@@ -47,6 +47,14 @@ jobs:
           done
           exit "$missing"
 
+      - name: Preflight collector without API calls
+        shell: bash
+        run: |
+          python -m py_compile \
+            interest-radar-v2/collect_source_material_v1.py \
+            interest-radar-v2/collect_source_material_v2_1.py
+          python -X utf8 interest-radar-v2/collect_source_material_v2_1.py --preview-queries
+
       - name: Collect source signals
         shell: bash
         run: |
