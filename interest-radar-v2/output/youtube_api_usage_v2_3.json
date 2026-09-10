@@ -205,6 +205,166 @@
           "status": "OK"
         }
       ]
+    },
+    "2026-09-10": {
+      "events": [
+        {
+          "at": "2026-09-10T17:28:21+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "MOBILITY|교통약자 이동 실패|EVIDENCE|장애인콜택시 대기 화면",
+          "query": "장애인콜택시 대기 화면",
+          "selection_tier": "SENTINEL",
+          "run_slot": 2,
+          "search_order": "date",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:22+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "COST_OF_LIVING|식비·생필품 구매 축소|SCENE|식비 줄인 한달 후기",
+          "query": "식비 줄인 한달 후기",
+          "selection_tier": "SENTINEL",
+          "run_slot": 2,
+          "search_order": "date",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:23+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "COST_OF_LIVING|공공요금 체납|EVIDENCE|공공요금 고지서 공개",
+          "query": "공공요금 고지서 공개",
+          "selection_tier": "SENTINEL",
+          "run_slot": 2,
+          "search_order": "date",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:24+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|EVIDENCE|간병비 영수증 공개",
+          "query": "간병비 영수증 공개",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "relevance",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:25+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "MOBILITY|교통약자 이동 실패|SCENE|휠체어 지하철 이동 후기",
+          "query": "휠체어 지하철 이동 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "date",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:26+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "COST_OF_LIVING|공공요금 체납|SCENE|전기 끊길 뻔한 후기",
+          "query": "전기 끊길 뻔한 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "relevance",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:27+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "EDUCATION|교육비 때문에 포기|EVIDENCE|학원비 결제 영수증",
+          "query": "학원비 결제 영수증",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "date",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:28+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "DIGITAL_RIGHTS|디지털 접근 배제|EVIDENCE|앱 예약 오류 화면",
+          "query": "앱 예약 오류 화면",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "relevance",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:29+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|EVIDENCE|침수 복구비 영수증",
+          "query": "침수 복구비 영수증",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "date",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:21+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "LOCAL_ECONOMY|골목상권 영업 포기|SOURCE|폐업 사장 브이로그",
+          "query": "폐업 사장 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "relevance",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:22+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "HOUSING|보증금 반환 지연|SOURCE|전세피해 임차인 브이로그",
+          "query": "전세피해 임차인 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "date",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:23+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "LABOR|임금·퇴직금 미지급|SCENE|월급 못 받은 후기",
+          "query": "월급 못 받은 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "relevance",
+          "source_run_id": 34455318623
+        },
+        {
+          "at": "2026-09-10T17:28:24+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK_RECOVERED",
+          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|SCENE|가족 간병 퇴사 후기",
+          "query": "가족 간병 퇴사 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 2,
+          "search_order": "date",
+          "source_run_id": 34455318623
+        }
+      ]
     }
   }
 }
