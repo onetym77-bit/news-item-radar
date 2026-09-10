@@ -1,0 +1,85 @@
+name: Collect source signals (manual test)
+
+on:
+  workflow_dispatch:
+    inputs:
+      audit_all:
+        description: Run every configured YouTube query for an audit
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: news-item-radar-collector
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONUTF8: "1"
+      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+      NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+      NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify required repository secrets
+        shell: bash
+        run: |
+          missing=0
+          for name in YOUTUBE_API_KEY NAVER_CLIENT_ID NAVER_CLIENT_SECRET; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing repository secret: $name"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Collect source signals
+        shell: bash
+        run: |
+          if [ "${{ inputs.audit_all }}" = "true" ]; then
+            python -X utf8 interest-radar-v2/collect_source_material_v2_1.py --audit-all
+          else
+            python -X utf8 interest-radar-v2/collect_source_material_v2_1.py
+          fi
+
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py
+
+      - name: Upload run output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-material-${{ github.run_id }}
+          path: |
+            interest-radar-v2/output/source_material_*.json
+            interest-radar-v2/output/source_material_latest.txt
+            interest-radar-v2/output/youtube_*.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Persist quota and discovery state
+        shell: bash
+        run: |
+          git config user.name "news-item-radar-bot"
+          git config user.email "news-item-radar-bot@users.noreply.github.com"
+          git add -f             interest-radar-v2/output/youtube_quota_state.json             interest-radar-v2/output/youtube_signal_ledger_v2_1.json             interest-radar-v2/output/youtube_query_health_v2_3.json             interest-radar-v2/output/youtube_api_usage_v2_3.json
+          if git diff --cached --quiet; then
+            echo "No state changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: update signal collection state"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
