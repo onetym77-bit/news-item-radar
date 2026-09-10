@@ -75,6 +75,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="서울 기획 아이템 발굴 시스템 v1.5 검증")
     parser.add_argument("--briefing", type=Path, help="계측 모순까지 확인할 브리핑 파일")
     parser.add_argument("--as-of", type=date.fromisoformat, default=date.today())
+    parser.add_argument(
+        "--allow-missing-source-reports",
+        action="store_true",
+        help="온라인 스냅샷에서 제외된 과거 source_report 파일의 존재 검사를 생략",
+    )
     return parser.parse_args()
 
 
@@ -99,6 +104,7 @@ def main() -> int:
 
     seen_ids: set[str] = set()
     seen_topics: dict[str, str] = {}
+    missing_source_reports = 0
     for row_number, row in enumerate(rows, start=2):
         item_id = (row.get("item_id") or "").strip()
         topic = (row.get("canonical_topic") or "").strip()
@@ -166,7 +172,10 @@ def main() -> int:
 
         report = (row.get("source_report") or "").strip()
         if report and not (ROOT / report).is_file():
-            errors.append(f"{item_id}: source_report 파일 없음 {report}")
+            if args.allow_missing_source_reports:
+                missing_source_reports += 1
+            else:
+                errors.append(f"{item_id}: source_report 파일 없음 {report}")
 
         review_by = (row.get("review_by") or "").strip()
         if review_by:
@@ -176,6 +185,12 @@ def main() -> int:
                     warnings.append(f"{item_id}: review_by 경과 {review_by}")
             except ValueError:
                 errors.append(f"{item_id}: 잘못된 review_by {review_by!r}")
+
+    if missing_source_reports:
+        warnings.append(
+            "온라인 스냅샷에서 제외된 source_report "
+            f"{missing_source_reports}건의 파일 존재 검사를 생략함"
+        )
 
     audit_rows: dict[str, dict[str, str]] = {}
     if QUESTION_AUDIT.is_file():
