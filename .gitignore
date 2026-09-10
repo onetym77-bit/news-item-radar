@@ -1,0 +1,41 @@
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Raw inputs and generated artifacts
+**/input/
+structure-radar-v1/output/
+interest-radar-v2/output/source_material_*.json
+interest-radar-v2/output/source_material_latest.txt
+scheduled-output/
+*.zip
+*.7z
+*.tar
+*.gz
+
+# Local snapshots and retired workspaces
+agent-system-v1/snapshots/
+briefing-v2.9-*/
+signal-radar-v1/
+tourism-concentration-v1/
+cg-reference/
+서울_관광소비_CG_최종전달/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

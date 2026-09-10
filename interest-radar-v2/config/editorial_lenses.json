@@ -1,0 +1,152 @@
+{
+  "version": "2026-09-09-v2.3",
+  "system_version": "1.5",
+  "purpose": "새 현상과 축적 통계에서 출처 프레임을 넘어 시민 손실·경쟁 가설·최소 판정 실험을 갖춘 기획 질문을 생성하기 위한 생활 의제 렌즈",
+  "agenda_domains": [
+    {"code": "HOUSING", "label": "주거", "core_daily": true},
+    {"code": "LABOR", "label": "노동", "core_daily": true},
+    {"code": "CARE_HEALTH", "label": "돌봄·의료", "core_daily": true},
+    {"code": "MOBILITY", "label": "교통·이동", "core_daily": true},
+    {"code": "COST_OF_LIVING", "label": "생활물가", "core_daily": true},
+    {"code": "EDUCATION", "label": "교육", "core_daily": false},
+    {"code": "DIGITAL_RIGHTS", "label": "디지털 권리", "core_daily": false},
+    {"code": "SAFETY_ENVIRONMENT", "label": "안전·환경", "core_daily": false},
+    {"code": "LOCAL_ECONOMY", "label": "지역경제·생활서비스", "core_daily": false}
+  ],
+  "coverage_policy": "핵심 의제 5개는 매일 확인하고 나머지는 순환한다. 출처군별 건수는 강제하지 않으며 질문 원석 0건도 정상이다.",
+  "question_framework": {
+    "required_axes": ["분포", "비교", "원인·결과"],
+    "optional_axes": ["자연스러움", "책임·대책"],
+    "decomposition_dimensions": ["지역", "집단", "업종", "시간", "채널"],
+    "phenomenon_patterns": ["임계치 돌파", "급증·급감", "총액·평균", "집중·이탈", "성과 발표", "제도 변경 후 결과"],
+    "entry_requirements": ["객관적 현상", "시민 이해관계", "검증 경로"],
+    "quality_dimensions": ["긴장·반전", "시민 손실·권리", "분포·배제", "경쟁 가설", "책임·변경 가능성", "반증·판정선"],
+    "mandatory_dimensions": ["시민 손실·권리", "경쟁 가설", "반증·판정선"],
+    "pass_score": 8,
+    "max_score": 12,
+    "hold_score_min": 5,
+    "central_question_limit": 1,
+    "supporting_question_limit": 3,
+    "minimum_competing_hypotheses": 2,
+    "required_decision_paths": ["기사 전환", "축소", "폐기"],
+    "template_question_score_cap": 7
+    ,"originality_gate_required": true
+    ,"minimum_test_max_hours": 24
+    ,"required_evidence_searches": ["시민 손실", "반대 근거"]
+    ,"public_origin_correction_threshold": 0.6
+  },
+  "youtube_discovery": {
+    "version": "2.3",
+    "lookback_days": 30,
+    "persistence_days": 30,
+    "queries_per_run": 4,
+    "expressions_per_agenda_per_run": 2,
+    "quota_timezone": "America/Los_Angeles",
+    "search_provider_daily_limit": 100,
+    "managed_search_daily_cap": 60,
+    "regular_search_daily_budget": 40,
+    "exploration_search_daily_budget": 20,
+    "search_reserved_calls": 40,
+    "regular_slot_search_calls": [14, 13, 13],
+    "sentinel_queries_per_slot": [4, 3, 3],
+    "rotation_queries_per_slot": [10, 10, 10],
+    "manual_queries_per_run": 8,
+    "query_health_min_runs": 3,
+    "query_health_min_accepted_for_review": 10,
+    "query_health_mismatch_rate_review": 0.5,
+    "query_health_noise_rate_review": 0.5,
+    "results_per_query": 15,
+    "comment_clusters_per_run": 3,
+    "comments_per_cluster": 20,
+    "signal_markers": ["못 받", "안 들어", "안 줘", "안 돼", "없어요", "없어서", "그만뒀", "퇴사", "포기", "줄였", "밀렸", "대기", "막혔", "끊겼", "폐업", "체납", "부담", "폭탄", "위험", "사고", "환불", "쫓겨", "올랐", "너무 오래"],
+    "first_person_markers": ["제가", "저는", "저희", "내가", "우리 집", "우리 가게", "우리 엄마", "우리 아빠", "직접 겪", "당했습니다", "못 받았습니다", "못 받았어요", "못 냈어요", "그만뒀습니다", "접었어요", "닫았어요", "이사했어요", "일을 쉬었", "포기했습니다"],
+    "verification_markers": ["만원", "개월", "시간", "분", "명", "건", "계약", "고지서", "영수증", "통장", "문자", "진단서", "신고", "민원"],
+    "advice_markers": ["확인하는 순서", "확인하세요", "방법입니다", "하는 법", "대처법", "알려드립니다", "총정리", "꿀팁", "지원금", "복지혜택", "레시피", "재료", "만들어 보세요"],
+    "media_channel_markers": ["뉴스", "KBS", "MBC", "SBS", "YTN", "JTBC", "연합뉴스", "채널A", "MBN", "TV조선"],
+    "fiction_markers": ["드라마", "극장", "영화", "야담", "민담", "전설", "설화", "스토리", "소설", "오디오북", "무비"],
+    "hard_exclusions": ["게임", "해외", "연예", "먹방", "asmr", "reaction", "리액션", "부동산 매물", "분양 광고", "협찬 광고"],
+    "short_video_seconds": 60
+  },
+  "youtube_cluster_queries": [
+    {"agenda": "HOUSING", "cluster": "보증금 반환 지연", "anchor_terms": ["전세금", "보증금"], "search_lanes": [{"lane": "BEHAVIOR", "query": "보증금 못 받아 이사 못 가"}, {"lane": "EVIDENCE", "query": "전세금 반환 문자 통장"}, {"lane": "SCENE", "query": "전세 보증금 반환 후기"}, {"lane": "SOURCE", "query": "전세피해 임차인 브이로그"}]},
+    {"agenda": "HOUSING", "cluster": "주거비 때문에 이동", "anchor_terms": ["월세", "관리비", "주거비"], "search_lanes": [{"lane": "BEHAVIOR", "query": "월세 올라 방 줄여 이사"}, {"lane": "EVIDENCE", "query": "관리비 고지서 공개"}, {"lane": "SCENE", "query": "월세 이사 후기"}, {"lane": "SOURCE", "query": "자취 월세 브이로그"}]},
+    {"agenda": "LABOR", "cluster": "임금·퇴직금 미지급", "anchor_terms": ["월급", "임금", "퇴직금", "체불"], "search_lanes": [{"lane": "BEHAVIOR", "query": "월급 밀려 퇴사"}, {"lane": "EVIDENCE", "query": "임금체불 통장 문자"}, {"lane": "SCENE", "query": "월급 못 받은 후기"}, {"lane": "SOURCE", "query": "임금체불 노동자 인터뷰"}]},
+    {"agenda": "LABOR", "cluster": "플랫폼 노동 수입 감소", "anchor_terms": ["배달기사", "배달 기사", "대리기사", "배달 수입", "라이더"], "search_lanes": [{"lane": "BEHAVIOR", "query": "배달 접속시간 늘었는데 수입"}, {"lane": "EVIDENCE", "query": "배달 하루 정산 공개"}, {"lane": "SCENE", "query": "배달 라이더 수입 후기"}, {"lane": "SOURCE", "query": "배달기사 일상 브이로그"}]},
+    {"agenda": "CARE_HEALTH", "cluster": "가족돌봄 때문에 퇴사", "anchor_terms": ["간병", "가족돌봄", "가족 돌봄"], "search_lanes": [{"lane": "BEHAVIOR", "query": "간병 때문에 일 쉬었어요"}, {"lane": "EVIDENCE", "query": "간병비 영수증 공개"}, {"lane": "SCENE", "query": "가족 간병 퇴사 후기"}, {"lane": "SOURCE", "query": "간병 가족 브이로그"}]},
+    {"agenda": "CARE_HEALTH", "cluster": "야간·시설 돌봄 공백", "anchor_terms": ["요양원", "야간돌봄", "밤에 돌봄", "돌봄 대기"], "search_lanes": [{"lane": "BEHAVIOR", "query": "요양원 못 구해 일 쉬어"}, {"lane": "EVIDENCE", "query": "돌봄 대기 문자"}, {"lane": "SCENE", "query": "야간 돌봄 이용 후기"}, {"lane": "SOURCE", "query": "간병 보호자 일상"}]},
+    {"agenda": "MOBILITY", "cluster": "대중교통 단절", "anchor_terms": ["버스", "출퇴근", "막차", "대중교통"], "search_lanes": [{"lane": "BEHAVIOR", "query": "막차 끊겨 택시 탔어요"}, {"lane": "EVIDENCE", "query": "출퇴근 두시간 기록"}, {"lane": "SCENE", "query": "버스 감차 불편 후기"}, {"lane": "SOURCE", "query": "장거리 출퇴근 브이로그"}]},
+    {"agenda": "MOBILITY", "cluster": "교통약자 이동 실패", "anchor_terms": ["휠체어", "장애인 콜택시", "장애인콜택시", "교통약자"], "search_lanes": [{"lane": "BEHAVIOR", "query": "장애인 콜택시 기다린 시간"}, {"lane": "EVIDENCE", "query": "장애인콜택시 대기 화면"}, {"lane": "SCENE", "query": "휠체어 지하철 이동 후기"}, {"lane": "SOURCE", "query": "휠체어 출근 브이로그"}]},
+    {"agenda": "COST_OF_LIVING", "cluster": "식비·생필품 구매 축소", "anchor_terms": ["장보기", "식비", "장바구니", "생필품"], "search_lanes": [{"lane": "BEHAVIOR", "query": "장바구니에서 고기 뺐어요"}, {"lane": "EVIDENCE", "query": "마트 영수증 물가 공개"}, {"lane": "SCENE", "query": "식비 줄인 한달 후기"}, {"lane": "SOURCE", "query": "한달 식비 공개 브이로그"}]},
+    {"agenda": "COST_OF_LIVING", "cluster": "공공요금 체납", "anchor_terms": ["공공요금", "전기요금", "가스요금", "수도요금"], "search_lanes": [{"lane": "BEHAVIOR", "query": "전기요금 밀려 못 냈어요"}, {"lane": "EVIDENCE", "query": "공공요금 고지서 공개"}, {"lane": "SCENE", "query": "전기 끊길 뻔한 후기"}, {"lane": "SOURCE", "query": "생활비 체납 브이로그"}]},
+    {"agenda": "EDUCATION", "cluster": "특수·돌봄교육 대기", "anchor_terms": ["특수교육", "돌봄교실", "아이 맡길", "교육 대기"], "search_lanes": [{"lane": "BEHAVIOR", "query": "돌봄교실 떨어져 일 못 가"}, {"lane": "EVIDENCE", "query": "돌봄교실 대기 문자"}, {"lane": "SCENE", "query": "아이 맡길 곳 찾은 후기"}, {"lane": "SOURCE", "query": "맞벌이 부모 돌봄 브이로그"}]},
+    {"agenda": "EDUCATION", "cluster": "교육비 때문에 포기", "anchor_terms": ["학원비", "교육비", "학원 끊", "사교육"], "search_lanes": [{"lane": "BEHAVIOR", "query": "학원비 올라 학원 끊었어요"}, {"lane": "EVIDENCE", "query": "학원비 결제 영수증"}, {"lane": "SCENE", "query": "사교육 줄인 후기"}, {"lane": "SOURCE", "query": "학원 끊은 부모 브이로그"}]},
+    {"agenda": "DIGITAL_RIGHTS", "cluster": "플랫폼 계정·환불 피해", "anchor_terms": ["자동결제", "구독 환불", "계정 정지", "플랫폼 계정"], "search_lanes": [{"lane": "BEHAVIOR", "query": "구독 환불 못 받았어요"}, {"lane": "EVIDENCE", "query": "자동결제 취소 내역"}, {"lane": "SCENE", "query": "계정 정지 당한 후기"}, {"lane": "SOURCE", "query": "플랫폼 계정 정지 브이로그"}]},
+    {"agenda": "DIGITAL_RIGHTS", "cluster": "디지털 접근 배제", "anchor_terms": ["키오스크", "앱 예약", "디지털 접근"], "search_lanes": [{"lane": "BEHAVIOR", "query": "키오스크 주문 포기"}, {"lane": "EVIDENCE", "query": "앱 예약 오류 화면"}, {"lane": "SCENE", "query": "키오스크 못 쓴 후기"}, {"lane": "SOURCE", "query": "디지털 어려운 부모님"}]},
+    {"agenda": "SAFETY_ENVIRONMENT", "cluster": "반복 주거·침수 피해", "anchor_terms": ["침수", "반지하", "집 곰팡이", "주거 곰팡이"], "search_lanes": [{"lane": "BEHAVIOR", "query": "반지하 침수 또 이사"}, {"lane": "EVIDENCE", "query": "침수 복구비 영수증"}, {"lane": "SCENE", "query": "집 곰팡이 이사 후기"}, {"lane": "SOURCE", "query": "반지하 거주 브이로그"}]},
+    {"agenda": "SAFETY_ENVIRONMENT", "cluster": "일터 안전 은폐", "anchor_terms": ["산재", "일하다 다쳤", "산업재해"], "search_lanes": [{"lane": "BEHAVIOR", "query": "일하다 다쳤는데 산재 안돼"}, {"lane": "EVIDENCE", "query": "산재 신청 문자"}, {"lane": "SCENE", "query": "산재 처리 후기"}, {"lane": "SOURCE", "query": "현장 노동자 부상 인터뷰"}]},
+    {"agenda": "LOCAL_ECONOMY", "cluster": "필수 생활서비스 폐업", "anchor_terms": ["병원 폐업", "의원 폐업", "약국 폐업", "소아과", "어린이집 폐원"], "search_lanes": [{"lane": "BEHAVIOR", "query": "소아과 멀리 원정 진료"}, {"lane": "EVIDENCE", "query": "병원 폐업 안내문"}, {"lane": "SCENE", "query": "어린이집 폐원 후기"}, {"lane": "SOURCE", "query": "동네 소아과 찾는 부모"}]},
+    {"agenda": "LOCAL_ECONOMY", "cluster": "골목상권 영업 포기", "anchor_terms": ["가게 폐업", "가게 접", "장사 접", "점포 폐업", "자영업 폐업"], "search_lanes": [{"lane": "BEHAVIOR", "query": "임대료 때문에 가게 접었어요"}, {"lane": "EVIDENCE", "query": "가게 폐업 정산 공개"}, {"lane": "SCENE", "query": "자영업 폐업 후기"}, {"lane": "SOURCE", "query": "폐업 사장 브이로그"}]}
+  ],
+  "youtube_seoul_place_terms": [
+    "서울", "종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구", "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구", "양천구", "강서구", "구로구", "금천구", "영등포구", "동작구", "관악구", "서초구", "강남구", "송파구", "강동구",
+    "성수", "을지로", "홍대", "연남", "여의도", "한남", "망원", "문래", "광장시장", "신림", "대림", "가리봉", "고덕", "상계", "창동", "불광", "연신내", "잠실", "천호", "신촌", "서울역", "지하철역"
+  ],
+  "lenses": [
+    {
+      "name": "주거부담과퇴거",
+      "question": "누가 계약·보증금·관리비·퇴거 위험을 더 떠안고 있으며 어떤 제도나 시장 구조가 만드는가",
+      "search_terms": ["보증금 반환 지연", "관리비 분쟁 서울", "계약갱신 거절", "퇴거 위기", "전세 피해 집단"]
+    },
+    {
+      "name": "노동위험전가",
+      "question": "임금·노동시간·산재·고용 위험이 누구에게 이전되고 있는가",
+      "search_terms": ["임금 체불 서울", "산재 은폐", "플랫폼 노동 통제", "야간노동 안전", "하청 고용 불안"]
+    },
+    {
+      "name": "돌봄의공백",
+      "question": "돌봄과 의료의 비용·시간·대기가 어느 가족과 집단에 집중되는가",
+      "search_terms": ["간병비 부담 서울", "돌봄 공백", "병원 대기 격차", "요양 공백", "가족돌봄 퇴사"]
+    },
+    {
+      "name": "교통접근격차",
+      "question": "이동시간과 안전 부담이 어느 생활권·교통약자에게 반복적으로 집중되는가",
+      "search_terms": ["출퇴근 시간 격차 서울", "교통약자 이동권", "버스 감차 생활권", "환승 부담 증가", "심야 교통 공백"]
+    },
+    {
+      "name": "생활비충격",
+      "question": "가격 변화가 단순 인상을 넘어 구매 축소·품목 대체·생계 위험으로 이어지는가",
+      "search_terms": ["식비 줄이기 가계", "공공요금 체납 서울", "생필품 구매 포기", "급식비 부담", "소득별 물가 충격"]
+    },
+    {
+      "name": "교육접근격차",
+      "question": "교육·돌봄 자원의 지역·소득 격차가 어떤 선택 포기와 시간 부담을 만드는가",
+      "search_terms": ["교육 접근 격차 서울", "방과후 돌봄 공백", "특수교육 대기", "학교 통폐합 이동", "교육비 체납"]
+    },
+    {
+      "name": "디지털권리",
+      "question": "플랫폼·자동화·알고리즘이 시민의 비용·정보·선택권을 어떻게 제한하는가",
+      "search_terms": ["자동결제 환불 분쟁", "플랫폼 계정 정지 생계", "알고리즘 차별", "개인정보 오남용", "디지털 취약계층 배제"]
+    },
+    {
+      "name": "안전과환경격차",
+      "question": "반복되는 위험과 예방 자원이 지역·집단별로 어떻게 다르게 배분되는가",
+      "search_terms": ["반복 침수 서울", "산업 안전 사각지대", "실내공기질 격차", "재난 취약계층", "안전 예산 집행 부진"]
+    },
+    {
+      "name": "생활서비스소멸",
+      "question": "임대료·폐업·인력 부족이 주민에게 필요한 생활서비스를 어디서 사라지게 하는가",
+      "search_terms": ["동네 병원 폐업 서울", "어린이집 폐원", "생활서비스 공백", "시장 점포 폐업", "필수 업종 이탈"]
+    }
+  ],
+  "exclusions": ["속보", "브리핑", "게임", "해외", "광고", "창업", "부업", "연예"],
+  "low_priority_signals": ["공연", "콘서트", "티켓", "축제", "팝업", "오픈런", "관광", "예약", "매진", "단일 가격"],
+  "youtube_exclusions": ["#shorts", "shorts", "매물", "분양", "전원주택", "급매", "먹방", "asmr", "챌린지", "reaction", "리액션"],
+  "youtube_editorial_keywords": ["주거", "보증금", "퇴거", "임금", "노동", "산재", "돌봄", "간병", "의료", "교육", "교통", "이동권", "물가", "체납", "플랫폼", "환불", "개인정보", "안전", "침수", "폐업", "격차", "사각지대", "부담 전가"],
+  "youtube_watch_channels": [
+    {
+      "id": "UCA_hgsFzmynpv1zkvA5A7jA",
+      "name": "지식인사이드",
+      "purpose": "구조 변화의 배경 가설을 얻는 장편 전문가 대담"
+    }
+  ]
+}
