@@ -8,6 +8,11 @@ on:
         required: false
         default: false
         type: boolean
+      validation_only:
+        description: Validate the online snapshot without calling source APIs
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -56,6 +61,7 @@ jobs:
           python -X utf8 interest-radar-v2/collect_source_material_v2_1.py --preview-queries
 
       - name: Collect source signals
+        if: ${{ !inputs.validation_only }}
         shell: bash
         run: |
           if [ "${{ inputs.audit_all }}" = "true" ]; then
@@ -65,7 +71,8 @@ jobs:
           fi
 
       - name: Validate discovery system
-        run: python -X utf8 agent-system-v1/validate_discovery_system.py
+        if: always()
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
 
       - name: Upload run output
         if: always()
@@ -80,6 +87,7 @@ jobs:
           retention-days: 14
 
       - name: Persist quota and discovery state
+        if: ${{ always() && !inputs.validation_only }}
         shell: bash
         run: |
           git config user.name "news-item-radar-bot"
