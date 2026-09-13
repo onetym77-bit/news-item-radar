@@ -1,0 +1,127 @@
+name: Build daily item briefing
+
+on:
+  schedule:
+    - cron: "30 9 * * *"
+      timezone: "Asia/Seoul"
+  workflow_dispatch:
+    inputs:
+      as_of:
+        description: Optional briefing date in YYYY-MM-DD
+        required: false
+        type: string
+  pull_request:
+    paths:
+      - "agent-system-v1/ITEM_LEDGER.csv"
+      - "agent-system-v1/QUESTION_QUALITY_AUDIT.csv"
+      - "agent-system-v1/VERIFICATION_QUEUE.csv"
+      - "agent-system-v1/validate_discovery_system.py"
+      - "daily-briefing-v5/**"
+      - ".github/workflows/daily-briefing.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-item-briefing-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Validate source ledgers
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+
+      - name: Build three-tier briefing and verification queue
+        shell: bash
+        env:
+          AS_OF: ${{ inputs.as_of || '' }}
+        run: |
+          args=()
+          if [ -n "$AS_OF" ]; then
+            args+=(--as-of "$AS_OF")
+          fi
+          python -m py_compile daily-briefing-v5/build_briefing.py
+          python -X utf8 daily-briefing-v5/build_briefing.py "${args[@]}"
+
+      - name: Validate generated briefing
+        run: >-
+          python -X utf8 agent-system-v1/validate_discovery_system.py
+          --allow-missing-source-reports
+          --briefing daily-briefing-v5/output/briefing_latest.md
+
+      - name: Add run summary
+        shell: bash
+        run: |
+          cat daily-briefing-v5/output/briefing_latest.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload briefing
+        uses: actions/upload-artifact@v6
+        with:
+          name: daily-item-briefing-${{ github.run_id }}
+          path: |
+            daily-briefing-v5/output/briefing_latest.md
+            daily-briefing-v5/output/history/*.md
+            agent-system-v1/VERIFICATION_QUEUE.csv
+          if-no-files-found: error
+          retention-days: 30
+
+  persist:
+    if: ${{ github.event_name != 'pull_request' }}
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild verified briefing
+        shell: bash
+        env:
+          AS_OF: ${{ inputs.as_of || '' }}
+        run: |
+          args=()
+          if [ -n "$AS_OF" ]; then
+            args+=(--as-of "$AS_OF")
+          fi
+          python -X utf8 daily-briefing-v5/build_briefing.py "${args[@]}"
+          python -X utf8 agent-system-v1/validate_discovery_system.py \
+            --allow-missing-source-reports \
+            --briefing daily-briefing-v5/output/briefing_latest.md
+
+      - name: Persist latest briefing and queue
+        shell: bash
+        run: |
+          git config user.name "news-item-radar-bot"
+          git config user.email "news-item-radar-bot@users.noreply.github.com"
+          git add -f \
+            agent-system-v1/VERIFICATION_QUEUE.csv \
+            daily-briefing-v5/output/briefing_latest.md \
+            daily-briefing-v5/output/history/
+          if git diff --cached --quiet; then
+            echo "No briefing changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: update daily item briefing"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
