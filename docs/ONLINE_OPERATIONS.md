@@ -27,25 +27,39 @@ Add these values under **Settings → Secrets and variables → Actions**:
 
 Never add their values to a tracked file, issue, pull request, log, or chat.
 
-## 3. Manual collection test
+## 3. Collection workflow
 
-The workflow `Collect source signals (manual test)` has no cron trigger. It consumes no API quota until a user manually starts it from the Actions tab.
+The workflow `Collect source signals` supports both scheduled and manual runs.
 
-A successful run:
+Scheduled collection times:
 
-1. checks out the repository,
+- 08:00 KST every day
+- 12:00 KST every day
+- 17:30 KST every day
+
+The workflow declares `Asia/Seoul` explicitly. GitHub may start a scheduled job a few minutes late during periods of high load.
+
+Manual inputs:
+
+- `audit_all=false`: use the regular quota-controlled query rotation.
+- `audit_all=true`: use the audit query budget. Run only when deliberately checking all configured agendas.
+- `validation_only=true`: validate the online snapshot without calling YouTube or Naver.
+
+A normal scheduled run:
+
+1. checks out the latest `main` branch,
 2. checks that the three repository secrets exist,
-3. runs the v2.3 collector,
-4. runs the discovery-system validator,
-5. stores raw run output as a GitHub Actions artifact for 14 days, and
-6. commits only the four small quota and discovery-state files.
+3. compiles the collectors and previews the selected queries without API calls,
+4. runs the v2.3 collector with the regular quota policy,
+5. validates the online repository snapshot,
+6. stores raw run output as a GitHub Actions artifact for 14 days, and
+7. commits only the four small quota and discovery-state files.
 
-Do not add a schedule until a manual run has succeeded and its API usage report has been reviewed.
+Collection state is persisted even if a later validation step fails, preventing the next run from undercounting API usage.
 
-## 4. Scheduled migration order
+## 4. Remaining migration order
 
-1. Run the collector manually once.
-2. Confirm YouTube response reasons, API-call counts, and new-signal yield.
-3. Add the three KST collection times to the workflow.
-4. Move editorial briefing and weekly audit jobs to online tasks that read this repository and the latest workflow artifact.
-5. Pause the old Windows-local scheduled tasks only after the online replacements pass their first run.
+1. Confirm the first scheduled run and its state commit.
+2. Pause the old Windows-local source-collection schedules to prevent duplicate API calls.
+3. Move editorial briefing and weekly audit jobs to online tasks that read this repository and the latest workflow artifact.
+4. Pause each remaining local task only after its online replacement passes its first run.
