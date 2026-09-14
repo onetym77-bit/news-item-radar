@@ -1141,10 +1141,13 @@ def document_date_from(parser: VisibleHTML) -> str:
     publication_candidates: list[str] = []
     modification_candidates: list[str] = []
     for index, chunk in enumerate(parser.chunks):
+        context = [chunk]
+        if not latest_date_from(context) and index + 1 < len(parser.chunks):
+            context.append(parser.chunks[index + 1])
         if PUBLICATION_DATE_LABEL_RE.search(chunk):
-            publication_candidates.extend(parser.chunks[index : index + 2])
+            publication_candidates.extend(context)
         elif MODIFICATION_DATE_LABEL_RE.search(chunk):
-            modification_candidates.extend(parser.chunks[index : index + 2])
+            modification_candidates.extend(context)
     return (
         latest_date_from(publication_candidates)
         or latest_date_from(modification_candidates)
