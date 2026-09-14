@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+"""Render the fixed 2026-09-14 false-positive/recall comparison."""
+
+from __future__ import annotations
+
+import importlib.util
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+OUTPUT = HERE / "output" / "grounding_comparison_latest.md"
+
+CASES = [
+    (
+        "일반 의정 연설",
+        "서울의 교육격차를 줄이고 안전한 학교를 만들기 위해 최선을 다하겠습니다",
+        "MEASURED_PROBLEM_SIGNAL",
+        "council",
+    ),
+    (
+        "학생인권 우려 발언",
+        "학생인권조례 폐지는 교육 격차와 갈등을 초래할 수 있어 우려됩니다",
+        "MEASURED_PROBLEM_SIGNAL",
+        "council",
+    ),
+    (
+        "위원 선임 절차",
+        "제4항과 제41조에 따라 11대 의회 상임위원을 선임하고 전자투표로 표결합니다",
+        "DECOMPOSABLE_STRUCTURE",
+        "council",
+    ),
+    (
+        "열린데이터 메뉴",
+        "본문 바로가기 메뉴 로그인 회원가입 분야 선택 파일내려받기 전체 설명보기",
+        "검증 지도 진입",
+        "open_data",
+    ),
+    (
+        "서울연구원 제목",
+        "집합건물 분쟁실태와 지원방안",
+        "MEASURED_PROBLEM_SIGNAL",
+        "research",
+    ),
+    (
+        "값 없는 체불 표 제목",
+        "2026.7월 지역별 체불 현황",
+        "MEASURED_PROBLEM_SIGNAL",
+        "labor",
+    ),
+    (
+        "외국인 카드 총액",
+        "서울 외국인 카드소비 총액 1조 원 자치구별·업종별 현황",
+        "NONE",
+        "council",
+    ),
+    (
+        "UD택시 공급 제약",
+        "서울 UD택시는 12대만 06~15시 운행해 요청과 매칭될 확률이 낮아 이용이 제한된다는 지적",
+        "질문에 병원 이동·미배차를 사실처럼 추가",
+        "council",
+    ),
+    (
+        "버스 소송 추산",
+        "서울 시내버스 소송 부담을 협회는 5,266억 원에서 1조 216억 원으로 추산했고 연간 적자지원은 8,915억 원이다",
+        "원인을 관리 공백으로 단정",
+        "council",
+    ),
+]
+
+SOURCES = {
+    "council": {"id": "council_minutes", "name": "서울시의회", "local": True, "voice": False, "role": "BOTH"},
+    "open_data": {"id": "seoul_open_data", "name": "열린데이터", "local": True, "voice": False, "role": "VERIFICATION"},
+    "research": {"id": "seoul_research", "name": "서울연구원", "local": True, "voice": False, "role": "BOTH"},
+    "labor": {"id": "labor_arrears", "name": "체불통계", "local": False, "voice": False, "role": "BOTH"},
+}
+
+
+def load_scout():
+    path = HERE / "scout_sources.py"
+    spec = importlib.util.spec_from_file_location("source_scout_comparison", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def main() -> int:
+    scout = load_scout()
+    lines = [
+        "# 질문 근거 검사 수정 전후 비교",
+        "",
+        "- 동일 자료: 2026-09-14 실제 실행에서 확인된 오탐 6건과 보존해야 할 양성 3건",
+        "- 수정 전은 당시 실행 결과·질문을 요약했고, 수정 후는 현재 분류기를 같은 문장에 다시 적용한 값",
+        "",
+        "| 사례 | 수정 전 | 수정 후 | 자동 처리 |",
+        "|---|---|---|---|",
+    ]
+    for name, evidence, before, source_key in CASES:
+        source = SOURCES[source_key]
+        _, _, _, signals = scout.score_text(evidence, source)
+        payload = scout.build_question_payload(evidence, source["id"], signals)
+        after = (
+            f"{signals['precheck_status']} · {signals['content_class']} · "
+            f"{signals['evidence_anchor']} · 질문 {payload['grounding_status']}"
+        )
+        action = (
+            "후보 유지" if signals["evidence_anchor"] != "NONE" and payload["grounding_status"] == "PASS"
+            else "검증자료만" if signals["verification_usable"]
+            else "본문 확보 대기" if signals["precheck_status"] == "HOLD"
+            else "자동 제외"
+        )
+        lines.append(f"| {name} | {before} | {after} | {action} |")
+    lines.extend(
+        [
+            "",
+            "수정 후 PASS는 기사 승인이 아니라 사람 판정 카드 진입 자격이다.",
+            "HOLD는 현상이 없다는 뜻이 아니라 제목·주장만으로는 사실관계를 확정할 수 없다는 뜻이다.",
+            "",
+        ]
+    )
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT.write_text("\n".join(lines), encoding="utf-8")
+    print(f"comparison={OUTPUT}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

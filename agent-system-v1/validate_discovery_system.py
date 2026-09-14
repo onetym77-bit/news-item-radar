@@ -24,8 +24,8 @@ REQUIRED_FILES = [
     SYSTEM / "SOURCE_FAMILY_REGISTRY.md",
     SYSTEM / "RUN_METRICS_TEMPLATE.md",
     SYSTEM / "EDITOR_FEEDBACK.md",
-    ROOT / "daily-briefing-v4" / "EDITORIAL_GATE.md",
-    ROOT / "daily-briefing-v4" / "OUTPUT_TEMPLATE.md",
+    ROOT / "daily-briefing-v5" / "EDITORIAL_GATE.md",
+    ROOT / "daily-briefing-v5" / "OUTPUT_TEMPLATE.md",
     ROOT / "interest-radar-v2" / "DESIGN.md",
     CONFIG,
     ROOT / "interest-radar-v2" / "collect_source_material_v2_1.py",
@@ -74,7 +74,7 @@ REQUIRED_CORE_AGENDAS = {
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="서울 기획 아이템 발굴 시스템 v1.6 검증")
+    parser = argparse.ArgumentParser(description="서울 기획 아이템 발굴 시스템 v1.7 검증")
     parser.add_argument("--briefing", type=Path, help="계측 모순까지 확인할 브리핑 파일")
     parser.add_argument("--as-of", type=date.fromisoformat, default=date.today())
     parser.add_argument(
@@ -283,8 +283,8 @@ def main() -> int:
     if CONFIG.is_file():
         try:
             config = json.loads(CONFIG.read_text(encoding="utf-8-sig"))
-            if config.get("system_version") != "1.6":
-                errors.append("관심 레이더 system_version은 1.6이어야 함")
+            if config.get("system_version") != "1.7":
+                errors.append("관심 레이더 system_version은 1.7이어야 함")
             agendas = {
                 entry.get("code")
                 for entry in config.get("agenda_domains", [])
@@ -398,6 +398,8 @@ def main() -> int:
             errors.append(f"브리핑 파일 없음: {briefing}")
         else:
             text = briefing.read_text(encoding="utf-8-sig")
+            if "<!-- RUN-METADATA:START -->" not in text or "<!-- RUN-METADATA:END -->" not in text:
+                errors.append("브리핑 실행 메타데이터 누락: latest로 사용 금지")
             has_shortfall = bool(
                 re.search(r"질문 게이트 PASS/HOLD 원석 5~10건:\s*미달", text)
                 or re.search(r"질문 게이트 PASS 우선 검증 2~4건:\s*미달", text)

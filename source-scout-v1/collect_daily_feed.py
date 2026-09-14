@@ -12,6 +12,7 @@ import csv
 import hashlib
 import importlib.util
 import json
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -33,19 +34,43 @@ REVIEW_FIELDS = [
     "first_seen",
     "last_seen",
     "candidate_id",
+    "source_revision",
     "lane",
     "source_id",
     "source_name",
-    "auto_score",
-    "evidence_anchor",
+    "ranking_score",
+    "auto_evidence_anchor",
+    "claim_status",
+    "precheck_status",
+    "precheck_reason",
+    "grounding_status",
+    "question_basis",
     "text",
     "question",
+    "verification_axes",
     "url",
     "editor_judgment",
-    "question_newness",
-    "four_hour_testable",
-    "notes",
+    "judgment_reason",
+    "editor_evidence_anchor",
+    "anchor_detail",
+    "anchor_scope",
+    "duplicate_parent_id",
+    "central_question",
+    "citizen_stake",
+    "competing_hypotheses",
+    "minimum_test",
+    "test_timebox_hours",
+    "test_pass_rule",
+    "test_kill_rule",
+    "reviewed_by",
+    "reviewed_at",
+    "review_revision",
+    "transition_state",
+    "transitioned_item_id",
 ]
+
+
+
 
 
 def load_scout_module():
@@ -69,50 +94,19 @@ def candidate_id(row: dict) -> str:
 
 
 def verification_question(row: dict) -> str:
-    if row.get("source_id") == "seoul_open_data":
-        return "이 신규 데이터로 기존 발표의 총량을 지역·대상·시간대별로 분해할 수 있는가?"
-    return "이 자료가 발굴된 질문의 지역·대상·업종 집중을 실제로 확인할 수 있는가?"
+    return row.get("question") or (
+        "이 자료의 실제 값과 분류항목으로 기존 발표의 총량 또는 집중 현상을 검증할 수 있는가?"
+    )
 
 
 def discovery_question(row: dict) -> str:
-    text = row.get("text", "")
     anchor = row.get("evidence_anchor") or row.get("signals", {}).get("evidence_anchor", "NONE")
     if anchor == "NONE":
         return "근거 앵커 없음 — 질문 점수 평가 제외"
-    if "장애인콜택시" in text or "UD택시" in text:
-        return (
-            "서울 전역 12대와 06~15시 운행은 실제 요청량과 병원 이동 수요를 감당하는가, "
-            "자치구·시간대별 미배차 격차는 얼마나 큰가?"
-        )
-    if "전세사기" in text:
-        return (
-            "인정 피해 1만 1,664가구와 약 1조 9,860억 원은 어느 자치구·주택유형·"
-            "임대인 관계망에 집중됐고, 현행 지원은 그 집중도와 맞는가?"
-        )
-    if "시내버스" in text and ("소송" in text or "준공영제" in text):
-        return (
-            "최대 1조 원대 소송 부담은 운송사·서울시·시민 사이에 어떻게 배분되며, "
-            "준공영제의 어떤 계약·관리 공백이 이 비용을 만들었는가?"
-        )
-    if "침수" in text and ("방문" in text or "이력" in text):
-        return (
-            "침수 피해 규모가 큰 지역일수록 현장 점검과 후속 조치가 우선됐는가, "
-            "시장 방문·지원 일정은 자치구별로 편중됐는가?"
-        )
-    if "긴급교실안심" in text or "SEM" in text:
-        return (
-            "긴급교실안심SEM 도입 뒤 교사의 개입과 학생 보호는 실제로 늘었는가, "
-            "사건 유형·학교별 이용 격차와 미개입 사유는 무엇인가?"
-        )
-    if "예산" in text or "추경" in text:
-        return (
-            "계획한 예산과 실제 집행 사이에 확인되는 차이는 얼마이며, "
-            "그 차이가 서비스 대상·자치구별 이용에 어떤 영향을 주는가?"
-        )
-    return (
-        "이 발언에서 확인된 문제 징후 또는 구조 자료는 무엇이며, "
-        "어떤 비교가 정상 변동과 구조적 반복을 가르는가?"
+    return row.get("question") or (
+        "확인된 근거를 어떤 범위·기간·비교집단으로 나누면 구조적 차이를 검증할 수 있는가?"
     )
+
 
 
 def unique_top(rows: list[dict], limit: int) -> list[dict]:
@@ -140,14 +134,17 @@ def build_feed(module) -> dict:
         records.extend(source_records)
         print(
             f"{source['id']}: status={metric['status']} requests={metric['requests']} "
-            f"items={metric['extracted']} qualified={metric['qualified']}"
+            f"items={metric['extracted']} precheck={metric.get('precheck_pass', 0)} "
+            f"grounded={metric.get('grounded', 0)} qualified={metric['qualified']}"
         )
 
     core = unique_top(
         [
             {**row, "lane": "CORE_DISCOVERY", "question": discovery_question(row)}
             for row in records
-            if row["source_id"] == "council_minutes" and row.get("qualified")
+            if row["source_id"] == "council_minutes"
+            and row.get("qualified")
+            and row.get("grounding_status") == "PASS"
         ],
         3,
     )
@@ -155,7 +152,9 @@ def build_feed(module) -> dict:
         [
             {**row, "lane": "AUX_DISCOVERY", "question": discovery_question(row)}
             for row in records
-            if row["source_id"] == "eungdapso" and row.get("qualified")
+            if row["source_id"] == "eungdapso"
+            and row.get("qualified")
+            and row.get("grounding_status") == "PASS"
         ],
         1,
     )
@@ -168,23 +167,46 @@ def build_feed(module) -> dict:
             }
             for row in records
             if row["source_id"] in {"seoul_open_data", "seoul_bigdata"}
-            and (row.get("signals", {}).get("evidence") or row.get("score", 0) >= 4)
+            and row.get("verification_usable")
+            and row.get("grounding_status") == "PASS"
         ],
         4,
     )
+    held = unique_top(
+        [
+            {**row, "lane": "HOLD_FOR_SOURCE_DETAIL"}
+            for row in records
+            if row.get("precheck_status") == "HOLD"
+            or row.get("grounding_status") == "HOLD"
+        ],
+        5,
+    )
+    failed_count = sum(row.get("precheck_status") == "FAIL" for row in records)
     return {
         "generated_at_kst": datetime.now(ZoneInfo("Asia/Seoul")).isoformat(timespec="seconds"),
         "status": {
             "discovery_core": "서울시의회 회의록",
             "discovery_auxiliary": "서울시 응답소 공개민원",
             "verification_only": ["서울 열린데이터", "서울 빅데이터캠퍼스"],
-            "warning": "근거 앵커를 통과한 레코드도 S0 이전 질문 씨앗이며 기사 후보가 아님",
+            "warning": "근거 앵커와 질문 일치를 통과한 레코드도 S0 이전 질문 씨앗이며 기사 후보가 아님",
+        },
+        "funnel": {
+            "extracted": len(records),
+            "precheck_pass": sum(row.get("precheck_status") == "PASS" for row in records),
+            "precheck_hold": sum(row.get("precheck_status") == "HOLD" for row in records),
+            "precheck_fail": failed_count,
+            "grounded": sum(row.get("grounding_status") == "PASS" for row in records),
+            "qualified": sum(row.get("qualified") for row in records),
+            "selected_discovery": len(core) + len(auxiliary),
+            "selected_verification": len(verification),
         },
         "metrics": metrics,
         "core_discovery": core,
         "auxiliary_discovery": auxiliary,
         "verification_map": verification,
+        "held_for_source_detail": held,
     }
+
 
 
 def read_review_queue() -> list[dict[str, str]]:
@@ -197,22 +219,40 @@ def read_review_queue() -> list[dict[str, str]]:
 def update_review_queue(feed: dict) -> None:
     today = feed["generated_at_kst"][:10]
     prior = read_review_queue()
-    by_id = {row.get("candidate_id", ""): row for row in prior}
+    by_id: dict[str, dict[str, str]] = {}
+    for old in prior:
+        normalized = {field: old.get(field, "") for field in REVIEW_FIELDS}
+        normalized["ranking_score"] = normalized["ranking_score"] or old.get("auto_score", "")
+        normalized["auto_evidence_anchor"] = (
+            normalized["auto_evidence_anchor"] or old.get("evidence_anchor", "")
+        )
+        if normalized["candidate_id"]:
+            by_id[normalized["candidate_id"]] = normalized
+
     for row in feed["core_discovery"] + feed["auxiliary_discovery"]:
         item_id = candidate_id(row)
         current = by_id.get(item_id, {field: "" for field in REVIEW_FIELDS})
+        revision_basis = f"{row.get('url', '')}|{concise(row.get('text', ''), 500)}"
+        source_revision = hashlib.sha1(revision_basis.encode("utf-8")).hexdigest()[:12]
         current.update(
             {
                 "first_seen": current.get("first_seen") or today,
                 "last_seen": today,
                 "candidate_id": item_id,
+                "source_revision": source_revision,
                 "lane": row["lane"],
                 "source_id": row["source_id"],
                 "source_name": row["source_name"],
-                "auto_score": str(row["score"]),
-                "evidence_anchor": row.get("evidence_anchor", "NONE"),
+                "ranking_score": str(row["score"]),
+                "auto_evidence_anchor": row.get("evidence_anchor", "NONE"),
+                "claim_status": row.get("claim_status", "UNRESOLVED"),
+                "precheck_status": row.get("precheck_status", ""),
+                "precheck_reason": row.get("precheck_reason", ""),
+                "grounding_status": row.get("grounding_status", ""),
+                "question_basis": concise(row.get("question_basis", ""), 500),
                 "text": concise(row["text"], 500),
                 "question": row["question"],
+                "verification_axes": ", ".join(row.get("verification_axes", [])),
                 "url": row["url"],
             }
         )
@@ -229,47 +269,76 @@ def update_review_queue(feed: dict) -> None:
         writer.writerows(ordered)
 
 
+
 def render_markdown(feed: dict) -> str:
+    funnel = feed.get("funnel", {})
     lines = [
         "# 역할 분리형 신규 소스 입력",
         "",
         f"- 생성: {feed['generated_at_kst']}",
         "- 상태: 아래 발굴 단서는 모두 S0 이전이며 자동으로 아이템 장부에 들어가지 않음",
+        "- 자동 점수: 수집 정렬용이며 편집 승인 점수가 아님",
         "",
-        "## 핵심 발굴 — 서울시의회 회의록",
+        "## 오늘의 변환 깔때기",
+        "",
+        "| 추출 | 사전통과 | 보류 | 제외 | 질문-근거 일치 | 자동 유효 | 편집 판정 카드 | 검증자료 |",
+        "|---:|---:|---:|---:|---:|---:|---:|---:|",
+        (
+            f"| {funnel.get('extracted', 0)} | {funnel.get('precheck_pass', 0)} | "
+            f"{funnel.get('precheck_hold', 0)} | {funnel.get('precheck_fail', 0)} | "
+            f"{funnel.get('grounded', 0)} | {funnel.get('qualified', 0)} | "
+            f"{funnel.get('selected_discovery', 0)} | {funnel.get('selected_verification', 0)} |"
+        ),
+        "",
+        "## 오늘 판정이 필요한 카드",
         "",
     ]
-    if not feed["core_discovery"]:
-        lines.extend(["- 오늘 자동 기준을 통과한 질문 씨앗 없음", ""])
+    candidates = feed["core_discovery"] + feed["auxiliary_discovery"]
+    if not candidates:
+        lines.extend(
+            [
+                "- 오늘 자동 기준을 통과한 질문 씨앗 없음",
+                "- 이는 '현상이 없음'이 아니라 위 깔때기에서 수집 실패·본문 부족·오탐 제외·질문 불일치 중 어디서 막혔는지 확인해야 한다는 뜻임",
+                "",
+            ]
+        )
     else:
-        for row in feed["core_discovery"]:
+        for index, row in enumerate(candidates, 1):
+            item_id = candidate_id(row)
+            axes = ", ".join(row.get("verification_axes", [])) or "추가 설계 필요"
+            recommendation = "PROMISING 검토" if (
+                row.get("evidence_anchor") in {"MEASURED_PROBLEM_SIGNAL", "DECOMPOSABLE_STRUCTURE"}
+                and row.get("grounding_status") == "PASS"
+            ) else "VERIFY 검토"
             lines.extend(
                 [
-                    f"### {concise(row['text'], 100)}",
+                    f"### 판정 카드 {index} · {item_id}",
                     "",
-                    f"- 근거 앵커: {row.get('evidence_anchor', 'NONE')}",
-                    f"- 붙일 질문: {row['question']}",
-                    f"- 자동 점수: {row['score']}점",
+                    f"- 관찰된 사실: {concise(row.get('question_basis') or row['text'], 320)}",
+                    f"- 자동 분류: {row.get('evidence_anchor', 'NONE')} · {row.get('claim_status', 'UNRESOLVED')} — 사람 판정 아님",
+                    f"- 제안 질문: {row['question']}",
+                    f"- 아직 확인할 변수: {axes}",
+                    f"- 질문-근거 일치: {row.get('grounding_status', 'HOLD')}",
+                    f"- 시스템 추천: {recommendation}",
+                    f"- 수집 정렬점수: {row['score']} (편집점수 아님)",
                     f"- 원문: {row['url']}",
-                    "- 편집 상태: 미검증 질문 씨앗",
+                    "- 선택: PROMISING / VERIFY / NOISE / DUPLICATE",
+                    "- 현재 전이: 미승인 — 장부 변경 없음",
                     "",
                 ]
             )
 
-    lines.extend(["## 보조 발굴 — 서울시 응답소", ""])
-    if not feed["auxiliary_discovery"]:
-        lines.extend(["- 오늘 자동 기준을 통과한 시민 경험 단서 없음", ""])
+    lines.extend(["## 본문 근거 보완 대기", ""])
+    held = feed.get("held_for_source_detail", [])
+    if not held:
+        lines.extend(["- 보완 대기 항목 없음", ""])
     else:
-        for row in feed["auxiliary_discovery"]:
-            lines.extend(
-                [
-                    f"- 단서: {concise(row['text'])}",
-                    f"- 근거 앵커: {row.get('evidence_anchor', 'NONE')}",
-                    f"- 붙일 질문: {row['question']}",
-                    f"- 원문: {row['url']}",
-                    "",
-                ]
+        for row in held:
+            lines.append(
+                f"- {concise(row['text'], 140)} — {row.get('precheck_reason', '근거 확인 필요')} "
+                f"([{row.get('source_name', '원문')}]({row.get('url', '')}))"
             )
+        lines.append("")
 
     lines.extend(["## 검증 데이터 지도", ""])
     if not feed["verification_map"]:
@@ -291,18 +360,21 @@ def render_markdown(feed: dict) -> str:
     lines.extend(["## 수집 상태", ""])
     lines.extend(
         [
-            "| 소스 | 접속 | 요청/실패 | 추출 | 자동 유효 |",
-            "|---|---:|---:|---:|---:|",
+            "| 소스 | 접속 | 상태 진단 | 요청/실패 | 추출 | 사전통과 | 질문일치 | 자동 유효 |",
+            "|---|---:|---|---:|---:|---:|---:|---:|",
         ]
     )
     for metric in feed["metrics"]:
         access = f"HTTP {metric['status']}" if metric["http_ok"] else metric["error"]
         lines.append(
-            f"| {metric['name']} | {access} | {metric['requests']}/{metric['failed_requests']} | "
-            f"{metric['extracted']} | {metric['qualified']} |"
+            f"| {metric['name']} | {access} | {metric.get('status_detail', '-')} | "
+            f"{metric['requests']}/{metric['failed_requests']} | {metric['extracted']} | "
+            f"{metric.get('precheck_pass', 0)} | {metric.get('grounded', 0)} | "
+            f"{metric['qualified']} |"
         )
     lines.append("")
     return "\n".join(lines)
+
 
 
 def parse_args() -> argparse.Namespace:
@@ -323,7 +395,8 @@ def main() -> int:
     history = OUTPUT / "history"
     history.mkdir(parents=True, exist_ok=True)
     run_day = feed["generated_at_kst"][:10]
-    (history / f"daily_feed_{run_day}.json").write_text(
+    run_key = os.environ.get("GITHUB_RUN_ID") or feed["generated_at_kst"][11:19].replace(":", "")
+    (history / f"daily_feed_{run_day}_{run_key}.json").write_text(
         json.dumps(feed, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     if not args.skip_review_queue:

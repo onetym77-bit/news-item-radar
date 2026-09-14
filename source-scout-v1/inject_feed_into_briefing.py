@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_BRIEFING = ROOT / "daily-briefing-v5" / "output" / "briefing_latest.md"
 DEFAULT_FEED = ROOT / "source-scout-v1" / "output" / "daily_feed_latest.json"
+DEFAULT_REVIEW = ROOT / "source-scout-v1" / "output" / "editorial_review_cards_latest.json"
 INSERT_BEFORE = "## C. 새 질문 원석·후속 관찰"
 
 
@@ -24,7 +25,8 @@ def md(value: str, limit: int = 180) -> str:
     return value
 
 
-def render(feed: dict) -> str:
+def render(feed: dict, review: dict | None = None) -> str:
+    review = review or {}
     core = feed.get("core_discovery", [])
     auxiliary = feed.get("auxiliary_discovery", [])
     verification = feed.get("verification_map", [])
@@ -32,6 +34,8 @@ def render(feed: dict) -> str:
         "## C-실험. 신규 소스 질문 씨앗",
         "",
         "**아래 항목은 S0 이전 자동 탐색 결과다. 기사 후보나 검증된 사실로 간주하지 않는다.**",
+        "",
+        "자동 분류·수집 정렬점수와 사람의 편집 판정은 서로 다른 값이다.",
         "",
         "### 핵심 발굴원 — 서울시의회 회의록",
         "",
@@ -41,14 +45,15 @@ def render(feed: dict) -> str:
     else:
         lines.extend(
             [
-                "| 관찰 단서 | 근거 앵커 | 붙일 질문 | 점수 | 원문 |",
-                "|---|---|---|---:|---|",
+                "| 관찰된 사실 | 자동 앵커 | 붙일 질문 | 질문 일치 | 수집 정렬점수 | 원문 |",
+                "|---|---|---|---|---:|---|",
             ]
         )
         for row in core:
             lines.append(
-                f"| {md(row.get('text', ''))} | {row.get('evidence_anchor', 'NONE')} | "
-                f"{md(row.get('question', ''))} | "
+                f"| {md(row.get('question_basis') or row.get('text', ''))} | "
+                f"{row.get('evidence_anchor', 'NONE')} · {row.get('claim_status', 'UNRESOLVED')} | "
+                f"{md(row.get('question', ''))} | {row.get('grounding_status', 'HOLD')} | "
                 f"{row.get('score', 0)} | [원문]({row.get('url', '')}) |"
             )
         lines.append("")
@@ -85,6 +90,27 @@ def render(feed: dict) -> str:
             )
         lines.append("")
 
+    proposals = review.get("transition_proposals", [])
+    killer = review.get("killer_test")
+    legacy = review.get("legacy_rereview", [])
+    lines.extend(["### 사람 판정 이후", ""])
+    lines.append(f"- S0 전이 승인 대기: {len(proposals)}건 — 자동 반영 없음")
+    if killer:
+        lines.extend(
+            [
+                f"- 오늘의 킬러 테스트: {killer.get('candidate_id', '-')}",
+                f"- 테스트 질문: {md(killer.get('test_question', ''), 220)}",
+                f"- 통과선: {md(killer.get('test_pass_rule', ''), 180)}",
+                f"- 폐기선: {md(killer.get('test_kill_rule', ''), 180)}",
+                "- 상태: PLANNED — 아직 수행하지 않음",
+            ]
+        )
+    else:
+        lines.append("- 오늘의 킬러 테스트: 완전한 판정선이 입력된 항목 없음")
+    if legacy:
+        missing = sum(row.get("source_status") == "SOURCE_REQUIRED" for row in legacy)
+        lines.append(f"- 기존 질문 재심사: {len(legacy)}건 · 원자료 복구 필요 {missing}건")
+    lines.append("")
     lines.extend(
         [
             "- 편집 판정 기록: source-scout-v1/HUMAN_REVIEW_QUEUE.csv",
@@ -99,6 +125,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--briefing", type=Path, default=DEFAULT_BRIEFING)
     parser.add_argument("--feed", type=Path, default=DEFAULT_FEED)
+    parser.add_argument("--review", type=Path, default=DEFAULT_REVIEW)
     return parser.parse_args()
 
 
@@ -111,7 +138,8 @@ def main() -> int:
     if INSERT_BEFORE not in text:
         raise RuntimeError(f"briefing insertion point missing: {INSERT_BEFORE}")
     feed = json.loads(args.feed.read_text(encoding="utf-8"))
-    section = render(feed)
+    review = json.loads(args.review.read_text(encoding="utf-8")) if args.review.is_file() else {}
+    section = render(feed, review)
     text = text.replace(INSERT_BEFORE, section + "\n" + INSERT_BEFORE, 1)
     args.briefing.write_text(text, encoding="utf-8")
 

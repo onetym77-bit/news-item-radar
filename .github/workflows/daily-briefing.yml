@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       as_of:
-        description: Optional briefing date in YYYY-MM-DD
+        description: Optional replay date in YYYY-MM-DD (preview only)
         required: false
         type: string
   push:
@@ -31,18 +31,16 @@ on:
       - ".github/workflows/daily-briefing.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: daily-item-briefing-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  validate:
+  build-validate-and-persist:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
+    timeout-minutes: 12
 
     steps:
       - name: Check out repository
@@ -53,20 +51,32 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Collect role-separated experimental source feed
+      - name: Compile and run regression tests
         run: |
+          python -m py_compile source-scout-v1/grounding.py
           python -m py_compile source-scout-v1/scout_sources.py
           python -m py_compile source-scout-v1/collect_daily_feed.py
+          python -m py_compile source-scout-v1/compile_editorial_review.py
+          python -m py_compile source-scout-v1/render_grounding_comparison.py
           python -m py_compile source-scout-v1/inject_feed_into_briefing.py
           python -m py_compile source-scout-v1/evaluate_human_review.py
+          python -m py_compile daily-briefing-v5/build_briefing.py
+          python -m py_compile daily-briefing-v5/run_provenance.py
           python -X utf8 -m unittest discover -s source-scout-v1 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s daily-briefing-v5 -p 'test_*.py' -v
+
+      - name: Collect source feed once
+        run: |
           python -X utf8 source-scout-v1/collect_daily_feed.py
+          python -X utf8 source-scout-v1/render_grounding_comparison.py
 
       - name: Validate source ledgers
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
 
-      - name: Build three-tier briefing and verification queue
+      - name: Compile human-review cards without applying transitions
+        run: python -X utf8 source-scout-v1/compile_editorial_review.py
+
+      - name: Build briefing from the collected feed
         shell: bash
         env:
           AS_OF: ${{ inputs.as_of || '' }}
@@ -75,98 +85,68 @@ jobs:
           if [ -n "$AS_OF" ]; then
             args+=(--as-of "$AS_OF")
           fi
-          python -m py_compile daily-briefing-v5/build_briefing.py
           python -X utf8 daily-briefing-v5/build_briefing.py "${args[@]}"
           python -X utf8 source-scout-v1/inject_feed_into_briefing.py
           python -X utf8 source-scout-v1/evaluate_human_review.py "${args[@]}"
 
-      - name: Validate generated briefing
-        run: >-
-          python -X utf8 agent-system-v1/validate_discovery_system.py
-          --allow-missing-source-reports
-          --briefing daily-briefing-v5/output/briefing_latest.md
-
-      - name: Add run summary
+      - name: Attach run identity to the exact artifact
         shell: bash
+        env:
+          AS_OF: ${{ inputs.as_of || '' }}
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          cat daily-briefing-v5/output/briefing_latest.md >> "$GITHUB_STEP_SUMMARY"
+          mode=preview
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            mode=preview
+          elif [ -n "$AS_OF" ]; then
+            mode=replay
+          elif [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            mode=main
+          fi
+          python -X utf8 daily-briefing-v5/run_provenance.py             --mode "$mode"             --run-id "$GITHUB_RUN_ID"             --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"             --code-sha "$GITHUB_SHA"             --source-sha "$SOURCE_SHA"
 
-      - name: Upload briefing
-        uses: actions/upload-artifact@v6
+      - name: Validate generated briefing and exact artifact identity
+        run: |
+          python -X utf8 agent-system-v1/validate_discovery_system.py             --allow-missing-source-reports             --briefing daily-briefing-v5/output/briefing_latest.md
+          python -X utf8 daily-briefing-v5/run_provenance.py --verify
+
+      - name: Add the exact result to run summary
+        shell: bash
+        run: cat daily-briefing-v5/output/briefing_latest.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the exact validated result
+        uses: actions/upload-artifact@v7
         with:
           name: daily-item-briefing-${{ github.run_id }}
           path: |
             daily-briefing-v5/output/briefing_latest.md
+            daily-briefing-v5/output/run_manifest_latest.json
             daily-briefing-v5/output/history/*.md
             agent-system-v1/VERIFICATION_QUEUE.csv
+            source-scout-v1/HUMAN_REVIEW_QUEUE.csv
             source-scout-v1/output/daily_feed_latest.json
             source-scout-v1/output/daily_feed_latest.md
             source-scout-v1/output/history/*.json
             source-scout-v1/output/review_summary_latest.json
             source-scout-v1/output/review_summary_latest.md
-            source-scout-v1/HUMAN_REVIEW_QUEUE.csv
+            source-scout-v1/output/editorial_review_cards_latest.json
+            source-scout-v1/output/editorial_review_cards_latest.md
+            source-scout-v1/output/legacy_anchor_rereview_latest.md
+            source-scout-v1/output/grounding_comparison_latest.md
           if-no-files-found: error
           retention-days: 30
 
-  persist:
-    if: ${{ github.event_name != 'pull_request' }}
-    needs: validate
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: write
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Recollect role-separated experimental source feed
-        run: |
-          python -m py_compile source-scout-v1/scout_sources.py
-          python -m py_compile source-scout-v1/collect_daily_feed.py
-          python -m py_compile source-scout-v1/inject_feed_into_briefing.py
-          python -m py_compile source-scout-v1/evaluate_human_review.py
-          python -X utf8 source-scout-v1/collect_daily_feed.py
-
-      - name: Rebuild verified briefing
-        shell: bash
-        env:
-          AS_OF: ${{ inputs.as_of || '' }}
-        run: |
-          args=()
-          if [ -n "$AS_OF" ]; then
-            args+=(--as-of "$AS_OF")
-          fi
-          python -X utf8 daily-briefing-v5/build_briefing.py "${args[@]}"
-          python -X utf8 source-scout-v1/inject_feed_into_briefing.py
-          python -X utf8 source-scout-v1/evaluate_human_review.py "${args[@]}"
-          python -X utf8 agent-system-v1/validate_discovery_system.py \
-            --allow-missing-source-reports \
-            --briefing daily-briefing-v5/output/briefing_latest.md
-
-      - name: Persist latest briefing and queue
+      - name: Persist those same validated files on main
+        if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && !inputs.as_of }}
         shell: bash
         run: |
+          python -X utf8 daily-briefing-v5/run_provenance.py --verify
           git config user.name "news-item-radar-bot"
           git config user.email "news-item-radar-bot@users.noreply.github.com"
-          git add -f \
-            agent-system-v1/VERIFICATION_QUEUE.csv \
-            daily-briefing-v5/output/briefing_latest.md \
-            daily-briefing-v5/output/history/ \
-            source-scout-v1/HUMAN_REVIEW_QUEUE.csv \
-            source-scout-v1/output/daily_feed_latest.json \
-            source-scout-v1/output/daily_feed_latest.md \
-            source-scout-v1/output/history/ \
-            source-scout-v1/output/review_summary_latest.json \
-            source-scout-v1/output/review_summary_latest.md
+          git add -f agent-system-v1/VERIFICATION_QUEUE.csv daily-briefing-v5/output/briefing_latest.md daily-briefing-v5/output/run_manifest_latest.json daily-briefing-v5/output/history/ source-scout-v1/HUMAN_REVIEW_QUEUE.csv source-scout-v1/output/daily_feed_latest.json source-scout-v1/output/daily_feed_latest.md source-scout-v1/output/history/ source-scout-v1/output/review_summary_latest.json source-scout-v1/output/review_summary_latest.md source-scout-v1/output/editorial_review_cards_latest.json source-scout-v1/output/editorial_review_cards_latest.md source-scout-v1/output/legacy_anchor_rereview_latest.md source-scout-v1/output/grounding_comparison_latest.md
           if git diff --cached --quiet; then
             echo "No briefing changes to commit."
             exit 0
           fi
-          git commit -m "chore: update daily item briefing"
+          git commit -m "chore: update exact daily item briefing [skip ci]"
           git push origin "HEAD:${GITHUB_REF_NAME}"

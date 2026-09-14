@@ -22,6 +22,9 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from grounding import analyze_content, build_question_payload
+
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = Path(__file__).resolve().parent / "output"
@@ -323,26 +326,24 @@ def valid_candidate(text: str) -> bool:
 
 
 def context_windows(chunks: list[str], limit: int = 45) -> list[str]:
-    joined = " · ".join(chunks)
+    """Build local neighbour windows without merging unrelated page-wide text."""
     windows: list[str] = []
     seen: set[str] = set()
-    for term in PROBLEM_TERMS + EVIDENCE_TERMS:
-        start = 0
-        while len(windows) < limit:
-            pos = joined.find(term, start)
-            if pos < 0:
-                break
-            left = max(0, pos - 95)
-            right = min(len(joined), pos + 155)
-            window = normalize(joined[left:right]).strip(" ·")
-            key = window[:160]
-            if valid_candidate(window) and key not in seen:
-                seen.add(key)
-                windows.append(window)
-            start = pos + len(term)
+    trigger_terms = PROBLEM_TERMS + EVIDENCE_TERMS
+    for index, chunk in enumerate(chunks):
+        if not any(term in chunk for term in trigger_terms):
+            continue
+        left = max(0, index - 1)
+        right = min(len(chunks), index + 2)
+        window = normalize(" · ".join(chunks[left:right])).strip(" ·")
+        key = re.sub(r"[^0-9A-Za-z가-힣]", "", window).lower()[:180]
+        if valid_candidate(window) and key and key not in seen:
+            seen.add(key)
+            windows.append(window)
         if len(windows) >= limit:
             break
     return windows
+
 
 
 def is_routine_action(text: str) -> bool:
@@ -359,60 +360,57 @@ def classify_evidence_anchor(
     problem: bool,
     evidence: bool,
     loss: bool,
+    record_kind: str = "PAGE_CHUNK",
 ) -> str:
-    """Return an evidence route, not a story or harm verdict."""
+    """Return an evidence route after semantic precheck."""
     routine_action = is_routine_action(text)
-    purpose_only = routine_action and any(term in text for term in ROUTINE_PURPOSE_TERMS)
-    observation_text = PURPOSE_CLAUSE_RE.sub(" ", text)
-    observed_event = bool(OBSERVED_EVENT_RE.search(observation_text))
-    observed_change = any(term in observation_text for term in OBSERVED_CHANGE_TERMS)
-    adverse_state = any(term in observation_text for term in ANCHOR_DEVIATION_TERMS)
-    direct_experience = (
-        source.get("voice", False)
-        and problem
-        and any(term in text for term in DIRECT_EXPERIENCE_TERMS)
+    purpose_only = routine_action and (
+        bool(PURPOSE_CLAUSE_RE.search(text))
+        or any(term in text for term in ROUTINE_PURPOSE_TERMS)
     )
-    measured_problem = (
-        problem
-        and (evidence or loss)
-        and (
-            observed_event
-            or observed_change
-            or (adverse_state and not purpose_only)
-        )
+    analysis = analyze_content(
+        text,
+        source,
+        record_kind,
+        problem=problem,
+        loss=loss,
+        routine_action=routine_action,
+        purpose_only=purpose_only,
     )
-    structural_data = (
-        bool(NUMBER_RE.search(text))
-        and any(term in text for term in STRUCTURAL_DATA_TERMS)
-        and (
-            not routine_action
-            or any(term in text for term in ROUTINE_STRUCTURAL_ESCAPE_TERMS)
-        )
-    )
-    if direct_experience:
-        return "DIRECT_PROBLEM_SIGNAL"
-    if measured_problem:
-        return "MEASURED_PROBLEM_SIGNAL"
-    if structural_data:
-        return "DECOMPOSABLE_STRUCTURE"
-    return "NONE"
+    return analysis["evidence_anchor"]
 
 
-def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
+
+def score_text(
+    text: str,
+    source: dict,
+    record_kind: str = "PAGE_CHUNK",
+) -> tuple[int, list[str], bool, dict]:
     score = 0
     reasons: list[str] = []
     explicit_seoul = any(marker in text for marker in ("서울", "자치구", "한강", "수도권"))
     seoul_scope = source["local"] or explicit_seoul
     problem = any(term in text for term in PROBLEM_TERMS)
-    evidence = any(term in text for term in EVIDENCE_TERMS) or bool(NUMBER_RE.search(text))
     implementation = any(term in text for term in IMPLEMENTATION_TERMS)
     loss = any(term in text for term in LOSS_TERMS)
     low_value = any(term in text for term in LOW_VALUE_TERMS)
-    boilerplate = any(term in text for term in BOILERPLATE_TERMS)
-    evidence_anchor = classify_evidence_anchor(
-        text, source, problem=problem, evidence=evidence, loss=loss
-    )
     routine_action = is_routine_action(text)
+    purpose_only = routine_action and (
+        bool(PURPOSE_CLAUSE_RE.search(text))
+        or any(term in text for term in ROUTINE_PURPOSE_TERMS)
+    )
+    analysis = analyze_content(
+        text,
+        source,
+        record_kind,
+        problem=problem,
+        loss=loss,
+        routine_action=routine_action,
+        purpose_only=purpose_only,
+    )
+    evidence = bool(analysis["substantive_values"]) or analysis["evidence_anchor"] != "NONE"
+    evidence_anchor = analysis["evidence_anchor"]
+    boilerplate = analysis["content_class"] == "NAVIGATION"
 
     if seoul_scope:
         score += 2 if explicit_seoul else 1
@@ -422,7 +420,7 @@ def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
         reasons.append("문제·변화")
     if evidence:
         score += 2
-        reasons.append("수치·공개근거")
+        reasons.append("실제 수치·관찰근거")
     if evidence_anchor == "DECOMPOSABLE_STRUCTURE" and not problem:
         score += 2
         reasons.append("분해 가능한 구조 자료")
@@ -443,7 +441,13 @@ def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
     if low_value:
         score -= 3
         reasons.append("행사·홍보 감점")
-    if boilerplate or text.count("·") > 10:
+    if analysis["precheck_status"] == "HOLD":
+        score -= 2
+        reasons.append("본문 근거 확인 대기")
+    elif analysis["precheck_status"] == "FAIL":
+        score -= 6
+        reasons.append("절차·연설·메뉴 제외")
+    if boilerplate:
         score -= 3
         reasons.append("목록·반복문구 감점")
 
@@ -456,31 +460,31 @@ def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
         "boilerplate": boilerplate,
         "evidence_anchor": evidence_anchor,
         "routine_action": routine_action,
+        **analysis,
     }
     return score, reasons, seoul_scope, signals
 
-def question_for(text: str, source: dict) -> str:
+
+
+def question_for(text: str, source: dict, record_kind: str = "PAGE_CHUNK") -> str:
     problem = any(term in text for term in PROBLEM_TERMS)
-    evidence = any(term in text for term in EVIDENCE_TERMS) or bool(NUMBER_RE.search(text))
     loss = any(term in text for term in LOSS_TERMS)
-    anchor = classify_evidence_anchor(
-        text, source, problem=problem, evidence=evidence, loss=loss
+    routine_action = is_routine_action(text)
+    purpose_only = routine_action and (
+        bool(PURPOSE_CLAUSE_RE.search(text))
+        or any(term in text for term in ROUTINE_PURPOSE_TERMS)
     )
-    if anchor == "NONE":
-        return "근거 앵커 없음 — 질문 점수 평가 제외"
-    if anchor == "DECOMPOSABLE_STRUCTURE":
-        return "이 실제 총량·평균·추이를 지역·대상·시간으로 나눴을 때 어떤 차이가 확인되는가?"
-    if source["voice"]:
-        return "이 불편은 개인 사례인가, 반복되는 제도 공백인가?"
-    if any(term in text for term in ("격차", "불균형", "집중", "편중")):
-        return "지역·대상별 격차는 얼마나 크고, 제도 설계가 이를 키우는가?"
-    if any(term in text for term in ("예산", "집행", "불용", "삭감")):
-        return "예산 규모와 실제 집행·수혜 사이에 누수나 배제는 없는가?"
-    if NUMBER_RE.search(text) or any(term in text for term in ("통계", "현황", "조사")):
-        return "공개된 총량 뒤에 어떤 지역·대상·업종 집중이 가려져 있는가?"
-    if any(term in text for term in LOSS_TERMS):
-        return "확인된 손실 주장은 어떤 조건에서 반복되며, 다른 설명과 어떻게 구분되는가?"
-    return "확인된 문제 징후는 일시적 사례인가, 구조적으로 반복되는 현상인가?"
+    analysis = analyze_content(
+        text,
+        source,
+        record_kind,
+        problem=problem,
+        loss=loss,
+        routine_action=routine_action,
+        purpose_only=purpose_only,
+    )
+    return build_question_payload(text, source.get("id", ""), analysis)["question"]
+
 
 
 def select_follow_links(parser: VisibleHTML, base_url: str, source: dict) -> list[str]:
@@ -538,55 +542,84 @@ def extract_records(
     source: dict,
     include_windows: bool,
 ) -> list[dict]:
-    texts: list[tuple[str, str]] = []
+    texts: list[tuple[str, str, str]] = []
     for href, label in parser.anchors:
         absolute = urljoin(page_url, href)
         if valid_candidate(label) and source_url_allowed(source["id"], absolute):
-            texts.append((label, absolute))
+            texts.append((label, absolute, "LINK_LABEL"))
     for chunk in parser.chunks:
         if valid_candidate(chunk):
-            texts.append((chunk, page_url))
+            texts.append((chunk, page_url, "PAGE_CHUNK"))
     if include_windows:
         for window in context_windows(parser.chunks, limit=20):
-            texts.append((window, page_url))
+            texts.append((window, page_url, "CONTEXT_WINDOW"))
 
     records: list[dict] = []
     seen: set[str] = set()
-    for text, url in texts:
+    for text, url, record_kind in texts:
         key = re.sub(r"[^0-9A-Za-z가-힣]", "", text).lower()
         if not key or key in seen:
             continue
         seen.add(key)
-        score, reasons, seoul_scope, signals = score_text(text, source)
-        if score < 2:
+        score, reasons, seoul_scope, signals = score_text(text, source, record_kind)
+        if score < 2 and signals["precheck_status"] == "PASS":
             continue
         if source["role"] == "VERIFICATION":
-            quality_gate = signals["evidence"] and (signals["implementation"] or signals["problem"])
+            quality_gate = signals["verification_usable"]
+            qualified = score >= 4 and seoul_scope and quality_gate and not signals["low_value"]
         else:
-            quality_gate = signals["evidence_anchor"] != "NONE" and (
-                signals["problem"] or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE"
+            quality_gate = (
+                signals["precheck_status"] == "PASS"
+                and signals["evidence_anchor"] != "NONE"
+                and (signals["problem"] or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE")
             )
-        qualified = score >= 6 and seoul_scope and quality_gate and not signals["low_value"]
-        localization_lead = score >= 7 and not seoul_scope and quality_gate and not signals["low_value"]
+            qualified = score >= 6 and seoul_scope and quality_gate and not signals["low_value"]
+        localization_lead = (
+            score >= 7
+            and not seoul_scope
+            and quality_gate
+            and not signals["low_value"]
+        )
+        question_payload = build_question_payload(text, source.get("id", ""), signals)
+        if question_payload["grounding_status"] != "PASS":
+            qualified = False
+            localization_lead = False
         records.append(
             {
                 "source_id": source["id"],
                 "source_name": source["name"],
                 "role": source["role"],
+                "record_kind": record_kind,
                 "text": text,
                 "url": url,
                 "score": score,
+                "ranking_score_note": "수집 정렬점수이며 편집 승인 점수가 아님",
                 "reasons": reasons,
                 "signals": signals,
+                "content_class": signals["content_class"],
+                "precheck_status": signals["precheck_status"],
+                "precheck_reason": signals["precheck_reason"],
+                "substantive_values": signals["substantive_values"],
+                "claim_status": signals["claim_status"],
+                "verification_usable": signals["verification_usable"],
                 "evidence_anchor": signals["evidence_anchor"],
                 "seoul_scope": seoul_scope,
                 "qualified": qualified,
                 "localization_lead": localization_lead,
-                "question": question_for(text, source),
+                **question_payload,
             }
         )
-    records.sort(key=lambda row: (row["qualified"], row["score"], len(row["text"])), reverse=True)
+    records.sort(
+        key=lambda row: (
+            row["qualified"],
+            row["precheck_status"] == "PASS",
+            row["score"],
+            len(row["text"]),
+        ),
+        reverse=True,
+    )
     return records[:80]
+
 
 
 def canonical_url(url: str, fallback: str) -> str:
@@ -667,6 +700,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 "main_url": source["url"],
                 "http_ok": False,
                 "status": main.status,
+                "status_detail": "FETCH_FAILED",
                 "error": main.error,
                 "requests": 1,
                 "failed_requests": 1,
@@ -675,6 +709,9 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 "latest_date": "",
                 "freshness_days": None,
                 "extracted": 0,
+                "precheck_pass": 0,
+                "grounded": 0,
+                "verification_usable": 0,
                 "qualified": 0,
                 "localization_leads": 0,
                 "strong": 0,
@@ -694,18 +731,30 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
 
     records: list[dict] = []
     for index, (page_url, parser) in enumerate(pages):
-        include_windows = index > 0 or source["id"] in {"labor_arrears", "eungdapso"}
+        include_windows = index > 0 or source["id"] in {
+            "labor_arrears", "eungdapso", "seoul_research"
+        }
         records.extend(extract_records(parser, page_url, source, include_windows))
 
-    # Performance is measured per distinct source item/page, not per matching sentence.
-    # This prevents one long council speech or dataset description from inflating yield.
     best_by_item: dict[str, dict] = {}
     for row in records:
         item_key = canonical_url(row["url"], source["url"])
         current = best_by_item.get(item_key)
-        if current is None or (row["qualified"], row["score"], len(row["text"])) > (
-            current["qualified"], current["score"], len(current["text"])
-        ):
+        row_rank = (
+            row["qualified"],
+            row["precheck_status"] == "PASS",
+            row["grounding_status"] == "PASS",
+            row["score"],
+            len(row["text"]),
+        )
+        current_rank = (
+            current["qualified"],
+            current["precheck_status"] == "PASS",
+            current["grounding_status"] == "PASS",
+            current["score"],
+            len(current["text"]),
+        ) if current else None
+        if current is None or row_rank > current_rank:
             row["url"] = item_key
             best_by_item[item_key] = row
     if source["id"] == "eungdapso" and any(
@@ -714,7 +763,13 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         best_by_item.pop(source["url"], None)
     records = sorted(
         best_by_item.values(),
-        key=lambda item: (item["qualified"], item["localization_lead"], item["score"]),
+        key=lambda item: (
+            item["qualified"],
+            item["precheck_status"] == "PASS",
+            item["grounding_status"] == "PASS",
+            item["localization_lead"],
+            item["score"],
+        ),
         reverse=True,
     )[:120]
 
@@ -723,6 +778,13 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     freshness = (TODAY - date.fromisoformat(latest)).days if latest else None
     scores = [row["score"] for row in records]
     qualified = sum(row["qualified"] for row in records)
+    verification_usable = sum(row["verification_usable"] for row in records)
+    values_found = sum(bool(row["substantive_values"]) for row in records)
+    status_detail = "OK"
+    if source["role"] == "VERIFICATION" and records and not verification_usable:
+        status_detail = "DEGRADED_NO_DATASET_TEXT"
+    elif source["id"] == "labor_arrears" and records and not values_found:
+        status_detail = "DEGRADED_NO_VALUES"
     metric = {
         "id": source["id"],
         "name": source["name"],
@@ -731,6 +793,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         "main_url": source["url"],
         "http_ok": True,
         "status": main.status,
+        "status_detail": status_detail,
         "error": "",
         "requests": len(fetches),
         "failed_requests": sum(not item.ok for item in fetches),
@@ -739,6 +802,9 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         "latest_date": latest,
         "freshness_days": freshness,
         "extracted": len(records),
+        "precheck_pass": sum(row["precheck_status"] == "PASS" for row in records),
+        "grounded": sum(row["grounding_status"] == "PASS" for row in records),
+        "verification_usable": verification_usable,
         "qualified": qualified,
         "localization_leads": sum(row["localization_lead"] for row in records),
         "strong": sum(row["qualified"] and row["score"] >= 8 for row in records),
@@ -748,7 +814,10 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     return metric, records
 
 
+
 def recommendation(metric: dict) -> str:
+    if metric.get("status_detail", "").startswith("DEGRADED_"):
+        return "보류: 본문 값·데이터 설명 추출 개선 필요"
     if not metric["http_ok"] or metric["failed_requests"] > max(1, metric["requests"] // 2):
         return "보류: 접속 안정성 개선 필요"
     if metric["role"] == "VERIFICATION" and metric["extracted"] >= 3:
@@ -783,8 +852,11 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
     )
 
     csv_fields = [
-        "source_id", "source_name", "role", "score", "evidence_anchor", "seoul_scope", "qualified",
-        "localization_lead", "text", "question", "reasons", "url",
+        "source_id", "source_name", "role", "record_kind", "score", "content_class",
+        "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
+        "substantive_values", "verification_usable", "seoul_scope", "qualified",
+        "localization_lead", "question_basis", "question", "verification_axes",
+        "grounding_status", "grounding_issues", "text", "reasons", "url",
     ]
     with (OUTPUT / "candidates_latest.csv").open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=csv_fields)
@@ -792,6 +864,9 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
         for row in records:
             export = {key: row.get(key, "") for key in csv_fields}
             export["reasons"] = ", ".join(row["reasons"])
+            for field in ("substantive_values", "verification_axes", "grounding_issues"):
+                if isinstance(export.get(field), list):
+                    export[field] = ", ".join(export[field])
             writer.writerow(export)
 
     lines = [
@@ -803,16 +878,17 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
         "",
         "## 결과 요약",
         "",
-        "| 소스 | 역할 | 접속 | 요청/실패 | 추출 | 유효후보 | 강한후보 | 유효율 | 최신일 | 판단 |",
-        "|---|---|---:|---:|---:|---:|---:|---:|---|---|",
+        "| 소스 | 역할 | 접속 상태 | 요청/실패 | 추출 | 사전통과 | 질문일치 | 유효후보 | 강한후보 | 최신일 | 판단 |",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|---|---|",
     ]
     for metric in metrics:
-        access = f"HTTP {metric['status']}" if metric["http_ok"] else metric["error"]
+        access = (f"HTTP {metric['status']} · {metric['status_detail']}"
+                  if metric["http_ok"] else metric["error"])
         lines.append(
             f"| {metric['name']} | {metric['role']} | {access} | "
             f"{metric['requests']}/{metric['failed_requests']} | {metric['extracted']} | "
-            f"{metric['qualified']} | {metric['strong']} | {metric['qualified_rate']}% | "
-            f"{metric['latest_date'] or '-'} | {metric['recommendation']} |"
+            f"{metric['precheck_pass']} | {metric['grounded']} | {metric['qualified']} | "
+            f"{metric['strong']} | {metric['latest_date'] or '-'} | {metric['recommendation']} |"
         )
 
     lines.extend(
@@ -848,11 +924,15 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
             )
             lines.extend(
                 [
-                    f"### {index}. {tag} · {row['score']}점",
+                    f"### {index}. {tag} · 수집 정렬점수 {row['score']}",
                     "",
                     f"- 단서: {row['text']}",
-                    f"- 근거 앵커: {row['evidence_anchor']}",
+                    f"- 내용 사전판정: {row['precheck_status']} · {row['content_class']}",
+                    f"- 근거 앵커: {row['evidence_anchor']} ({row['claim_status']})",
+                    f"- 질문 근거: {row['question_basis']}",
                     f"- 붙일 질문: {row['question']}",
+                    f"- 추가 확인 변수: {', '.join(row['verification_axes']) or '-'}",
+                    f"- 질문-근거 일치: {row['grounding_status']}",
                     f"- 근거 요소: {', '.join(row['reasons'])}",
                     f"- 원문: {row['url']}",
                     "",
