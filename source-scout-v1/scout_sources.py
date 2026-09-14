@@ -739,6 +739,9 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     best_by_item: dict[str, dict] = {}
     for row in records:
         item_key = canonical_url(row["url"], source["url"])
+        if source["role"] == "VERIFICATION":
+            text_key = re.sub(r"[^0-9A-Za-z가-힣]", "", row["text"]).lower()
+            item_key = f"text:{text_key}" if text_key else item_key
         current = best_by_item.get(item_key)
         row_rank = (
             row["qualified"],
@@ -755,7 +758,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
             len(current["text"]),
         ) if current else None
         if current is None or row_rank > current_rank:
-            row["url"] = item_key
+            row["url"] = canonical_url(row["url"], source["url"])
             best_by_item[item_key] = row
     if source["id"] == "eungdapso" and any(
         key != source["url"] and row["qualified"] for key, row in best_by_item.items()

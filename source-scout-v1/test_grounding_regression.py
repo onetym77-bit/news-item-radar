@@ -98,6 +98,36 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertEqual(result["content_class"], "TABLE_SCHEMA_WITHOUT_VALUE")
         self.assertEqual(result["precheck_status"], "HOLD")
 
+    def test_contact_footer_is_rejected(self):
+        result = self.signals(
+            "서울특별시청 (04524) 서울특별시 중구 세종대로 110 · 문의 및 전화민원 신청: 02)120",
+            {
+                "id": "eungdapso", "name": "응답소", "local": True,
+                "voice": True, "role": "DISCOVERY",
+            },
+            "CONTEXT_WINDOW",
+        )
+        self.assertEqual(result["content_class"], "CONTACT_BOILERPLATE")
+        self.assertEqual(result["precheck_status"], "FAIL")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_budget_input_without_observed_outcome_is_held(self):
+        result = self.signals(
+            "서울시는 1조 4,570억 원 추경을 편성해 교통비 부담을 낮추고 피해지원 재원을 투입했습니다"
+        )
+        self.assertEqual(result["content_class"], "POLICY_ANNOUNCEMENT")
+        self.assertEqual(result["precheck_status"], "HOLD")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_data_portal_display_notice_is_rejected(self):
+        result = self.signals(
+            "※ 가장 최근에 개방된 100개 데이터만 표시됩니다.",
+            self.open_data,
+            "PAGE_CHUNK",
+        )
+        self.assertEqual(result["content_class"], "PLATFORM_NOTICE")
+        self.assertFalse(result["verification_usable"])
+
     def test_foreign_card_total_is_decomposable(self):
         result = self.signals("서울 외국인 카드소비 총액 1조 원 자치구별·업종별 현황")
         self.assertEqual(result["precheck_status"], "PASS")

@@ -22,6 +22,16 @@ NAV_TERMS = (
     "페이스북", "인스타그램", "유튜브", "맨위로", "전체 설명보기", "오류신고",
     "파일내려받기", "분야 선택",
 )
+CONTACT_RE = re.compile(r"(?:\(?0\d{1,2}\)?[- )]\d{2,4}[- ]?\d{3,4}|\(0\d{4,5}\)|우편번호)")
+PLATFORM_NOTICE_TERMS = (
+    "가장 최근에 개방된", "데이터만 표시", "최대", "노출됩니다",
+    "전체 데이터는 CSV", "내려받아 확인", "sheet는",
+)
+POLICY_ACTION_TERMS = (
+    "예산을 편성", "추경을 편성", "지원한", "지원했습니다", "재원을 투입",
+    "발행을 확대", "시행", "도입", "조성공사", "설치공사",
+)
+
 PROCEDURE_TERMS = (
     "의사봉", "상정", "표결", "전자투표", "위원 선임", "위원을 선임", "안건 처리",
     "개의하겠습니다", "산회를 선포", "회의규칙",
@@ -45,7 +55,7 @@ STRUCTURAL_TERMS = (
 )
 OBSERVED_TERMS = (
     "발생", "접수", "확인", "기록", "집계", "증가", "감소", "급증", "급감",
-    "초과", "미달", "체불", "미지급", "적자", "소송", "부담", "피해",
+    "초과", "미달", "체불", "미지급", "적자", "소송", "피해",
     "불편", "대기", "중단", "분쟁", "낮아", "높아",
 )
 ATTRIBUTION_TERMS = ("주장", "추산", "추정", "예상", "전망", "우려", "밝혔다", "밝혔", "협회")
@@ -104,14 +114,31 @@ def analyze_content(
     source_id = source.get("id", "")
     role = source.get("role", "")
     purpose_change = bool(re.search(r"(?:증가|감소|격차|사고).{0,20}(?:위한|위해|목표)", text))
-    observed = any(term in text for term in OBSERVED_TERMS) and not purpose_change
+    observed_text = text.replace("피해지원", " ").replace("피해 지원", " ")
+    observed = any(term in observed_text for term in OBSERVED_TERMS) and not purpose_change
+    cost_problem = bool(
+        re.search(
+            r"(?:부담|피해액|손실|체불|미지급|적자|소송).{0,28}\d"
+            r"|\d.{0,28}(?:부담|피해액|손실|체불|미지급|적자|소송)",
+            text,
+        )
+    )
     concern = any(term in text for term in CONCERN_TERMS)
     speech = any(term in text for term in SPEECH_TERMS)
 
     content_class = "REPORTABLE_TEXT"
     precheck_status = "PASS"
     precheck_reason = "구체 문장"
-    if len(nav_hits) >= 2 or (text.count("·") >= 9 and not values):
+    if (
+        ("문의" in text or "전화" in text)
+        and (CONTACT_RE.search(text) or "서울특별시청" in text)
+    ):
+        content_class, precheck_status = "CONTACT_BOILERPLATE", "FAIL"
+        precheck_reason = "기관 연락처·푸터"
+    elif any(term in text for term in PLATFORM_NOTICE_TERMS):
+        content_class, precheck_status = "PLATFORM_NOTICE", "FAIL"
+        precheck_reason = "데이터 포털 이용 안내"
+    elif len(nav_hits) >= 2 or (text.count("·") >= 9 and not values):
         content_class, precheck_status = "NAVIGATION", "FAIL"
         precheck_reason = "메뉴·반복 문구"
     elif len(procedure_hits) >= 2 or (
@@ -120,6 +147,14 @@ def analyze_content(
     ):
         content_class, precheck_status = "PARLIAMENTARY_PROCEDURE", "FAIL"
         precheck_reason = "회의 진행 절차"
+    elif (
+        values
+        and any(term in text for term in POLICY_ACTION_TERMS)
+        and not observed
+        and not cost_problem
+    ):
+        content_class, precheck_status = "POLICY_ANNOUNCEMENT", "HOLD"
+        precheck_reason = "정책 투입액만 있고 결과 관찰값 없음"
     elif not values and concern:
         content_class, precheck_status = "CONCERN_OR_ATTRIBUTED_CLAIM", "HOLD"
         precheck_reason = "전망·우려만 있고 관찰값 없음"
@@ -149,7 +184,7 @@ def analyze_content(
     measured = (
         bool(values)
         and problem
-        and (observed or loss)
+        and (observed or cost_problem)
         and not (routine_action and purpose_only and not observed)
     )
     structural = bool(values) and any(term in text for term in STRUCTURAL_TERMS)
