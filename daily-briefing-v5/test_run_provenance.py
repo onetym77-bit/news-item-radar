@@ -100,7 +100,7 @@ class ProvenanceTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "feed hash mismatch"):
                 provenance.verify(args)
 
-    def test_workflow_collects_only_once_and_has_no_recollect_job(self):
+    def test_workflow_collects_once_and_separates_read_from_write(self):
         workflow = (ROOT / ".github" / "workflows" / "daily-briefing.yml").read_text(
             encoding="utf-8"
         )
@@ -109,10 +109,21 @@ class ProvenanceTests(unittest.TestCase):
         self.assertNotIn("Recollect", workflow)
         self.assertIn("run_provenance.py --verify", workflow)
         self.assertIn("actions/upload-artifact@v7", workflow)
+        self.assertIn("actions/download-artifact@v8", workflow)
         self.assertIn("interest-radar-v2/config/editorial_lenses.json", workflow)
+        self.assertIn("persist-credentials: false", workflow)
+        self.assertIn("build-and-validate:", workflow)
+        self.assertIn("persist-main:", workflow)
+        self.assertIn("needs: build-and-validate", workflow)
+        self.assertIn("Confirm protected ledgers were not changed", workflow)
+        self.assertIn("Persist only the explicit generated-file allowlist", workflow)
         self.assertLess(
-            workflow.index("Persist those same validated files on main"),
-            workflow.index("Upload the exact validated result"),
+            workflow.index("Upload the validated build package"),
+            workflow.index("persist-main:"),
+        )
+        self.assertLess(
+            workflow.index('git push origin "HEAD:'),
+            workflow.index("Upload the exact persisted result"),
         )
 
 
