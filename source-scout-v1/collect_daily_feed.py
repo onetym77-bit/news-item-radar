@@ -30,6 +30,15 @@ DAILY_SOURCE_IDS = {
     "council_minutes",
     "seoul_open_data",
     "seoul_bigdata",
+    "seoul_research",
+    "labor_arrears",
+    "consumer_agency",
+}
+SUPPLEMENTARY_DISCOVERY_IDS = {
+    "eungdapso",
+    "seoul_research",
+    "labor_arrears",
+    "consumer_agency",
 }
 REVIEW_FIELDS = [
     "first_seen",
@@ -171,12 +180,12 @@ def build_feed(module) -> dict:
         [
             {**row, "lane": "AUX_DISCOVERY", "question": discovery_question(row)}
             for row in records
-            if row["source_id"] == "eungdapso"
+            if row["source_id"] in SUPPLEMENTARY_DISCOVERY_IDS
             and row.get("qualified")
             and row.get("grounding_status") == "PASS"
         ],
-        1,
-        dedupe_by="url",
+        3,
+        near_duplicate=getattr(module, "near_duplicate_context", None),
     )
     verification = unique_top(
         [
@@ -241,7 +250,12 @@ def build_feed(module) -> dict:
         "generated_at_kst": datetime.now(ZoneInfo("Asia/Seoul")).isoformat(timespec="seconds"),
         "status": {
             "discovery_core": "서울시의회 회의록",
-            "discovery_auxiliary": "서울시 응답소 공개민원",
+            "discovery_auxiliary": [
+                "서울시 응답소 공개민원",
+                "서울연구원 정책·연구 자료",
+                "고용노동부 임금체불 통계",
+                "한국소비자원 피해·분쟁 자료",
+            ],
             "verification_only": ["서울 열린데이터", "서울 빅데이터캠퍼스"],
             "warning": "근거 앵커와 질문 일치를 통과한 레코드도 S0 이전 질문 씨앗이며 기사 후보가 아님",
         },
@@ -388,6 +402,7 @@ def render_markdown(feed: dict) -> str:
                     f"- 질문-근거 일치: {row.get('grounding_status', 'HOLD')}",
                     f"- 시스템 추천: {recommendation}",
                     f"- 수집 정렬점수: {row['score']} (편집점수 아님)",
+                    f"- 출처: {row.get('source_name', row.get('source_id', '미상'))}",
                     f"- 원문: {row['url']}",
                     "- 선택: PROMISING / VERIFY / NOISE / DUPLICATE",
                     "- 현재 전이: 미승인 — 장부 변경 없음",

@@ -801,5 +801,55 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertIn("시민 손실", reasons)
 
 
+    def test_off_session_both_source_can_enter_daily_review_cards(self):
+        row = {
+            "source_id": "seoul_research",
+            "source_name": "서울연구원",
+            "score": 8,
+            "qualified": True,
+            "grounding_status": "PASS",
+            "precheck_status": "PASS",
+            "content_class": "REPORTABLE_TEXT",
+            "verification_usable": False,
+            "verification_metadata_lead": False,
+            "verification_schema_lead": False,
+            "evidence_anchor": "DECOMPOSABLE_STRUCTURE",
+            "claim_status": "OBSERVED_OR_PUBLISHED",
+            "question_basis": "서울 자치구별 돌봄 공백 120건이 집계됐습니다",
+            "text": "서울 자치구별 돌봄 공백 120건이 집계됐습니다",
+            "question": "어느 자치구와 대상에 집중됐는가?",
+            "verification_axes": ["자치구", "대상"],
+            "url": "https://example.test/research/1",
+        }
+
+        class FakeModule:
+            SOURCES = [{
+                "id": "seoul_research",
+                "name": "서울연구원",
+                "role": "BOTH",
+            }]
+
+            @staticmethod
+            def run_source(source):
+                metric = {
+                    "id": source["id"], "name": source["name"], "role": source["role"],
+                    "status": 200, "requests": 1, "extracted": 1,
+                    "precheck_pass": 1, "grounded": 1, "qualified": 1,
+                }
+                return metric, [row]
+
+            @staticmethod
+            def near_duplicate_context(left, right):
+                return False
+
+        built = feed.build_feed(FakeModule)
+        self.assertEqual(built["core_discovery"], [])
+        self.assertEqual(len(built["auxiliary_discovery"]), 1)
+        self.assertEqual(
+            built["auxiliary_discovery"][0]["source_id"],
+            "seoul_research",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
