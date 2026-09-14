@@ -205,8 +205,8 @@ class GroundingRegressionTests(unittest.TestCase):
         parser = scout.parse_html(f"<p>{text}</p>")
         rows = scout.extract_records(
             parser,
-            "https://ms.smc.seoul.kr/record/example",
-            self.council,
+            "https://example.test/research/event",
+            self.research,
             include_windows=False,
         )
         self.assertTrue(rows)
@@ -1912,7 +1912,8 @@ class GroundingRegressionTests(unittest.TestCase):
         )
         self.assertEqual(payload["grounding_status"], "PASS")
         self.assertIn("서울 시내버스", payload["question"])
-        self.assertFalse(payload["question_contract_missing"])
+        self.assertEqual(payload["grounding_issues"], [])
+        self.assertIn("통상임금 미지급 또는 체불", payload["grounding_contract"])
 
     def test_compound_korean_currency_is_one_measurement(self):
         values = grounding.extract_substantive_values(
