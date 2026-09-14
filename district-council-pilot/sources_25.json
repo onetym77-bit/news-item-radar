@@ -107,7 +107,16 @@
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
     "list_fallback_url": "https://council-dobong.seoul.kr/meeting/confer/recent.do",
-    "diagnostic_js": true
+    "diagnostic_js": true,
+    "popup_adapter": true,
+    "detail_pattern": "/meeting/confer/popup\\.do",
+    "id_params": [
+      "ntime",
+      "contype",
+      "subtype",
+      "num",
+      "istemp"
+    ]
   },
   {
     "id": "eunpyeong",
@@ -122,7 +131,7 @@
   {
     "id": "seodaemun",
     "name": "서대문구",
-    "list_url": "https://ams.sdmcouncil.go.kr/assem/recent.do",
+    "list_url": "https://ams.sdmcouncil.go.kr/main.do",
     "hosts": [
       "www.sdmcouncil.go.kr",
       "ams.sdmcouncil.go.kr"
@@ -132,7 +141,8 @@
       "minId"
     ],
     "verified_entry_on": "2026-09-14",
-    "role": "DISTRICT_CONNECTION_TEST"
+    "role": "DISTRICT_CONNECTION_TEST",
+    "anchor_rows": true
   },
   {
     "id": "yangcheon",
@@ -158,14 +168,16 @@
     ],
     "detail_pattern": "/meeting/confer/popup\\.do",
     "id_params": [
-      "contype",
       "ntime",
+      "contype",
+      "subtype",
       "num",
-      "subtype"
+      "istemp"
     ],
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
-    "diagnostic_js": true
+    "diagnostic_js": true,
+    "popup_adapter": true
   },
   {
     "id": "gwangjin",
@@ -212,7 +224,16 @@
     ],
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
-    "diagnostic_js": true
+    "diagnostic_js": true,
+    "popup_adapter": true,
+    "detail_pattern": "/meeting/confer/popup\\.do",
+    "id_params": [
+      "ntime",
+      "contype",
+      "subtype",
+      "num",
+      "istemp"
+    ]
   },
   {
     "id": "geumcheon",
@@ -230,15 +251,18 @@
   {
     "id": "yeongdeungpo",
     "name": "영등포구",
-    "list_url": "https://www.ydpc.go.kr/",
+    "list_url": "https://www.ydpc.go.kr/content/minutes/minutesLately.html",
     "hosts": [
       "www.ydpc.go.kr",
       "ydpc.go.kr"
     ],
-    "discover_list_label": "최근회의록",
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
-    "diagnostic_js": true
+    "diagnostic_js": true,
+    "detail_pattern": "/mnts/asvr/cnts/mnt/mntViewer\\.php",
+    "id_params": [
+      "params"
+    ]
   },
   {
     "id": "dongjak",
@@ -286,6 +310,15 @@
     ],
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
-    "diagnostic_js": true
+    "diagnostic_js": true,
+    "popup_adapter": true,
+    "detail_pattern": "/meeting/confer/popup\\.do",
+    "id_params": [
+      "ntime",
+      "contype",
+      "subtype",
+      "num",
+      "istemp"
+    ]
   }
 ]

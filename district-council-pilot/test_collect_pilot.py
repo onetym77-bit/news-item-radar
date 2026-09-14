@@ -60,6 +60,30 @@ class PilotRegression(unittest.TestCase):
         rows,_=select_rows(Page('<footer>오늘 2026.09.14</footer><table><tr><td>제300회 본회의 2026.09.07</td><td><a href="/record/main?uid=1">보기</a></td></tr></table>'),"https://example.gov/late",SRC)
         self.assertEqual(rows[0]["meeting_date"],"2026-09-07")
 class ConnectionRegression(unittest.TestCase):
+    def test_verified_popup_field_order_and_temporary_version(self):
+        from collect_pilot import detail_from
+        source={"hosts":["example.gov"],"popup_adapter":True}
+        call="fn_popup_page('323','1','0','1','정례회','본회의','1',1);"
+        self.assertEqual(detail_from([("onclick",call)],"https://example.gov/late",source),"https://example.gov/meeting/confer/popup.do?ntime=323&contype=1&subtype=0&num=1&istemp=1")
+    def test_popup_appendix_is_not_minutes(self):
+        from collect_pilot import detail_from
+        source={"hosts":["example.gov"],"popup_adapter":True}
+        call="fn_popup_page('323','1','0','1','정례회','본회의','1',3);"
+        self.assertEqual(detail_from([("onclick",call)],"https://example.gov/late",source),"")
+    def test_anonymous_session_suffix_not_logged(self):
+        from collect_pilot import clean_diagnostic
+        self.assertEqual(clean_diagnostic("/popup.do;jsessionid=ABC123"),"/popup.do;jsessionid=[REDACTED]")
+
+    def test_clerk_ceremony_is_a_valid_transcript_not_a_fetch_failure(self):
+        html='<p>○의사담당 강가나 '+('지금부터 임시회 개회식을 시작하겠습니다. '*12)+'</p><p>○의장 김가나 '+('동료 의원 여러분께 감사드립니다. '*12)+'</p><p>○의사담당 강가나 폐식을 선언합니다.</p>'
+        body,parts=transcript(Page(html))
+        self.assertTrue(body)
+        self.assertEqual(len(parts),3)
+    def test_path_based_record_identity(self):
+        from collect_pilot import detail_from
+        source={"hosts":["example.gov"],"detail_pattern":r"/council/viewer/minutes/[0-9]+\.do","path_identity":True,"id_params":[]}
+        self.assertEqual(detail_from([("href","/council/viewer/minutes/2946.do")],"https://example.gov",source),"https://example.gov/council/viewer/minutes/2946.do")
+
     def test_registry_has_all_25_unique_districts(self):
         import json
         from pathlib import Path

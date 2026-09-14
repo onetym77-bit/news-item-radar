@@ -35,6 +35,9 @@ UA = "Mozilla/5.0 (compatible; NewsItemRadarPilot/1.0; +https://github.com/onety
 def norm(text):
     return re.sub(r"\s+", " ", text).strip()
 
+def clean_diagnostic(text):
+    return re.sub(r";jsessionid=[A-Za-z0-9]+", ";jsessionid=[REDACTED]", text, flags=re.I)
+
 def day(text):
     m = DATE.search(text)
     if not m:
@@ -128,6 +131,11 @@ def canonical(url, source=None):
 
 def detail_from(attrs, base, source):
     for key, value in attrs:
+        if source.get("popup_adapter") and key in {"onclick","href"}:
+            match = re.search(r"fn_popup_page\(\s*'(\d+)'\s*,\s*'(\d+)'\s*,\s*'(\d+)'\s*,\s*'(\d+)'\s*,\s*'[^']*'\s*,\s*'[^']*'\s*,\s*'([01])'\s*,\s*1\s*\)",value)
+            if match:
+                params=dict(zip(("ntime","contype","subtype","num","istemp"),match.groups()))
+                return urljoin(base,"/meeting/confer/popup.do")+"?"+urlencode(params)
         if key == "data-uid" and source.get("uid_path") and value.isdigit():
             url = urljoin(base, source["uid_path"]) + "?uid=" + value
             if allowed(url, source):
@@ -143,7 +151,8 @@ def detail_from(attrs, base, source):
 
 def select_rows(page, base, source, count=4):
     rows, seen = [], set()
-    for r in page.rows:
+    source_rows = page.anchors if source.get("anchor_rows") else page.rows
+    for r in source_rows:
         label = norm(" ".join(r["chunks"]))
         when = day(label)
         if not re.search(r"\d+\s*(?:대|회)", label) or not re.search(r"본회의|위원회|행정사무감사|개원식|개회식", label):
@@ -174,7 +183,7 @@ def transcript(page):
     speaker = re.compile(
         r"^(?:(?:위원장|부위원장|의장|부의장|위원|의원)\s*[가-힣]{2,5}"
         r"|[가-힣]{2,5}\s*(?:위원|의원)"
-        r"|[가-힣·]{0,30}(?:과장|국장|팀장|소장|동장|이사장|대표이사|구청장|담당관|전문위원)\s*[가-힣]{2,5})"
+        r"|[가-힣·]{0,30}(?:과장|국장|팀장|소장|동장|이사장|대표이사|구청장|담당관|전문위원|담당)\s*[가-힣]{2,5})"
     )
     parts = []
     for chunk in re.split(r"[○◯]", text)[1:]:
@@ -245,7 +254,7 @@ class Client:
         try:
             with urlopen(Request(url, headers={"User-Agent": UA, "Accept-Language":"ko"}), timeout=18) as res:
                 result["status"] = res.status
-                result["final_url"] = res.url
+                result["final_url"] = clean_diagnostic(res.url)
                 if not allowed(res.url, self.source):
                     raise ValueError("Redirect outside configured official hosts")
                 raw = res.read(6_000_001)
@@ -333,9 +342,12 @@ def run(source, as_of, count=4):
             result["diagnostic_scripts"] = listing.script_sources[:12]
             inline = "\n".join(listing.script_text)
             functions = re.findall(r"function\s+fn_popup_page[\s\S]{0,2200}",inline)
-            result["diagnostic_popup"] = functions[:1]
+            result["diagnostic_popup"] = [clean_diagnostic(f) for f in functions[:1]]
             if not selected:
-                result["diagnostic_inline_routes"] = re.findall(r".{0,60}(?:location|ajax|url\s*:|\.do).{0,180}",inline)[:12]
+                result["diagnostic_inline_routes"] = [clean_diagnostic(v) for v in re.findall(r".{0,60}(?:location|ajax|url\s*:|\.do).{0,180}",inline)[:12]]
+                at = inline.find("/main/getAssemList")
+                result["diagnostic_list_function"] = clean_diagnostic(inline[max(0,at-500):at+2300]) if at >= 0 else ""
+                result["diagnostic_detail_anchors"] = [a for a in listing.anchors if detail_from(a["attrs"],listing_url,source)][:4]
         if not selected:
             result["diagnosis"] = "LIST_PARSE_EMPTY"
             result["diagnostic_links"] = [u for u in listing.links if any(s in u for s in ("record","minute","confer","recent","viewer"))][:16]
@@ -371,6 +383,9 @@ def run(source, as_of, count=4):
                     row["speech_turns"] = len(parts)
                     row["review_windows"] = review_windows(parts) if body else []
                     row["diagnosis"] = "BODY_OK" if body else "EMPTY_OR_UNPARSED_BODY"
+                    if not body:
+                        row["diagnostic_speaker_markup"] = [clean_diagnostic(v) for v in re.findall(r".{0,110}(?:위원장|의장|의사담당|과장).{0,180}",page.raw_html)[:8]]
+                        row["diagnostic_text_tail"] = norm(" ".join(page.chunks))[-600:]
                     row["title"] = norm(" ".join(page.title))
                     row["title_date"] = day(row["title"])
                     rawtext = norm(" ".join(page.chunks))
