@@ -1477,8 +1477,8 @@ class GroundingRegressionTests(unittest.TestCase):
 
     def test_sign_language_center_budget_gets_service_gap_question(self):
         text = (
-            "서울 25개 자치구 수어통역센터의 복지 사업비는 800만 원 수준이고 "
-            "자체수입을 목적사업에 재투자하기 어렵습니다."
+            "서울 25개 자치구 수어통역센터의 복지 사업비는 800만 원 수준이라 "
+            "재정적 한계와 센터 자부담이 발생하고 자체수입 재투자에도 제약이 있습니다."
         )
         question = scout.question_for(text, self.council)
         self.assertIn("통역 건수·이용자 수요", question)
@@ -1496,7 +1496,7 @@ class GroundingRegressionTests(unittest.TestCase):
     def test_cost_overrun_gets_design_omission_question(self):
         text = (
             "서울 시설의 앵커 방식에서 파일 방식으로 바꾸며 사업비가 "
-            "39억 원에서 113억 원으로 3배 늘었고 구조진단과 지반조사가 늦었습니다."
+            "39억 원에서 113억 원으로 3배 증가했고 구조진단과 지반조사가 늦었습니다."
         )
         question = scout.question_for(text, self.council)
         self.assertIn("초기 설계·조사에서 빠진 조건", question)
