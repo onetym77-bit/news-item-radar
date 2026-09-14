@@ -17,6 +17,9 @@ SOURCES = [
     ("C_LIST", "https://cis.seoul.go.kr/TotalAlimi_new/CnrtList.action"),
     ("C_PAYMENTS", "https://cis.seoul.go.kr/TotalAlimi_new/CnrtExList.action"),
     ("P_LIST", "https://idea.seoul.go.kr/front/allSuggest/list.do?tab=cateAll"),
+    ("P1", "https://idea.seoul.go.kr/front/freeSuggest/view.do?pageIndex=1&sDiscussionSn=&sKind=M&sPracticeSn=&sRegDateE=&sRegDateS=&sSuggest_divi=&searchCondition=&searchCondition2=1&searchCondition3=&searchKeyword=&searchSYear=&searchUseYn=Y&sn=202770&suggestask_sn="),
+    ("P2", "https://idea.seoul.go.kr/front/freeSuggest/view.do?pageIndex=1&sDiscussionSn=&sKind=M&sPracticeSn=&sRegDateE=&sRegDateS=&sSuggest_divi=&searchCondition=&searchCondition2=1&searchCondition3=&searchKeyword=&searchSYear=&searchUseYn=Y&sn=202769&suggestask_sn="),
+    ("P3", "https://idea.seoul.go.kr/front/freeSuggest/view.do?pageIndex=1&sDiscussionSn=&sKind=M&sPracticeSn=&sRegDateE=&sRegDateS=&sSuggest_divi=&searchCondition=&searchCondition2=1&searchCondition3=&searchKeyword=&searchSYear=&searchUseYn=Y&sn=202768&suggestask_sn="),
 ]
 MARKERS = ("다자녀", "특정건축물", "불꽃축제", "천왕산", "별빛내린천", "구봉산", "풍납2동")
 def norm(value):

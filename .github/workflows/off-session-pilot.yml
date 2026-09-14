@@ -23,7 +23,7 @@ jobs:
         run: python -X utf8 -m unittest discover -s off-session-pilot -p 'test_*.py' -v
       - name: Validate existing system without changing ledgers
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
-      - name: Read four official public pages once
+      - name: Read four listings and three fixed proposal URLs
         run: python -X utf8 off-session-pilot/probe_sources.py
       - name: Preserve bounded diagnostics
         if: always()
