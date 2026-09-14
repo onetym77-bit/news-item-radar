@@ -150,7 +150,7 @@ def analyze_content(
         bool(values)
         and problem
         and (observed or loss)
-        and not (routine_action and purpose_only and not any(term in text for term in ("증가", "감소", "발생", "접수")))
+        and not (routine_action and purpose_only and not observed)
     )
     structural = bool(values) and any(term in text for term in STRUCTURAL_TERMS)
 
