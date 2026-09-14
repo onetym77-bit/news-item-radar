@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - "district-council-pilot/**"
+      - "district-council-pilot/*.py"
+      - "district-council-pilot/sources.json"
       - ".github/workflows/district-council-pilot.yml"
 
 permissions:
