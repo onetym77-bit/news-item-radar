@@ -103,6 +103,10 @@ def canonical(url):
 
 def detail_from(attrs, base, source):
     for key, value in attrs:
+        if key == "data-uid" and source.get("uid_path") and value.isdigit():
+            url = urljoin(base, source["uid_path"]) + "?uid=" + value
+            if allowed(url, source):
+                return canonical(url)
         candidates = [value] if key in {"href", "src"} else re.findall(r"""['"]([^'"]+)['"]""", value)
         for candidate in candidates:
             url = urljoin(base, candidate)
@@ -124,7 +128,7 @@ def select_rows(page, base, source, count=4):
         seen.add(identity)
         rows.append({"list_rank": len(rows)+1, "meeting_date": when,
                      "label": label[:300], "url": url,
-                     "provisional": "임시" in label,
+                     "provisional": bool(re.search(r"\[임시\]|임시회의록|임시본", label)),
                      "unresolved_attrs": r["attrs"][:10] if not url else []})
     # Official listing order is preserved. Failures are never replaced with easy pages.
     return rows[:count], len(rows)
@@ -160,8 +164,16 @@ def review_windows(parts):
         if i in used:
             continue
         # Only short review pointers are persisted. These are not generated article questions.
+        part = parts[i]
+        positions = [part.find(t) for t in signals if t in part]
+        positions += [part.find(t) for topic in topics for t in TOPICS[topic] if t in part]
+        positions = sorted(set(p for p in positions if p >= 0))
+        # Pick the densest relevant context, not the opening greetings of a long speech.
+        anchor = max(positions, key=lambda p:sum(abs(q-p)<=240 for q in positions)) if positions else 0
+        start = max(0, anchor-180)
         chosen.append({"turn_index": i, "topics": topics, "signals": signals,
-                       "passage": parts[i][:650],
+                       "speaker_prefix": part[:65], "character_offset": start,
+                       "passage": part[start:start+650],
                        "next_turn_context": parts[i+1][:350] if i+1 < len(parts) else "",
                        "attribution": "발언자·집행부 답변 구분은 원문 대조 필요",
                        "editor_status": "UNREVIEWED"})
@@ -254,12 +266,19 @@ def run(source, as_of):
                     row["diagnosis"] = "BODY_OK" if body else "EMPTY_OR_UNPARSED_BODY"
                     row["title"] = norm(" ".join(page.title))
                     row["title_date"] = day(row["title"])
-                    row["date_conflict"] = bool(row["title_date"] and row["title_date"] != row["meeting_date"])
+                    rawtext = norm(" ".join(page.chunks))
+                    heading = re.search(r"일\s*시\s*[:：]?\s*(20\d{2}.{0,30})", rawtext)
+                    row["header_date"] = day(heading.group(1)) if heading else ""
+                    dates = [d for d in (row["title_date"],row["header_date"]) if d]
+                    row["date_conflict"] = any(d != row["meeting_date"] for d in dates)
+                    row["date_crosschecked"] = bool(dates) and not row["date_conflict"]
+                    if row["date_conflict"]:
+                        row["diagnosis"] = "BODY_METADATA_CONFLICT"
                 else:
                     row["diagnosis"] = "DETAIL_FETCH_FAILED"
             result["selected"].append(row)
         if selected:
-            result["diagnosis"] = "SAMPLE_COMPLETE" if len(selected)==4 and all(r["body_ok"] for r in selected) else "SAMPLE_INCOMPLETE"
+            result["diagnosis"] = "SAMPLE_COMPLETE" if len(selected)==4 and all(r["body_ok"] and not r.get("date_conflict") for r in selected) else "SAMPLE_INCOMPLETE"
     result["requests"] = client.logs
     result["bodies"] = sum(r["body_ok"] for r in result["selected"])
     result["documents_with_review_windows"] = sum(bool(r["review_windows"]) for r in result["selected"])
