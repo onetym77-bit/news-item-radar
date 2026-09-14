@@ -1996,6 +1996,7 @@ class GroundingRegressionTests(unittest.TestCase):
             "lane": "CORE_DISCOVERY",
             "score": 9,
             "text": "현재 미지급 통상임금은 약 2,900억 원입니다.",
+            "question": "미지급액의 산정 범위와 부담 주체는 누구인가?",
             "url": "https://ms.smc.seoul.kr/record/recordView.do?key=queue-context",
             "context_status": "PASS",
             "context_rule": "BUS_WAGE",
