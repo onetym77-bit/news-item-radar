@@ -37,7 +37,7 @@ SOURCES = [
         "role": "DISCOVERY",
         "local": True,
         "voice": True,
-        "follow": r"complaint.*(?:view|vie|read|detail)|complaint_pub.*\.do",
+        "follow": r"complaint_pub_vie\.do",
         "max_follow": 8,
     },
     {
@@ -73,8 +73,9 @@ SOURCES = [
     {
         "id": "seoul_research",
         "name": "서울연구원 정책·연구 자료",
-        "url": "https://si.re.kr/",
+        "url": "https://www.si.re.kr/bbs/list.do?key=2024100154",
         "role": "BOTH",
+        "cadence": "monthly",
         "local": True,
         "voice": False,
         "follow": r"bbs/view\.do",
@@ -85,6 +86,7 @@ SOURCES = [
         "name": "고용노동부 임금체불 통계",
         "url": "https://labor.moel.go.kr/arrstat/sttcStusList.do",
         "role": "BOTH",
+        "cadence": "monthly",
         "local": False,
         "voice": False,
         "follow": "",
@@ -110,7 +112,7 @@ PROBLEM_TERMS = (
     "침수", "붕괴", "과밀", "공백", "부담", "취약", "분쟁",
 )
 EVIDENCE_TERMS = (
-    "통계", "현황", "실태", "조사", "예산", "결산", "감사", "분석", "결과",
+    "통계", "현황", "실태", "조사", "예산", "결산", "감사", "분석",
     "집행률", "이용률", "증감", "건수", "비율", "측정값", "발생률",
 )
 IMPLEMENTATION_TERMS = (
@@ -393,6 +395,20 @@ def select_follow_links(parser: VisibleHTML, base_url: str, source: dict) -> lis
     return [url for _, url in ranked[: source["max_follow"]]]
 
 
+def source_url_allowed(source_id: str, url: str) -> bool:
+    if source_id == "eungdapso":
+        return "/exp/pub/complaint_pub_vie.do" in url or url.rstrip("/") == "https://eungdapso.seoul.go.kr/main.do"
+    if source_id == "council_minutes":
+        return "recordView.do" in url or "appendixDownload.do" in url or "/kr/assembly/main.do" in url
+    if source_id == "seoul_open_data":
+        return "datasetView.do" in url or "datasetRanking/new.do" in url
+    if source_id == "seoul_bigdata":
+        return "/data/" in url or url.rstrip("/") == "https://bigdata.seoul.go.kr/main.do"
+    if source_id == "seoul_research":
+        return "/bbs/view.do" in url or "/bbs/list.do" in url
+    return True
+
+
 def extract_records(
     parser: VisibleHTML,
     page_url: str,
@@ -401,8 +417,9 @@ def extract_records(
 ) -> list[dict]:
     texts: list[tuple[str, str]] = []
     for href, label in parser.anchors:
-        if valid_candidate(label):
-            texts.append((label, urljoin(page_url, href)))
+        absolute = urljoin(page_url, href)
+        if valid_candidate(label) and source_url_allowed(source["id"], absolute):
+            texts.append((label, absolute))
     for chunk in parser.chunks:
         if valid_candidate(chunk):
             texts.append((chunk, page_url))
@@ -520,6 +537,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 "id": source["id"],
                 "name": source["name"],
                 "role": source["role"],
+                "cadence": source.get("cadence", "continuous"),
                 "main_url": source["url"],
                 "http_ok": False,
                 "status": main.status,
@@ -564,6 +582,10 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         ):
             row["url"] = item_key
             best_by_item[item_key] = row
+    if source["id"] == "eungdapso" and any(
+        key != source["url"] and row["qualified"] for key, row in best_by_item.items()
+    ):
+        best_by_item.pop(source["url"], None)
     records = sorted(
         best_by_item.values(),
         key=lambda item: (item["qualified"], item["localization_lead"], item["score"]),
@@ -579,6 +601,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         "id": source["id"],
         "name": source["name"],
         "role": source["role"],
+        "cadence": source.get("cadence", "continuous"),
         "main_url": source["url"],
         "http_ok": True,
         "status": main.status,
@@ -604,6 +627,8 @@ def recommendation(metric: dict) -> str:
         return "보류: 접속 안정성 개선 필요"
     if metric["role"] == "VERIFICATION" and metric["extracted"] >= 3:
         return "검증 데이터 지도에 편입"
+    if metric.get("cadence") == "monthly" and metric["qualified"] >= 1:
+        return "월간 구조신호로 시험 편입"
     if metric["qualified"] >= 5 and metric["strong"] >= 2:
         return "발굴 수집원 시험 편입"
     if metric["qualified"] >= 2 or metric["localization_leads"] >= 2:
@@ -690,7 +715,11 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
             lines.append("- 검토할 수준의 후보를 추출하지 못했습니다.")
             continue
         for index, row in enumerate(subset, 1):
-            tag = "서울형 유효후보" if row["qualified"] else "서울 현지화 필요"
+            tag = (
+                "검증 자산" if row["role"] == "VERIFICATION" and row["qualified"]
+                else "서울형 유효후보" if row["qualified"]
+                else "서울 현지화 필요"
+            )
             lines.extend(
                 [
                     f"### {index}. {tag} · {row['score']}점",
