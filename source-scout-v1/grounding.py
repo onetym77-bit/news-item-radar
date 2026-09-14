@@ -379,8 +379,10 @@ def analyze_content(
     measured = (
         bool(values)
         and problem
-        and (observed or cost_problem)
-        and problem_value_link
+        and (
+            (record_kind == "DATA_ROW" and bool(table_values))
+            or ((observed or cost_problem) and problem_value_link)
+        )
         and not positive_change
         and not (routine_action and purpose_only and not observed)
     )
