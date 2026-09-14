@@ -25,6 +25,24 @@ def md(value: str, limit: int = 180) -> str:
     return value
 
 
+CLAIM_STATUS_LABELS = {
+    "ATTRIBUTED_CLAIM": "의원 발언에서 제시",
+    "OBSERVED_OR_PUBLISHED": "원자료에 공개된 값",
+    "UNRESOLVED": "확인 수준 미분류",
+}
+METRIC_SOURCE_LABELS = {
+    "SPEAKER_ONLY": "산정 원자료 미확인",
+    "CITED_SOURCE_UNCHECKED": "인용 원자료 대조 전",
+    "INDEPENDENTLY_VERIFIED": "원자료 재확인 완료",
+}
+METRIC_PERIOD_LABELS = {
+    "EXPLICIT": "발언문에 기간 명시",
+    "RELATIVE_TO_DOCUMENT": "발언 당시 기준",
+    "UNKNOWN": "기준기간 확인 필요",
+    "NOT_APPLICABLE": "정량 수치 없음",
+}
+
+
 def render(feed: dict, review: dict | None = None) -> str:
     review = review or {}
     core = feed.get("core_discovery", [])
@@ -80,30 +98,47 @@ def render(feed: dict, review: dict | None = None) -> str:
         lines.extend(["- 오늘 자동 기준을 통과한 문맥 잠금 완료 단서 없음", ""])
     else:
         for index, row in enumerate(core, 1):
-            scope = " · ".join(
+            event = " · ".join(
                 value for value in (
                     row.get("context_subject", ""),
-                    row.get("sector_scope", ""),
-                    row.get("context_period", ""),
+                    row.get("context_trigger", ""),
                 ) if value
+            )
+            claim_level = CLAIM_STATUS_LABELS.get(
+                row.get("claim_status", ""),
+                row.get("claim_status") or "확인 수준 미분류",
             )
             source_level = " · ".join(
                 value for value in (
                     row.get("speaker", ""),
                     row.get("speech_type_label", ""),
-                    row.get("claim_status", ""),
+                    claim_level,
+                    METRIC_SOURCE_LABELS.get(
+                        row.get("metric_source_status", ""),
+                        row.get("metric_source_status", ""),
+                    ),
                 ) if value
+            )
+            period_level = METRIC_PERIOD_LABELS.get(
+                row.get("metric_period_status", ""),
+                row.get("metric_period_status") or "미확인",
             )
             fact_label = row.get("statement_label") or "제시된 내용"
             lines.extend(
                 [
                     f"#### {index}. {row.get('context_subject') or '문맥 잠금 완료 단서'}",
                     "",
-                    f"- 사안·범위: {md(scope or '별도 문맥 잠금 불필요', 240)}",
+                    f"- 무슨 일: {md(event or '사안 미확인', 240)}",
+                    f"- 적용 범위: {md(row.get('sector_scope') or '확인 필요', 260)}",
+                    f"- 영향 확인 대상: {md(row.get('affected_group') or '확인 필요', 180)}",
                     f"- {fact_label}: {md(row.get('display_fact') or row.get('question_basis') or row.get('text', ''), 300)}",
-                    f"- 출처·확인 수준: {md(source_level or row.get('source_name', '미상'), 180)}",
+                    (
+                        f"- 수치 범위·기준: {md(row.get('metric_scope') or '정량 수치 없음', 240)} · "
+                        f"{row.get('metric_period') or '확인 필요'} ({period_level})"
+                    ),
+                    f"- 출처·확인 수준: {md(source_level or row.get('source_name', '미상'), 220)}",
+                    f"- 회의록 문서일: {row.get('speech_date') or '미확인'}",
                     f"- 범위 주의: {md(row.get('scope_exclusion') or '별도 주의 없음', 180)}",
-                    f"- 수치 기준기간: {row.get('metric_period') or '미확인'} · {row.get('metric_period_status') or 'UNKNOWN'}",
                     f"- 기획 질문: {md(row.get('question', ''), 300)}",
                     f"- 질문 일치: {row.get('grounding_status', 'HOLD')} · 수집 정렬점수 {row.get('score', 0)}",
                     f"- [원문]({row.get('url', '')})",
@@ -113,7 +148,7 @@ def render(feed: dict, review: dict | None = None) -> str:
 
     lines.extend(["### 문맥 확인 대기 — 질문 생성 금지", ""])
     if not context_holds:
-        lines.extend(["- 사건·대상·업종 범위를 확정하지 못해 보류된 의회 단서 없음", ""])
+        lines.extend(["- 사건·대상·수치 범위·기준기간을 확정하지 못해 보류된 의회 단서 없음", ""])
     else:
         for row in context_holds:
             missing = ", ".join(row.get("context_missing_fields", [])) or "세부 문맥"
@@ -121,7 +156,8 @@ def render(feed: dict, review: dict | None = None) -> str:
                 [
                     f"- 발언 조각: {md(row.get('text', ''), 220)}",
                     f"- 보류 이유: {md(row.get('context_reason') or '문맥 잠금 미완료', 220)}",
-                    f"- 빠진 항목: {md(missing, 120)}",
+                    f"- 빠진 항목: {md(missing, 160)}",
+                    f"- 회의록 문서일: {row.get('speech_date') or '미확인'}",
                     f"- [원문]({row.get('url', '')})",
                     "",
                 ]

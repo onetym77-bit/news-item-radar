@@ -25,6 +25,22 @@ POSITIVE_ANCHORS = {
     "MEASURED_PROBLEM_SIGNAL",
     "DECOMPOSABLE_STRUCTURE",
 }
+CLAIM_STATUS_LABELS = {
+    "ATTRIBUTED_CLAIM": "의원 발언에서 제시",
+    "OBSERVED_OR_PUBLISHED": "원자료에 공개된 값",
+    "UNRESOLVED": "확인 수준 미분류",
+}
+METRIC_SOURCE_LABELS = {
+    "SPEAKER_ONLY": "산정 원자료 미확인",
+    "CITED_SOURCE_UNCHECKED": "인용 원자료 대조 전",
+    "INDEPENDENTLY_VERIFIED": "원자료 재확인 완료",
+}
+METRIC_PERIOD_LABELS = {
+    "EXPLICIT": "발언문에 기간 명시",
+    "RELATIVE_TO_DOCUMENT": "발언 당시 기준",
+    "UNKNOWN": "기준기간 확인 필요",
+    "NOT_APPLICABLE": "정량 수치 없음",
+}
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -78,6 +94,20 @@ def proposal_blockers(row: dict[str, str]) -> list[str]:
         blockers.append("원문 지문과 검토 지문 불일치")
     if text(row, "grounding_status").upper() != "PASS":
         blockers.append("질문-근거 일치 미통과")
+    if text(row, "source_id") == "council_minutes":
+        if text(row, "context_status").upper() != "PASS":
+            blockers.append("서울시의회 발언 문맥 잠금 미통과")
+        quantitative_context = bool(text(row, "metric_scope"))
+        if (
+            quantitative_context
+            and text(row, "metric_period_status").upper() == "UNKNOWN"
+        ):
+            blockers.append("수치 기준기간 미확인")
+        if (
+            quantitative_context
+            and text(row, "metric_source_status").upper() == "SPEAKER_ONLY"
+        ):
+            blockers.append("수치 산정 원자료 미확인")
     return blockers
 
 
@@ -114,6 +144,7 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
                 else "제시된 내용"
             ),
             "context_status": text(row, "context_status"),
+            "context_rule": text(row, "context_rule"),
             "context_subject": text(row, "context_subject"),
             "context_trigger": text(row, "context_trigger"),
             "context_reason": text(row, "context_reason"),
@@ -125,9 +156,14 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
             "geography": text(row, "geography"),
             "sector_scope": text(row, "sector_scope"),
             "scope_exclusion": text(row, "scope_exclusion"),
+            "speech_date": text(row, "speech_date"),
+            "event_period": text(row, "event_period"),
             "context_period": text(row, "context_period"),
+            "metric_scope": text(row, "metric_scope"),
             "metric_period": text(row, "metric_period"),
             "metric_period_status": text(row, "metric_period_status"),
+            "metric_source_status": text(row, "metric_source_status"),
+            "source_id": text(row, "source_id"),
             "source_name": text(row, "source_name"),
             "source_date": text(row, "source_date"),
             "freshness_status": text(row, "freshness_status") or "UNKNOWN",
@@ -263,39 +299,55 @@ def render_cards(payload: dict) -> str:
     if not payload["review_cards"]:
         lines.extend(["- 카드 없음", ""])
     for index, card in enumerate(payload["review_cards"], 1):
+        is_council = card.get("source_id") == "council_minutes"
+        claim_level = CLAIM_STATUS_LABELS.get(
+            card.get("claim_status", ""),
+            card.get("claim_status") or "확인 수준 미분류",
+        )
+        if is_council:
+            event = " · ".join(
+                value for value in (
+                    card.get("context_subject", ""),
+                    card.get("context_trigger", ""),
+                ) if value
+            )
+            source_level = " · ".join(
+                value for value in (
+                    card.get("speaker", ""),
+                    card.get("speech_type_label", ""),
+                    claim_level,
+                    METRIC_SOURCE_LABELS.get(
+                        card.get("metric_source_status", ""),
+                        card.get("metric_source_status", ""),
+                    ),
+                ) if value
+            )
+            context_lines = [
+                f"- 무슨 일: {event or '사안 미확인'}",
+                f"- 적용 범위: {card.get('sector_scope') or '확인 필요'}",
+                f"- 영향 확인 대상: {card.get('affected_group') or '확인 필요'}",
+                f"- {card.get('fact_label') or '제시된 내용'}: {card['fact'] or '-'}",
+                (
+                    f"- 수치 범위·기준: {card.get('metric_scope') or '정량 수치 없음'} · "
+                    f"{card.get('metric_period') or '확인 필요'} "
+                    f"({METRIC_PERIOD_LABELS.get(card.get('metric_period_status', ''), card.get('metric_period_status') or '미확인')})"
+                ),
+                f"- 출처·확인 수준: {source_level or card.get('source_name', '미상')}",
+                f"- 회의록 문서일: {card.get('speech_date') or '미확인'}",
+                f"- 범위 주의: {card.get('scope_exclusion') or '별도 주의 없음'}",
+            ]
+        else:
+            context_lines = [
+                "- 사안·범위: 별도 문맥 잠금 불필요",
+                f"- {card.get('fact_label') or '제시된 내용'}: {card['fact'] or '-'}",
+                f"- 출처·확인 수준: {card.get('source_name', '미상')} · {claim_level}",
+            ]
         lines.extend(
             [
                 f"### {index}. {card['candidate_id']}",
                 "",
-                (
-                    "- 사안·범위: "
-                    + " · ".join(
-                        value for value in (
-                            card.get("context_subject", ""),
-                            card.get("sector_scope", ""),
-                            card.get("context_period", ""),
-                        ) if value
-                    )
-                    if card.get("context_subject")
-                    else "- 사안·범위: 별도 문맥 잠금 불필요"
-                ),
-                f"- {card.get('fact_label') or '제시된 내용'}: {card['fact'] or '-'}",
-                (
-                    "- 출처·확인 수준: "
-                    + (
-                        " · ".join(
-                            value for value in (
-                                card.get("speaker", ""),
-                                card.get("speech_type_label", ""),
-                                card.get("claim_status", ""),
-                            ) if value
-                        )
-                        or card.get("source_name", "미상")
-                    )
-                ),
-                f"- 범위 주의: {card.get('scope_exclusion') or '별도 주의 없음'}",
-                f"- 수치 기준기간: {card.get('metric_period') or '미확인'} · {card.get('metric_period_status') or 'UNKNOWN'}",
-                f"- 자동 추정: {card['auto_anchor']} · {card['claim_status']} — 사람 판정 아님",
+                *context_lines,
+                f"- 자동 추정: {card['auto_anchor']} · {claim_level} — 사람 판정 아님",
                 f"- 제안 질문: {card['question'] or '-'}",
                 f"- 아직 확인할 변수: {card['verification_axes'] or '-'}",
                 f"- 사람 판정: {card['editor_judgment']}",

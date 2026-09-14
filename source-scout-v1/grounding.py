@@ -489,6 +489,12 @@ def analyze_content(
     }
 
 
+
+def has_unpaid_wage_marker(text: str) -> bool:
+    return any(
+        term in text for term in ("미지급", "체불임금", "체불 임금")
+    )
+
 def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
     text = normalize(text)
     anchor = analysis.get("evidence_anchor", "NONE")
@@ -543,12 +549,12 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
     bus_unpaid_interest_evidence = (
         any(term in text for term in ("시내버스", "서울시내버스", "버스노동조합"))
         and "통상임금" in text
-        and any(term in text for term in ("미지급", "체불임금", "체불 임금"))
+        and has_unpaid_wage_marker(text)
         and "지연이자" in text
         and bool(analysis.get("substantive_values"))
     )
     unpaid_interest_evidence = (
-        any(term in text for term in ("미지급", "체불임금", "체불 임금"))
+        has_unpaid_wage_marker(text)
         and "지연이자" in text
         and bool(analysis.get("substantive_values"))
     )
@@ -688,7 +694,10 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
                     for term in ("시내버스", "서울시내버스", "버스노동조합")
                 ),
             ),
-            ("통상임금 미지급", "통상임금" in text and "미지급" in text),
+            (
+                "통상임금 미지급 또는 체불",
+                "통상임금" in text and has_unpaid_wage_marker(text),
+            ),
             ("지연이자", "지연이자" in text),
             ("측정값", bool(analysis.get("substantive_values"))),
         ]
@@ -712,7 +721,7 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
     elif unpaid_interest_evidence:
         contract = ["미지급", "지연이자", "측정값"]
         contract_checks = [
-            ("미지급 또는 체불임금", any(term in text for term in ("미지급", "체불임금", "체불 임금"))),
+            ("미지급 또는 체불임금", has_unpaid_wage_marker(text)),
             ("지연이자", "지연이자" in text),
             ("측정값", bool(analysis.get("substantive_values"))),
         ]

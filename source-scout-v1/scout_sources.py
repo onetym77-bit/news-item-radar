@@ -640,9 +640,15 @@ def context_windows(chunks: list[str], limit: int = 45) -> list[str]:
 
 
 
-COUNCIL_SPEAKER_RE = re.compile(
-    r"^(?:○|●|◯)?\s*([가-힣]{2,6})\s*"
-    r"(의원|위원|시장|부시장|실장|국장|과장|본부장|사장)(?:\s|$)"
+COUNCIL_ROLE_PATTERN = (
+    r"(?:부위원장|위원장|부의장|의장|의원|위원|시장|부시장|"
+    r"[가-힣]{0,8}(?:실장|국장|과장|본부장|사장))"
+)
+COUNCIL_SPEAKER_NAME_ROLE_RE = re.compile(
+    rf"^[○●◯]\s*([가-힣]{{2,6}})\s*({COUNCIL_ROLE_PATTERN})(?=\s|$)"
+)
+COUNCIL_SPEAKER_ROLE_NAME_RE = re.compile(
+    rf"^[○●◯]\s*({COUNCIL_ROLE_PATTERN})\s*([가-힣]{{2,6}})(?=\s|$)"
 )
 COUNCIL_CONTEXT_RULES = (
     {
@@ -656,6 +662,7 @@ COUNCIL_CONTEXT_RULES = (
         "sector_scope": "서울 시내버스 준공영제와 운수업체",
         "affected_group": "버스 노동자·운수업체·서울시 재정·버스 이용 시민",
         "scope_exclusion": "서울 전체 임금시장 수치가 아님",
+        "metric_scope": "발언에서 제시된 미지급 통상임금 원금과 일별 지연이자",
     },
     {
         "key": "seoul_rent_fraud",
@@ -665,6 +672,7 @@ COUNCIL_CONTEXT_RULES = (
         "sector_scope": "서울 전세사기 피해 인정 가구와 임차보증금",
         "affected_group": "전세사기 피해 인정 가구와 임차인",
         "scope_exclusion": "",
+        "metric_scope": "발언에서 제시된 전세사기 피해 가구·임차보증금",
     },
     {
         "key": "sign_language_centers",
@@ -677,6 +685,7 @@ COUNCIL_CONTEXT_RULES = (
         "sector_scope": "서울 25개 자치구 수어통역센터",
         "affected_group": "농인 이용자·수어통역센터 종사자",
         "scope_exclusion": "",
+        "metric_scope": "발언에서 제시된 수어통역센터 재정·서비스 수치",
     },
     {
         "key": "climate_card_loss",
@@ -686,6 +695,7 @@ COUNCIL_CONTEXT_RULES = (
         "sector_scope": "서울시와 서울교통공사의 기후동행카드 재정",
         "affected_group": "서울교통공사·서울시 재정·대중교통 이용 시민",
         "scope_exclusion": "",
+        "metric_scope": "발언에서 제시된 기후동행카드 손실 수치",
     },
 )
 
@@ -701,22 +711,180 @@ COUNCIL_CONTEXT_EVENT_TERMS = (
 )
 
 
+COUNCIL_TOPIC_BOUNDARY_RE = re.compile(
+    r"^(?:(?:먼저|첫째|둘째|셋째|넷째|다섯째|다음은|다음으로|"
+    r"두\s*번째|세\s*번째|네\s*번째|마지막으로|마지막\s*질문|끝으로)"
+    r"(?:\s|[,.:：·]|$)|[1-9]\s*[.)]\s*)"
+)
+COUNCIL_SCOPE_MARKERS = (
+    "서울", "서울시", "서울특별시", "자치구",
+    "종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구",
+    "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구",
+    "양천구", "강서구", "구로구", "금천구", "영등포구", "동작구", "관악구",
+    "서초구", "강남구", "송파구", "강동구",
+)
+COUNCIL_AFFECTED_GROUP_TERMS = (
+    "시민", "주민", "이용자", "이용객", "승객", "노동자", "근로자", "종사자",
+    "임차인", "세입자", "가구", "환자", "학생", "학부모", "아동", "청소년",
+    "청년", "노인", "어르신", "장애인", "농인", "산모", "보호자", "소상공인",
+    "자영업자", "상인", "사업자", "운전자", "운수업체", "서울시 재정", "재정",
+)
+COUNCIL_SUBJECT_OBJECT_RE = re.compile(
+    r"[0-9A-Za-z가-힣·_-]{2,36}"
+    r"(?:센터|복지관|병원|학교|어린이집|조리원|공사|공단|재단|"
+    r"사업|정책|제도|조례|서비스|시설|기금|예산|재정|"
+    r"버스|택시|지하철|철도|노선|주택|상가|시장|공원|도로|"
+    r"노동자|근로자|임차인|세입자|가구|이용자|이용객|업체)"
+)
+
+
 def _council_speaker(chunk: str) -> str:
-    match = COUNCIL_SPEAKER_RE.match(normalize(chunk))
-    if not match:
-        return ""
-    return f"{match.group(1)} {match.group(2)}"
+    candidate = normalize(chunk)
+    match = COUNCIL_SPEAKER_NAME_ROLE_RE.match(candidate)
+    if match:
+        return f"{match.group(1)} {match.group(2)}"
+    match = COUNCIL_SPEAKER_ROLE_NAME_RE.match(candidate)
+    if match:
+        return f"{match.group(2)} {match.group(1)}"
+    return ""
+
+
+def _council_speaker_at(
+    chunks: list[str],
+    position: int,
+    max_parts: int = 4,
+) -> tuple[str, int | None]:
+    """Recognize a speaker even when HTML splits marker, name and role."""
+    for part_count in range(1, max_parts + 1):
+        end = position + part_count
+        if end > len(chunks):
+            break
+        candidate = normalize(" ".join(chunks[position:end]))
+        speaker = _council_speaker(candidate)
+        if speaker:
+            return speaker, end - 1
+    return "", None
 
 
 def _council_speech_type(chunks: list[str], start: int, index: int) -> tuple[str, str]:
-    nearby = " · ".join(chunks[max(0, start - 120) : index + 1])
-    if "5분 자유발언" in nearby or "5분자유발언" in nearby:
+    nearby = "".join(chunks[max(0, start - 120) : index + 1])
+    compact = re.sub(r"[\s·]+", "", nearby)
+    if "5분자유발언" in compact:
         return "FIVE_MINUTE_SPEECH", "5분 자유발언"
-    if "시정질문" in nearby:
+    if "시정질문" in compact:
         return "POLICY_QUESTION", "시정질문"
-    if "업무보고" in nearby:
+    if "업무보고" in compact:
         return "COMMITTEE_REPORT", "위원회 업무보고"
     return "COUNCIL_STATEMENT", "시의회 발언"
+
+
+def _council_topic_start(chunks: list[str], start: int, index: int) -> int:
+    """Do not carry one speaker's previous issue across an explicit topic turn."""
+    for position in range(index, start - 1, -1):
+        if COUNCIL_TOPIC_BOUNDARY_RE.match(normalize(chunks[position])):
+            return position
+    return start
+
+
+def _council_local_evidence(
+    chunks: list[str],
+    start: int,
+    index: int,
+) -> str:
+    """Rejoin nearby text nodes without crossing a speaker or topic boundary."""
+    values: list[str] = []
+    left = max(start, index - 2)
+    right = min(len(chunks), index + 3)
+    for position in range(left, right):
+        if position > index:
+            speaker, _ = _council_speaker_at(chunks, position)
+            if speaker or COUNCIL_TOPIC_BOUNDARY_RE.match(normalize(chunks[position])):
+                break
+        value = normalize(chunks[position])
+        if value:
+            values.append(value)
+    return normalize(" · ".join(values))
+
+
+def _generic_council_context(segment: list[str], combined: str) -> dict:
+    """Infer a novel issue only from explicit same-topic subject, scope and stake."""
+    subject_chunk = ""
+    for chunk in reversed(segment):
+        candidate = normalize(chunk)
+        if (
+            candidate
+            and not _council_speaker(candidate)
+            and COUNCIL_SUBJECT_OBJECT_RE.search(candidate)
+        ):
+            subject_chunk = candidate[:180].rstrip()
+            break
+    scope_confirmed = any(term in combined for term in COUNCIL_SCOPE_MARKERS)
+    affected = [
+        term for term in COUNCIL_AFFECTED_GROUP_TERMS
+        if term in combined
+    ]
+    affected = list(dict.fromkeys(affected))
+    missing: list[str] = []
+    if not subject_chunk:
+        missing.append("정확한 사안")
+    if not scope_confirmed:
+        missing.append("서울·자치구 적용 범위")
+    if not affected:
+        missing.append("영향 대상·부담 주체")
+    return {
+        "subject": subject_chunk,
+        "sector_scope": (
+            f"같은 발언 블록에 명시된 대상: {subject_chunk}"
+            if subject_chunk else ""
+        ),
+        "affected_group": "·".join(affected),
+        "scope_exclusion": (
+            "해당 발언 블록에 명시된 대상·범위에 한정; "
+            "서울 전체 현상으로 확대 해석할 수 없음"
+            if subject_chunk and scope_confirmed else ""
+        ),
+        "metric_scope": (
+            f"발언에서 제시된 {subject_chunk} 관련 수치"
+            if subject_chunk else ""
+        ),
+        "missing": missing,
+    }
+
+
+def unlocked_council_context(evidence_text: str, record_kind: str) -> dict:
+    evidence = normalize(evidence_text)
+    return {
+        "context_required": True,
+        "context_status": "HOLD",
+        "context_rule": "UNLOCKED",
+        "context_subject": "",
+        "context_trigger": "",
+        "context_text": "",
+        "context_reason": (
+            f"{record_kind}은 발언자와 같은 발언 블록을 확인하지 못해 질문 생성 금지"
+        ),
+        "context_missing_fields": [
+            "발언자", "정확한 사안", "서울·자치구 적용 범위", "영향 대상·부담 주체"
+        ],
+        "source_type": "COUNCIL_MINUTES",
+        "speech_type": "UNKNOWN",
+        "speech_type_label": "발언 형식 미확인",
+        "speaker": "",
+        "affected_group": "",
+        "geography": "",
+        "sector_scope": "",
+        "scope_exclusion": "발언 블록이 연결되지 않아 서울 전체 현상으로 해석할 수 없음",
+        "speech_date": "",
+        "event_period": "",
+        "context_period": "",
+        "metric_scope": "",
+        "metric_period": "",
+        "metric_period_status": "UNKNOWN",
+        "metric_source_status": "SPEAKER_ONLY",
+        "statement_label": "발언에서 제시된 내용",
+        "display_fact": f"적용 대상 미확인 — {evidence}",
+        "_analysis_text": evidence,
+    }
 
 
 def lock_council_context(
@@ -724,96 +892,212 @@ def lock_council_context(
     index: int,
     evidence_text: str,
 ) -> dict:
-    """Attach bounded speech context before a council excerpt may become a lead."""
-    lower_bound = max(0, index - 80)
+    """Attach a bounded same-speaker, same-topic context before generating a question."""
+    lower_bound = max(0, index - 120)
     speaker_index: int | None = None
+    speaker_end: int | None = None
     speaker = ""
     for position in range(index, lower_bound - 1, -1):
-        found = _council_speaker(chunks[position])
+        found, found_end = _council_speaker_at(chunks, position)
         if found:
             speaker_index = position
+            speaker_end = found_end
             speaker = found
             break
 
-    start = speaker_index if speaker_index is not None else max(0, index - 12)
-    segment = [normalize(value) for value in chunks[start : index + 1] if normalize(value)]
-    combined = normalize(" · ".join(segment + [evidence_text]))
+    speech_start = (
+        (speaker_end + 1)
+        if speaker_end is not None
+        else max(0, index - 12)
+    )
+    topic_start = _council_topic_start(chunks, speech_start, index)
+    segment = [
+        normalize(value)
+        for value in chunks[topic_start : index + 1]
+        if normalize(value)
+    ]
+    local_evidence = _council_local_evidence(chunks, topic_start, index)
     evidence = normalize(evidence_text)
+    combined = normalize(" · ".join(segment + [local_evidence]))
 
     matched_rule: dict | None = None
     for rule in COUNCIL_CONTEXT_RULES:
-        evidence_matches = any(term in evidence for term in rule["evidence_terms"])
-        subject_matches = any(term in combined for term in rule["subject_terms"])
+        evidence_matches = any(
+            term in local_evidence for term in rule["evidence_terms"]
+        )
+        subject_matches = any(
+            term in combined for term in rule["subject_terms"]
+        )
         if evidence_matches and subject_matches:
             matched_rule = rule
             break
 
-    speech_type, speech_type_label = _council_speech_type(chunks, start, index)
+    speech_type, speech_type_label = _council_speech_type(
+        chunks,
+        speaker_index if speaker_index is not None else topic_start,
+        index,
+    )
     missing: list[str] = []
     if not speaker:
         missing.append("발언자")
-    if matched_rule is None:
-        missing.extend(["정확한 사안", "적용 대상·업종 범위"])
 
-    relevant_terms: tuple[str, ...] = ()
     if matched_rule is not None:
+        subject = matched_rule["subject"]
+        sector_scope = matched_rule["sector_scope"]
+        affected_group = matched_rule["affected_group"]
+        scope_exclusion = matched_rule["scope_exclusion"]
+        metric_scope = matched_rule["metric_scope"]
+        context_rule = matched_rule["key"]
         relevant_terms = tuple(matched_rule["evidence_terms"]) + tuple(
             matched_rule["subject_terms"]
         )
-    relevant_chunks: list[str] = []
-    for chunk in segment:
-        if chunk == evidence or not relevant_terms:
-            continue
-        if any(term in chunk for term in relevant_terms):
-            relevant_chunks.append(chunk)
-    relevant_chunks = relevant_chunks[-5:]
+        relevant_chunks = [
+            chunk for chunk in segment
+            if chunk != evidence and any(term in chunk for term in relevant_terms)
+        ][-5:]
+    else:
+        generic = _generic_council_context(segment, combined)
+        subject = generic["subject"]
+        sector_scope = generic["sector_scope"]
+        affected_group = generic["affected_group"]
+        scope_exclusion = generic["scope_exclusion"]
+        metric_scope = generic["metric_scope"]
+        context_rule = "GENERIC" if not generic["missing"] else "UNRESOLVED"
+        missing.extend(generic["missing"])
+        relevant_chunks = [
+            chunk for chunk in segment
+            if chunk != evidence
+            and not _council_speaker(chunk)
+            and not COUNCIL_TOPIC_BOUNDARY_RE.fullmatch(chunk)
+        ][-5:]
+
     context_text = normalize(" · ".join(relevant_chunks))
     events = [
         label for token, label in COUNCIL_CONTEXT_EVENT_TERMS
         if token in combined
     ]
     context_trigger = "·".join(dict.fromkeys(events))
-
     status = "PASS" if not missing else "HOLD"
-    subject = matched_rule["subject"] if matched_rule else ""
     display_fact = (
         f"{subject} — {evidence}" if subject
         else f"적용 대상 미확인 — {evidence}"
     )
     analysis_text = normalize(" · ".join(
-        value for value in (context_text, evidence) if value
-    ))
-    if not analysis_text:
-        analysis_text = evidence
+        value for value in (context_text, local_evidence) if value
+    )) or evidence
 
     return {
         "context_required": True,
         "context_status": status,
+        "context_rule": context_rule,
         "context_subject": subject,
         "context_trigger": context_trigger,
         "context_text": context_text,
         "context_reason": (
-            "발언자와 사안·대상 범위를 같은 발언 안에서 확인"
+            "발언자와 사안·적용 범위·영향 대상을 같은 주제 블록에서 확인"
             if status == "PASS"
-            else "문맥 잠금 미완료: " + ", ".join(missing)
+            else "문맥 잠금 미완료: " + ", ".join(dict.fromkeys(missing))
         ),
-        "context_missing_fields": missing,
+        "context_missing_fields": list(dict.fromkeys(missing)),
         "source_type": "COUNCIL_MINUTES",
         "speech_type": speech_type,
         "speech_type_label": speech_type_label,
         "speaker": speaker,
-        "affected_group": matched_rule["affected_group"] if matched_rule else "",
-        "geography": "서울",
-        "sector_scope": matched_rule["sector_scope"] if matched_rule else "",
-        "scope_exclusion": matched_rule["scope_exclusion"] if matched_rule else "",
+        "affected_group": affected_group,
+        "geography": "서울" if status == "PASS" else "",
+        "sector_scope": sector_scope,
+        "scope_exclusion": scope_exclusion,
+        "speech_date": "",
+        "event_period": "",
         "context_period": "",
+        "metric_scope": metric_scope,
         "metric_period": "",
         "metric_period_status": "UNKNOWN",
+        "metric_source_status": "SPEAKER_ONLY",
         "statement_label": "발언에서 제시된 내용",
         "display_fact": display_fact,
         "_analysis_text": analysis_text,
     }
 
+
+COUNCIL_RELATIVE_PERIOD_RE = re.compile(
+    r"(?:현재|지금|발언\s*당시|올해|금년)"
+)
+
+
+def finalize_council_context(
+    row: dict,
+    document_date: str,
+    reference_period: str,
+) -> None:
+    """Finish the lock after document and metric dates are available."""
+    if not row.get("context_required"):
+        return
+    row["speech_date"] = document_date
+    row["event_period"] = reference_period
+    row["context_period"] = reference_period
+    row["metric_source_status"] = "SPEAKER_ONLY"
+
+    quantitative = bool(row.get("substantive_values"))
+    if not quantitative:
+        row["metric_scope"] = ""
+    context_for_period = normalize(
+        " · ".join(
+            value for value in (
+                row.get("context_text", ""),
+                row.get("text", ""),
+            ) if value
+        )
+    )
+    if reference_period:
+        row["metric_period"] = reference_period
+        row["metric_period_status"] = "EXPLICIT"
+    elif quantitative and document_date and COUNCIL_RELATIVE_PERIOD_RE.search(
+        context_for_period
+    ):
+        row["metric_period"] = f"{document_date} 발언 당시"
+        row["metric_period_status"] = "RELATIVE_TO_DOCUMENT"
+    elif quantitative:
+        row["metric_period"] = ""
+        row["metric_period_status"] = "UNKNOWN"
+    else:
+        row["metric_period"] = ""
+        row["metric_period_status"] = "NOT_APPLICABLE"
+
+    missing = list(row.get("context_missing_fields", []))
+    if quantitative and not row.get("metric_scope"):
+        missing.append("수치 적용 범위")
+    if quantitative and row.get("metric_period_status") == "UNKNOWN":
+        missing.append("수치 기준기간")
+    row["context_missing_fields"] = list(dict.fromkeys(missing))
+
+    if row["context_missing_fields"]:
+        row["context_status"] = "HOLD"
+        row["qualified"] = False
+        row["localization_lead"] = False
+        row["grounding_status"] = "HOLD"
+        issue = (
+            "문맥 잠금 미완료: "
+            + ", ".join(row["context_missing_fields"])
+        )
+        row["context_reason"] = issue
+        issues = list(row.get("grounding_issues", []))
+        if issue not in issues:
+            issues.append(issue)
+        row["grounding_issues"] = issues
+        row["question"] = (
+            "문맥 잠금 미완료 — 사건·대상·수치 범위·기준기간을 "
+            "확인한 뒤 질문 생성"
+        )
+    elif row.get("context_status") == "PASS" and quantitative:
+        period_note = (
+            "수치 기준기간은 발언의 상대시점을 회의록 문서일에 연결"
+            if row.get("metric_period_status") == "RELATIVE_TO_DOCUMENT"
+            else "수치 기준기간을 발언문에서 확인"
+        )
+        row["context_reason"] = (
+            row.get("context_reason", "") + "; " + period_note
+        ).strip("; ")
 
 def is_routine_action(text: str) -> bool:
     """Detect an administrative action without treating 기관명 속 '공사' as a project."""
@@ -1148,6 +1432,11 @@ def extract_records(
             continue
         seen.add(key)
         context_payload = dict(raw_context)
+        if (
+            source["id"] == "council_minutes"
+            and not context_payload.get("context_required")
+        ):
+            context_payload = unlocked_council_context(text, record_kind)
         analysis_text = context_payload.pop("_analysis_text", text)
         score, reasons, seoul_scope, signals = score_text(
             analysis_text, source, record_kind
@@ -1251,7 +1540,10 @@ def extract_records(
     records.sort(
         key=lambda row: (
             row["qualified"],
-            row.get("context_status", "PASS") == "PASS",
+            (
+                row.get("source_id") != "council_minutes"
+                or row.get("context_status") == "PASS"
+            ),
             row["precheck_status"] == "PASS",
             row["score"],
             len(row["text"]),
@@ -1457,7 +1749,10 @@ DIVERSITY_STOPWORDS = {
 def record_rank(row: dict) -> tuple:
     return (
         row["qualified"],
-        row.get("context_status", "PASS") == "PASS",
+        (
+            row.get("source_id") != "council_minutes"
+            or row.get("context_status") == "PASS"
+        ),
         row.get("freshness_status") == "FRESH",
         row["precheck_status"] == "PASS",
         row["grounding_status"] == "PASS",
@@ -1521,21 +1816,44 @@ def near_duplicate_context(left: dict, right: dict) -> bool:
 
 
 def select_distinct_council_records(records: list[dict], source_url: str) -> list[dict]:
-    """Keep multiple issues per minutes URL while collapsing overlapping windows."""
+    """Keep reviewable issues and context holds under separate per-page quotas."""
     grouped: dict[str, list[dict]] = {}
     for row in records:
         row["url"] = canonical_url(row["url"], source_url)
         grouped.setdefault(row["url"], []).append(row)
-    selected: list[dict] = []
-    for rows in grouped.values():
+
+    def choose(
+        rows: list[dict],
+        limit: int,
+        prior_rows: list[dict] | None = None,
+    ) -> list[dict]:
         chosen: list[dict] = []
+        prior_rows = prior_rows or []
         for row in sorted(rows, key=record_rank, reverse=True):
-            if any(near_duplicate_context(row, prior) for prior in chosen):
+            if any(
+                near_duplicate_context(row, prior)
+                for prior in [*prior_rows, *chosen]
+            ):
                 continue
             chosen.append(row)
-            if len(chosen) >= 3:
+            if len(chosen) >= limit:
                 break
-        selected.extend(chosen)
+        return chosen
+
+    selected: list[dict] = []
+    for rows in grouped.values():
+        passed = [
+            row for row in rows
+            if row.get("context_status") == "PASS"
+        ]
+        held = [
+            row for row in rows
+            if row.get("context_status") != "PASS"
+        ]
+        chosen_passed = choose(passed, 3)
+        chosen_held = choose(held, 6, chosen_passed)
+        selected.extend(chosen_passed)
+        selected.extend(chosen_held)
     return selected
 
 
@@ -1625,8 +1943,12 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
             if is_unscoped_listing_row
             else page_dates.get(canonical_record, "")
         )
-        reference_period = latest_period_label([row.get("text", "")])
-        reference_effective_date = latest_date_from([row.get("text", "")])
+        period_inputs = [
+            row.get("context_text", ""),
+            row.get("text", ""),
+        ]
+        reference_period = latest_period_label(period_inputs)
+        reference_effective_date = latest_date_from(period_inputs)
         if (
             source["id"] in {"labor_arrears", "consumer_agency"}
             and row.get("record_kind") == "DATA_ROW"
@@ -1648,16 +1970,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
             )
         )
         if row.get("context_required"):
-            row["context_period"] = reference_period or document_date
-            row["metric_period"] = reference_period
-            row["metric_period_status"] = (
-                "KNOWN" if reference_period else "UNVERIFIED"
-            )
-            if not reference_period:
-                row["context_reason"] = (
-                    row.get("context_reason", "")
-                    + "; 수치 기준기간은 독립 원자료에서 확인 필요"
-                ).strip("; ")
+            finalize_council_context(row, document_date, reference_period)
 
     if source["id"] == "council_minutes":
         item_records = select_distinct_council_records(records, source["url"])
@@ -1842,11 +2155,12 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
 
     csv_fields = [
         "source_id", "source_name", "role", "record_kind", "score", "content_class",
-        "context_status", "context_subject", "context_trigger", "context_text",
+        "context_status", "context_rule", "context_subject", "context_trigger", "context_text",
         "context_reason", "context_missing_fields", "source_type", "speech_type",
         "speech_type_label", "speaker", "affected_group", "geography",
-        "sector_scope", "scope_exclusion", "context_period", "metric_period",
-        "metric_period_status", "statement_label", "display_fact",
+        "sector_scope", "scope_exclusion", "speech_date", "event_period",
+        "context_period", "metric_scope", "metric_period", "metric_period_status",
+        "metric_source_status", "statement_label", "display_fact",
         "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
         "substantive_values", "verification_usable", "verification_metadata_lead", "verification_schema_lead",
         "seoul_scope", "scope_class", "scope_reason", "qualified",
