@@ -74,6 +74,7 @@ REVIEW_FIELDS = [
     "metric_source_status",
     "statement_label",
     "display_fact",
+    "evidence_values",
     "source_id",
     "source_name",
     "source_date",
@@ -600,6 +601,7 @@ def update_review_queue(feed: dict) -> None:
                     else row["lane"]
                 ),
                 "context_status": str(row.get("context_status", "")),
+                "context_rule": str(row.get("context_rule", "")),
                 "context_subject": str(row.get("context_subject", "")),
                 "context_trigger": str(row.get("context_trigger", "")),
                 "context_text": concise(row.get("context_text", ""), 800),
@@ -615,13 +617,20 @@ def update_review_queue(feed: dict) -> None:
                 "geography": str(row.get("geography", "")),
                 "sector_scope": str(row.get("sector_scope", "")),
                 "scope_exclusion": str(row.get("scope_exclusion", "")),
+                "speech_date": str(row.get("speech_date", "")),
+                "event_period": str(row.get("event_period", "")),
                 "context_period": str(row.get("context_period", "")),
+                "metric_scope": str(row.get("metric_scope", "")),
                 "metric_period": str(row.get("metric_period", "")),
                 "metric_period_status": str(
                     row.get("metric_period_status", "")
                 ),
+                "metric_source_status": str(
+                    row.get("metric_source_status", "")
+                ),
                 "statement_label": str(row.get("statement_label", "")),
                 "display_fact": concise(row.get("display_fact", ""), 800),
+                "evidence_values": ", ".join(row.get("evidence_values", [])),
                 "source_id": row["source_id"],
                 "source_name": row["source_name"],
                 "source_date": str(row.get("source_date", "")),

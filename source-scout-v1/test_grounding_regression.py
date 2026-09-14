@@ -1989,5 +1989,48 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertNotIn("수치 기준기간", row["context_missing_fields"])
 
 
+    def test_review_queue_preserves_council_numeric_context_fields(self):
+        row = {
+            "source_id": "council_minutes",
+            "source_name": "서울시의회 회의록",
+            "lane": "CORE_DISCOVERY",
+            "score": 9,
+            "text": "현재 미지급 통상임금은 약 2,900억 원입니다.",
+            "url": "https://ms.smc.seoul.kr/record/recordView.do?key=queue-context",
+            "context_status": "PASS",
+            "context_rule": "BUS_WAGE",
+            "context_subject": "서울 시내버스 통상임금·노사 분쟁",
+            "metric_scope": "서울 시내버스 운수업체 미지급 통상임금",
+            "metric_period": "2026-09-11 발언 당시",
+            "metric_period_status": "RELATIVE_TO_DOCUMENT",
+            "metric_source_status": "SPEAKER_ONLY",
+            "speech_date": "2026-09-11",
+            "event_period": "",
+            "evidence_values": ["2,900억 원"],
+        }
+        payload = {
+            "generated_at_kst": "2026-09-15T09:00:00+09:00",
+            "core_discovery": [row],
+            "auxiliary_discovery": [],
+            "localization_discovery": [],
+            "rediscovered_carryover": [],
+        }
+        original_queue = feed.QUEUE
+        with tempfile.TemporaryDirectory() as tmp:
+            feed.QUEUE = Path(tmp) / "review.csv"
+            try:
+                feed.update_review_queue(payload)
+                saved = feed.read_review_queue()[0]
+            finally:
+                feed.QUEUE = original_queue
+        self.assertEqual(
+            saved["metric_scope"],
+            "서울 시내버스 운수업체 미지급 통상임금",
+        )
+        self.assertEqual(saved["metric_source_status"], "SPEAKER_ONLY")
+        self.assertEqual(saved["speech_date"], "2026-09-11")
+        self.assertEqual(saved["evidence_values"], "2,900억 원")
+
+
 if __name__ == "__main__":
     unittest.main()
