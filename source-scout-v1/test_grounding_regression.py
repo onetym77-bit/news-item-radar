@@ -1599,5 +1599,162 @@ class GroundingRegressionTests(unittest.TestCase):
 
 
 
+    def test_council_bus_wage_context_lock_preserves_scope(self):
+        html = (
+            "<p>5분 자유발언</p>"
+            "<p>○정진철 의원</p>"
+            "<p>서울 시내버스 파업 재발 위기와 통상임금 판결에 대해 발언하겠습니다.</p>"
+            "<p>서울시가 준공영제 운영 주체로 노사협상에 책임 있게 나서야 합니다.</p>"
+            "<p>현재 미지급 통상임금이 약 2,900억 원이고 "
+            "지연이자는 하루 약 1억 4,000만 원씩 늘어난다고 합니다.</p>"
+            "<p>○김민석 의원</p>"
+            "<p>서울 전세사기 피해 100가구에 대해 발언하겠습니다.</p>"
+        )
+        parser = scout.parse_html(html)
+        rows = scout.extract_records(
+            parser,
+            "https://ms.smc.seoul.kr/record/recordView.do?key=bus",
+            self.council,
+            include_windows=True,
+        )
+        target = next(row for row in rows if "2,900억 원" in row["text"])
+        self.assertEqual(target["context_status"], "PASS")
+        self.assertEqual(target["context_subject"], "서울 시내버스 통상임금·노사 분쟁")
+        self.assertEqual(target["speech_type"], "FIVE_MINUTE_SPEECH")
+        self.assertEqual(target["speaker"], "정진철 의원")
+        self.assertIn("버스 파업", target["context_trigger"])
+        self.assertIn("서울 시내버스", target["question_basis"])
+        self.assertIn("서울 시내버스", target["question"])
+        self.assertIn("서울 전체 임금시장 수치가 아님", target["scope_exclusion"])
+        self.assertNotIn("전세사기", target["context_text"])
+        self.assertTrue(target["qualified"])
+
+    def test_council_isolated_unpaid_wage_claim_is_context_hold(self):
+        html = (
+            "<p>5분 자유발언</p>"
+            "<p>현재 미지급 통상임금이 약 2,900억 원이고 "
+            "지연이자는 하루 약 1억 4,000만 원씩 늘어난다고 합니다.</p>"
+        )
+        parser = scout.parse_html(html)
+        rows = scout.extract_records(
+            parser,
+            "https://ms.smc.seoul.kr/record/recordView.do?key=isolated",
+            self.council,
+            include_windows=True,
+        )
+        target = next(row for row in rows if "2,900억 원" in row["text"])
+        self.assertEqual(target["context_status"], "HOLD")
+        self.assertFalse(target["qualified"])
+        self.assertEqual(target["grounding_status"], "HOLD")
+        self.assertIn("발언자", target["context_missing_fields"])
+        self.assertIn("적용 대상·업종 범위", target["context_missing_fields"])
+
+    def test_council_context_lock_stops_at_speaker_boundary(self):
+        html = (
+            "<p>5분 자유발언</p>"
+            "<p>○김민석 의원</p>"
+            "<p>서울 전세사기 피해 100가구와 임차보증금 문제입니다.</p>"
+            "<p>○정진철 의원</p>"
+            "<p>서울 시내버스 파업과 통상임금 판결 문제입니다.</p>"
+            "<p>미지급 통상임금 2,900억 원, 지연이자 하루 1억 4,000만 원이라고 합니다.</p>"
+        )
+        parser = scout.parse_html(html)
+        rows = scout.extract_records(
+            parser,
+            "https://ms.smc.seoul.kr/record/recordView.do?key=boundary",
+            self.council,
+            include_windows=True,
+        )
+        target = next(row for row in rows if "2,900억 원" in row["text"])
+        self.assertEqual(target["speaker"], "정진철 의원")
+        self.assertIn("시내버스", target["context_text"])
+        self.assertNotIn("전세사기", target["context_text"])
+
+    def test_feed_excludes_context_hold_from_reviewable_core(self):
+        base = {
+            "source_id": "council_minutes",
+            "source_name": "서울시의회 회의록",
+            "score": 9,
+            "qualified": True,
+            "grounding_status": "PASS",
+            "precheck_status": "PASS",
+            "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+            "claim_status": "ATTRIBUTED_CLAIM",
+            "freshness_status": "FRESH",
+            "text": "미지급 통상임금 2,900억 원과 지연이자",
+            "question": "누가 부담하는가?",
+            "url": "https://ms.smc.seoul.kr/record/recordView.do?key=feed",
+        }
+        passed = {
+            **base,
+            "context_status": "PASS",
+            "context_subject": "서울 시내버스 통상임금·노사 분쟁",
+        }
+        held = {
+            **base,
+            "text": "적용 대상이 없는 미지급 임금 2,901억 원",
+            "context_status": "HOLD",
+            "context_reason": "문맥 잠금 미완료",
+            "context_missing_fields": ["정확한 사안", "적용 대상·업종 범위"],
+        }
+
+        class FakeModule:
+            @staticmethod
+            def run_source(source):
+                metric = {
+                    "id": source["id"], "name": source["name"], "role": source["role"],
+                    "http_ok": True, "status": 200, "status_detail": "OK",
+                    "requests": 1, "failed_requests": 0, "extracted": 2,
+                    "precheck_pass": 2, "grounded": 2, "qualified": 2,
+                }
+                return metric, [passed, held]
+
+        FakeModule.SOURCES = [self.council]
+        built = feed.build_feed(FakeModule)
+        self.assertEqual(len(built["core_discovery"]), 1)
+        self.assertEqual(
+            built["core_discovery"][0]["context_status"], "PASS"
+        )
+        self.assertEqual(len(built["context_holds"]), 1)
+        self.assertEqual(built["funnel"]["selected_discovery"], 1)
+        self.assertEqual(built["funnel"]["context_holds"], 1)
+
+    def test_context_change_keeps_candidate_id_but_changes_revision(self):
+        base = {
+            "source_id": "council_minutes",
+            "url": "https://ms.smc.seoul.kr/record/recordView.do?key=revision",
+            "text": "미지급 통상임금 2,900억 원과 지연이자",
+        }
+        unlocked = {
+            **base,
+            "context_status": "HOLD",
+            "context_subject": "",
+            "context_text": "",
+        }
+        locked = {
+            **base,
+            "context_status": "PASS",
+            "context_subject": "서울 시내버스 통상임금·노사 분쟁",
+            "context_text": "서울 시내버스 파업과 통상임금 판결",
+            "speaker": "정진철 의원",
+            "speech_type": "FIVE_MINUTE_SPEECH",
+        }
+        self.assertEqual(feed.candidate_id(unlocked), feed.candidate_id(locked))
+        self.assertNotEqual(
+            feed.source_revision_for_row(unlocked),
+            feed.source_revision_for_row(locked),
+        )
+
+    def test_compound_korean_currency_is_one_measurement(self):
+        values = scout.extract_substantive_values(
+            "피해액은 1조 9,860억 원이고 지연이자는 하루 1억 4,000만 원입니다."
+        )
+        self.assertIn("1조 9,860억 원", values)
+        self.assertIn("1억 4,000만 원", values)
+        self.assertNotIn("1조", values)
+        self.assertNotIn("9,860억 원", values)
+        self.assertNotIn("1억", values)
+
+
 if __name__ == "__main__":
     unittest.main()

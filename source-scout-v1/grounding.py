@@ -6,6 +6,12 @@ from __future__ import annotations
 import re
 
 SPACE_RE = re.compile(r"\s+")
+COMPOUND_CURRENCY_RE = re.compile(
+    r"(?<![0-9A-Za-z가-힣])(?:"
+    r"\d[\d,]*(?:\.\d+)?\s*조(?:\s*\d[\d,]*(?:\.\d+)?\s*억)?"
+    r"|\d[\d,]*(?:\.\d+)?\s*억(?:\s*\d[\d,]*(?:\.\d+)?\s*만)?"
+    r")\s*원"
+)
 MEASUREMENT_RE = re.compile(
     r"(?<![0-9A-Za-z가-힣])\d[\d,]*(?:\.\d+)?\s*"
     r"(?:%|조\s*원|억\s*원|백만\s*원|만\s*원|천\s*원|원|조|억|명|가구|건|대|곳|개|회|시간|분|개월|km|㎞)"
@@ -138,7 +144,18 @@ def extract_substantive_values(text: str) -> list[str]:
     cleaned = DATE_TOKEN_RE.sub(" ", cleaned)
     cleaned = _strip_static_scope_counts(cleaned)
     values: list[str] = []
-    for match in list(TIME_RANGE_RE.finditer(cleaned)) + list(MEASUREMENT_RE.finditer(cleaned)):
+    matches = list(COMPOUND_CURRENCY_RE.finditer(cleaned))
+    protected_spans = [match.span() for match in matches]
+    matches.extend(TIME_RANGE_RE.finditer(cleaned))
+    matches.extend(
+        match
+        for match in MEASUREMENT_RE.finditer(cleaned)
+        if not any(
+            match.start() < end and start < match.end()
+            for start, end in protected_spans
+        )
+    )
+    for match in sorted(matches, key=lambda item: item.start()):
         value = normalize(match.group(0))
         if value and value not in values:
             values.append(value)
@@ -523,6 +540,13 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         and "소송" in text
         and bool(analysis.get("substantive_values"))
     )
+    bus_unpaid_interest_evidence = (
+        any(term in text for term in ("시내버스", "서울시내버스", "버스노동조합"))
+        and "통상임금" in text
+        and any(term in text for term in ("미지급", "체불임금", "체불 임금"))
+        and "지연이자" in text
+        and bool(analysis.get("substantive_values"))
+    )
     unpaid_interest_evidence = (
         any(term in text for term in ("미지급", "체불임금", "체불 임금"))
         and "지연이자" in text
@@ -654,6 +678,28 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
             else "확인된 피해 규모를 자치구·주택유형별로 나누면 집중이 있는가? 지원 대상·금액 분포와 일치하는가?"
         )
         proposed_axes = existing_axes or ["자치구", "주택유형", "지원 대상"]
+    elif bus_unpaid_interest_evidence:
+        contract = ["서울 시내버스", "통상임금 미지급", "지연이자", "측정값"]
+        contract_checks = [
+            (
+                "서울 시내버스",
+                any(
+                    term in text
+                    for term in ("시내버스", "서울시내버스", "버스노동조합")
+                ),
+            ),
+            ("통상임금 미지급", "통상임금" in text and "미지급" in text),
+            ("지연이자", "지연이자" in text),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = (
+            "서울 시내버스 통상임금 분쟁에서 제시된 미지급액과 지연이자는 "
+            "어떤 판결·기간·임금항목·운수업체를 합산한 것인가? "
+            "결정 지연 비용은 운수업체·서울시 재정·노동자 가운데 누구에게 귀속되는가?"
+        )
+        proposed_axes = [
+            "판결·산정 기간", "임금항목", "운수업체", "최종 부담자"
+        ]
     elif bus_lawsuit_evidence:
         contract = ["시내버스", "소송", "측정값"]
         contract_checks = [

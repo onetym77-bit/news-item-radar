@@ -640,6 +640,181 @@ def context_windows(chunks: list[str], limit: int = 45) -> list[str]:
 
 
 
+COUNCIL_SPEAKER_RE = re.compile(
+    r"^(?:○|●|◯)?\s*([가-힣]{2,6})\s*"
+    r"(의원|위원|시장|부시장|실장|국장|과장|본부장|사장)(?:\s|$)"
+)
+COUNCIL_CONTEXT_RULES = (
+    {
+        "key": "seoul_bus_wage",
+        "evidence_terms": ("통상임금", "지연이자", "체불임금", "체불 임금"),
+        "subject_terms": (
+            "시내버스", "서울시내버스", "버스노동조합",
+            "버스운송사업조합", "운수회사", "운송사",
+        ),
+        "subject": "서울 시내버스 통상임금·노사 분쟁",
+        "sector_scope": "서울 시내버스 준공영제와 운수업체",
+        "affected_group": "버스 노동자·운수업체·서울시 재정·버스 이용 시민",
+        "scope_exclusion": "서울 전체 임금시장 수치가 아님",
+    },
+    {
+        "key": "seoul_rent_fraud",
+        "evidence_terms": ("전세사기", "임차보증금", "피해가구"),
+        "subject_terms": ("전세사기", "임차보증금", "피해가구", "피해자 지원"),
+        "subject": "서울 전세사기 피해 인정·지원",
+        "sector_scope": "서울 전세사기 피해 인정 가구와 임차보증금",
+        "affected_group": "전세사기 피해 인정 가구와 임차인",
+        "scope_exclusion": "",
+    },
+    {
+        "key": "sign_language_centers",
+        "evidence_terms": ("수어통역센터", "수어통역서비스"),
+        "subject_terms": (
+            "수어통역센터", "수어통역서비스", "수어교육",
+            "자체수입", "사업비",
+        ),
+        "subject": "서울 자치구 수어통역센터 재정·서비스",
+        "sector_scope": "서울 25개 자치구 수어통역센터",
+        "affected_group": "농인 이용자·수어통역센터 종사자",
+        "scope_exclusion": "",
+    },
+    {
+        "key": "climate_card_loss",
+        "evidence_terms": ("기후동행카드",),
+        "subject_terms": ("기후동행카드", "교통공사", "손실금", "부채"),
+        "subject": "기후동행카드 손실 분담",
+        "sector_scope": "서울시와 서울교통공사의 기후동행카드 재정",
+        "affected_group": "서울교통공사·서울시 재정·대중교통 이용 시민",
+        "scope_exclusion": "",
+    },
+)
+
+COUNCIL_CONTEXT_EVENT_TERMS = (
+    ("파업", "버스 파업"),
+    ("통상임금", "통상임금"),
+    ("판결", "법원 판결"),
+    ("소송", "소송"),
+    ("노사협상", "노사협상"),
+    ("교섭", "노사교섭"),
+    ("지원 조례", "피해지원 조례"),
+    ("자체수입", "자체수입 재투자 제한"),
+)
+
+
+def _council_speaker(chunk: str) -> str:
+    match = COUNCIL_SPEAKER_RE.match(normalize(chunk))
+    if not match:
+        return ""
+    return f"{match.group(1)} {match.group(2)}"
+
+
+def _council_speech_type(chunks: list[str], start: int, index: int) -> tuple[str, str]:
+    nearby = " · ".join(chunks[max(0, start - 120) : index + 1])
+    if "5분 자유발언" in nearby or "5분자유발언" in nearby:
+        return "FIVE_MINUTE_SPEECH", "5분 자유발언"
+    if "시정질문" in nearby:
+        return "POLICY_QUESTION", "시정질문"
+    if "업무보고" in nearby:
+        return "COMMITTEE_REPORT", "위원회 업무보고"
+    return "COUNCIL_STATEMENT", "시의회 발언"
+
+
+def lock_council_context(
+    chunks: list[str],
+    index: int,
+    evidence_text: str,
+) -> dict:
+    """Attach bounded speech context before a council excerpt may become a lead."""
+    lower_bound = max(0, index - 80)
+    speaker_index: int | None = None
+    speaker = ""
+    for position in range(index, lower_bound - 1, -1):
+        found = _council_speaker(chunks[position])
+        if found:
+            speaker_index = position
+            speaker = found
+            break
+
+    start = speaker_index if speaker_index is not None else max(0, index - 12)
+    segment = [normalize(value) for value in chunks[start : index + 1] if normalize(value)]
+    combined = normalize(" · ".join(segment + [evidence_text]))
+    evidence = normalize(evidence_text)
+
+    matched_rule: dict | None = None
+    for rule in COUNCIL_CONTEXT_RULES:
+        evidence_matches = any(term in evidence for term in rule["evidence_terms"])
+        subject_matches = any(term in combined for term in rule["subject_terms"])
+        if evidence_matches and subject_matches:
+            matched_rule = rule
+            break
+
+    speech_type, speech_type_label = _council_speech_type(chunks, start, index)
+    missing: list[str] = []
+    if not speaker:
+        missing.append("발언자")
+    if matched_rule is None:
+        missing.extend(["정확한 사안", "적용 대상·업종 범위"])
+
+    relevant_terms: tuple[str, ...] = ()
+    if matched_rule is not None:
+        relevant_terms = tuple(matched_rule["evidence_terms"]) + tuple(
+            matched_rule["subject_terms"]
+        )
+    relevant_chunks: list[str] = []
+    for chunk in segment:
+        if chunk == evidence or not relevant_terms:
+            continue
+        if any(term in chunk for term in relevant_terms):
+            relevant_chunks.append(chunk)
+    relevant_chunks = relevant_chunks[-5:]
+    context_text = normalize(" · ".join(relevant_chunks))
+    events = [
+        label for token, label in COUNCIL_CONTEXT_EVENT_TERMS
+        if token in combined
+    ]
+    context_trigger = "·".join(dict.fromkeys(events))
+
+    status = "PASS" if not missing else "HOLD"
+    subject = matched_rule["subject"] if matched_rule else ""
+    display_fact = (
+        f"{subject} — {evidence}" if subject
+        else f"적용 대상 미확인 — {evidence}"
+    )
+    analysis_text = normalize(" · ".join(
+        value for value in (context_text, evidence) if value
+    ))
+    if not analysis_text:
+        analysis_text = evidence
+
+    return {
+        "context_required": True,
+        "context_status": status,
+        "context_subject": subject,
+        "context_trigger": context_trigger,
+        "context_text": context_text,
+        "context_reason": (
+            "발언자와 사안·대상 범위를 같은 발언 안에서 확인"
+            if status == "PASS"
+            else "문맥 잠금 미완료: " + ", ".join(missing)
+        ),
+        "context_missing_fields": missing,
+        "source_type": "COUNCIL_MINUTES",
+        "speech_type": speech_type,
+        "speech_type_label": speech_type_label,
+        "speaker": speaker,
+        "affected_group": matched_rule["affected_group"] if matched_rule else "",
+        "geography": "서울",
+        "sector_scope": matched_rule["sector_scope"] if matched_rule else "",
+        "scope_exclusion": matched_rule["scope_exclusion"] if matched_rule else "",
+        "context_period": "",
+        "metric_period": "",
+        "metric_period_status": "UNKNOWN",
+        "statement_label": "발언에서 제시된 내용",
+        "display_fact": display_fact,
+        "_analysis_text": analysis_text,
+    }
+
+
 def is_routine_action(text: str) -> bool:
     """Detect an administrative action without treating 기관명 속 '공사' as a project."""
     return any(term in text for term in ROUTINE_ACTION_TERMS) or bool(
@@ -940,32 +1115,43 @@ def extract_records(
     source: dict,
     include_windows: bool,
 ) -> list[dict]:
-    texts: list[tuple[str, str, str]] = []
+    texts: list[tuple[str, str, str, dict]] = []
     if source["role"] == "VERIFICATION" or source["id"] in {"labor_arrears", "consumer_agency"}:
         for row_text in static_verification_rows(parser):
-            texts.append((row_text, page_url, "DATA_ROW"))
+            texts.append((row_text, page_url, "DATA_ROW", {}))
     if source["id"] == "labor_arrears":
         for row_text in labor_region_rows(parser):
-            texts.append((row_text, page_url, "DATA_ROW"))
+            texts.append((row_text, page_url, "DATA_ROW", {}))
     for href, label in parser.anchors:
         absolute = urljoin(page_url, href)
         if valid_candidate(label) and source_url_allowed(source["id"], absolute):
-            texts.append((label, absolute, "LINK_LABEL"))
-    for chunk in parser.chunks:
-        if valid_candidate(chunk):
-            texts.append((chunk, page_url, "PAGE_CHUNK"))
-    if include_windows:
+            texts.append((label, absolute, "LINK_LABEL", {}))
+    for index, chunk in enumerate(parser.chunks):
+        if not valid_candidate(chunk):
+            continue
+        context_payload: dict = {}
+        if (
+            source["id"] == "council_minutes"
+            and "recordView.do" in page_url
+        ):
+            context_payload = lock_council_context(parser.chunks, index, chunk)
+        texts.append((chunk, page_url, "PAGE_CHUNK", context_payload))
+    if include_windows and source["id"] != "council_minutes":
         for window in context_windows(parser.chunks, limit=20):
-            texts.append((window, page_url, "CONTEXT_WINDOW"))
+            texts.append((window, page_url, "CONTEXT_WINDOW", {}))
 
     records: list[dict] = []
     seen: set[str] = set()
-    for text, url, record_kind in texts:
+    for text, url, record_kind, raw_context in texts:
         key = re.sub(r"[^0-9A-Za-z가-힣]", "", text).lower()
         if not key or key in seen:
             continue
         seen.add(key)
-        score, reasons, seoul_scope, signals = score_text(text, source, record_kind)
+        context_payload = dict(raw_context)
+        analysis_text = context_payload.pop("_analysis_text", text)
+        score, reasons, seoul_scope, signals = score_text(
+            analysis_text, source, record_kind
+        )
         if score < 2 and signals["precheck_status"] == "PASS":
             continue
         if source["role"] == "VERIFICATION":
@@ -975,7 +1161,10 @@ def extract_records(
             quality_gate = (
                 signals["precheck_status"] == "PASS"
                 and signals["evidence_anchor"] != "NONE"
-                and (signals["problem"] or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE")
+                and (
+                    signals["problem"]
+                    or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE"
+                )
             )
             qualified = score >= 6 and seoul_scope and quality_gate
         localization_threshold = (
@@ -994,10 +1183,34 @@ def extract_records(
             and not seoul_scope
             and quality_gate
         )
-        question_payload = build_question_payload(text, source.get("id", ""), signals)
+        question_payload = build_question_payload(
+            analysis_text, source.get("id", ""), signals
+        )
         if question_payload["grounding_status"] != "PASS":
             qualified = False
             localization_lead = False
+
+        if (
+            context_payload.get("context_required")
+            and context_payload.get("context_status") != "PASS"
+        ):
+            qualified = False
+            localization_lead = False
+            question_payload["grounding_status"] = "HOLD"
+            issue = context_payload.get(
+                "context_reason", "문맥 잠금 미완료"
+            )
+            current_issues = list(question_payload.get("grounding_issues", []))
+            if issue not in current_issues:
+                current_issues.append(issue)
+            question_payload["grounding_issues"] = current_issues
+            question_payload["question"] = (
+                "문맥 잠금 미완료 — 정확한 사건·대상·업종 범위를 확인한 뒤 질문 생성"
+            )
+
+        if context_payload.get("display_fact"):
+            question_payload["question_basis"] = context_payload["display_fact"]
+
         records.append(
             {
                 "source_id": source["id"],
@@ -1017,20 +1230,28 @@ def extract_records(
                 "substantive_values": signals["substantive_values"],
                 "claim_status": signals["claim_status"],
                 "verification_usable": signals["verification_usable"],
-                "verification_metadata_lead": signals.get("verification_metadata_lead", False),
-                "verification_schema_lead": signals.get("verification_schema_lead", False),
+                "verification_metadata_lead": signals.get(
+                    "verification_metadata_lead", False
+                ),
+                "verification_schema_lead": signals.get(
+                    "verification_schema_lead", False
+                ),
                 "evidence_anchor": signals["evidence_anchor"],
                 "seoul_scope": seoul_scope,
-                "scope_class": signals.get("scope_class", "NATIONAL_OR_UNBOUND"),
+                "scope_class": signals.get(
+                    "scope_class", "NATIONAL_OR_UNBOUND"
+                ),
                 "scope_reason": signals.get("scope_reason", ""),
                 "qualified": qualified,
                 "localization_lead": localization_lead,
+                **context_payload,
                 **question_payload,
             }
         )
     records.sort(
         key=lambda row: (
             row["qualified"],
+            row.get("context_status", "PASS") == "PASS",
             row["precheck_status"] == "PASS",
             row["score"],
             len(row["text"]),
@@ -1038,7 +1259,6 @@ def extract_records(
         reverse=True,
     )
     return records[:240]
-
 
 
 def canonical_url(url: str, fallback: str) -> str:
@@ -1237,6 +1457,7 @@ DIVERSITY_STOPWORDS = {
 def record_rank(row: dict) -> tuple:
     return (
         row["qualified"],
+        row.get("context_status", "PASS") == "PASS",
         row.get("freshness_status") == "FRESH",
         row["precheck_status"] == "PASS",
         row["grounding_status"] == "PASS",
@@ -1362,6 +1583,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 "stale_carryover": 0,
                 "archived_stale": 0,
                 "freshness_unknown": 0,
+                "context_holds": 0,
             },
             [],
         )
@@ -1425,6 +1647,17 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 basis=freshness_basis,
             )
         )
+        if row.get("context_required"):
+            row["context_period"] = reference_period or document_date
+            row["metric_period"] = reference_period
+            row["metric_period_status"] = (
+                "KNOWN" if reference_period else "UNVERIFIED"
+            )
+            if not reference_period:
+                row["context_reason"] = (
+                    row.get("context_reason", "")
+                    + "; 수치 기준기간은 독립 원자료에서 확인 필요"
+                ).strip("; ")
 
     if source["id"] == "council_minutes":
         item_records = select_distinct_council_records(records, source["url"])
@@ -1558,6 +1791,9 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
             row.get("freshness_status") in {"FRESHNESS_UNKNOWN", "FUTURE_DATED"}
             for row in records
         ),
+        "context_holds": sum(
+            row.get("context_status") == "HOLD" for row in records
+        ),
     }
     return metric, records
 
@@ -1606,6 +1842,11 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
 
     csv_fields = [
         "source_id", "source_name", "role", "record_kind", "score", "content_class",
+        "context_status", "context_subject", "context_trigger", "context_text",
+        "context_reason", "context_missing_fields", "source_type", "speech_type",
+        "speech_type_label", "speaker", "affected_group", "geography",
+        "sector_scope", "scope_exclusion", "context_period", "metric_period",
+        "metric_period_status", "statement_label", "display_fact",
         "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
         "substantive_values", "verification_usable", "verification_metadata_lead", "verification_schema_lead",
         "seoul_scope", "scope_class", "scope_reason", "qualified",
@@ -1621,7 +1862,10 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
         for row in records:
             export = {key: row.get(key, "") for key in csv_fields}
             export["reasons"] = ", ".join(row["reasons"])
-            for field in ("substantive_values", "verification_axes", "grounding_issues"):
+            for field in (
+                "substantive_values", "verification_axes", "grounding_issues",
+                "context_missing_fields",
+            ):
                 if isinstance(export.get(field), list):
                     export[field] = ", ".join(export[field])
             writer.writerow(export)

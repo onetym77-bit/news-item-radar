@@ -107,7 +107,27 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
         card = {
             "candidate_id": candidate_id,
             "source_revision": text(row, "source_revision") or candidate_revision(row),
-            "fact": text(row, "question_basis") or text(row, "text"),
+            "fact": text(row, "display_fact") or text(row, "question_basis") or text(row, "text"),
+            "fact_label": text(row, "statement_label") or (
+                "원자료에서 확인된 수치"
+                if text(row, "claim_status") == "OBSERVED_OR_PUBLISHED"
+                else "제시된 내용"
+            ),
+            "context_status": text(row, "context_status"),
+            "context_subject": text(row, "context_subject"),
+            "context_trigger": text(row, "context_trigger"),
+            "context_reason": text(row, "context_reason"),
+            "source_type": text(row, "source_type"),
+            "speech_type": text(row, "speech_type"),
+            "speech_type_label": text(row, "speech_type_label"),
+            "speaker": text(row, "speaker"),
+            "affected_group": text(row, "affected_group"),
+            "geography": text(row, "geography"),
+            "sector_scope": text(row, "sector_scope"),
+            "scope_exclusion": text(row, "scope_exclusion"),
+            "context_period": text(row, "context_period"),
+            "metric_period": text(row, "metric_period"),
+            "metric_period_status": text(row, "metric_period_status"),
             "source_name": text(row, "source_name"),
             "source_date": text(row, "source_date"),
             "freshness_status": text(row, "freshness_status") or "UNKNOWN",
@@ -247,7 +267,34 @@ def render_cards(payload: dict) -> str:
             [
                 f"### {index}. {card['candidate_id']}",
                 "",
-                f"- 관찰된 사실: {card['fact'] or '-'}",
+                (
+                    "- 사안·범위: "
+                    + " · ".join(
+                        value for value in (
+                            card.get("context_subject", ""),
+                            card.get("sector_scope", ""),
+                            card.get("context_period", ""),
+                        ) if value
+                    )
+                    if card.get("context_subject")
+                    else "- 사안·범위: 별도 문맥 잠금 불필요"
+                ),
+                f"- {card.get('fact_label') or '제시된 내용'}: {card['fact'] or '-'}",
+                (
+                    "- 출처·확인 수준: "
+                    + (
+                        " · ".join(
+                            value for value in (
+                                card.get("speaker", ""),
+                                card.get("speech_type_label", ""),
+                                card.get("claim_status", ""),
+                            ) if value
+                        )
+                        or card.get("source_name", "미상")
+                    )
+                ),
+                f"- 범위 주의: {card.get('scope_exclusion') or '별도 주의 없음'}",
+                f"- 수치 기준기간: {card.get('metric_period') or '미확인'} · {card.get('metric_period_status') or 'UNKNOWN'}",
                 f"- 자동 추정: {card['auto_anchor']} · {card['claim_status']} — 사람 판정 아님",
                 f"- 제안 질문: {card['question'] or '-'}",
                 f"- 아직 확인할 변수: {card['verification_axes'] or '-'}",

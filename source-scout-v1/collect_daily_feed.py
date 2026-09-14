@@ -50,6 +50,25 @@ REVIEW_FIELDS = [
     "auto_active_today",
     "review_eligible",
     "lane",
+    "context_status",
+    "context_subject",
+    "context_trigger",
+    "context_text",
+    "context_reason",
+    "context_missing_fields",
+    "source_type",
+    "speech_type",
+    "speech_type_label",
+    "speaker",
+    "affected_group",
+    "geography",
+    "sector_scope",
+    "scope_exclusion",
+    "context_period",
+    "metric_period",
+    "metric_period_status",
+    "statement_label",
+    "display_fact",
     "source_id",
     "source_name",
     "source_date",
@@ -118,8 +137,24 @@ def candidate_id(row: dict) -> str:
 
 def source_revision_for_row(row: dict) -> str:
     normalized_text = " ".join(str(row.get("text", "")).split())
+    context_signature = "|".join(
+        " ".join(str(row.get(field, "")).split())
+        for field in (
+            "context_status",
+            "context_subject",
+            "context_trigger",
+            "context_text",
+            "speaker",
+            "speech_type",
+            "sector_scope",
+            "scope_exclusion",
+            "context_period",
+            "metric_period",
+        )
+    )
     basis = (
-        f"{row.get('source_id', '')}|{row.get('url', '')}|{normalized_text}"
+        f"{row.get('source_id', '')}|{row.get('url', '')}|"
+        f"{normalized_text}|{context_signature}"
     )
     return hashlib.sha1(basis.encode("utf-8")).hexdigest()[:12]
 
@@ -219,6 +254,7 @@ def build_feed(
             if row["source_id"] == "council_minutes"
             and row.get("qualified")
             and row.get("grounding_status") == "PASS"
+            and row.get("context_status", "PASS") == "PASS"
             and is_fresh(row)
             and source_revision_for_row(row) not in prior_source_revisions
         ],
@@ -278,6 +314,21 @@ def build_feed(
             and row.get("freshness_status") == "STALE_CARRYOVER"
         ],
         5,
+        near_duplicate=getattr(module, "near_duplicate_context", None),
+    )
+    context_holds = unique_top(
+        [
+            {
+                **row,
+                "lane": "CONTEXT_HOLD",
+                "question": (
+                    "문맥 잠금 미완료 — 정확한 사건·대상·업종 범위를 확인한 뒤 질문 생성"
+                ),
+            }
+            for row in records
+            if row.get("context_status") == "HOLD"
+        ],
+        8,
         near_duplicate=getattr(module, "near_duplicate_context", None),
     )
     freshness_holds = unique_top(
@@ -354,6 +405,7 @@ def build_feed(
             for row in records
             if (
                 row.get("content_class") != "AGGREGATE_ACTIVITY_DASHBOARD"
+                and row.get("context_status") != "HOLD"
                 and (
                     row.get("precheck_status") == "HOLD"
                     or row.get("grounding_status") == "HOLD"
@@ -395,6 +447,7 @@ def build_feed(
                 row.get("freshness_status") == "ARCHIVED_STALE" for row in records
             ),
             "freshness_holds": len(freshness_holds),
+            "context_holds": len(context_holds),
             "selected_verification": len(verification),
             "verification_metadata_leads": len(verification_leads),
             "verification_schema_leads": len(verification_schema_leads),
@@ -408,6 +461,7 @@ def build_feed(
         "stale_carryover": stale_carryover,
         "archived_stale": archived_stale,
         "freshness_holds": freshness_holds,
+        "context_holds": context_holds,
         "activity_baselines": activity_baselines,
         "verification_metadata_leads": verification_leads,
         "verification_schema_leads": verification_schema_leads,
@@ -473,6 +527,29 @@ def update_review_queue(feed: dict) -> None:
                     if row.get("localization_lead") and not row.get("seoul_scope")
                     else row["lane"]
                 ),
+                "context_status": str(row.get("context_status", "")),
+                "context_subject": str(row.get("context_subject", "")),
+                "context_trigger": str(row.get("context_trigger", "")),
+                "context_text": concise(row.get("context_text", ""), 800),
+                "context_reason": str(row.get("context_reason", "")),
+                "context_missing_fields": ", ".join(
+                    row.get("context_missing_fields", [])
+                ),
+                "source_type": str(row.get("source_type", "")),
+                "speech_type": str(row.get("speech_type", "")),
+                "speech_type_label": str(row.get("speech_type_label", "")),
+                "speaker": str(row.get("speaker", "")),
+                "affected_group": str(row.get("affected_group", "")),
+                "geography": str(row.get("geography", "")),
+                "sector_scope": str(row.get("sector_scope", "")),
+                "scope_exclusion": str(row.get("scope_exclusion", "")),
+                "context_period": str(row.get("context_period", "")),
+                "metric_period": str(row.get("metric_period", "")),
+                "metric_period_status": str(
+                    row.get("metric_period_status", "")
+                ),
+                "statement_label": str(row.get("statement_label", "")),
+                "display_fact": concise(row.get("display_fact", ""), 800),
                 "source_id": row["source_id"],
                 "source_name": row["source_name"],
                 "source_date": str(row.get("source_date", "")),
@@ -538,7 +615,8 @@ def render_markdown(feed: dict) -> str:
             f"동일 원문 재등장 {funnel.get('rediscovered_carryover', 0)}건 · "
             f"STALE {funnel.get('stale_carryover', 0)}건 · "
             f"보관 종료 {funnel.get('archived_stale', 0)}건 · "
-            f"날짜 확인 대기 {funnel.get('freshness_holds', 0)}건"
+            f"날짜 확인 대기 {funnel.get('freshness_holds', 0)}건 · "
+            f"문맥 확인 대기 {funnel.get('context_holds', 0)}건"
         ),
         "",
         "## 오늘 판정이 필요한 카드",
@@ -562,11 +640,33 @@ def render_markdown(feed: dict) -> str:
                 and row.get("grounding_status") == "PASS"
                 and row.get("claim_status") == "OBSERVED_OR_PUBLISHED"
             ) else "VERIFY 검토"
+            fact_label = row.get("statement_label") or (
+                "원자료에서 확인된 수치"
+                if row.get("claim_status") == "OBSERVED_OR_PUBLISHED"
+                else "제시된 내용"
+            )
+            context_scope = " · ".join(
+                value for value in (
+                    row.get("context_subject", ""),
+                    row.get("sector_scope", ""),
+                    row.get("context_period", ""),
+                ) if value
+            )
+            source_level = " · ".join(
+                value for value in (
+                    row.get("speaker", ""),
+                    row.get("speech_type_label", ""),
+                    row.get("claim_status", "UNRESOLVED"),
+                ) if value
+            )
             lines.extend(
                 [
                     f"### 판정 카드 {index} · {item_id}",
                     "",
-                    f"- 관찰된 사실: {concise(row.get('question_basis') or row['text'], 320)}",
+                    f"- 사안·범위: {context_scope or '별도 문맥 잠금 불필요'}",
+                    f"- {fact_label}: {concise(row.get('display_fact') or row.get('question_basis') or row['text'], 320)}",
+                    f"- 출처·확인 수준: {source_level or row.get('source_name', row.get('source_id', '미상'))}",
+                    f"- 범위 주의: {row.get('scope_exclusion') or '별도 주의 없음'}",
                     f"- 자동 분류: {row.get('evidence_anchor', 'NONE')} · {row.get('claim_status', 'UNRESOLVED')} — 사람 판정 아님",
                     f"- 제안 질문: {row['question']}",
                     f"- 아직 확인할 변수: {axes}",
@@ -578,6 +678,23 @@ def render_markdown(feed: dict) -> str:
                     f"- 원문: {row['url']}",
                     "- 선택: PROMISING / VERIFY / NOISE / DUPLICATE",
                     "- 현재 전이: 미승인 — 장부 변경 없음",
+                    "",
+                ]
+            )
+
+    context_holds = feed.get("context_holds", [])
+    lines.extend(["## 문맥 확인 대기 · 질문 생성 금지", ""])
+    if not context_holds:
+        lines.extend(["- 정확한 사건·대상 범위가 비어 보류된 의회 단서 없음", ""])
+    else:
+        for row in context_holds:
+            missing = ", ".join(row.get("context_missing_fields", [])) or "세부 문맥"
+            lines.extend(
+                [
+                    f"- 발언 조각: {concise(row.get('text', ''), 220)}",
+                    f"- 보류 이유: {row.get('context_reason') or '문맥 잠금 미완료'}",
+                    f"- 빠진 항목: {missing}",
+                    f"- 원문: {row.get('url', '')}",
                     "",
                 ]
             )

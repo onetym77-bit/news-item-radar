@@ -34,6 +34,7 @@ def render(feed: dict, review: dict | None = None) -> str:
     stale = feed.get("stale_carryover", [])
     archived = feed.get("archived_stale", [])
     freshness_holds = feed.get("freshness_holds", [])
+    context_holds = feed.get("context_holds", [])
     baselines = feed.get("activity_baselines", [])
     metadata_leads = feed.get("verification_metadata_leads", [])
     schema_leads = feed.get("verification_schema_leads", [])
@@ -76,23 +77,55 @@ def render(feed: dict, review: dict | None = None) -> str:
         ]
     )
     if not core:
-        lines.extend(["- 오늘 자동 기준을 통과한 질문 씨앗 없음", ""])
+        lines.extend(["- 오늘 자동 기준을 통과한 문맥 잠금 완료 단서 없음", ""])
     else:
-        lines.extend(
-            [
-                "| 관찰된 사실 | 자동 앵커 | 붙일 질문 | 질문 일치 | 수집 정렬점수 | 신선도 기준일 | 원문 |",
-                "|---|---|---|---|---:|---|---|",
-            ]
-        )
-        for row in core:
-            lines.append(
-                f"| {md(row.get('question_basis') or row.get('text', ''))} | "
-                f"{row.get('evidence_anchor', 'NONE')} · {row.get('claim_status', 'UNRESOLVED')} | "
-                f"{md(row.get('question', ''))} | {row.get('grounding_status', 'HOLD')} | "
-                f"{row.get('score', 0)} | {row.get('source_date', '미상')} | "
-                f"[원문]({row.get('url', '')}) |"
+        for index, row in enumerate(core, 1):
+            scope = " · ".join(
+                value for value in (
+                    row.get("context_subject", ""),
+                    row.get("sector_scope", ""),
+                    row.get("context_period", ""),
+                ) if value
             )
-        lines.append("")
+            source_level = " · ".join(
+                value for value in (
+                    row.get("speaker", ""),
+                    row.get("speech_type_label", ""),
+                    row.get("claim_status", ""),
+                ) if value
+            )
+            fact_label = row.get("statement_label") or "제시된 내용"
+            lines.extend(
+                [
+                    f"#### {index}. {row.get('context_subject') or '문맥 잠금 완료 단서'}",
+                    "",
+                    f"- 사안·범위: {md(scope or '별도 문맥 잠금 불필요', 240)}",
+                    f"- {fact_label}: {md(row.get('display_fact') or row.get('question_basis') or row.get('text', ''), 300)}",
+                    f"- 출처·확인 수준: {md(source_level or row.get('source_name', '미상'), 180)}",
+                    f"- 범위 주의: {md(row.get('scope_exclusion') or '별도 주의 없음', 180)}",
+                    f"- 수치 기준기간: {row.get('metric_period') or '미확인'} · {row.get('metric_period_status') or 'UNKNOWN'}",
+                    f"- 기획 질문: {md(row.get('question', ''), 300)}",
+                    f"- 질문 일치: {row.get('grounding_status', 'HOLD')} · 수집 정렬점수 {row.get('score', 0)}",
+                    f"- [원문]({row.get('url', '')})",
+                    "",
+                ]
+            )
+
+    lines.extend(["### 문맥 확인 대기 — 질문 생성 금지", ""])
+    if not context_holds:
+        lines.extend(["- 사건·대상·업종 범위를 확정하지 못해 보류된 의회 단서 없음", ""])
+    else:
+        for row in context_holds:
+            missing = ", ".join(row.get("context_missing_fields", [])) or "세부 문맥"
+            lines.extend(
+                [
+                    f"- 발언 조각: {md(row.get('text', ''), 220)}",
+                    f"- 보류 이유: {md(row.get('context_reason') or '문맥 잠금 미완료', 220)}",
+                    f"- 빠진 항목: {md(missing, 120)}",
+                    f"- [원문]({row.get('url', '')})",
+                    "",
+                ]
+            )
 
     lines.extend(["### 보완 발굴원", ""])
     if not auxiliary:
