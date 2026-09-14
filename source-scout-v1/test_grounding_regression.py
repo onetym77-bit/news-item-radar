@@ -1474,6 +1474,8 @@ class GroundingRegressionTests(unittest.TestCase):
     def test_standalone_meeting_datetime_label_uses_following_value(self):
         parser = scout.parse_html("<p>일 시</p><p>2026-09-11 10:00</p>")
         self.assertEqual(scout.document_date_from(parser), "2026-09-11")
+        same_chunk = scout.parse_html("<p>일시  2026년 9월 11일 오전 10시</p>")
+        self.assertEqual(scout.document_date_from(same_chunk), "2026-09-11")
 
     def test_sign_language_center_budget_gets_service_gap_question(self):
         text = (

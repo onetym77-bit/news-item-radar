@@ -1116,7 +1116,7 @@ def latest_period_label(chunks: Iterable[str]) -> str:
 
 DOCUMENT_DATE_LABEL_RE = re.compile(
     r"(?:게시일|등록일|작성일|발행일|공개일|수정일|회의일|회의일시|개최일"
-    r"|(?<![가-힣])일\s*시(?=\s*(?:[:：]|$)))"
+    r"|(?<![가-힣])일\s*시(?=\s*(?:[:：]|(?:19|20)\d{2}\s*년|$)))"
 )
 
 
