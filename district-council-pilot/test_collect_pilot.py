@@ -60,6 +60,27 @@ class PilotRegression(unittest.TestCase):
         rows,_=select_rows(Page('<footer>오늘 2026.09.14</footer><table><tr><td>제300회 본회의 2026.09.07</td><td><a href="/record/main?uid=1">보기</a></td></tr></table>'),"https://example.gov/late",SRC)
         self.assertEqual(rows[0]["meeting_date"],"2026-09-07")
 class ConnectionRegression(unittest.TestCase):
+    def test_assem_transcript_requires_named_speech_inside_original_container(self):
+        prose = '돌봄 대기와 교통 불편을 확인하여 자료를 제출하겠습니다. ' * 15
+        block = lambda name: '<div class="view_content_item"><div class="content_name"><strong>'+name+'</strong></div><a name="viewLine23"></a><div class="content_speech"><p>'+prose+'</p></div></div>'
+        html = block('AI 요약 원문아님') + '<div id="assem-content"><div class="bill_item">'+block('위원장 김가나')+block('교통과장 이다라')+'</div></div><div>출석공무원 명단</div>'
+        body,parts = transcript(Page(html))
+        self.assertEqual(len(parts),2)
+        self.assertTrue(parts[0].startswith('위원장 김가나'))
+        self.assertTrue(parts[1].startswith('교통과장 이다라'))
+        self.assertNotIn('AI 요약',body)
+        self.assertNotIn('출석공무원',body)
+
+    def test_assem_agenda_or_nameless_block_is_not_speech(self):
+        prose = '돌봄 부족 대기 백 명 ' * 100
+        html = '<div id="assem-content"><div class="view_content_item"><div class="content_name">의사일정</div><p>'+prose+'</p></div><div class="view_content_item"><div class="content_speech">'+prose+'</div></div></div>'
+        self.assertFalse(transcript(Page(html))[0])
+
+    def test_recent_api_null_labels_not_rendered_as_none(self):
+        from collect_pilot import recent_api_rows
+        rows=recent_api_rows([{"minId":1,"mtgDate":"2026.9.1","mtgNm":"본회의","mtgCerClssNm":None}],"https://example.gov",SRC)
+        self.assertNotIn("None",rows[0]["chunks"][0])
+
     def test_recent_tabs_deduplicate_and_order_without_using_ai_summary(self):
         from collect_pilot import recent_api_rows
         row={"minId":10,"mtgDate":"2026. 9. 1.","tmpMinYn":"Y","lsnNo":10,"ssnNo":319,"ssnTpNm":"정례회","sessNo":1,"mtgNm":"본회의","summary":"DO NOT USE AI SUMMARY"}

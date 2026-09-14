@@ -64,6 +64,9 @@ class Page(HTMLParser):
         self.speeches = []
         self.speech_chunks = None
         self.speech_depth = 0
+        self.speech_has_name = False
+        self.speech_has_body = False
+        self.assem_depth = 0
         self.frames = []
         self.title = []
         self.in_title = False
@@ -78,11 +81,20 @@ class Page(HTMLParser):
         if self.skip:
             return
         if tag == "div":
+            attributes = dict(attrs)
+            classes = attributes.get("class","").split()
+            if self.assem_depth:
+                self.assem_depth += 1
+            elif attributes.get("id") == "assem-content":
+                self.assem_depth = 1
             if self.speech_chunks is not None:
                 self.speech_depth += 1
-            elif "speaker_area" in dict(attrs).get("class","").split():
+                self.speech_has_name |= "content_name" in classes
+                self.speech_has_body |= "content_speech" in classes
+            elif "speaker_area" in classes or (self.assem_depth and "view_content_item" in classes):
                 self.speech_chunks = []
                 self.speech_depth = 1
+                self.speech_has_name = self.speech_has_body = "speaker_area" in classes
         if tag == "a":
             self.anchor = {"attrs":list(attrs), "chunks":[]}
         if tag == "title":
@@ -105,11 +117,15 @@ class Page(HTMLParser):
             self.skip = max(0, self.skip - 1)
         if self.skip:
             return
-        if tag == "div" and self.speech_chunks is not None:
-            self.speech_depth -= 1
-            if self.speech_depth == 0:
-                self.speeches.append(norm(" ".join(self.speech_chunks)))
-                self.speech_chunks = None
+        if tag == "div":
+            if self.speech_chunks is not None:
+                self.speech_depth -= 1
+                if self.speech_depth == 0:
+                    if self.speech_has_name and self.speech_has_body:
+                        self.speeches.append(norm(" ".join(self.speech_chunks)))
+                    self.speech_chunks = None
+            if self.assem_depth:
+                self.assem_depth -= 1
         if tag == "a" and self.anchor is not None:
             self.anchors.append(self.anchor)
             self.anchor = None
@@ -348,8 +364,8 @@ def recent_api_rows(records, base, source):
         if not identity.isdigit() or not when:
             raise ValueError("Recent API record lacks a valid identifier or meeting date")
         label = ("[임시회의록] " if record.get("tmpMinYn") == "Y" else "")
-        label += f"제 {record.get('lsnNo','')}대 {record.get('ssnNo','')}회 {record.get('ssnTpNm','')} "
-        label += f"{record.get('sessNo','')}차 {record.get('mtgCerClssNm','')} {record.get('mtgNm','')} {when}"
+        label += f"제 {(record.get('lsnNo') or '')}대 {(record.get('ssnNo') or '')}회 {(record.get('ssnTpNm') or '')} "
+        label += f"{(record.get('sessNo') or '')}차 {(record.get('mtgCerClssNm') or '')} {(record.get('mtgNm') or '')} {when}"
         url = urljoin(base,"/assem/viewer.do")+"?minId="+identity
         distinct.setdefault(identity,{"chunks":[label],"attrs":[["href",url]],"sort_date":when,"sort_id":int(identity)})
     return sorted(distinct.values(),key=lambda row:(row["sort_date"],row["sort_id"]),reverse=True)
@@ -457,7 +473,6 @@ def run(source, as_of, count=4):
                     if not body:
                         row["diagnostic_speaker_markup"] = [clean_diagnostic(page.raw_html[max(0,m.start()-220):m.end()+550]) for m in list(re.finditer(r"위원장|의사담당",page.raw_html))[:4]]
                         row["diagnostic_text_tail"] = norm(" ".join(page.chunks))[-600:]
-                        row["diagnostic_speech_dom"] = [clean_diagnostic(page.raw_html[max(0,m.start()-1300):m.end()+600]) for m in list(re.finditer(r"의석을 정돈|성원이 되었|안녕하십니까",page.raw_html))[:3]]
                     row["title"] = norm(" ".join(page.title))
                     row["title_date"] = day(row["title"])
                     rawtext = norm(" ".join(page.chunks))
