@@ -60,6 +60,7 @@ jobs:
           python -m py_compile source-scout-v1/inject_feed_into_briefing.py
           python -m py_compile source-scout-v1/evaluate_human_review.py
           python -X utf8 -m unittest discover -s source-scout-v1 -p 'test_*.py' -v
+          python -X utf8 -m unittest discover -s daily-briefing-v5 -p 'test_*.py' -v
           python -X utf8 source-scout-v1/collect_daily_feed.py
 
       - name: Validate source ledgers

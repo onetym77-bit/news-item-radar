@@ -60,6 +60,22 @@ class EvidenceAnchorTests(unittest.TestCase):
         self.assertTrue(rows)
         self.assertFalse(rows[0]["qualified"])
 
+    def test_prevention_project_does_not_become_an_accident_signal(self):
+        text = "서울 어린이 안전사고 예방시설 설치공사 5억원"
+        score, _, _, signals = scout.score_text(text, self.council)
+        self.assertEqual(signals["evidence_anchor"], "NONE")
+        self.assertFalse(score >= 6 and signals["evidence_anchor"] != "NONE")
+
+    def test_agency_name_does_not_block_structural_data(self):
+        text = "서울교통공사 2026년 월별 이용률 70%"
+        _, _, _, signals = scout.score_text(text, self.council)
+        self.assertEqual(signals["evidence_anchor"], "DECOMPOSABLE_STRUCTURE")
+
+    def test_observed_accident_count_is_a_problem_signal(self):
+        text = "서울 어린이 안전사고 37건 발생"
+        _, _, _, signals = scout.score_text(text, self.council)
+        self.assertEqual(signals["evidence_anchor"], "MEASURED_PROBLEM_SIGNAL")
+
     def test_direct_experience_can_enter_as_claim_not_verified_harm(self):
         text = "서울 시민이 버스를 2시간 대기해 불편을 겪었다는 민원"
         _, _, _, signals = scout.score_text(text, self.voice)

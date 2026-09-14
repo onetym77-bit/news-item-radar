@@ -62,6 +62,8 @@ VALID_FAMILIES = {
 }
 S2_SCENES = {"관찰됨", "당사자 진술"}
 VALID_UPSTREAM_GATES = {"PASS", "HOLD", "FAIL"}
+POSITIVE_EVIDENCE_ANCHORS = {"PROBLEM_SIGNAL", "STRUCTURAL_DATA"}
+VALID_EVIDENCE_ANCHORS = POSITIVE_EVIDENCE_ANCHORS | {"NONE", "UNRESOLVED"}
 REQUIRED_CORE_AGENDAS = {
     "HOUSING",
     "LABOR",
@@ -193,6 +195,7 @@ def main() -> int:
         )
 
     audit_rows: dict[str, dict[str, str]] = {}
+    unreviewed_evidence_anchors: list[str] = []
     if QUESTION_AUDIT.is_file():
         with QUESTION_AUDIT.open("r", encoding="utf-8-sig", newline="") as handle:
             audit_reader = csv.DictReader(handle)
@@ -205,6 +208,7 @@ def main() -> int:
                 "citizen_stake",
                 "competing_hypotheses",
                 "decision_rule",
+                "evidence_anchor",
             }
             missing_audit_columns = required_audit_columns - set(audit_reader.fieldnames or [])
             if missing_audit_columns:
@@ -216,6 +220,17 @@ def main() -> int:
                 audit_rows[audit_id] = audit_row
                 gate = (audit_row.get("quality_gate") or "").strip()
                 score_text = (audit_row.get("quality_score") or "").strip()
+                anchor = (audit_row.get("evidence_anchor") or "").strip()
+                if not anchor:
+                    unreviewed_evidence_anchors.append(audit_id)
+                elif anchor not in VALID_EVIDENCE_ANCHORS:
+                    errors.append(f"{audit_id}: 잘못된 evidence_anchor {anchor!r}")
+                elif gate == "PASS" and anchor not in POSITIVE_EVIDENCE_ANCHORS:
+                    errors.append(f"{audit_id}: 품질 PASS인데 긍정 근거 앵커가 없음")
+                elif anchor in {"NONE", "UNRESOLVED"} and score_text != "N/A":
+                    errors.append(f"{audit_id}: 근거 앵커 {anchor}인데 점수가 N/A가 아님")
+                elif anchor in POSITIVE_EVIDENCE_ANCHORS and score_text == "N/A":
+                    errors.append(f"{audit_id}: 근거 앵커가 확인됐는데 점수가 N/A")
                 if score_text == "N/A":
                     if gate not in {"HOLD", "FAIL"}:
                         errors.append(f"{audit_id}: 품질 {gate}인데 점수가 N/A")
@@ -247,6 +262,12 @@ def main() -> int:
                     for path_label in ("전환:", "축소:", "폐기:"):
                         if path_label not in decision_rule:
                             errors.append(f"{audit_id}: 판정선에 {path_label} 없음")
+
+    if unreviewed_evidence_anchors:
+        warnings.append(
+            "v1.6 근거 앵커 재심사 대기 "
+            f"{len(unreviewed_evidence_anchors)}건: 브리핑 B·C 선별에서 제외"
+        )
 
     for row in rows:
         item_id = (row.get("item_id") or "").strip()

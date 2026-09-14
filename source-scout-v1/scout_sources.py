@@ -128,17 +128,36 @@ ANCHOR_DEVIATION_TERMS = (
     "불용", "삭감", "적자", "위반", "체불", "미지급", "폐업", "사고", "붕괴",
     "과밀", "공백", "분쟁", "반복", "연장", "변경", "취소",
 )
+OBSERVED_CHANGE_TERMS = (
+    "격차", "불균형", "급증", "급감", "증가", "감소", "지연", "미달", "초과",
+    "불용", "삭감", "적자", "위반", "반복", "연장", "변경", "취소",
+)
 STRUCTURAL_DATA_TERMS = (
     "총액", "평균", "비율", "건수", "이용률", "집행률", "발생률", "통계", "현황",
-    "실태", "조사", "지역별", "자치구별", "대상별", "업종별", "시간대별", "채널별",
-    "전년", "전월", "지난해", "추이", "분포",
+    "실태", "조사", "지역별", "자치구별", "대상별", "업종별", "연령별", "성별",
+    "월별", "시간대별", "채널별", "전년", "전월", "지난해", "추이", "분포", "돌파",
+)
+STRUCTURAL_AXIS_TERMS = (
+    "지역별", "자치구별", "대상별", "업종별", "연령별", "성별", "월별",
+    "시간대별", "채널별", "전년", "전월", "지난해", "추이", "분포",
+)
+ROUTINE_STRUCTURAL_ESCAPE_TERMS = STRUCTURAL_AXIS_TERMS + (
+    "건수", "이용률", "집행률", "발생률",
 )
 DIRECT_EXPERIENCE_TERMS = (
     "겪", "불편", "피해", "못하", "못했", "거절", "대기", "부담", "위험", "민원",
     "문의", "이용 포기", "우회",
 )
 ROUTINE_ACTION_TERMS = (
-    "공사", "조성", "정비", "보수", "개선", "설치", "개관", "준공", "지원사업",
+    "조성", "정비", "보수", "개선", "설치", "개관", "준공", "지원사업",
+)
+ROUTINE_PURPOSE_TERMS = (
+    "예방", "방지", "대응", "해소", "개선", "지원", "보호", "저감",
+)
+ROUTINE_ACTION_RE = re.compile(r"(?:공사비|공사\s*기간|공사\s*계약|착공|준공)")
+OBSERVED_EVENT_RE = re.compile(
+    r"(?:사고|피해|민원|붕괴|분쟁|체불|미지급).{0,24}"
+    r"(?:\d[\d,]*(?:건|명|회)|발생|접수|확인|반복|증가|감소|지연|초과|미달)"
 )
 
 LOW_VALUE_TERMS = (
@@ -314,6 +333,13 @@ def context_windows(chunks: list[str], limit: int = 45) -> list[str]:
     return windows
 
 
+def is_routine_action(text: str) -> bool:
+    """Detect an administrative action without treating 기관명 속 '공사' as a project."""
+    return any(term in text for term in ROUTINE_ACTION_TERMS) or bool(
+        ROUTINE_ACTION_RE.search(text)
+    )
+
+
 def classify_evidence_anchor(
     text: str,
     source: dict,
@@ -323,6 +349,11 @@ def classify_evidence_anchor(
     loss: bool,
 ) -> str:
     """Return an evidence route, not a story or harm verdict."""
+    routine_action = is_routine_action(text)
+    purpose_only = routine_action and any(term in text for term in ROUTINE_PURPOSE_TERMS)
+    observed_event = bool(OBSERVED_EVENT_RE.search(text))
+    observed_change = any(term in text for term in OBSERVED_CHANGE_TERMS)
+    adverse_state = any(term in text for term in ANCHOR_DEVIATION_TERMS)
     direct_experience = (
         source.get("voice", False)
         and problem
@@ -330,15 +361,19 @@ def classify_evidence_anchor(
     )
     measured_problem = (
         problem
-        and any(term in text for term in ANCHOR_DEVIATION_TERMS)
         and (evidence or loss)
+        and (
+            observed_event
+            or observed_change
+            or (adverse_state and not purpose_only)
+        )
     )
     structural_data = (
         bool(NUMBER_RE.search(text))
         and any(term in text for term in STRUCTURAL_DATA_TERMS)
-        and not (
-            any(term in text for term in ROUTINE_ACTION_TERMS)
-            and not any(term in text for term in ANCHOR_DEVIATION_TERMS)
+        and (
+            not routine_action
+            or any(term in text for term in ROUTINE_STRUCTURAL_ESCAPE_TERMS)
         )
     )
     if direct_experience:
@@ -364,7 +399,7 @@ def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
     evidence_anchor = classify_evidence_anchor(
         text, source, problem=problem, evidence=evidence, loss=loss
     )
-    routine_action = any(term in text for term in ROUTINE_ACTION_TERMS)
+    routine_action = is_routine_action(text)
 
     if seoul_scope:
         score += 2 if explicit_seoul else 1
