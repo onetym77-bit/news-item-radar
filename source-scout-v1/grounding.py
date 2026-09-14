@@ -98,6 +98,11 @@ DATA_ROW_VALUE_HEADERS = (
     "이용자수", "발생건수", "승하차", "매출", "소비", "농도", "지수",
     "측정값", "합계", "평균",
 )
+DATA_ROW_SPECIFIC_VALUE_HEADERS = (
+    "피해건수", "발생건수", "사고건수", "민원건수", "이용자수", "승하차",
+    "체불액", "피해액", "미지급액", "환급액", "매출", "소비", "농도",
+    "지수", "측정값", "이용률", "발생률", "대기시간",
+)
 DATA_ROW_NUMERIC_RE = re.compile(
     r"^[+-]?\d[\d,]*(?:\.\d+)?"
     r"(?:\s*(?:%|원|명|건|가구|대|곳|개|회|시간|분|개월|km|㎞))?$"
@@ -148,7 +153,7 @@ def extract_data_row_values(text: str) -> list[str]:
             continue
         header = normalize(header)
         raw_value = normalize(raw_value)
-        if not any(term in header for term in DATA_ROW_VALUE_HEADERS):
+        if not any(term in header for term in DATA_ROW_SPECIFIC_VALUE_HEADERS):
             continue
         if DATA_ROW_NUMERIC_RE.fullmatch(raw_value) and raw_value not in values:
             values.append(raw_value)
@@ -397,10 +402,19 @@ def analyze_content(
         elif structural:
             anchor = "DECOMPOSABLE_STRUCTURE"
 
-    claim_status = "HYPOTHETICAL" if hypothetical else (
-        "ATTRIBUTED_CLAIM" if any(term in text for term in ATTRIBUTION_TERMS) else (
-            "OBSERVED_OR_PUBLISHED" if anchor != "NONE" else "UNRESOLVED"
+    explicit_attribution = any(term in text for term in ATTRIBUTION_TERMS)
+    official_citation = any(
+        term in text
+        for term in (
+            "공식 집계", "서울시 자료", "제출 자료", "공시 자료", "통계에 따르면",
+            "보고서에 따르면", "감사 결과", "결산 자료", "원자료에서 확인",
         )
+    )
+    claim_status = "HYPOTHETICAL" if hypothetical else (
+        "ATTRIBUTED_CLAIM"
+        if (explicit_attribution and not official_citation)
+        or (source_id == "council_minutes" and anchor != "NONE" and not official_citation)
+        else ("OBSERVED_OR_PUBLISHED" if anchor != "NONE" else "UNRESOLVED")
     )
     actual_data_value = bool(
         (record_kind == "DATA_ROW" and table_values)
@@ -517,7 +531,11 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
             ("피해", "피해" in text),
             ("측정값", bool(analysis.get("substantive_values"))),
         ]
-        question = "확인된 피해 규모를 자치구·주택유형별로 나누면 집중이 있는가? 지원 대상·금액 분포와 일치하는가?"
+        question = (
+            "제시된 피해 규모는 원자료로 재현되는가? 재현된다면 자치구·주택유형별 집중은 어디에 있고 지원 대상·금액 분포와 일치하는가?"
+            if analysis.get("claim_status") == "ATTRIBUTED_CLAIM"
+            else "확인된 피해 규모를 자치구·주택유형별로 나누면 집중이 있는가? 지원 대상·금액 분포와 일치하는가?"
+        )
         proposed_axes = existing_axes or ["자치구", "주택유형", "지원 대상"]
     elif bus_lawsuit_evidence:
         contract = ["시내버스", "소송", "측정값"]

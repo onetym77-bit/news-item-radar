@@ -30,6 +30,8 @@ class ProvenanceTests(unittest.TestCase):
         feed = root / "feed.json"
         config = root / "config.json"
         manifest = root / "manifest.json"
+        evidence = root / "review.md"
+        evidence.write_text("검토 결과\n", encoding="utf-8")
         briefing.write_text("# 브리핑\n\n본문\n", encoding="utf-8")
         feed.write_text(
             json.dumps(
@@ -52,6 +54,9 @@ class ProvenanceTests(unittest.TestCase):
             run_url="https://github.com/example/actions/runs/12345",
             code_sha="abcdef1234567890",
             source_sha="abcdef1234567890",
+            as_of="2026-09-01" if mode == "replay" else "",
+            bundle_root=root,
+            bundle_files=[briefing, feed, evidence],
             verify=False,
             at_time="2026-09-14T10:05:00+09:00",
         )
@@ -82,7 +87,7 @@ class ProvenanceTests(unittest.TestCase):
             provenance.write(args)
             manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
             self.assertFalse(manifest["publishable"])
-            self.assertIn("과거 날짜 재실행", args.briefing.read_text(encoding="utf-8"))
+            self.assertIn("과거 장부 기준·현재 소스 혼합", args.briefing.read_text(encoding="utf-8"))
 
     def test_expired_artifact_fails_at_read_time(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -117,6 +122,24 @@ class ProvenanceTests(unittest.TestCase):
         self.assertIn("needs: build-and-validate", workflow)
         self.assertIn("Confirm protected ledgers were not changed", workflow)
         self.assertIn("Persist only the explicit generated-file allowlist", workflow)
+        self.assertEqual(
+            workflow.count('- "agent-system-v1/validate_discovery_system.py"'), 2
+        )
+        self.assertIn("briefing_*_${{ github.run_id }}.md", workflow)
+        self.assertIn("daily_feed_*_${{ github.run_id }}.json", workflow)
+        self.assertNotIn("daily-briefing-v5/output/history/*.md", workflow)
+        self.assertNotIn("source-scout-v1/output/history/*.json", workflow)
+        self.assertIn(
+            "git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv",
+            workflow,
+        )
+        self.assertIn("Add non-persisted preview or replay result", workflow)
+        persist = workflow.split("persist-main:", 1)[1]
+        self.assertEqual(persist.count("run_provenance.py --verify"), 2)
+        self.assertLess(
+            persist.index("run_provenance.py --verify"),
+            persist.index("--mode main"),
+        )
         self.assertLess(
             workflow.index("Upload the validated build package"),
             workflow.index("persist-main:"),
@@ -125,6 +148,41 @@ class ProvenanceTests(unittest.TestCase):
             workflow.index('git push origin "HEAD:'),
             workflow.index("Upload the exact persisted result"),
         )
+
+
+    def test_bundle_file_tamper_fails_verification(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = self.make_args(Path(tmp), "preview")
+            provenance.write(args)
+            args.bundle_files[-1].write_text("변조\n", encoding="utf-8")
+            with self.assertRaisesRegex(RuntimeError, "bundle file hash mismatch"):
+                provenance.verify(args)
+
+    def test_bundle_membership_is_fixed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = self.make_args(Path(tmp), "preview")
+            provenance.write(args)
+            manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+            manifest["bundle_files"].pop("review.md")
+            manifest["bundle_sha256"] = provenance.bundle_index_sha(
+                manifest["bundle_files"]
+            )
+            args.manifest.write_text(
+                json.dumps(manifest, ensure_ascii=False), encoding="utf-8"
+            )
+            with self.assertRaisesRegex(RuntimeError, "bundle membership mismatch"):
+                provenance.verify(args)
+
+    def test_replay_discloses_current_source_snapshot(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = self.make_args(Path(tmp), "replay")
+            provenance.write(args)
+            manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+            rendered = args.briefing.read_text(encoding="utf-8")
+            self.assertEqual(manifest["requested_as_of"], "2026-09-01")
+            self.assertEqual(manifest["source_snapshot_semantics"], "current_at_execution")
+            self.assertIn("과거 장부 기준·현재 소스 혼합", rendered)
+            self.assertIn("실행 시점의 현재 소스", rendered)
 
 
 if __name__ == "__main__":

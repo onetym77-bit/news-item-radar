@@ -29,6 +29,10 @@ def render(feed: dict, review: dict | None = None) -> str:
     review = review or {}
     core = feed.get("core_discovery", [])
     auxiliary = feed.get("auxiliary_discovery", [])
+    localization = feed.get("localization_discovery", [])
+    rediscovered = feed.get("rediscovered_carryover", [])
+    stale = feed.get("stale_carryover", [])
+    freshness_holds = feed.get("freshness_holds", [])
     baselines = feed.get("activity_baselines", [])
     metadata_leads = feed.get("verification_metadata_leads", [])
     schema_leads = feed.get("verification_schema_leads", [])
@@ -40,16 +44,43 @@ def render(feed: dict, review: dict | None = None) -> str:
         "",
         "자동 분류·수집 정렬점수와 사람의 편집 판정은 서로 다른 값이다.",
         "",
+    ]
+    unhealthy = [
+        metric
+        for metric in feed.get("metrics", [])
+        if not metric.get("http_ok", False)
+        or str(metric.get("status_detail", "")).startswith(("FETCH_FAILED", "DEGRADED_"))
+    ]
+    lines.extend(["### 소스 연결·본문 상태", ""])
+    if not unhealthy:
+        lines.extend(["- 연결 실패나 본문 저하가 감지되지 않음", ""])
+    else:
+        for metric in unhealthy:
+            state = metric.get("status_detail") or "FETCH_FAILED"
+            detail = metric.get("error") or "본문에서 필요한 값을 확보하지 못함"
+            lines.append(
+                f"- {md(metric.get('name', metric.get('id', '미상')), 80)}: "
+                f"{md(str(state), 60)} — {md(str(detail), 180)}"
+            )
+        lines.extend(
+            [
+                "- 위 소스의 0건은 현상 부재가 아니라 수집·본문 확인 실패로 해석",
+                "",
+            ]
+        )
+    lines.extend(
+        [
         "### 핵심 발굴원 — 서울시의회 회의록",
         "",
-    ]
+        ]
+    )
     if not core:
         lines.extend(["- 오늘 자동 기준을 통과한 질문 씨앗 없음", ""])
     else:
         lines.extend(
             [
-                "| 관찰된 사실 | 자동 앵커 | 붙일 질문 | 질문 일치 | 수집 정렬점수 | 원문 |",
-                "|---|---|---|---|---:|---|",
+                "| 관찰된 사실 | 자동 앵커 | 붙일 질문 | 질문 일치 | 수집 정렬점수 | 원문 최신일 | 원문 |",
+                "|---|---|---|---|---:|---|---|",
             ]
         )
         for row in core:
@@ -57,25 +88,76 @@ def render(feed: dict, review: dict | None = None) -> str:
                 f"| {md(row.get('question_basis') or row.get('text', ''))} | "
                 f"{row.get('evidence_anchor', 'NONE')} · {row.get('claim_status', 'UNRESOLVED')} | "
                 f"{md(row.get('question', ''))} | {row.get('grounding_status', 'HOLD')} | "
-                f"{row.get('score', 0)} | [원문]({row.get('url', '')}) |"
+                f"{row.get('score', 0)} | {row.get('source_date', '미상')} | "
+                f"[원문]({row.get('url', '')}) |"
             )
         lines.append("")
 
-    lines.extend(["### 보조 발굴원 — 서울시 응답소", ""])
+    lines.extend(["### 보완 발굴원", ""])
     if not auxiliary:
-        lines.extend(["- 오늘 자동 기준을 통과한 시민 경험 단서 없음", ""])
+        lines.extend(["- 오늘 자동 기준을 통과한 보완 발굴 단서 없음", ""])
     else:
         for row in auxiliary:
             lines.extend(
                 [
+                    f"- 출처: {row.get('source_name', row.get('source_id', '미상'))}",
                     f"- 단서: {md(row.get('text', ''))}",
                     f"- 근거 앵커: {row.get('evidence_anchor', 'NONE')}",
+                    f"- 원문 최신일: {row.get('source_date', '미상')} · 경과 {row.get('freshness_days', '미상')}일",
                     f"- 질문: {md(row.get('question', ''))}",
                     f"- [원문]({row.get('url', '')})",
                     "",
                 ]
             )
 
+    lines.extend(["### 서울 지역화 대기 — 서울 근거 확보 전 S0 불가", ""])
+    if not localization:
+        lines.extend(["- 오늘 서울 자료로 재확인할 전국 단서 없음", ""])
+    else:
+        for row in localization:
+            lines.extend(
+                [
+                    f"- 전국 단서: {md(row.get('question_basis') or row.get('text', ''), 220)}",
+                    f"- 서울 검증 질문: {md(row.get('question', ''), 220)}",
+                    f"- 출처: {row.get('source_name', row.get('source_id', '미상'))}",
+                    f"- [원문]({row.get('url', '')})",
+                    "- 상태: 서울 수치 미확보 — 편집 카드·S0 전이 대상 아님",
+                    "",
+                ]
+            )
+
+    lines.extend(["### 동일 원문 재등장 — 오늘 새 후보 제외", ""])
+    if not rediscovered:
+        lines.extend(["- 이전 실행과 동일한 원문·날짜의 재등장 없음", ""])
+    else:
+        for row in rediscovered:
+            lines.append(
+                f"- {md(row.get('question_basis') or row.get('text', ''), 190)} — "
+                "이전과 같은 원문 지문; 새 카드·자동 재활성화·S0 제안 제외"
+            )
+        lines.append("")
+    lines.extend(["### STALE_CARRYOVER — 오늘 후보 제외", ""])
+    if not stale:
+        lines.extend(["- 신선도 창을 넘긴 유효 단서 없음", ""])
+    else:
+        for row in stale:
+            lines.append(
+                f"- {md(row.get('question_basis') or row.get('text', ''), 190)} — "
+                f"{row.get('source_date', '날짜 미상')} 기준 {row.get('freshness_days', '?')}일 경과; "
+                "오늘 카드·재활성화·S0 제안 제외"
+            )
+        lines.append("")
+
+    lines.extend(["### 날짜 확인 대기 — 오늘 후보 제외", ""])
+    if not freshness_holds:
+        lines.extend(["- 날짜를 확인하지 못한 유효 단서 없음", ""])
+    else:
+        for row in freshness_holds:
+            lines.append(
+                f"- {md(row.get('question_basis') or row.get('text', ''), 190)} — "
+                f"{row.get('freshness_status', 'FRESHNESS_UNKNOWN')}; 원문 날짜 확인 전 후보 제외"
+            )
+        lines.append("")
     lines.extend(["### 활동량 기준선 — 후보 아님", ""])
     if not baselines:
         lines.extend(["- 오늘 저장된 활동량 기준선 없음", ""])

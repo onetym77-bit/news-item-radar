@@ -40,6 +40,7 @@ SUPPLEMENTARY_DISCOVERY_IDS = {
     "labor_arrears",
     "consumer_agency",
 }
+NATIONAL_LOCALIZATION_IDS = {"labor_arrears", "consumer_agency"}
 REVIEW_FIELDS = [
     "first_seen",
     "last_seen",
@@ -49,6 +50,11 @@ REVIEW_FIELDS = [
     "lane",
     "source_id",
     "source_name",
+    "source_date",
+    "freshness_days",
+    "freshness_window_days",
+    "freshness_status",
+    "cadence",
     "ranking_score",
     "auto_evidence_anchor",
     "claim_status",
@@ -108,6 +114,13 @@ def candidate_id(row: dict) -> str:
     return hashlib.sha1(basis.encode("utf-8")).hexdigest()[:12]
 
 
+def source_revision_for_row(row: dict) -> str:
+    basis = (
+        f"{row.get('url', '')}|{concise(row.get('text', ''), 500)}|"
+        f"{row.get('source_date', '')}"
+    )
+    return hashlib.sha1(basis.encode("utf-8")).hexdigest()[:12]
+
 def verification_question(row: dict) -> str:
     return row.get("question") or (
         "이 자료의 실제 값과 분류항목으로 기존 발표의 총량 또는 집중 현상을 검증할 수 있는가?"
@@ -122,6 +135,21 @@ def discovery_question(row: dict) -> str:
         "확인된 근거를 어떤 범위·기간·비교집단으로 나누면 구조적 차이를 검증할 수 있는가?"
     )
 
+
+def localization_question(row: dict) -> str:
+    return (
+        "이 전국 현상이 서울에서도 확인되는가? 서울 원자료로 규모·분포·피해 대상을 "
+        "재현하고 전국 평균과의 차이를 설명할 수 있는가?"
+    )
+
+
+
+def is_fresh(row: dict) -> bool:
+    return row.get("freshness_status", "FRESH") == "FRESH"
+
+
+def is_freshness_hold(row: dict) -> bool:
+    return row.get("freshness_status") in {"FRESHNESS_UNKNOWN", "FUTURE_DATED"}
 
 
 def unique_top(
@@ -150,7 +178,11 @@ def unique_top(
     return selected
 
 
-def build_feed(module) -> dict:
+def build_feed(
+    module,
+    prior_source_revisions: set[str] | None = None,
+) -> dict:
+    prior_source_revisions = prior_source_revisions or set()
     metrics: list[dict] = []
     records: list[dict] = []
     for source in module.SOURCES:
@@ -172,6 +204,8 @@ def build_feed(module) -> dict:
             if row["source_id"] == "council_minutes"
             and row.get("qualified")
             and row.get("grounding_status") == "PASS"
+            and is_fresh(row)
+            and source_revision_for_row(row) not in prior_source_revisions
         ],
         3,
         near_duplicate=getattr(module, "near_duplicate_context", None),
@@ -183,8 +217,64 @@ def build_feed(module) -> dict:
             if row["source_id"] in SUPPLEMENTARY_DISCOVERY_IDS
             and row.get("qualified")
             and row.get("grounding_status") == "PASS"
+            and is_fresh(row)
+            and source_revision_for_row(row) not in prior_source_revisions
         ],
         3,
+        near_duplicate=getattr(module, "near_duplicate_context", None),
+    )
+    localization = unique_top(
+        [
+            {
+                **row,
+                "lane": "LOCALIZE_TO_SEOUL",
+                "question": localization_question(row),
+            }
+            for row in records
+            if row["source_id"] in NATIONAL_LOCALIZATION_IDS
+            and row.get("localization_lead")
+            and row.get("grounding_status") == "PASS"
+            and is_fresh(row)
+            and source_revision_for_row(row) not in prior_source_revisions
+        ],
+        2,
+        near_duplicate=getattr(module, "near_duplicate_context", None),
+    )
+    rediscovered_carryover = unique_top(
+        [
+            {**row, "lane": "REDISCOVERED_CARRYOVER", "question": discovery_question(row)}
+            for row in records
+            if row["source_id"] in (SUPPLEMENTARY_DISCOVERY_IDS | {"council_minutes"})
+            and (row.get("qualified") or row.get("localization_lead"))
+            and row.get("grounding_status") == "PASS"
+            and is_fresh(row)
+            and source_revision_for_row(row) in prior_source_revisions
+        ],
+        5,
+        near_duplicate=getattr(module, "near_duplicate_context", None),
+    )
+    stale_carryover = unique_top(
+        [
+            {**row, "lane": "STALE_CARRYOVER", "question": discovery_question(row)}
+            for row in records
+            if row["source_id"] in (SUPPLEMENTARY_DISCOVERY_IDS | {"council_minutes"})
+            and (row.get("qualified") or row.get("localization_lead"))
+            and row.get("grounding_status") == "PASS"
+            and row.get("freshness_status") == "STALE_CARRYOVER"
+        ],
+        5,
+        near_duplicate=getattr(module, "near_duplicate_context", None),
+    )
+    freshness_holds = unique_top(
+        [
+            {**row, "lane": "FRESHNESS_HOLD", "question": discovery_question(row)}
+            for row in records
+            if row["source_id"] in (SUPPLEMENTARY_DISCOVERY_IDS | {"council_minutes"})
+            and (row.get("qualified") or row.get("localization_lead"))
+            and row.get("grounding_status") == "PASS"
+            and is_freshness_hold(row)
+        ],
+        5,
         near_duplicate=getattr(module, "near_duplicate_context", None),
     )
     verification = unique_top(
@@ -257,6 +347,7 @@ def build_feed(module) -> dict:
                 "한국소비자원 피해·분쟁 자료",
             ],
             "verification_only": ["서울 열린데이터", "서울 빅데이터캠퍼스"],
+            "freshness_policy_days": getattr(module, "FRESHNESS_POLICY_DAYS", {}),
             "warning": "근거 앵커와 질문 일치를 통과한 레코드도 S0 이전 질문 씨앗이며 기사 후보가 아님",
         },
         "funnel": {
@@ -266,7 +357,17 @@ def build_feed(module) -> dict:
             "precheck_fail": failed_count,
             "grounded": sum(row.get("grounding_status") == "PASS" for row in records),
             "qualified": sum(row.get("qualified") for row in records),
+            "fresh_qualified": sum(
+                row.get("qualified") and is_fresh(row) for row in records
+            ),
             "selected_discovery": len(core) + len(auxiliary),
+            "selected_localization": len(localization),
+            "rediscovered_carryover": len(rediscovered_carryover),
+            "stale_carryover": len(stale_carryover),
+            "archived_stale": sum(
+                row.get("freshness_status") == "ARCHIVED_STALE" for row in records
+            ),
+            "freshness_holds": len(freshness_holds),
             "selected_verification": len(verification),
             "verification_metadata_leads": len(verification_leads),
             "verification_schema_leads": len(verification_schema_leads),
@@ -275,6 +376,10 @@ def build_feed(module) -> dict:
         "metrics": metrics,
         "core_discovery": core,
         "auxiliary_discovery": auxiliary,
+        "localization_discovery": localization,
+        "rediscovered_carryover": rediscovered_carryover,
+        "stale_carryover": stale_carryover,
+        "freshness_holds": freshness_holds,
         "activity_baselines": activity_baselines,
         "verification_metadata_leads": verification_leads,
         "verification_schema_leads": verification_schema_leads,
@@ -308,8 +413,7 @@ def update_review_queue(feed: dict) -> None:
     for row in feed["core_discovery"] + feed["auxiliary_discovery"]:
         item_id = candidate_id(row)
         current = by_id.get(item_id, {field: "" for field in REVIEW_FIELDS})
-        revision_basis = f"{row.get('url', '')}|{concise(row.get('text', ''), 500)}"
-        source_revision = hashlib.sha1(revision_basis.encode("utf-8")).hexdigest()[:12]
+        source_revision = source_revision_for_row(row)
         current.update(
             {
                 "first_seen": current.get("first_seen") or today,
@@ -320,6 +424,11 @@ def update_review_queue(feed: dict) -> None:
                 "lane": row["lane"],
                 "source_id": row["source_id"],
                 "source_name": row["source_name"],
+                "source_date": str(row.get("source_date", "")),
+                "freshness_days": str(row.get("freshness_days", "")),
+                "freshness_window_days": str(row.get("freshness_window_days", "")),
+                "freshness_status": str(row.get("freshness_status", "FRESH")),
+                "cadence": str(row.get("cadence", "")),
                 "ranking_score": str(row["score"]),
                 "auto_evidence_anchor": row.get("evidence_anchor", "NONE"),
                 "claim_status": row.get("claim_status", "UNRESOLVED"),
@@ -355,6 +464,7 @@ def render_markdown(feed: dict) -> str:
         f"- 생성: {feed['generated_at_kst']}",
         "- 상태: 아래 발굴 단서는 모두 S0 이전이며 자동으로 아이템 장부에 들어가지 않음",
         "- 자동 점수: 수집 정렬용이며 편집 승인 점수가 아님",
+        "- 오늘 카드: 원문 날짜가 소스 주기별 신선도 창 안에 있는 항목만 포함",
         "",
         "## 오늘의 변환 깔때기",
         "",
@@ -368,6 +478,16 @@ def render_markdown(feed: dict) -> str:
             f"{funnel.get('verification_metadata_leads', 0)} | "
             f"{funnel.get('verification_schema_leads', 0)} | "
             f"{funnel.get('selected_verification', 0)} |"
+        ),
+        "",
+        (
+            f"- 신선도 게이트: 신선 유효 {funnel.get('fresh_qualified', 0)}건 · "
+            f"오늘 카드 {funnel.get('selected_discovery', 0)}건 · "
+            f"서울 지역화 대기 {funnel.get('selected_localization', 0)}건 · "
+            f"동일 원문 재등장 {funnel.get('rediscovered_carryover', 0)}건 · "
+            f"STALE {funnel.get('stale_carryover', 0)}건 · "
+            f"보관 종료 {funnel.get('archived_stale', 0)}건 · "
+            f"날짜 확인 대기 {funnel.get('freshness_holds', 0)}건"
         ),
         "",
         "## 오늘 판정이 필요한 카드",
@@ -403,6 +523,7 @@ def render_markdown(feed: dict) -> str:
                     f"- 시스템 추천: {recommendation}",
                     f"- 수집 정렬점수: {row['score']} (편집점수 아님)",
                     f"- 출처: {row.get('source_name', row.get('source_id', '미상'))}",
+                    f"- 원문 최신일: {row.get('source_date', '미상')} · 경과 {row.get('freshness_days', '미상')}일 · 허용창 {row.get('freshness_window_days', '미상')}일",
                     f"- 원문: {row['url']}",
                     "- 선택: PROMISING / VERIFY / NOISE / DUPLICATE",
                     "- 현재 전이: 미승인 — 장부 변경 없음",
@@ -410,6 +531,58 @@ def render_markdown(feed: dict) -> str:
                 ]
             )
 
+    localization = feed.get("localization_discovery", [])
+    lines.extend(["## 서울 지역화 대기 · 서울 근거 확보 전 S0 불가", ""])
+    if not localization:
+        lines.extend(["- 오늘 서울 자료로 재확인할 전국 단서 없음", ""])
+    else:
+        for row in localization:
+            lines.extend(
+                [
+                    f"- 전국 단서: {concise(row.get('question_basis') or row['text'], 260)}",
+                    f"- 서울 검증 질문: {row['question']}",
+                    f"- 출처: {row.get('source_name', row.get('source_id', '미상'))}",
+                    f"- 원문: {row['url']}",
+                    "- 상태: 서울 수치 미확보 — 편집 카드·S0 전이 대상 아님",
+                    "",
+                ]
+            )
+
+    rediscovered = feed.get("rediscovered_carryover", [])
+    lines.extend(["## 동일 원문 재등장 · 오늘 새 카드 제외", ""])
+    if not rediscovered:
+        lines.extend(["- 이전 실행과 동일한 원문·날짜의 재등장 없음", ""])
+    else:
+        for row in rediscovered:
+            lines.append(
+                f"- {concise(row.get('question_basis') or row.get('text', ''), 180)} — "
+                "이전과 같은 원문 지문; 새 카드·자동 재활성화·S0 제안 제외"
+            )
+        lines.append("")
+    stale = feed.get("stale_carryover", [])
+    lines.extend(["## STALE_CARRYOVER · 오늘 판정 제외", ""])
+    if not stale:
+        lines.extend(["- 신선도 창을 넘긴 유효 단서 없음", ""])
+    else:
+        for row in stale:
+            lines.append(
+                f"- {concise(row.get('question_basis') or row.get('text', ''), 180)} — "
+                f"{row.get('source_date', '날짜 미상')} 기준 {row.get('freshness_days', '?')}일 경과; "
+                "근거는 보관하되 오늘 카드·재활성화·S0 제안에서 제외"
+            )
+        lines.append("")
+
+    freshness_holds = feed.get("freshness_holds", [])
+    lines.extend(["## 날짜 확인 대기 · 오늘 판정 제외", ""])
+    if not freshness_holds:
+        lines.extend(["- 날짜를 확인하지 못한 유효 단서 없음", ""])
+    else:
+        for row in freshness_holds:
+            lines.append(
+                f"- {concise(row.get('question_basis') or row.get('text', ''), 180)} — "
+                f"{row.get('freshness_status', 'FRESHNESS_UNKNOWN')}; 원문 날짜 확인 전 후보 제외"
+            )
+        lines.append("")
     lines.extend(["## 활동량 기준선 · 후보 아님", ""])
     baselines = feed.get("activity_baselines", [])
     if not baselines:
@@ -504,7 +677,12 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     module = load_scout_module()
-    feed = build_feed(module)
+    prior_revisions = {
+        row.get("source_revision", "")
+        for row in read_review_queue()
+        if row.get("source_revision")
+    }
+    feed = build_feed(module, prior_revisions)
     OUTPUT.mkdir(parents=True, exist_ok=True)
     (OUTPUT / "daily_feed_latest.json").write_text(
         json.dumps(feed, ensure_ascii=False, indent=2), encoding="utf-8"

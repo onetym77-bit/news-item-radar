@@ -39,12 +39,14 @@ def text(row: dict[str, str], key: str, legacy: str = "") -> str:
 
 
 def candidate_revision(row: dict[str, str]) -> str:
-    basis = f"{text(row, 'url')}|{text(row, 'text')}"
+    basis = f"{text(row, 'url')}|{text(row, 'text')}|{text(row, 'source_date')}"
     return hashlib.sha1(basis.encode("utf-8")).hexdigest()[:12]
 
 
 def proposal_blockers(row: dict[str, str]) -> list[str]:
     blockers: list[str] = []
+    if text(row, "auto_active_today").lower() == "false":
+        blockers.append("오늘 활성 후보 아님")
     if text(row, "editor_judgment").upper() != "PROMISING":
         blockers.append("PROMISING 판정 아님")
     if text(row, "editor_evidence_anchor").upper() not in POSITIVE_ANCHORS:
@@ -92,6 +94,8 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
             "source_revision": text(row, "source_revision") or candidate_revision(row),
             "fact": text(row, "question_basis") or text(row, "text"),
             "source_name": text(row, "source_name"),
+            "source_date": text(row, "source_date"),
+            "freshness_status": text(row, "freshness_status") or "UNKNOWN",
             "url": text(row, "url"),
             "auto_anchor": auto_anchor,
             "claim_status": text(row, "claim_status") or "UNRESOLVED",
@@ -102,6 +106,12 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
             "active_today": active_today,
         }
         cards.append(card)
+
+        if not active_today:
+            card["decision_blocker"] = (
+                "오늘 활성 후보 아님 — 과거 판정 보관만, 전이·킬러테스트 생성 금지"
+            )
+            continue
 
         if judgment == "DUPLICATE":
             parent = text(row, "duplicate_parent_id")
@@ -221,6 +231,8 @@ def render_cards(payload: dict) -> str:
                 f"- 제안 질문: {card['question'] or '-'}",
                 f"- 아직 확인할 변수: {card['verification_axes'] or '-'}",
                 f"- 사람 판정: {card['editor_judgment']}",
+                f"- 오늘 활성: {'예' if card['active_today'] else '아니오'} · 신선도 {card['freshness_status']}",
+                f"- 원문 최신일: {card['source_date'] or '-'}",
                 f"- 원문: {card['url'] or '-'}",
                 f"- 전이 상태: {card['transition_state']} — 장부 변경 없음",
             ]

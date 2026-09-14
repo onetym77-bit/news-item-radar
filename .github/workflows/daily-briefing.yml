@@ -22,6 +22,7 @@ on:
       - "agent-system-v1/ITEM_LEDGER.csv"
       - "agent-system-v1/QUESTION_QUALITY_AUDIT.csv"
       - "agent-system-v1/VERIFICATION_QUEUE.csv"
+      - "agent-system-v1/validate_discovery_system.py"
       - "daily-briefing-v5/**"
       - "source-scout-v1/**"
       - ".github/workflows/daily-briefing.yml"
@@ -118,7 +119,8 @@ jobs:
             --run-id "$GITHUB_RUN_ID" \
             --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             --code-sha "$GITHUB_SHA" \
-            --source-sha "$SOURCE_SHA"
+            --source-sha "$SOURCE_SHA" \
+            --as-of "$AS_OF"
 
       - name: Validate generated briefing and exact source identity
         run: |
@@ -134,12 +136,12 @@ jobs:
           path: |
             daily-briefing-v5/output/briefing_latest.md
             daily-briefing-v5/output/run_manifest_latest.json
-            daily-briefing-v5/output/history/*.md
+            daily-briefing-v5/output/history/briefing_*_${{ github.run_id }}.md
             agent-system-v1/VERIFICATION_QUEUE.csv
             source-scout-v1/HUMAN_REVIEW_QUEUE.csv
             source-scout-v1/output/daily_feed_latest.json
             source-scout-v1/output/daily_feed_latest.md
-            source-scout-v1/output/history/*.json
+            source-scout-v1/output/history/daily_feed_*_${{ github.run_id }}.json
             source-scout-v1/output/review_summary_latest.json
             source-scout-v1/output/review_summary_latest.md
             source-scout-v1/output/editorial_review_cards_latest.json
@@ -149,7 +151,8 @@ jobs:
           if-no-files-found: error
           retention-days: 3
 
-      - name: Add preview result to run summary
+      - name: Add non-persisted preview or replay result to run summary
+        if: ${{ github.event_name == 'pull_request' || github.ref != 'refs/heads/main' || inputs.as_of }}
         shell: bash
         run: cat daily-briefing-v5/output/briefing_latest.md >> "$GITHUB_STEP_SUMMARY"
 
@@ -185,13 +188,14 @@ jobs:
           SOURCE_SHA: ${{ github.sha }}
         run: |
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          python -X utf8 daily-briefing-v5/run_provenance.py --verify --source-sha "$SOURCE_SHA"
           python -X utf8 daily-briefing-v5/run_provenance.py \
             --mode main \
             --run-id "$GITHUB_RUN_ID" \
             --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
             --code-sha "$GITHUB_SHA" \
             --source-sha "$SOURCE_SHA"
-          python -X utf8 daily-briefing-v5/run_provenance.py --verify
+          python -X utf8 daily-briefing-v5/run_provenance.py --verify --source-sha "$SOURCE_SHA"
           python -X utf8 agent-system-v1/validate_discovery_system.py \
             --allow-missing-source-reports \
             --briefing daily-briefing-v5/output/briefing_latest.md
@@ -201,37 +205,46 @@ jobs:
         run: |
           git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv
           git diff --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+          git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
 
       - name: Persist only the explicit generated-file allowlist
         shell: bash
         run: |
           git config user.name "news-item-radar-bot"
           git config user.email "news-item-radar-bot@users.noreply.github.com"
+          run_day="$(python -c 'import json; print(json.load(open("source-scout-v1/output/daily_feed_latest.json", encoding="utf-8"))["generated_at_kst"][:10])')"
+          briefing_history="daily-briefing-v5/output/history/briefing_${run_day}_${GITHUB_RUN_ID}.md"
+          feed_history="source-scout-v1/output/history/daily_feed_${run_day}_${GITHUB_RUN_ID}.json"
+          test -f "$briefing_history"
+          test -f "$feed_history"
           git add -f \
             agent-system-v1/VERIFICATION_QUEUE.csv \
             daily-briefing-v5/output/briefing_latest.md \
             daily-briefing-v5/output/run_manifest_latest.json \
-            daily-briefing-v5/output/history/ \
+            "$briefing_history" \
             source-scout-v1/HUMAN_REVIEW_QUEUE.csv \
             source-scout-v1/output/daily_feed_latest.json \
             source-scout-v1/output/daily_feed_latest.md \
-            source-scout-v1/output/history/ \
+            "$feed_history" \
             source-scout-v1/output/review_summary_latest.json \
             source-scout-v1/output/review_summary_latest.md \
             source-scout-v1/output/editorial_review_cards_latest.json \
             source-scout-v1/output/editorial_review_cards_latest.md \
             source-scout-v1/output/legacy_anchor_rereview_latest.md \
             source-scout-v1/output/grounding_comparison_latest.md
+          git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
           while IFS= read -r file; do
             case "$file" in
               agent-system-v1/VERIFICATION_QUEUE.csv|\
               daily-briefing-v5/output/briefing_latest.md|\
               daily-briefing-v5/output/run_manifest_latest.json|\
-              daily-briefing-v5/output/history/*|\
+              "$briefing_history"|\
               source-scout-v1/HUMAN_REVIEW_QUEUE.csv|\
               source-scout-v1/output/daily_feed_latest.json|\
               source-scout-v1/output/daily_feed_latest.md|\
-              source-scout-v1/output/history/*|\
+              "$feed_history"|\
               source-scout-v1/output/review_summary_latest.json|\
               source-scout-v1/output/review_summary_latest.md|\
               source-scout-v1/output/editorial_review_cards_latest.json|\
@@ -263,12 +276,12 @@ jobs:
           path: |
             daily-briefing-v5/output/briefing_latest.md
             daily-briefing-v5/output/run_manifest_latest.json
-            daily-briefing-v5/output/history/*.md
+            daily-briefing-v5/output/history/briefing_*_${{ github.run_id }}.md
             agent-system-v1/VERIFICATION_QUEUE.csv
             source-scout-v1/HUMAN_REVIEW_QUEUE.csv
             source-scout-v1/output/daily_feed_latest.json
             source-scout-v1/output/daily_feed_latest.md
-            source-scout-v1/output/history/*.json
+            source-scout-v1/output/history/daily_feed_*_${{ github.run_id }}.json
             source-scout-v1/output/review_summary_latest.json
             source-scout-v1/output/review_summary_latest.md
             source-scout-v1/output/editorial_review_cards_latest.json

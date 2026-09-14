@@ -74,7 +74,7 @@ REQUIRED_CORE_AGENDAS = {
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="서울 기획 아이템 발굴 시스템 v1.8 검증")
+    parser = argparse.ArgumentParser(description="서울 기획 아이템 발굴 시스템 v1.9 검증")
     parser.add_argument("--briefing", type=Path, help="계측 모순까지 확인할 브리핑 파일")
     parser.add_argument("--as-of", type=date.fromisoformat, default=date.today())
     parser.add_argument(
@@ -283,8 +283,8 @@ def main() -> int:
     if CONFIG.is_file():
         try:
             config = json.loads(CONFIG.read_text(encoding="utf-8-sig"))
-            if config.get("system_version") != "1.8":
-                errors.append("관심 레이더 system_version은 1.8이어야 함")
+            if config.get("system_version") != "1.9":
+                errors.append("관심 레이더 system_version은 1.9이어야 함")
             agendas = {
                 entry.get("code")
                 for entry in config.get("agenda_domains", [])

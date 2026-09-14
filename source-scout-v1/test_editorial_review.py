@@ -107,5 +107,32 @@ class EditorialReviewTests(unittest.TestCase):
         self.assertEqual(rows[0]["action"], "원자료 복구 후 0점부터 재심사")
 
 
+    def test_inactive_promising_is_audit_only_and_never_transitions(self):
+        row = {
+            **self.base_row(),
+            "auto_active_today": "false",
+            "editor_judgment": "PROMISING",
+            "editor_evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+            "anchor_detail": "공식 집계에서 피해 37건",
+            "anchor_scope": "서울·2026년",
+            "central_question": "피해는 어느 자치구에 집중되는가?",
+            "citizen_stake": "안전 손실",
+            "competing_hypotheses": "노출 차이; 신고 차이",
+            "decision_rule": "자치구 격차가 노출량 보정 뒤에도 유지",
+            "minimum_test": "원자료 표를 확보한다",
+            "test_timebox_hours": "4",
+            "test_pass_rule": "지역별 값이 존재",
+            "test_kill_rule": "총량만 존재",
+            "reviewed_by": "editor",
+            "reviewed_at": "2026-09-14T12:00:00+09:00",
+            "review_revision": "rev123",
+        }
+        payload = review.build_review([row], [])
+        self.assertEqual(len(payload["review_cards"]), 1)
+        self.assertEqual(payload["transition_proposals"], [])
+        self.assertIsNone(payload["killer_test"])
+        self.assertIn("오늘 활성 후보 아님", payload["review_cards"][0]["decision_blocker"])
+
+
 if __name__ == "__main__":
     unittest.main()

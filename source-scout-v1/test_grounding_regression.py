@@ -851,5 +851,236 @@ class GroundingRegressionTests(unittest.TestCase):
         )
 
 
+    def test_injected_auxiliary_card_shows_its_actual_source(self):
+        payload = {
+            "core_discovery": [],
+            "auxiliary_discovery": [{
+                "source_id": "seoul_research",
+                "source_name": "서울연구원 정책·연구 자료",
+                "text": "서울 돌봄 공백 120건",
+                "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+                "question": "어디에 집중됐는가?",
+                "url": "https://example.test/research",
+            }],
+            "activity_baselines": [],
+            "verification_metadata_leads": [],
+            "verification_schema_leads": [],
+            "verification_map": [],
+        }
+        rendered = inject.render(payload, {})
+        self.assertIn("### 보완 발굴원", rendered)
+        self.assertIn("출처: 서울연구원 정책·연구 자료", rendered)
+        self.assertNotIn("보조 발굴원 — 서울시 응답소", rendered)
+
+
+    def test_generic_axis_and_total_table_is_not_a_data_row(self):
+        parser = scout.parse_html(
+            "<table><tr><th>자치구</th><th>합계</th></tr>"
+            "<tr><td>강남구</td><td>37</td></tr></table>"
+        )
+        self.assertEqual(scout.static_verification_rows(parser), [])
+
+    def test_unattributed_council_number_stays_attributed(self):
+        text = "서울 전세사기 피해 11,664가구가 발생했습니다"
+        result = self.signals(text)
+        self.assertEqual(result["claim_status"], "ATTRIBUTED_CLAIM")
+        payload = scout.build_question_payload(text, "council_minutes", result)
+        self.assertIn("제시된 피해 규모", payload["question"])
+        self.assertIn("원자료로 재현", payload["question"])
+
+    def test_official_council_citation_can_be_published_fact(self):
+        text = "서울시 공식 집계에 따르면 서울 전세사기 피해 11,664가구가 발생했습니다"
+        result = self.signals(text)
+        self.assertEqual(result["claim_status"], "OBSERVED_OR_PUBLISHED")
+
+    def test_freshness_policy_boundaries(self):
+        today = scout.date(2026, 9, 14)
+        event = {"cadence": "event_driven"}
+        self.assertEqual(
+            scout.freshness_metadata(event, "2026-08-31", today=today)["freshness_status"],
+            "FRESH",
+        )
+        self.assertEqual(
+            scout.freshness_metadata(event, "2026-08-30", today=today)["freshness_status"],
+            "STALE_CARRYOVER",
+        )
+        self.assertEqual(
+            scout.freshness_metadata(event, "2026-08-16", today=today)["freshness_status"],
+            "ARCHIVED_STALE",
+        )
+        monthly = {"cadence": "monthly"}
+        self.assertEqual(
+            scout.freshness_metadata(monthly, "2026-07-31", today=today)["freshness_status"],
+            "FRESH",
+        )
+        self.assertEqual(
+            scout.freshness_metadata(monthly, "2026-07-30", today=today)["freshness_status"],
+            "STALE_CARRYOVER",
+        )
+
+    def test_month_only_date_uses_end_of_reporting_month(self):
+        original_today = scout.TODAY
+        scout.TODAY = scout.date(2026, 9, 14)
+        try:
+            self.assertEqual(scout.latest_date_from(["2026.7월 지역별 체불 현황"]), "2026-07-31")
+        finally:
+            scout.TODAY = original_today
+
+    def test_source_retry_can_recover_without_hiding_first_failure(self):
+        html = "<html><body>2026-09-14 수집 정상</body></html>"
+        attempts = []
+        original_fetch = scout.fetch
+
+        def fake_fetch(url, timeout=22):
+            attempts.append(timeout)
+            if len(attempts) == 1:
+                return scout.FetchResult(url, False, 0, 1, 0, "", "TimeoutError")
+            return scout.FetchResult(url, True, 200, 1, len(html), html)
+
+        scout.fetch = fake_fetch
+        source = {
+            "id": "seoul_research",
+            "name": "서울연구원",
+            "url": "https://example.test/source",
+            "role": "BOTH",
+            "local": True,
+            "voice": False,
+            "follow": "",
+            "max_follow": 0,
+            "cadence": "monthly",
+            "timeout": 45,
+            "retry": 1,
+        }
+        try:
+            metric, _ = scout.run_source(source)
+        finally:
+            scout.fetch = original_fetch
+        self.assertTrue(metric["http_ok"])
+        self.assertEqual(metric["requests"], 2)
+        self.assertEqual(metric["failed_requests"], 1)
+        self.assertEqual(attempts, [45, 45])
+
+    def test_feed_separates_fresh_stale_and_unknown_candidates(self):
+        base = {
+            "source_id": "council_minutes",
+            "source_name": "서울시의회 회의록",
+            "score": 9,
+            "qualified": True,
+            "localization_lead": False,
+            "grounding_status": "PASS",
+            "precheck_status": "PASS",
+            "content_class": "REPORTABLE_TEXT",
+            "verification_usable": False,
+            "verification_metadata_lead": False,
+            "verification_schema_lead": False,
+            "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+            "claim_status": "ATTRIBUTED_CLAIM",
+            "question": "원자료로 재현되는가?",
+            "verification_axes": ["자치구"],
+        }
+        rows = [
+            {**base, "text": "서울 피해 37건 발생", "question_basis": "서울 피해 37건 발생",
+             "url": "https://example.test/fresh", "freshness_status": "FRESH",
+             "source_date": "2026-09-13", "freshness_days": 1, "freshness_window_days": 14},
+            {**base, "text": "서울 피해 52건 발생", "question_basis": "서울 피해 52건 발생",
+             "url": "https://example.test/stale", "freshness_status": "STALE_CARRYOVER",
+             "source_date": "2026-08-25", "freshness_days": 20, "freshness_window_days": 14},
+            {**base, "text": "서울 피해 61건 발생", "question_basis": "서울 피해 61건 발생",
+             "url": "https://example.test/unknown", "freshness_status": "FRESHNESS_UNKNOWN",
+             "source_date": "", "freshness_days": None, "freshness_window_days": 14},
+        ]
+
+        class FakeModule:
+            SOURCES = [{"id": "council_minutes", "name": "서울시의회 회의록", "role": "BOTH"}]
+            FRESHNESS_POLICY_DAYS = {"event_driven": (14, 28)}
+
+            @staticmethod
+            def run_source(source):
+                metric = {
+                    "id": source["id"], "name": source["name"], "role": source["role"],
+                    "status": 200, "requests": 1, "extracted": 3,
+                    "precheck_pass": 3, "grounded": 3, "qualified": 3,
+                }
+                return metric, rows
+
+            @staticmethod
+            def near_duplicate_context(left, right):
+                return False
+
+        built = feed.build_feed(FakeModule)
+        self.assertEqual(len(built["core_discovery"]), 1)
+        self.assertEqual(built["core_discovery"][0]["url"], "https://example.test/fresh")
+        self.assertEqual(len(built["stale_carryover"]), 1)
+        self.assertEqual(len(built["freshness_holds"]), 1)
+        self.assertEqual(built["funnel"]["selected_discovery"], 1)
+
+        repeated = feed.build_feed(
+            FakeModule, {feed.source_revision_for_row(rows[0])}
+        )
+        self.assertEqual(repeated["core_discovery"], [])
+        self.assertEqual(len(repeated["rediscovered_carryover"]), 1)
+        self.assertEqual(repeated["funnel"]["selected_discovery"], 0)
+
+    def test_national_lead_enters_localization_lane_not_editorial_card(self):
+        row = {
+            "source_id": "labor_arrears", "source_name": "고용노동부 임금체불 통계",
+            "score": 8, "qualified": False, "localization_lead": True,
+            "grounding_status": "PASS", "precheck_status": "PASS",
+            "content_class": "REPORTABLE_TEXT", "verification_usable": False,
+            "verification_metadata_lead": False, "verification_schema_lead": False,
+            "evidence_anchor": "MEASURED_PROBLEM_SIGNAL", "claim_status": "OBSERVED_OR_PUBLISHED",
+            "question_basis": "전국 임금체불액 1조 원", "text": "전국 임금체불액 1조 원",
+            "question": "기존 질문", "verification_axes": ["지역"], "url": "https://example.test/labor",
+            "freshness_status": "FRESH", "source_date": "2026-08-31",
+        }
+
+        class FakeModule:
+            SOURCES = [{"id": "labor_arrears", "name": "고용노동부", "role": "BOTH"}]
+
+            @staticmethod
+            def run_source(source):
+                return {
+                    "id": source["id"], "name": source["name"], "role": source["role"],
+                    "status": 200, "requests": 1, "extracted": 1,
+                    "precheck_pass": 1, "grounded": 1, "qualified": 0,
+                }, [row]
+
+        built = feed.build_feed(FakeModule)
+        self.assertEqual(len(built["localization_discovery"]), 1)
+        self.assertEqual(built["core_discovery"], [])
+        self.assertEqual(built["auxiliary_discovery"], [])
+        self.assertIn("서울에서도 확인", built["localization_discovery"][0]["question"])
+
+    def test_final_briefing_exposes_source_failure_and_stale_exclusion(self):
+        payload = {
+            "core_discovery": [],
+            "auxiliary_discovery": [],
+            "localization_discovery": [],
+            "stale_carryover": [{
+                "text": "오래된 서울 피해 37건",
+                "question_basis": "오래된 서울 피해 37건",
+                "source_date": "2026-08-20",
+                "freshness_days": 25,
+            }],
+            "freshness_holds": [],
+            "metrics": [{
+                "id": "consumer_agency",
+                "name": "한국소비자원 피해·분쟁 자료",
+                "http_ok": False,
+                "status_detail": "FETCH_FAILED",
+                "error": "certificate verify failed",
+            }],
+            "activity_baselines": [],
+            "verification_metadata_leads": [],
+            "verification_schema_leads": [],
+            "verification_map": [],
+        }
+        rendered = inject.render(payload, {})
+        self.assertIn("소스 연결·본문 상태", rendered)
+        self.assertIn("certificate verify failed", rendered)
+        self.assertIn("STALE_CARRYOVER — 오늘 후보 제외", rendered)
+        self.assertIn("오늘 카드·재활성화·S0 제안 제외", rendered)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import csv
 import json
+from calendar import monthrange
 import re
 import statistics
 import sys
@@ -23,7 +24,11 @@ from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from grounding import analyze_content, build_question_payload
+from grounding import (
+    DATA_ROW_SPECIFIC_VALUE_HEADERS,
+    analyze_content,
+    build_question_payload,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +36,53 @@ OUTPUT = Path(__file__).resolve().parent / "output"
 NOW_KST = datetime.now(timezone(timedelta(hours=9)))
 TODAY = NOW_KST.date()
 USER_AGENT = "Mozilla/5.0 (compatible; NewsItemRadar/1.0; +https://github.com/onetym77-bit/news-item-radar)"
+
+FRESHNESS_POLICY_DAYS = {
+    "daily": (3, 7),
+    "continuous": (7, 14),
+    "event_driven": (14, 28),
+    "weekly": (14, 28),
+    "monthly": (45, 90),
+    "quarterly": (120, 180),
+}
+
+
+def freshness_metadata(
+    source: dict,
+    observed_date: str,
+    *,
+    today: date = TODAY,
+) -> dict:
+    cadence = source.get("cadence", "continuous")
+    fresh_days, carryover_days = FRESHNESS_POLICY_DAYS.get(
+        cadence, FRESHNESS_POLICY_DAYS["continuous"]
+    )
+    payload = {
+        "source_date": observed_date or "",
+        "freshness_days": None,
+        "freshness_window_days": fresh_days,
+        "carryover_until_days": carryover_days,
+        "freshness_status": "FRESHNESS_UNKNOWN",
+        "cadence": cadence,
+        "freshness_basis": "record_or_detail_page_latest_date",
+    }
+    if not observed_date:
+        return payload
+    try:
+        age = (today - date.fromisoformat(observed_date)).days
+    except ValueError:
+        return payload
+    payload["freshness_days"] = age
+    if age < 0:
+        payload["freshness_status"] = "FUTURE_DATED"
+    elif age <= fresh_days:
+        payload["freshness_status"] = "FRESH"
+    elif age <= carryover_days:
+        payload["freshness_status"] = "STALE_CARRYOVER"
+    else:
+        payload["freshness_status"] = "ARCHIVED_STALE"
+    return payload
+
 
 SOURCES = [
     {
@@ -48,6 +100,7 @@ SOURCES = [
         "name": "서울시의회 회의록",
         "url": "https://ms.smc.seoul.kr/kr/assembly/main.do",
         "role": "BOTH",
+        "cadence": "event_driven",
         "local": True,
         "voice": False,
         "follow": r"recordView\.do",
@@ -94,6 +147,8 @@ SOURCES = [
         "voice": False,
         "follow": "",
         "max_follow": 0,
+        "timeout": 45,
+        "retry": 1,
     },
     {
         "id": "consumer_agency",
@@ -190,6 +245,9 @@ BOILERPLATE_TERMS = (
 KOREAN_RE = re.compile(r"[가-힣]")
 NUMBER_RE = re.compile(r"(?:\d[\d,]*(?:\.\d+)?\s*(?:%|명|건|원|억|조|대|곳|개|일|개월|년))")
 DATE_RE = re.compile(r"(?<!\d)(20\d{2})[.\-/년]\s*(\d{1,2})[.\-/월]\s*(\d{1,2})(?:일)?")
+YEAR_MONTH_RE = re.compile(
+    r"(?<!\d)(20\d{2})\s*(?:[.\-/]\s*(\d{1,2})|년\s*(\d{1,2})\s*월)(?!\s*\d)"
+)
 SPACE_RE = re.compile(r"\s+")
 
 
@@ -360,7 +418,7 @@ def parse_html(html: str) -> VisibleHTML:
 
 
 TABLE_AXIS_HEADERS = (
-    "자치구", "지역", "구분", "행정동", "법정동", "연령", "성별", "업종",
+    "구분", "자치구", "지역", "구분", "행정동", "법정동", "연령", "성별", "업종",
     "대상", "시설", "측정소", "노선", "기간", "년월", "일자", "시간대",
 )
 TABLE_VALUE_HEADERS = (
@@ -416,8 +474,12 @@ def static_verification_rows(parser: VisibleHTML, limit: int = 80) -> list[str]:
             continue
         axis_indexes = _matching_header_indexes(headers, TABLE_AXIS_HEADERS)
         value_indexes = _matching_header_indexes(headers, TABLE_VALUE_HEADERS)
-        if not axis_indexes or not value_indexes:
+        specific_value_indexes = _matching_header_indexes(
+            headers, DATA_ROW_SPECIFIC_VALUE_HEADERS
+        )
+        if not axis_indexes or not specific_value_indexes:
             continue
+        value_indexes = specific_value_indexes
         selected_indexes = sorted(set(axis_indexes + value_indexes))
         for row in table[header_position + 1 :]:
             cells = [value for _, value in row]
@@ -719,7 +781,7 @@ def extract_records(
     include_windows: bool,
 ) -> list[dict]:
     texts: list[tuple[str, str, str]] = []
-    if source["role"] == "VERIFICATION":
+    if source["role"] == "VERIFICATION" or source["id"] in {"labor_arrears", "consumer_agency"}:
         for row_text in static_verification_rows(parser):
             texts.append((row_text, page_url, "DATA_ROW"))
     for href, label in parser.anchors:
@@ -820,6 +882,15 @@ def latest_date_from(chunks: Iterable[str]) -> str:
                 continue
             if parsed <= TODAY + timedelta(days=3):
                 found.append(parsed)
+        without_full_dates = DATE_RE.sub(" ", text)
+        for year, dotted_month, korean_month in YEAR_MONTH_RE.findall(without_full_dates):
+            month = dotted_month or korean_month
+            try:
+                parsed = date(int(year), int(month), monthrange(int(year), int(month))[1])
+            except ValueError:
+                continue
+            if parsed <= TODAY + timedelta(days=3):
+                found.append(parsed)
     return max(found).isoformat() if found else ""
 
 
@@ -885,6 +956,7 @@ DIVERSITY_STOPWORDS = {
 
 def record_rank(row: dict) -> tuple:
     return (
+        row.get("freshness_status") == "FRESH",
         row["qualified"],
         row["precheck_status"] == "PASS",
         row["grounding_status"] == "PASS",
@@ -940,8 +1012,14 @@ def select_distinct_council_records(records: list[dict], source_url: str) -> lis
 
 
 def run_source(source: dict) -> tuple[dict, list[dict]]:
-    main = fetch(source["url"])
+    timeout = int(source.get("timeout", 22))
+    main = fetch(source["url"], timeout=timeout)
     fetches = [main]
+    for _ in range(int(source.get("retry", 0))):
+        if main.ok:
+            break
+        main = fetch(source["url"], timeout=timeout)
+        fetches.append(main)
     if not main.ok:
         return (
             {
@@ -954,9 +1032,9 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 "status": main.status,
                 "status_detail": "FETCH_FAILED",
                 "error": main.error,
-                "requests": 1,
-                "failed_requests": 1,
-                "latency_ms": main.elapsed_ms,
+                "requests": len(fetches),
+                "failed_requests": sum(not item.ok for item in fetches),
+                "latency_ms": sum(item.elapsed_ms for item in fetches),
                 "bytes": 0,
                 "latest_date": "",
                 "freshness_days": None,
@@ -971,6 +1049,12 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 "strong": 0,
                 "qualified_rate": 0.0,
                 "median_score": 0,
+                "fresh_qualified": 0,
+                "fresh_strong": 0,
+                "fresh_localization_leads": 0,
+                "stale_carryover": 0,
+                "archived_stale": 0,
+                "freshness_unknown": 0,
             },
             [],
         )
@@ -978,17 +1062,26 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     main_parser = parse_html(main.text)
     pages: list[tuple[str, VisibleHTML]] = [(main.url, main_parser)]
     for detail_url in select_follow_links(main_parser, main.url, source):
-        detail = fetch(detail_url)
+        detail = fetch(detail_url, timeout=timeout)
         fetches.append(detail)
         if detail.ok:
             pages.append((detail.url, parse_html(detail.text)))
 
     records: list[dict] = []
+    page_dates: dict[str, str] = {}
     for index, (page_url, parser) in enumerate(pages):
+        canonical_page = canonical_url(page_url, source["url"])
+        page_dates[canonical_page] = latest_date_from(parser.chunks)
         include_windows = index > 0 or source["id"] in {
             "labor_arrears", "eungdapso", "seoul_research"
         }
         records.extend(extract_records(parser, page_url, source, include_windows))
+
+    for row in records:
+        canonical_record = canonical_url(row.get("url", ""), source["url"])
+        record_date = latest_date_from([row.get("text", "")])
+        observed_date = record_date or page_dates.get(canonical_record, "")
+        row.update(freshness_metadata(source, observed_date))
 
     if source["id"] == "council_minutes":
         item_records = select_distinct_council_records(records, source["url"])
@@ -1022,6 +1115,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     records = sorted(
         item_records,
         key=lambda item: (
+            item.get("freshness_status") == "FRESH",
             item["qualified"],
             item["precheck_status"] == "PASS",
             item["grounding_status"] == "PASS",
@@ -1090,12 +1184,37 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         "strong": sum(row["qualified"] and row["score"] >= 8 for row in records),
         "qualified_rate": round(qualified / len(records) * 100, 1) if records else 0.0,
         "median_score": round(statistics.median(scores), 1) if scores else 0,
+        "fresh_qualified": sum(
+            row["qualified"] and row.get("freshness_status") == "FRESH"
+            for row in records
+        ),
+        "fresh_strong": sum(
+            row["qualified"]
+            and row.get("freshness_status") == "FRESH"
+            and row["score"] >= 8
+            for row in records
+        ),
+        "fresh_localization_leads": sum(
+            row["localization_lead"] and row.get("freshness_status") == "FRESH"
+            for row in records
+        ),
+        "stale_carryover": sum(
+            row.get("freshness_status") == "STALE_CARRYOVER" for row in records
+        ),
+        "archived_stale": sum(
+            row.get("freshness_status") == "ARCHIVED_STALE" for row in records
+        ),
+        "freshness_unknown": sum(
+            row.get("freshness_status") in {"FRESHNESS_UNKNOWN", "FUTURE_DATED"}
+            for row in records
+        ),
     }
     return metric, records
 
 
 
 def recommendation(metric: dict) -> str:
+    fresh_qualified = metric.get("fresh_qualified", metric.get("qualified", 0))
     if metric.get("status_detail", "").startswith("DEGRADED_"):
         return "보류: 본문 값·데이터 설명 추출 개선 필요"
     if not metric["http_ok"] or metric["failed_requests"] > max(1, metric["requests"] // 2):
@@ -1106,11 +1225,11 @@ def recommendation(metric: dict) -> str:
         and metric.get("qualified", 0) >= 1
     ):
         return "검증 데이터 지도에 편입"
-    if metric.get("cadence") == "monthly" and metric["qualified"] >= 1:
+    if metric.get("cadence") == "monthly" and fresh_qualified >= 1:
         return "월간 구조신호로 시험 편입"
-    if metric["qualified"] >= 5 and metric["strong"] >= 2:
+    if fresh_qualified >= 5 and metric.get("fresh_strong", 0) >= 2:
         return "발굴 수집원 시험 편입"
-    if metric["qualified"] >= 2 or metric["localization_leads"] >= 2:
+    if fresh_qualified >= 2 or metric.get("fresh_localization_leads", 0) >= 2:
         return "보조 탐색원으로 추가 검증"
     return "보류: 유효 후보 부족"
 
@@ -1139,7 +1258,9 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
         "source_id", "source_name", "role", "record_kind", "score", "content_class",
         "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
         "substantive_values", "verification_usable", "verification_metadata_lead", "verification_schema_lead", "seoul_scope", "qualified",
-        "localization_lead", "question_basis", "question", "verification_axes",
+        "localization_lead", "source_date", "freshness_days", "freshness_window_days",
+        "carryover_until_days", "freshness_status", "cadence", "freshness_basis",
+        "question_basis", "question", "verification_axes",
         "grounding_status", "grounding_issues", "text", "reasons", "url",
     ]
     with (OUTPUT / "candidates_latest.csv").open("w", encoding="utf-8-sig", newline="") as handle:
@@ -1162,8 +1283,8 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
         "",
         "## 결과 요약",
         "",
-        "| 소스 | 역할 | 접속 상태 | 요청/실패 | 추출 | 사전통과 | 질문일치 | 유효후보 | 강한후보 | 최신일 | 판단 |",
-        "|---|---|---|---:|---:|---:|---:|---:|---:|---|---|",
+        "| 소스 | 역할 | 접속 상태 | 요청/실패 | 추출 | 사전통과 | 질문일치 | 유효후보 | 신선 유효 | STALE | 날짜미상 | 최신일 | 판단 |",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|",
     ]
     for metric in metrics:
         access = (f"HTTP {metric['status']} · {metric['status_detail']}"
@@ -1172,7 +1293,9 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
             f"| {metric['name']} | {metric['role']} | {access} | "
             f"{metric['requests']}/{metric['failed_requests']} | {metric['extracted']} | "
             f"{metric['precheck_pass']} | {metric['grounded']} | {metric['qualified']} | "
-            f"{metric['strong']} | {metric['latest_date'] or '-'} | {metric['recommendation']} |"
+            f"{metric.get('fresh_qualified', 0)} | {metric.get('stale_carryover', 0)} | "
+            f"{metric.get('freshness_unknown', 0)} | {metric['latest_date'] or '-'} | "
+            f"{metric['recommendation']} |"
         )
 
     lines.extend(
