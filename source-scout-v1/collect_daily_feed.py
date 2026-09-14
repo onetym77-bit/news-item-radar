@@ -184,12 +184,26 @@ def build_feed(module) -> dict:
         4,
         dedupe_by="url",
     )
+    activity_baselines = unique_top(
+        [
+            {**row, "lane": "ACTIVITY_BASELINE"}
+            for row in records
+            if row.get("content_class") == "AGGREGATE_ACTIVITY_DASHBOARD"
+        ],
+        2,
+        dedupe_by="url",
+    )
     held = unique_top(
         [
             {**row, "lane": "HOLD_FOR_SOURCE_DETAIL"}
             for row in records
-            if row.get("precheck_status") == "HOLD"
-            or row.get("grounding_status") == "HOLD"
+            if (
+                row.get("content_class") != "AGGREGATE_ACTIVITY_DASHBOARD"
+                and (
+                    row.get("precheck_status") == "HOLD"
+                    or row.get("grounding_status") == "HOLD"
+                )
+            )
         ],
         5,
     )
@@ -211,10 +225,12 @@ def build_feed(module) -> dict:
             "qualified": sum(row.get("qualified") for row in records),
             "selected_discovery": len(core) + len(auxiliary),
             "selected_verification": len(verification),
+            "activity_baselines": len(activity_baselines),
         },
         "metrics": metrics,
         "core_discovery": core,
         "auxiliary_discovery": auxiliary,
+        "activity_baselines": activity_baselines,
         "verification_map": verification,
         "held_for_source_detail": held,
     }
@@ -295,13 +311,14 @@ def render_markdown(feed: dict) -> str:
         "",
         "## 오늘의 변환 깔때기",
         "",
-        "| 추출 | 사전통과 | 보류 | 제외 | 질문-근거 일치 | 자동 유효 | 편집 판정 카드 | 검증자료 |",
-        "|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| 추출 | 사전통과 | 보류 | 제외 | 질문-근거 일치 | 자동 유효 | 편집 판정 카드 | 활동 기준선 | 검증자료 |",
+        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
         (
             f"| {funnel.get('extracted', 0)} | {funnel.get('precheck_pass', 0)} | "
             f"{funnel.get('precheck_hold', 0)} | {funnel.get('precheck_fail', 0)} | "
             f"{funnel.get('grounded', 0)} | {funnel.get('qualified', 0)} | "
-            f"{funnel.get('selected_discovery', 0)} | {funnel.get('selected_verification', 0)} |"
+            f"{funnel.get('selected_discovery', 0)} | {funnel.get('activity_baselines', 0)} | "
+            f"{funnel.get('selected_verification', 0)} |"
         ),
         "",
         "## 오늘 판정이 필요한 카드",
@@ -341,6 +358,18 @@ def render_markdown(feed: dict) -> str:
                     "",
                 ]
             )
+
+    lines.extend(["## 활동량 기준선 · 후보 아님", ""])
+    baselines = feed.get("activity_baselines", [])
+    if not baselines:
+        lines.extend(["- 오늘 저장된 활동량 기준선 없음", ""])
+    else:
+        for row in baselines:
+            lines.append(
+                f"- {concise(row['text'], 180)} — 단일 총량만으로 이상 현상 판정 금지; "
+                "누적된 전일·전월 기준선과 비교한 뒤에만 신호 생성"
+            )
+        lines.append("")
 
     lines.extend(["## 본문 근거 보완 대기", ""])
     held = feed.get("held_for_source_detail", [])

@@ -16,6 +16,16 @@ ORDINAL_RE = re.compile(r"\d+\s*대\s*(?:의회|국회|대통령|전략|과제|�
 DATE_TOKEN_RE = re.compile(
     r"(?<!\d)(?:19|20)\d{2}(?:\s*년|[.\-/]\s*\d{1,2}(?:\s*월|[.\-/]\s*\d{1,2}\s*일?)?)?"
 )
+SCOPE_COUNT_RE = re.compile(
+    r"(?<!\d)\d[\d,]*\s*(?:개\s*)?(?:자치구|시도|행정동|법정동|개\s*구)"
+)
+PROCEDURAL_VALUE_RE = re.compile(
+    r"(?:남은\s*(?:발언|질의)?\s*시간(?:이|은|을)?|발언\s*시간|질의\s*시간)"
+    r"[^.!?·]{0,16}\d[\d,]*\s*(?:시간|분)"
+    r"|\d[\d,]*\s*분씩[^.!?·]{0,28}(?:시정질문|발언|질의)"
+    r"|\d\s*대\s*\d[^.!?·]{0,20}(?:시정질문|발언|질의)"
+)
+EVIDENCE_SEGMENT_RE = re.compile(r"[.!?。！？]|\s*·\s*")
 
 NAV_TERMS = (
     "본문 바로가기", "검색어 입력", "메뉴", "로그인", "회원가입", "개인정보처리방침",
@@ -66,7 +76,10 @@ OBSERVED_TERMS = (
     "초과", "미달", "체불", "미지급", "적자", "소송", "피해",
     "불편", "대기", "중단", "분쟁", "낮아", "높아",
 )
-ATTRIBUTION_TERMS = ("주장", "추산", "추정", "예상", "전망", "우려", "밝혔다", "밝혔", "협회")
+ATTRIBUTION_TERMS = (
+    "주장", "추산", "추정", "예상", "전망", "우려", "밝혔다", "밝혔", "협회",
+    "한다고 합니다", "다고 합니다", "라고 합니다", "다는 얘기", "라는 얘기", "들었", "전언", "지적",
+)
 DIRECT_TERMS = ("겪", "불편", "피해", "못하", "거절", "대기", "이용 포기", "우회")
 AXIS_MAP = {
     "지역별": "지역", "자치구별": "자치구", "대상별": "대상", "업종별": "업종",
@@ -84,6 +97,7 @@ def extract_substantive_values(text: str) -> list[str]:
     cleaned = LAW_RE.sub(" ", text or "")
     cleaned = ORDINAL_RE.sub(" ", cleaned)
     cleaned = DATE_TOKEN_RE.sub(" ", cleaned)
+    cleaned = SCOPE_COUNT_RE.sub(" ", cleaned)
     values: list[str] = []
     for match in list(TIME_RANGE_RE.finditer(cleaned)) + list(MEASUREMENT_RE.finditer(cleaned)):
         value = normalize(match.group(0))
@@ -115,7 +129,17 @@ def analyze_content(
     purpose_only: bool = False,
 ) -> dict:
     text = normalize(text)
-    values = extract_substantive_values(text)
+    measurement_text = (
+        PROCEDURAL_VALUE_RE.sub(" ", text)
+        if source.get("id", "") == "council_minutes"
+        else text
+    )
+    values = extract_substantive_values(measurement_text)
+    evidence_segments = [
+        normalize(segment)
+        for segment in EVIDENCE_SEGMENT_RE.split(measurement_text)
+        if normalize(segment)
+    ]
     nav_hits = [term for term in NAV_TERMS if term in text]
     procedure_hits = [term for term in PROCEDURE_TERMS if term in text]
     axes = _axis_terms(text)
@@ -124,30 +148,21 @@ def analyze_content(
     purpose_change = bool(re.search(r"(?:증가|감소|격차|사고).{0,20}(?:위한|위해|목표)", text))
     observed_text = text.replace("피해지원", " ").replace("피해 지원", " ")
     observed = any(term in observed_text for term in OBSERVED_TERMS) and not purpose_change
-    cost_problem = bool(
-        re.search(
-            r"(?:부담|피해액|손실|체불|미지급|적자|소송).{0,28}\d"
-            r"|\d.{0,28}(?:부담|피해액|손실|체불|미지급|적자|소송)",
-            text,
-        )
+    cost_terms = ("부담", "피해액", "손실", "체불", "미지급", "적자", "소송", "지연이자")
+    problem_terms = (
+        "피해", "사고", "누락", "체불", "미지급", "적자", "불편", "대기",
+        "중단", "분쟁", "제한", "낮아", "접수", "증가", "감소", "급증", "급감",
     )
-    problem_value_link = cost_problem or bool(
-        re.search(
-            r"(?:피해|사고|누락|체불|미지급|적자|불편|대기|중단|분쟁|제한|낮아|접수|증가|감소|급증|급감)"
-            r".{0,36}\d[\d,]*(?:\.\d+)?\s*(?:%|조\s*원|억\s*원|만\s*원|원|명|가구|건|대|곳|개|시간|분|시|개월|km|㎞)"
-            r"|\d[\d,]*(?:\.\d+)?\s*(?:%|조\s*원|억\s*원|만\s*원|원|명|가구|건|대|곳|개|시간|분|시|개월|km|㎞)"
-            r".{0,36}(?:피해|사고|누락|체불|미지급|적자|불편|대기|중단|분쟁|제한|낮아|접수|증가|감소|급증|급감)",
-            text,
-        )
+    cost_problem = any(
+        extract_substantive_values(segment)
+        and any(term in segment for term in cost_terms)
+        for segment in evidence_segments
     )
-    procedural_measurements_only = bool(
-        source_id == "council_minutes"
-        and any(term in text for term in ("남은 시간", "발언시간", "질의시간", "시정질문"))
-        and values
-        and all(re.search(r"(?:대|시간|분|시)$", value) for value in values)
+    problem_value_link = cost_problem or any(
+        extract_substantive_values(segment)
+        and any(term in segment for term in problem_terms)
+        for segment in evidence_segments
     )
-    if procedural_measurements_only:
-        problem_value_link = False
     issue_mention_only = bool(
         source_id == "council_minutes"
         and re.search(r"(?:사고|누락|문제).{0,30}(?:이야기|말씀|질문)(?:하겠|드리겠)", text)
@@ -156,6 +171,21 @@ def analyze_content(
     aggregate_complaint_dashboard = bool(
         source_id == "eungdapso"
         and ("민원 현황판" in text or "월별 민원접수 건수" in text)
+    )
+    complaint_portal_instruction = bool(
+        source_id == "eungdapso"
+        and (
+            ("민원의 처리결과" in text and "확인" in text)
+            or ("120다산콜재단" in text and "클릭" in text)
+        )
+    )
+    future_projection = bool(
+        re.search(
+            r"(?:낮아질|높아질|늘어날|줄어들|증가할|감소할|될)"
+            r".{0,12}(?:전망|예상)",
+            text,
+        )
+        and not cost_problem
     )
     concern = any(term in text for term in CONCERN_TERMS)
     speech = any(term in text for term in SPEECH_TERMS)
@@ -189,6 +219,9 @@ def analyze_content(
     elif any(term in text for term in PLATFORM_NOTICE_TERMS):
         content_class, precheck_status = "PLATFORM_NOTICE", "FAIL"
         precheck_reason = "데이터 포털 이용 안내"
+    elif complaint_portal_instruction:
+        content_class, precheck_status = "PORTAL_INSTRUCTION", "FAIL"
+        precheck_reason = "민원 결과 확인 방법 안내이며 시민 피해 서술이 아님"
     elif aggregate_complaint_dashboard:
         content_class, precheck_status = "AGGREGATE_ACTIVITY_DASHBOARD", "HOLD"
         precheck_reason = "단순 접수 총량이며 이상·피해 또는 시민 경험은 확인되지 않음"
@@ -212,6 +245,9 @@ def analyze_content(
     ):
         content_class, precheck_status = "TABLE_SCHEMA_WITHOUT_VALUE", "HOLD"
         precheck_reason = "표 구조 설명만 있고 실제 지역 값 없음"
+    elif future_projection:
+        content_class, precheck_status = "POLICY_FORECAST", "HOLD"
+        precheck_reason = "정책 효과 전망이며 실제 결과 관찰값이 아님"
     elif (
         values
         and (any(term in text for term in POLICY_ACTION_TERMS) or speech)
@@ -239,9 +275,19 @@ def analyze_content(
         content_class, precheck_status = "DOCUMENT_TITLE_ONLY", "HOLD"
         precheck_reason = "보고서 제목만 있고 본문 근거 없음"
 
+    direct_experience = bool(
+        re.search(
+            r"(?:저는|제가|제게|우리|주민|시민|이용자|입주민)"
+            r".{0,40}(?:겪|불편|피해|못하|거절|대기|포기|우회)"
+            r"|(?:겪|불편|피해|못하|거절|대기|포기|우회)"
+            r".{0,40}(?:저는|제가|제게|우리|주민|시민|이용자|입주민)",
+            text,
+        )
+    )
     direct = (
         source.get("voice", False)
         and problem
+        and direct_experience
         and any(term in text for term in DIRECT_TERMS)
         and not purpose_only
     )
@@ -321,6 +367,16 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         and "소송" in text
         and bool(analysis.get("substantive_values"))
     )
+    unpaid_interest_evidence = (
+        "미지급" in text
+        and "지연이자" in text
+        and bool(analysis.get("substantive_values"))
+    )
+    climate_card_loss_evidence = (
+        "기후동행카드" in text
+        and "손실" in text
+        and bool(analysis.get("substantive_values"))
+    )
 
     if anchor == "NONE" and not analysis.get("verification_usable"):
         question = "근거 앵커 없음 — 질문 점수 평가 제외"
@@ -357,6 +413,24 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         ]
         question = "제시된 소송 부담 추산은 운송사별·회계연도별로 어디에 집중되는가? 보조금·계약자료로 추산을 확인할 수 있는가?"
         proposed_axes = existing_axes or ["운송사", "회계연도", "보조금"]
+    elif unpaid_interest_evidence:
+        contract = ["미지급", "지연이자", "측정값"]
+        contract_checks = [
+            ("미지급", "미지급" in text),
+            ("지연이자", "지연이자" in text),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = "미지급 원금과 지연이자의 산정 근거는 무엇이며, 지급 결정이 늦어진 책임과 최종 비용 부담자는 누구인가?"
+        proposed_axes = existing_axes or ["계약·판결 근거", "결정 시점", "최종 부담자"]
+    elif climate_card_loss_evidence:
+        contract = ["기후동행카드", "손실", "측정값"]
+        contract_checks = [
+            ("기후동행카드", "기후동행카드" in text),
+            ("손실", "손실" in text),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = "손실금 부담 배분은 계약·협의 절차에 부합했는가? 연도별 실제 손실과 정책 편익을 함께 보면 배분은 적정한가?"
+        proposed_axes = existing_axes or ["부담 주체", "연도", "계약·협의 근거"]
     elif analysis.get("change_direction") == "POSITIVE":
         contract = ["긍정 변화", "측정값"]
         contract_checks = [
@@ -365,14 +439,6 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         ]
         question = "확인된 증가·회복은 어느 지역·대상에서 나타났으며, 인구구조 변화와 정책 효과를 구분할 비교자료는 무엇인가?"
         proposed_axes = existing_axes or ["지역", "대상", "비교기간"]
-    elif anchor == "DECOMPOSABLE_STRUCTURE":
-        contract = ["분해 가능한 구조", "측정값"]
-        contract_checks = [
-            ("분해 가능한 구조", anchor == "DECOMPOSABLE_STRUCTURE"),
-            ("측정값", bool(analysis.get("substantive_values"))),
-        ]
-        question = "원문 수치를 지역·대상·시간 등 확인 가능한 분류항목으로 나누면 어떤 집중이나 격차가 나타나는가?"
-        proposed_axes = existing_axes or ["지역", "대상", "시간"]
     elif analysis.get("claim_status") == "ATTRIBUTED_CLAIM":
         contract = ["귀속된 주장", "문제 근거 앵커"]
         contract_checks = [
@@ -381,6 +447,14 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         ]
         question = "이 주장의 수치와 비교 기준을 원자료로 재현할 수 있는가? 다른 설명을 적용해도 차이가 남는가?"
         proposed_axes = existing_axes or ["원자료", "비교 기준", "대안 설명"]
+    elif anchor == "DECOMPOSABLE_STRUCTURE":
+        contract = ["분해 가능한 구조", "측정값"]
+        contract_checks = [
+            ("분해 가능한 구조", anchor == "DECOMPOSABLE_STRUCTURE"),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = "원문 수치를 지역·대상·시간 등 확인 가능한 분류항목으로 나누면 어떤 집중이나 격차가 나타나는가?"
+        proposed_axes = existing_axes or ["지역", "대상", "시간"]
     else:
         contract = ["문제 근거 앵커"]
         contract_checks = [("문제 근거 앵커", anchor in {"DIRECT_PROBLEM_SIGNAL", "MEASURED_PROBLEM_SIGNAL"})]

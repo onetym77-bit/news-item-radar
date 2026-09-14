@@ -344,6 +344,117 @@ class GroundingRegressionTests(unittest.TestCase):
         }
         self.assertNotEqual(scout.recommendation(metric), "검증 데이터 지도에 편입")
 
+    def test_complaint_portal_instruction_is_rejected(self):
+        result = self.signals(
+            "120다산콜재단 전화, 문자, 챗봇 또는 스마트불편신고 앱에서 신청한 "
+            "민원의 처리결과는 응답소 민원결과에서 클릭하여 확인하세요",
+            {
+                "id": "eungdapso", "name": "응답소", "local": True,
+                "voice": True, "role": "DISCOVERY",
+            },
+        )
+        self.assertEqual(result["content_class"], "PORTAL_INSTRUCTION")
+        self.assertEqual(result["precheck_status"], "FAIL")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_scope_count_does_not_turn_concern_into_measured_fact(self):
+        result = self.signals(
+            "구청 전담인력이 별로 없어 우왕좌왕할 가능성이 많고 "
+            "25개 자치구마다 기준이 달라 혼선과 갈등이 우려됩니다"
+        )
+        self.assertEqual(result["substantive_values"], [])
+        self.assertEqual(result["content_class"], "CONCERN_OR_ATTRIBUTED_CLAIM")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_policy_forecast_is_held_until_observed(self):
+        result = self.signals(
+            "서울시는 세출 1,780억 원을 조정하고 세외수입 1,994억 원을 확보해 "
+            "채무비율이 20.94%에서 19.06%로 낮아질 전망입니다"
+        )
+        self.assertEqual(result["content_class"], "POLICY_FORECAST")
+        self.assertEqual(result["precheck_status"], "HOLD")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_unrelated_number_in_next_sentence_cannot_anchor_issue_mention(self):
+        result = self.signals(
+            "삼성역 철근 누락 사고입니다. 별도 추경 예산은 100억 원입니다"
+        )
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_real_waiting_time_survives_nearby_speaking_time_cleanup(self):
+        result = self.signals(
+            "장애인콜택시 이용자는 대기시간 120분으로 불편을 겪습니다. "
+            "남은 발언시간은 12분입니다"
+        )
+        self.assertEqual(result["evidence_anchor"], "MEASURED_PROBLEM_SIGNAL")
+        self.assertIn("120분", result["substantive_values"])
+        self.assertNotIn("12분", result["substantive_values"])
+
+    def test_reported_unpaid_interest_is_attributed_and_gets_specific_question(self):
+        text = (
+            "현재 미지급 통상임금이 약 2,900억 원이고 "
+            "지연이자는 하루 약 1억 4,000만 원씩 늘어난다고 합니다"
+        )
+        result = self.signals(text)
+        self.assertEqual(result["claim_status"], "ATTRIBUTED_CLAIM")
+        payload = scout.build_question_payload(text, "council_minutes", result)
+        self.assertIn("산정 근거", payload["question"])
+        self.assertIn("최종 비용 부담자", payload["question"])
+
+    def test_reported_climate_card_loss_gets_specific_question(self):
+        text = (
+            "기후동행카드 손실금 중 50%만 보전하고 나머지 50%는 공사에 전가했다는 "
+            "얘기를 들었어요"
+        )
+        result = self.signals(text)
+        self.assertEqual(result["claim_status"], "ATTRIBUTED_CLAIM")
+        payload = scout.build_question_payload(text, "council_minutes", result)
+        self.assertIn("부담 배분", payload["question"])
+        self.assertIn("계약·협의", payload["question"])
+
+    def test_sliding_context_overlap_is_deduplicated(self):
+        left = {
+            "text": "전세사기 피해가구 보증금 미반환 임차인 지원 지연 원자료 확인",
+        }
+        right = {
+            "text": "보증금 미반환 임차인 지원 지연 원자료 확인 추가 검증",
+        }
+        self.assertTrue(scout.near_duplicate_context(left, right))
+
+    def test_activity_dashboard_uses_baseline_lane_not_review_card(self):
+        row = {
+            "source_id": "eungdapso",
+            "source_name": "서울시 응답소",
+            "score": 4,
+            "qualified": False,
+            "grounding_status": "HOLD",
+            "precheck_status": "HOLD",
+            "content_class": "AGGREGATE_ACTIVITY_DASHBOARD",
+            "evidence_anchor": "NONE",
+            "text": "민원 현황판 오늘 4,714건 · 월별 민원접수 건수",
+            "url": "https://eungdapso.seoul.go.kr/main.do",
+        }
+
+        class FakeModule:
+            @staticmethod
+            def run_source(source):
+                metric = {
+                    "id": source["id"], "name": source["name"], "role": source["role"],
+                    "http_ok": True, "status": 200, "status_detail": "OK",
+                    "requests": 1, "failed_requests": 0, "extracted": 1,
+                    "precheck_pass": 0, "grounded": 0, "qualified": 0,
+                }
+                return metric, [row]
+
+        FakeModule.SOURCES = [{
+            "id": "eungdapso", "name": "서울시 응답소",
+            "role": "DISCOVERY", "local": True, "voice": True,
+        }]
+        built = feed.build_feed(FakeModule)
+        self.assertEqual(len(built["activity_baselines"]), 1)
+        self.assertEqual(built["auxiliary_discovery"], [])
+        self.assertEqual(built["held_for_source_detail"], [])
+
     def test_high_score_navigation_cannot_reenter_verification_map(self):
         fake_record = {
             "source_id": "seoul_open_data",

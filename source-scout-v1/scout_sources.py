@@ -722,8 +722,8 @@ def near_duplicate_context(left: dict, right: dict) -> bool:
     right_tokens = content_tokens(right_text)
     if not left_tokens or not right_tokens:
         return False
-    overlap = len(left_tokens & right_tokens) / len(left_tokens | right_tokens)
-    return overlap >= 0.62
+    overlap = len(left_tokens & right_tokens) / min(len(left_tokens), len(right_tokens))
+    return overlap >= 0.67
 
 
 def select_distinct_council_records(records: list[dict], source_url: str) -> list[dict]:
