@@ -1,5 +1,5 @@
 import unittest
-from collect_pilot import Page, select_rows, transcript, day, review_windows, identity_conflict
+from collect_pilot import Page, select_rows, transcript, day, review_windows, identity_conflict, discover_list, window_change, canonical
 SRC={"hosts":["example.gov"]}
 class PilotRegression(unittest.TestCase):
     def test_selection_keeps_unresolved_newest_row(self):
@@ -59,5 +59,116 @@ class PilotRegression(unittest.TestCase):
     def test_speech_date_not_selected_from_footer(self):
         rows,_=select_rows(Page('<footer>오늘 2026.09.14</footer><table><tr><td>제300회 본회의 2026.09.07</td><td><a href="/record/main?uid=1">보기</a></td></tr></table>'),"https://example.gov/late",SRC)
         self.assertEqual(rows[0]["meeting_date"],"2026-09-07")
+class ConnectionRegression(unittest.TestCase):
+    def test_assem_transcript_requires_named_speech_inside_original_container(self):
+        prose = '돌봄 대기와 교통 불편을 확인하여 자료를 제출하겠습니다. ' * 15
+        block = lambda name: '<div class="view_content_item"><div class="content_name"><strong>'+name+'</strong></div><a name="viewLine23"></a><div class="content_speech"><p>'+prose+'</p></div></div>'
+        html = block('AI 요약 원문아님') + '<div id="assem-content"><div class="bill_item">'+block('위원장 김가나')+block('교통과장 이다라')+'</div></div><div>출석공무원 명단</div>'
+        body,parts = transcript(Page(html))
+        self.assertEqual(len(parts),2)
+        self.assertTrue(parts[0].startswith('위원장 김가나'))
+        self.assertTrue(parts[1].startswith('교통과장 이다라'))
+        self.assertNotIn('AI 요약',body)
+        self.assertNotIn('출석공무원',body)
+
+    def test_assem_agenda_or_nameless_block_is_not_speech(self):
+        prose = '돌봄 부족 대기 백 명 ' * 100
+        html = '<div id="assem-content"><div class="view_content_item"><div class="content_name">의사일정</div><p>'+prose+'</p></div><div class="view_content_item"><div class="content_speech">'+prose+'</div></div></div>'
+        self.assertFalse(transcript(Page(html))[0])
+
+    def test_recent_api_null_labels_not_rendered_as_none(self):
+        from collect_pilot import recent_api_rows
+        rows=recent_api_rows([{"minId":1,"mtgDate":"2026.9.1","mtgNm":"본회의","mtgCerClssNm":None}],"https://example.gov",SRC)
+        self.assertNotIn("None",rows[0]["chunks"][0])
+
+    def test_recent_tabs_deduplicate_and_order_without_using_ai_summary(self):
+        from collect_pilot import recent_api_rows
+        row={"minId":10,"mtgDate":"2026. 9. 1.","tmpMinYn":"Y","lsnNo":10,"ssnNo":319,"ssnTpNm":"정례회","sessNo":1,"mtgNm":"본회의","summary":"DO NOT USE AI SUMMARY"}
+        later={**row,"minId":11,"mtgDate":"2026. 9. 2."}
+        rows=recent_api_rows([row,later,row],"https://example.gov",SRC)
+        self.assertEqual(len(rows),2)
+        self.assertIn("minId=11",rows[0]["attrs"][0][1])
+        self.assertNotIn("DO NOT USE"," ".join(rows[0]["chunks"]))
+    def test_recent_api_missing_date_is_not_silently_replaced(self):
+        from collect_pilot import recent_api_rows
+        with self.assertRaises(ValueError):
+            recent_api_rows([{"minId":10}],"https://example.gov",SRC)
+    def test_recent_tabs_partial_fetch_cannot_be_a_complete_list(self):
+        from collect_pilot import load_recent_tabs
+        class ClientStub:
+            def get(self,url,form=None):
+                return None if form["searchMtgClssGrp"]=="B" else Page('{"list":[]}')
+        with self.assertRaises(ValueError):
+            load_recent_tabs(ClientStub(),{"list_url":"https://example.gov/recent"})
+
+    def test_structured_speaker_blocks_exclude_navigation_and_attendance(self):
+        html='<span class="member_name">위원장 신가나</span><div class="speaker_area"><div class="line_name"><span>위원장</span><span>신가나</span></div><div class="line_context">'+('교통 불편을 확인하겠습니다. '*20)+'</div></div><div class="speaker_area"><div>교통과장 이다라</div><div>'+('현황 자료를 제출하겠습니다. '*20)+'</div></div><div>출석공무원 의원프로필</div>'
+        body,parts=transcript(Page(html))
+        self.assertEqual(len(parts),2)
+        self.assertNotIn("의원프로필",body)
+        self.assertNotIn("출석공무원",body)
+
+    def test_verified_popup_field_order_and_temporary_version(self):
+        from collect_pilot import detail_from
+        source={"hosts":["example.gov"],"popup_adapter":True}
+        call="fn_popup_page('323','1','0','1','정례회','본회의','1',1);"
+        self.assertEqual(detail_from([("onclick",call)],"https://example.gov/late",source),"https://example.gov/meeting/confer/popup.do?ntime=323&contype=1&subtype=0&num=1&istemp=1")
+    def test_popup_appendix_is_not_minutes(self):
+        from collect_pilot import detail_from
+        source={"hosts":["example.gov"],"popup_adapter":True}
+        call="fn_popup_page('323','1','0','1','정례회','본회의','1',3);"
+        self.assertEqual(detail_from([("onclick",call)],"https://example.gov/late",source),"")
+    def test_anonymous_session_suffix_not_logged(self):
+        from collect_pilot import clean_diagnostic
+        self.assertEqual(clean_diagnostic("/popup.do;jsessionid=ABC123"),"/popup.do;jsessionid=[REDACTED]")
+
+    def test_clerk_ceremony_is_a_valid_transcript_not_a_fetch_failure(self):
+        html='<p>○의사담당 강가나 '+('지금부터 임시회 개회식을 시작하겠습니다. '*12)+'</p><p>○의장 김가나 '+('동료 의원 여러분께 감사드립니다. '*12)+'</p><p>○의사담당 강가나 폐식을 선언합니다.</p>'
+        body,parts=transcript(Page(html))
+        self.assertTrue(body)
+        self.assertEqual(len(parts),3)
+    def test_path_based_record_identity(self):
+        from collect_pilot import detail_from
+        source={"hosts":["example.gov"],"detail_pattern":r"/council/viewer/minutes/[0-9]+\.do","path_identity":True,"id_params":[]}
+        self.assertEqual(detail_from([("href","/council/viewer/minutes/2946.do")],"https://example.gov",source),"https://example.gov/council/viewer/minutes/2946.do")
+
+    def test_registry_has_all_25_unique_districts(self):
+        import json
+        from pathlib import Path
+        sources=json.loads((Path(__file__).parent/"sources_25.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(sources),25)
+        self.assertEqual(len({s["id"] for s in sources}),25)
+        self.assertEqual({s["name"] for s in sources},set("종로구 중구 용산구 성동구 광진구 동대문구 중랑구 성북구 강북구 도봉구 노원구 은평구 서대문구 마포구 양천구 강서구 구로구 금천구 영등포구 동작구 관악구 서초구 강남구 송파구 강동구".split()))
+
+    def test_official_recent_menu_discovery(self):
+        page=Page('<a href="/kr/minutes/late.do"><span>최근회의록</span></a>')
+        self.assertEqual(discover_list(page,"https://example.gov/",SRC),"https://example.gov/kr/minutes/late.do")
+    def test_discovery_does_not_leave_official_host(self):
+        page=Page('<a href="https://other.invalid/late">최근회의록</a>')
+        self.assertEqual(discover_list(page,"https://example.gov/",SRC),"")
+    def test_first_observation_is_not_no_new(self):
+        current={"listing_ok":True,"expected":1,"selected":[{"url":"https://example.gov/record/main?uid=1"}]}
+        self.assertEqual(window_change(current,None),"BASELINE")
+    def test_fetch_failure_is_not_no_new(self):
+        current={"listing_ok":False,"expected":1,"selected":[]}
+        self.assertEqual(window_change(current,{}),"UNKNOWN_COLLECTION")
+    def test_same_visible_window_with_alias_is_not_new(self):
+        current={"listing_ok":True,"expected":1,"selected":[{"url":"https://example.gov/record/main?uid=1"}]}
+        prior={**current,"selected":[{"url":"https://www.example.gov/record/main?uid=1"}]}
+        self.assertEqual(window_change(current,prior),"NO_NEW_IN_VISIBLE_WINDOW")
+    def test_new_record_is_new_in_visible_window(self):
+        current={"listing_ok":True,"expected":1,"selected":[{"url":"https://example.gov/record/main?uid=2"}]}
+        prior={**current,"selected":[{"url":"https://example.gov/record/main?uid=1"}]}
+        self.assertEqual(window_change(current,prior),"NEW_IN_VISIBLE_WINDOW")
+    def test_sampling_change_is_new_baseline(self):
+        current={"listing_ok":True,"expected":1,"selected":[{"url":"https://example.gov/record/main?uid=1"}]}
+        self.assertEqual(window_change(current,{**current,"expected":2}),"BASELINE_WINDOW_CHANGED")
+    def test_partial_prior_list_is_not_new_publication(self):
+        current={"listing_ok":True,"expected":2,"selected":[{"url":"https://example.gov/record/main?uid=1"},{"url":"https://example.gov/record/main?uid=2"}]}
+        prior={**current,"selected":current["selected"][:1]}
+        self.assertEqual(window_change(current,prior),"BASELINE_AFTER_FAILURE")
+    def test_configured_legacy_identity_preserved(self):
+        self.assertEqual(canonical("https://example.gov/popup.do?contype=1&ntime=318&num=1&subtype=0&noise=x",{"id_params":["contype","ntime","num","subtype"]}),"https://example.gov/popup.do?contype=1&ntime=318&num=1&subtype=0")
+
 if __name__=="__main__":
     unittest.main()
