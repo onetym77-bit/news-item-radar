@@ -51,6 +51,7 @@ class Page(HTMLParser):
         self.rows = []
         self.row = None
         self.links = []
+        self.frames = []
         self.title = []
         self.in_title = False
         self.feed(html)
@@ -70,6 +71,8 @@ class Page(HTMLParser):
                     self.row["attrs"].append([key, value])
                 if key in {"href", "src"}:
                     self.links.append(value)
+                if key == "src" and tag in {"iframe", "frame"}:
+                    self.frames.append(value)
 
     def handle_endtag(self, tag):
         if tag in {"script", "style", "noscript"}:
@@ -119,7 +122,7 @@ def select_rows(page, base, source, count=4):
     for r in page.rows:
         label = norm(" ".join(r["chunks"]))
         when = day(label)
-        if not when or not re.search(r"\d+\s*(?:대|회)", label):
+        if not re.search(r"\d+\s*(?:대|회)", label) or not re.search(r"본회의|위원회|행정사무감사|개원식|개회식", label):
             continue
         url = detail_from(r["attrs"], base, source)
         identity = url or label
@@ -243,8 +246,11 @@ def run(source, as_of):
             result["diagnostic_links"] = [u for u in listing.links if "record" in u or "minute" in u][:12]
         for row in selected:
             row.update({"body_ok":False, "review_windows":[],
-                        "age_days":(as_of-date.fromisoformat(row["meeting_date"])).days})
-            if row["age_days"] < 0:
+                        "age_days":(as_of-date.fromisoformat(row["meeting_date"])).days if row["meeting_date"] else None,
+                        "publication_status":"PROVISIONAL" if row["provisional"] else "UNCONFIRMED"})
+            if row["age_days"] is None:
+                row["diagnosis"] = "DATE_UNRESOLVED"
+            elif row["age_days"] < 0:
                 row["diagnosis"] = "FUTURE_MEETING"
             elif not row["url"]:
                 row["diagnosis"] = "DETAIL_LINK_UNRESOLVED"
@@ -254,11 +260,13 @@ def run(source, as_of):
                     body, parts = transcript(page)
                     # Some viewers host the transcript in a same-site frame.
                     if not body:
-                        inner = detail_from([("src",u) for u in page.links], row["url"], source)
+                        inner = detail_from([("src",u) for u in page.frames], row["url"], source)
                         if inner and inner != row["url"]:
                             framed = client.get(inner)
                             if framed:
                                 body, parts = transcript(framed)
+                                page = framed
+                                row["body_url"] = inner
                     row["body_ok"] = bool(body)
                     row["body_characters"] = len(body)
                     row["speech_turns"] = len(parts)
