@@ -4,7 +4,7 @@
     "end": "2026-09-14",
     "days": 7
   },
-  "generated": 5,
+  "generated": 7,
   "labeled": 0,
   "coverage": 0.0,
   "promising": 0,
@@ -13,7 +13,7 @@
   "useful_rate": null,
   "by_source": {
     "council_minutes": {
-      "generated": 4,
+      "generated": 6,
       "labeled": 0,
       "promising": 0,
       "useful": 0,

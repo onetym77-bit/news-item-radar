@@ -1,5 +1,5 @@
 {
-  "generated_at_kst": "2026-09-14T09:46:44+09:00",
+  "generated_at_kst": "2026-09-14T14:20:38+09:00",
   "status": {
     "discovery_core": "서울시의회 회의록",
     "discovery_auxiliary": "서울시 응답소 공개민원",
@@ -7,7 +7,7 @@
       "서울 열린데이터",
       "서울 빅데이터캠퍼스"
     ],
-    "warning": "모든 발굴 레코드는 S0 이전 질문 씨앗이며 기사 후보가 아님"
+    "warning": "근거 앵커를 통과한 레코드도 S0 이전 질문 씨앗이며 기사 후보가 아님"
   },
   "metrics": [
     {
@@ -21,8 +21,8 @@
       "error": "",
       "requests": 3,
       "failed_requests": 0,
-      "latency_ms": 3506,
-      "bytes": 195361,
+      "latency_ms": 3161,
+      "bytes": 195372,
       "latest_date": "2026-09-14",
       "freshness_days": 0,
       "extracted": 2,
@@ -43,15 +43,15 @@
       "error": "",
       "requests": 7,
       "failed_requests": 1,
-      "latency_ms": 8387,
-      "bytes": 1226475,
+      "latency_ms": 13266,
+      "bytes": 1093685,
       "latest_date": "2026-09-11",
       "freshness_days": 3,
-      "extracted": 16,
-      "qualified": 7,
+      "extracted": 14,
+      "qualified": 4,
       "localization_leads": 0,
       "strong": 4,
-      "qualified_rate": 43.8,
+      "qualified_rate": 28.6,
       "median_score": 4.0
     },
     {
@@ -65,15 +65,15 @@
       "error": "",
       "requests": 7,
       "failed_requests": 0,
-      "latency_ms": 9245,
+      "latency_ms": 8992,
       "bytes": 616094,
       "latest_date": "2026-09-14",
       "freshness_days": 0,
       "extracted": 55,
-      "qualified": 0,
+      "qualified": 6,
       "localization_leads": 0,
       "strong": 0,
-      "qualified_rate": 0.0,
+      "qualified_rate": 10.9,
       "median_score": 3
     },
     {
@@ -87,16 +87,16 @@
       "error": "",
       "requests": 2,
       "failed_requests": 0,
-      "latency_ms": 2714,
+      "latency_ms": 1885,
       "bytes": 115742,
       "latest_date": "2026-09-08",
       "freshness_days": 6,
-      "extracted": 11,
+      "extracted": 10,
       "qualified": 1,
       "localization_leads": 0,
       "strong": 1,
-      "qualified_rate": 9.1,
-      "median_score": 3
+      "qualified_rate": 10.0,
+      "median_score": 4.0
     }
   ],
   "core_discovery": [
@@ -104,7 +104,7 @@
       "source_id": "council_minutes",
       "source_name": "서울시의회 회의록",
       "role": "BOTH",
-      "text": "여러분, 전세사기라는 단어 이제는 너무 많이 들어 익숙해지셨습니까? 1만 1,664가구, 공식적으로 전세사기피해를 인정받은 서울의 피해가구 수입니다. 약 1조 9,860억 원, 해당 가구들의 임차보증금 피해액입니다. 단순 계산으로도 가구당 평균 약 1억 7,000만 원에 달합니다. 물론 정부와 서울시 그리고 우리 서울시의회가 손을 놓고 있었던 것은 아닙니다. 이를 심각한 사회문제로 받아들이고 전세사기피해자 지원 조례를 제정하는 등 제도적 개선과 문제 해결을 위해 분명 노력해 왔습니다.",
+      "text": "서울시는 판결 이후 즉시 해야 할 일들이 있었습니다. 첫째, 대법원 판결의 내용을 정확하게 분석하고 둘째, 서울시내버스 전체 사업장에 미치는 영향을 신속하게 검토하여 셋째, 미지급 임금 문제를 어떤 원칙과 일정으로 해결할 것인지 구체적인 실행계획을 마련했어야 합니다.",
       "url": "https://ms.smc.seoul.kr/record/recordView.do?key=b151822b84a6ace88fa739955c6d340e88dd95cbc33c81dfe55c5900725b92643c2e8446558df958",
       "score": 9,
       "reasons": [
@@ -121,12 +121,15 @@
         "implementation": true,
         "loss": true,
         "low_value": false,
-        "boilerplate": false
+        "boilerplate": false,
+        "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+        "routine_action": false
       },
+      "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
       "seoul_scope": true,
       "qualified": true,
       "localization_lead": false,
-      "question": "인정 피해 1만 1,664가구와 약 1조 9,860억 원은 어느 자치구·주택유형·임대인 관계망에 집중됐고, 현행 지원은 그 집중도와 맞는가?",
+      "question": "이 발언에서 확인된 문제 징후 또는 구조 자료는 무엇이며, 어떤 비교가 정상 변동과 구조적 반복을 가르는가?",
       "lane": "CORE_DISCOVERY"
     },
     {
@@ -150,8 +153,11 @@
         "implementation": true,
         "loss": true,
         "low_value": false,
-        "boilerplate": false
+        "boilerplate": false,
+        "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+        "routine_action": true
       },
+      "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
       "seoul_scope": true,
       "qualified": true,
       "localization_lead": false,
@@ -162,8 +168,8 @@
       "source_id": "council_minutes",
       "source_name": "서울시의회 회의록",
       "role": "BOTH",
-      "text": "게 되겠습니까. · 판단이 처벌로 이루어질 수 있는 환경에서는 결국 판단을 멈추게 됩니다. 규정에 있는 것만 하고 문제가 될 것 같으면 개입하지 않고 피할 것입니다. 그 피해는 결국 우리 학생들에게 돌아갑니다. 물론 교사의 모든 행동을 보호하자는 주장이 아닙니다. 명백한 잘못이나 부적절한 행위에 대해서는 그에 상응하는 책임을 엄격하게 물어야 합니다. · 서울시교육청이 2026년 3월 발표한 자료에 따르면 긴급교실안심SEM사업은 2025년 8월",
-      "url": "https://ms.smc.seoul.kr/record/recordView.do?key=5e3c224d38966e995244c2f89a397fe8739fd44207973c15e4419d4c3bf3a352555cce1784771d86",
+      "text": "운 민생현장을 헤아려 진짜 시민 일상과 안전을 지키는 사업으로 채워 주시기 바랍니다. · 서울시의회는 혈세가 쓰이는 길목마다 근거와 절차를 집요하게 묻되 시민에게 필요한 예산이라면 주저없이 지원하겠습니다. · 교육 또한 이번 회기의 중요한 과제입니다. 대한민국의 미래를 결정짓는 백년지대계인 만큼 우리 아이들이 서울 어디서나 균등한 출발선에 설 수 있도록 교육격차 해소, 학교 안전, 마음 건강까지도 꼼꼼히 챙기겠습니다. · 교육은 미래를 위한 가",
+      "url": "https://ms.smc.seoul.kr/record/recordView.do?key=9d0a6e8f8a648933c1b13a2d77bf20525c77d972c130820eed4454f20e2eedd610b0331913918aaf",
       "score": 9,
       "reasons": [
         "서울 범위",
@@ -179,12 +185,15 @@
         "implementation": true,
         "loss": true,
         "low_value": false,
-        "boilerplate": false
+        "boilerplate": false,
+        "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+        "routine_action": false
       },
+      "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
       "seoul_scope": true,
       "qualified": true,
       "localization_lead": false,
-      "question": "긴급교실안심SEM 도입 뒤 교사의 개입과 학생 보호는 실제로 늘었는가, 사건 유형·학교별 이용 격차와 미개입 사유는 무엇인가?",
+      "question": "계획한 예산과 실제 집행 사이에 확인되는 차이는 얼마이며, 그 차이가 서비스 대상·자치구별 이용에 어떤 영향을 주는가?",
       "lane": "CORE_DISCOVERY"
     }
   ],
@@ -210,8 +219,11 @@
         "implementation": true,
         "loss": true,
         "low_value": false,
-        "boilerplate": false
+        "boilerplate": false,
+        "evidence_anchor": "DIRECT_PROBLEM_SIGNAL",
+        "routine_action": false
       },
+      "evidence_anchor": "DIRECT_PROBLEM_SIGNAL",
       "seoul_scope": true,
       "qualified": true,
       "localization_lead": false,
@@ -241,8 +253,11 @@
         "implementation": true,
         "loss": true,
         "low_value": false,
-        "boilerplate": false
+        "boilerplate": false,
+        "evidence_anchor": "NONE",
+        "routine_action": false
       },
+      "evidence_anchor": "NONE",
       "seoul_scope": true,
       "qualified": true,
       "localization_lead": false,
@@ -253,66 +268,13 @@
       "source_id": "seoul_open_data",
       "source_name": "서울 열린데이터 신규 데이터셋",
       "role": "VERIFICATION",
-      "text": "서울시 장애인 버스요금 환급지급 인원수",
-      "url": "https://data.seoul.go.kr/dataList/OA-23007/S/1/datasetView.do",
-      "score": 6,
-      "reasons": [
-        "서울 범위",
-        "문제·변화",
-        "시민 손실",
-        "독립 검증원"
-      ],
-      "signals": {
-        "problem": true,
-        "evidence": false,
-        "implementation": false,
-        "loss": true,
-        "low_value": false,
-        "boilerplate": false
-      },
-      "seoul_scope": true,
-      "qualified": false,
-      "localization_lead": false,
-      "question": "이 신규 데이터로 기존 발표의 총량을 지역·대상·시간대별로 분해할 수 있는가?",
-      "lane": "VERIFICATION_MAP"
-    },
-    {
-      "source_id": "seoul_open_data",
-      "source_name": "서울 열린데이터 신규 데이터셋",
-      "role": "VERIFICATION",
-      "text": "서울특별시교통실 교통운영관 생활교통안전과",
-      "url": "https://data.seoul.go.kr/datasetRanking/new.do",
-      "score": 5,
-      "reasons": [
-        "서울 범위",
-        "제도·집행",
-        "시민 손실",
-        "독립 검증원"
-      ],
-      "signals": {
-        "problem": false,
-        "evidence": false,
-        "implementation": true,
-        "loss": true,
-        "low_value": false,
-        "boilerplate": false
-      },
-      "seoul_scope": true,
-      "qualified": false,
-      "localization_lead": false,
-      "question": "이 신규 데이터로 기존 발표의 총량을 지역·대상·시간대별로 분해할 수 있는가?",
-      "lane": "VERIFICATION_MAP"
-    },
-    {
-      "source_id": "seoul_open_data",
-      "source_name": "서울 열린데이터 신규 데이터셋",
-      "role": "VERIFICATION",
-      "text": "서울특별시 쪽방주민 동행식당 현황.csv 다운로드",
-      "url": "https://data.seoul.go.kr/dataList/OA-23003/S/1/datasetView.do",
-      "score": 5,
+      "text": "서울특별시 강서구 코로나19 월별 확진자 및 사망자 현황(2022년)",
+      "url": "https://data.seoul.go.kr/dataList/OA-21798/F/1/datasetView.do",
+      "score": 7,
       "reasons": [
         "서울 범위",
         "수치·공개근거",
+        "분해 가능한 구조 자료",
         "독립 검증원"
       ],
       "signals": {
@@ -321,8 +283,71 @@
         "implementation": false,
         "loss": false,
         "low_value": false,
-        "boilerplate": false
+        "boilerplate": false,
+        "evidence_anchor": "DECOMPOSABLE_STRUCTURE",
+        "routine_action": false
       },
+      "evidence_anchor": "DECOMPOSABLE_STRUCTURE",
+      "seoul_scope": true,
+      "qualified": false,
+      "localization_lead": false,
+      "question": "이 신규 데이터로 기존 발표의 총량을 지역·대상·시간대별로 분해할 수 있는가?",
+      "lane": "VERIFICATION_MAP"
+    },
+    {
+      "source_id": "seoul_open_data",
+      "source_name": "서울 열린데이터 신규 데이터셋",
+      "role": "VERIFICATION",
+      "text": "서울특별시 강서구 일별 동별 코로나확진자현황(2023년)",
+      "url": "https://data.seoul.go.kr/dataList/OA-21782/F/1/datasetView.do",
+      "score": 7,
+      "reasons": [
+        "서울 범위",
+        "수치·공개근거",
+        "분해 가능한 구조 자료",
+        "독립 검증원"
+      ],
+      "signals": {
+        "problem": false,
+        "evidence": true,
+        "implementation": false,
+        "loss": false,
+        "low_value": false,
+        "boilerplate": false,
+        "evidence_anchor": "DECOMPOSABLE_STRUCTURE",
+        "routine_action": false
+      },
+      "evidence_anchor": "DECOMPOSABLE_STRUCTURE",
+      "seoul_scope": true,
+      "qualified": false,
+      "localization_lead": false,
+      "question": "이 신규 데이터로 기존 발표의 총량을 지역·대상·시간대별로 분해할 수 있는가?",
+      "lane": "VERIFICATION_MAP"
+    },
+    {
+      "source_id": "seoul_open_data",
+      "source_name": "서울 열린데이터 신규 데이터셋",
+      "role": "VERIFICATION",
+      "text": "서울특별시 강서구 코로나19 예방접종 현황(2022년)",
+      "url": "https://data.seoul.go.kr/dataList/OA-21792/F/1/datasetView.do",
+      "score": 7,
+      "reasons": [
+        "서울 범위",
+        "수치·공개근거",
+        "분해 가능한 구조 자료",
+        "독립 검증원"
+      ],
+      "signals": {
+        "problem": false,
+        "evidence": true,
+        "implementation": false,
+        "loss": false,
+        "low_value": false,
+        "boilerplate": false,
+        "evidence_anchor": "DECOMPOSABLE_STRUCTURE",
+        "routine_action": false
+      },
+      "evidence_anchor": "DECOMPOSABLE_STRUCTURE",
       "seoul_scope": true,
       "qualified": false,
       "localization_lead": false,
