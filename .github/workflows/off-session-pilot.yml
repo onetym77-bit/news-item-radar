@@ -1,0 +1,34 @@
+name: Probe off-session source access
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "off-session-pilot/*.py"
+      - ".github/workflows/off-session-pilot.yml"
+permissions:
+  contents: read
+concurrency:
+  group: off-session-pilot-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test diagnostic boundaries
+        run: python -X utf8 -m unittest discover -s off-session-pilot -p 'test_*.py' -v
+      - name: Validate existing system without changing ledgers
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Read four official public pages once
+        run: python -X utf8 off-session-pilot/probe_sources.py
+      - name: Preserve bounded diagnostics
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: off-session-access-${{ github.run_id }}
+          path: off-session-pilot/output/
+          retention-days: 30
