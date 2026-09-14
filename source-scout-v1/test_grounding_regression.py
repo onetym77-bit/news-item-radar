@@ -19,6 +19,7 @@ def load_module(name: str, filename: str):
 
 scout = load_module("source_scout_grounding_regression", "scout_sources.py")
 feed = load_module("source_feed_grounding_regression", "collect_daily_feed.py")
+inject = load_module("source_inject_grounding_regression", "inject_feed_into_briefing.py")
 
 
 class GroundingRegressionTests(unittest.TestCase):
@@ -454,6 +455,63 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertEqual(len(built["activity_baselines"]), 1)
         self.assertEqual(built["auxiliary_discovery"], [])
         self.assertEqual(built["held_for_source_detail"], [])
+
+    def test_decimal_measurement_stays_in_one_evidence_segment(self):
+        result = self.signals("서울 침수 피해율은 3.5%로 증가했습니다")
+        self.assertIn("3.5%", result["substantive_values"])
+        self.assertEqual(result["evidence_anchor"], "MEASURED_PROBLEM_SIGNAL")
+
+    def test_partial_district_extent_remains_a_measurement(self):
+        result = self.signals("서울 3개 자치구에서 침수 피해 100건이 발생했습니다")
+        self.assertIn("3개", result["substantive_values"])
+        self.assertIn("100건", result["substantive_values"])
+        self.assertEqual(result["evidence_anchor"], "MEASURED_PROBLEM_SIGNAL")
+
+    def test_two_thirds_sliding_window_overlap_is_duplicate(self):
+        left = {"text": "전세사기 보증금 피해 임차인 지원 지연 확인"}
+        right = {"text": "보증금 피해 임차인 지원 지연 확인 대책"}
+        self.assertTrue(scout.near_duplicate_context(left, right))
+
+    def test_dataset_title_is_metadata_lead_not_verification_asset(self):
+        result = self.signals(
+            "복지 · 서울시 장애인 버스요금 환급지급 인원수 · 공공데이터",
+            self.open_data,
+            "LINK_LABEL",
+        )
+        self.assertTrue(result["verification_metadata_lead"])
+        self.assertFalse(result["verification_usable"])
+
+    def test_final_briefing_labels_baseline_and_metadata_lead(self):
+        feed_payload = {
+            "core_discovery": [],
+            "auxiliary_discovery": [],
+            "activity_baselines": [{
+                "text": "민원 현황판 오늘 4,714건",
+                "url": "https://eungdapso.seoul.go.kr/main.do",
+            }],
+            "verification_metadata_leads": [{
+                "text": "서울시 장애인 버스요금 환급지급 인원수",
+                "url": "https://data.seoul.go.kr/example",
+            }],
+            "verification_map": [],
+        }
+        rendered = inject.render(feed_payload, {})
+        self.assertIn("활동량 기준선 — 후보 아님", rendered)
+        self.assertIn("전일·전월 누적 비교 전", rendered)
+        self.assertIn("데이터셋 후보 — 스키마·값 미확인", rendered)
+        self.assertIn("검증 자산 사용 금지", rendered)
+
+    def test_protest_end_is_not_service_interruption(self):
+        result = self.signals(
+            "12대 서울시의회 개원 후 지난 4년 8개월 동안 이어진 "
+            "장애인 지하철 탑승 시위가 중단을 선언했습니다"
+        )
+        self.assertNotIn("12대", result["substantive_values"])
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_operational_service_interruption_remains_a_problem(self):
+        result = self.signals("서울 지하철 운행이 3시간 중단돼 시민이 불편을 겪었습니다")
+        self.assertEqual(result["evidence_anchor"], "MEASURED_PROBLEM_SIGNAL")
 
     def test_high_score_navigation_cannot_reenter_verification_map(self):
         fake_record = {

@@ -29,6 +29,8 @@ def render(feed: dict, review: dict | None = None) -> str:
     review = review or {}
     core = feed.get("core_discovery", [])
     auxiliary = feed.get("auxiliary_discovery", [])
+    baselines = feed.get("activity_baselines", [])
+    metadata_leads = feed.get("verification_metadata_leads", [])
     verification = feed.get("verification_map", [])
     lines = [
         "## C-실험. 신규 소스 질문 씨앗",
@@ -72,6 +74,27 @@ def render(feed: dict, review: dict | None = None) -> str:
                     "",
                 ]
             )
+
+    lines.extend(["### 활동량 기준선 — 후보 아님", ""])
+    if not baselines:
+        lines.extend(["- 오늘 저장된 활동량 기준선 없음", ""])
+    else:
+        for row in baselines:
+            lines.append(
+                f"- {md(row.get('text', ''), 180)} — 전일·전월 누적 비교 전에는 이상 신호로 사용하지 않음"
+            )
+        lines.append("")
+
+    lines.extend(["### 데이터셋 후보 — 스키마·값 미확인", ""])
+    if not metadata_leads:
+        lines.extend(["- 오늘 스키마 확인 대기 중인 데이터셋 제목 없음", ""])
+    else:
+        for row in metadata_leads:
+            lines.append(
+                f"- {md(row.get('text', ''), 160)} — 컬럼·실제 값 확인 전 검증 자산 사용 금지 "
+                f"([원문]({row.get('url', '')}))"
+            )
+        lines.append("")
 
     lines.extend(["### 검증 데이터 지도", ""])
     if not verification:

@@ -184,6 +184,16 @@ def build_feed(module) -> dict:
         4,
         dedupe_by="url",
     )
+    verification_leads = unique_top(
+        [
+            {**row, "lane": "VERIFICATION_METADATA_LEAD"}
+            for row in records
+            if row.get("verification_metadata_lead")
+            and not row.get("verification_usable")
+        ],
+        4,
+        dedupe_by="url",
+    )
     activity_baselines = unique_top(
         [
             {**row, "lane": "ACTIVITY_BASELINE"}
@@ -225,12 +235,14 @@ def build_feed(module) -> dict:
             "qualified": sum(row.get("qualified") for row in records),
             "selected_discovery": len(core) + len(auxiliary),
             "selected_verification": len(verification),
+            "verification_metadata_leads": len(verification_leads),
             "activity_baselines": len(activity_baselines),
         },
         "metrics": metrics,
         "core_discovery": core,
         "auxiliary_discovery": auxiliary,
         "activity_baselines": activity_baselines,
+        "verification_metadata_leads": verification_leads,
         "verification_map": verification,
         "held_for_source_detail": held,
     }
@@ -311,13 +323,14 @@ def render_markdown(feed: dict) -> str:
         "",
         "## 오늘의 변환 깔때기",
         "",
-        "| 추출 | 사전통과 | 보류 | 제외 | 질문-근거 일치 | 자동 유효 | 편집 판정 카드 | 활동 기준선 | 검증자료 |",
-        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| 추출 | 사전통과 | 보류 | 제외 | 질문-근거 일치 | 자동 유효 | 편집 판정 카드 | 활동 기준선 | 데이터 후보 | 검증자료 |",
+        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
         (
             f"| {funnel.get('extracted', 0)} | {funnel.get('precheck_pass', 0)} | "
             f"{funnel.get('precheck_hold', 0)} | {funnel.get('precheck_fail', 0)} | "
             f"{funnel.get('grounded', 0)} | {funnel.get('qualified', 0)} | "
             f"{funnel.get('selected_discovery', 0)} | {funnel.get('activity_baselines', 0)} | "
+            f"{funnel.get('verification_metadata_leads', 0)} | "
             f"{funnel.get('selected_verification', 0)} |"
         ),
         "",
@@ -379,6 +392,18 @@ def render_markdown(feed: dict) -> str:
         for row in held:
             lines.append(
                 f"- {concise(row['text'], 140)} — {row.get('precheck_reason', '근거 확인 필요')} "
+                f"([{row.get('source_name', '원문')}]({row.get('url', '')}))"
+            )
+        lines.append("")
+
+    lines.extend(["## 데이터셋 후보 · 스키마·값 미확인", ""])
+    metadata_leads = feed.get("verification_metadata_leads", [])
+    if not metadata_leads:
+        lines.extend(["- 오늘 확인 대기 중인 데이터셋 제목 없음", ""])
+    else:
+        for row in metadata_leads:
+            lines.append(
+                f"- {concise(row['text'], 140)} — 제목만 발견; 컬럼·실제 값 확인 전에는 검증 자산으로 사용 금지 "
                 f"([{row.get('source_name', '원문')}]({row.get('url', '')}))"
             )
         lines.append("")

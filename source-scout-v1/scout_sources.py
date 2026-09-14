@@ -111,7 +111,7 @@ PROBLEM_TERMS = (
     "격차", "불균형", "부족", "불편", "피해", "손실", "사고", "체불", "미지급", "폐업",
     "급증", "급감", "증가", "감소", "지연", "혼잡", "위험", "미달", "초과",
     "사각지대", "제한", "불용", "삭감", "적자", "위반", "민원", "환불", "해지",
-    "부실", "제외", "중단", "갈등", "논란", "노후", "고령", "장애", "폭염",
+    "부실", "제외", "갈등", "논란", "노후", "고령", "폭염",
     "침수", "붕괴", "과밀", "공백", "부담", "취약", "분쟁",
 )
 EVIDENCE_TERMS = (
@@ -390,7 +390,16 @@ def score_text(
     reasons: list[str] = []
     explicit_seoul = any(marker in text for marker in ("서울", "자치구", "한강", "수도권"))
     seoul_scope = source["local"] or explicit_seoul
-    problem = any(term in text for term in PROBLEM_TERMS)
+    operational_interruption = bool(
+        re.search(
+            r"(?:운행|서비스|지원|급식|공급|진료|돌봄|전산|통신|시설)"
+            r".{0,16}(?:장애|중단)"
+            r"|(?:장애|중단).{0,16}"
+            r"(?:운행|서비스|지원|급식|공급|진료|돌봄|전산|통신|시설)",
+            text,
+        )
+    )
+    problem = any(term in text for term in PROBLEM_TERMS) or operational_interruption
     implementation = any(term in text for term in IMPLEMENTATION_TERMS)
     loss = any(term in text for term in LOSS_TERMS)
     low_value = any(term in text for term in LOW_VALUE_TERMS)
@@ -602,6 +611,7 @@ def extract_records(
                 "substantive_values": signals["substantive_values"],
                 "claim_status": signals["claim_status"],
                 "verification_usable": signals["verification_usable"],
+                "verification_metadata_lead": signals.get("verification_metadata_lead", False),
                 "evidence_anchor": signals["evidence_anchor"],
                 "seoul_scope": seoul_scope,
                 "qualified": qualified,
@@ -723,7 +733,7 @@ def near_duplicate_context(left: dict, right: dict) -> bool:
     if not left_tokens or not right_tokens:
         return False
     overlap = len(left_tokens & right_tokens) / min(len(left_tokens), len(right_tokens))
-    return overlap >= 0.67
+    return overlap >= 0.66
 
 
 def select_distinct_council_records(records: list[dict], source_url: str) -> list[dict]:
@@ -770,6 +780,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 "precheck_pass": 0,
                 "grounded": 0,
                 "verification_usable": 0,
+                "verification_metadata_leads": 0,
                 "qualified": 0,
                 "localization_leads": 0,
                 "strong": 0,
@@ -837,9 +848,19 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     scores = [row["score"] for row in records]
     qualified = sum(row["qualified"] for row in records)
     verification_usable = sum(row["verification_usable"] for row in records)
+    verification_metadata_leads = sum(
+        row.get("verification_metadata_lead", False) for row in records
+    )
     values_found = sum(bool(row["substantive_values"]) for row in records)
     status_detail = "OK"
-    if source["role"] == "VERIFICATION" and records and not verification_usable:
+    if (
+        source["role"] == "VERIFICATION"
+        and records
+        and not verification_usable
+        and verification_metadata_leads
+    ):
+        status_detail = "DEGRADED_METADATA_ONLY"
+    elif source["role"] == "VERIFICATION" and records and not verification_usable:
         status_detail = "DEGRADED_NO_DATASET_TEXT"
     elif source["id"] == "labor_arrears" and records and not values_found:
         status_detail = "DEGRADED_NO_VALUES"
@@ -863,6 +884,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         "precheck_pass": sum(row["precheck_status"] == "PASS" for row in records),
         "grounded": sum(row["grounding_status"] == "PASS" for row in records),
         "verification_usable": verification_usable,
+        "verification_metadata_leads": verification_metadata_leads,
         "qualified": qualified,
         "localization_leads": sum(row["localization_lead"] for row in records),
         "strong": sum(row["qualified"] and row["score"] >= 8 for row in records),
@@ -916,7 +938,7 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
     csv_fields = [
         "source_id", "source_name", "role", "record_kind", "score", "content_class",
         "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
-        "substantive_values", "verification_usable", "seoul_scope", "qualified",
+        "substantive_values", "verification_usable", "verification_metadata_lead", "seoul_scope", "qualified",
         "localization_lead", "question_basis", "question", "verification_axes",
         "grounding_status", "grounding_issues", "text", "reasons", "url",
     ]

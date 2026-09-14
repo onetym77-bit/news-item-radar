@@ -150,6 +150,18 @@ CASES = [
         "council",
     ),
     (
+        "시위 종료와 의회 서수",
+        "12대 서울시의회 개원 후 지난 4년 8개월 동안 이어진 장애인 지하철 탑승 시위가 중단을 선언했습니다",
+        "MEASURED_PROBLEM_SIGNAL",
+        "council",
+    ),
+    (
+        "제목만 확인된 데이터셋",
+        "복지 · 서울시 장애인 버스요금 환급지급 인원수 · 공공데이터",
+        "검증 자산",
+        "open_data",
+    ),
+    (
         "외국인 카드 총액",
         "서울 외국인 카드소비 총액 1조 원 자치구별·업종별 현황",
         "NONE",
@@ -194,7 +206,7 @@ def main() -> int:
     lines = [
         "# 질문 근거 검사 수정 전후 비교",
         "",
-        "- 동일 자료: 2026-09-14 실제 실행에서 확인된 오탐·오분류 23건과 보존해야 할 양성 3건",
+        "- 동일 자료: 2026-09-14 실제 실행에서 확인된 오탐·오분류 25건과 보존해야 할 양성 3건",
         "- 수정 전은 당시 실행 결과·질문을 요약했고, 수정 후는 현재 분류기를 같은 문장에 다시 적용한 값",
         "",
         "| 사례 | 수정 전 | 수정 후 | 자동 처리 |",
@@ -211,6 +223,8 @@ def main() -> int:
         action = (
             "후보 유지" if signals["evidence_anchor"] != "NONE" and payload["grounding_status"] == "PASS"
             else "검증자료만" if signals["verification_usable"]
+            else "활동 기준선·후보 아님" if signals["content_class"] == "AGGREGATE_ACTIVITY_DASHBOARD"
+            else "스키마·값 확인 대기" if signals.get("verification_metadata_lead")
             else "본문 확보 대기" if signals["precheck_status"] == "HOLD"
             else "자동 제외"
         )

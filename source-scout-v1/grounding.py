@@ -12,12 +12,12 @@ MEASUREMENT_RE = re.compile(
 )
 TIME_RANGE_RE = re.compile(r"(?<!\d)\d{1,2}\s*[~-]\s*\d{1,2}\s*시")
 LAW_RE = re.compile(r"제\s*\d+\s*(?:조|항|호)")
-ORDINAL_RE = re.compile(r"\d+\s*대\s*(?:의회|국회|대통령|전략|과제|통계)")
+ORDINAL_RE = re.compile(r"\d+\s*대\s*(?:[가-힣]{0,10}의회|국회|대통령|전략|과제|통계)")
 DATE_TOKEN_RE = re.compile(
     r"(?<!\d)(?:19|20)\d{2}(?:\s*년|[.\-/]\s*\d{1,2}(?:\s*월|[.\-/]\s*\d{1,2}\s*일?)?)?"
 )
 SCOPE_COUNT_RE = re.compile(
-    r"(?<!\d)\d[\d,]*\s*(?:개\s*)?(?:자치구|시도|행정동|법정동|개\s*구)"
+    r"(?<!\d)(?:25\s*개\s*자치구|17\s*개\s*시도)(?=\s|마다|전체|각각|에서|의|,|\.|$)"
 )
 PROCEDURAL_VALUE_RE = re.compile(
     r"(?:남은\s*(?:발언|질의)?\s*시간(?:이|은|을)?|발언\s*시간|질의\s*시간)"
@@ -25,7 +25,7 @@ PROCEDURAL_VALUE_RE = re.compile(
     r"|\d[\d,]*\s*분씩[^.!?·]{0,28}(?:시정질문|발언|질의)"
     r"|\d\s*대\s*\d[^.!?·]{0,20}(?:시정질문|발언|질의)"
 )
-EVIDENCE_SEGMENT_RE = re.compile(r"[.!?。！？]|\s*·\s*")
+EVIDENCE_SEGMENT_RE = re.compile(r"(?<!\d)\.(?!\d)|[!?。！？]|\s*·\s*")
 
 NAV_TERMS = (
     "본문 바로가기", "검색어 입력", "메뉴", "로그인", "회원가입", "개인정보처리방침",
@@ -320,14 +320,17 @@ def analyze_content(
     verification_usable = (
         precheck_status == "PASS"
         and role == "VERIFICATION"
+        and bool(values)
         and (
-            content_class == "DATASET_METADATA"
-            or bool(axes)
-            or (
-                bool(values)
-                and any(term in text.lower() for term in STRUCTURAL_TERMS + DATASET_TERMS)
-            )
+            bool(axes)
+            or any(term in text.lower() for term in STRUCTURAL_TERMS + DATASET_TERMS)
         )
+    )
+    verification_metadata_lead = (
+        precheck_status == "PASS"
+        and role == "VERIFICATION"
+        and content_class == "DATASET_METADATA"
+        and not verification_usable
     )
     anchor_facts = [text] if anchor != "NONE" else []
     return {
@@ -342,6 +345,7 @@ def analyze_content(
         "claim_status": claim_status,
         "change_direction": change_direction,
         "verification_usable": verification_usable,
+        "verification_metadata_lead": verification_metadata_lead,
     }
 
 
