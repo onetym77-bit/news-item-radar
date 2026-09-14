@@ -4,7 +4,13 @@ class ProbeTests(unittest.TestCase):
     def test_linked_entries_are_ordered_and_deduplicated(self):
         html = '<a href="/front/freeSuggest/view.do?sn=1">첫 제안</a>' * 2
         html += '<a href="/front/freeSuggest/view.do?sn=2">두 번째</a>'
-        self.assertEqual([a["text"] for a in inspect(html)["first_three_linked_entries"]],["첫 제안","두 번째"])
+        self.assertEqual([a["text"] for a in inspect(html,"P_LIST")["first_three_linked_entries"]],["첫 제안","두 번째"])
+    def test_vote_and_empty_ids_cannot_become_proposals(self):
+        html='<a href="/front/freeSuggest/view.do?sn=1#x">첫 제안</a><a href="/front/freeSuggest/view.do?sn=1">공감수 193</a><a href="/front/freeSuggest/view.do?sn=">처리상태 공감 투표중</a><a href="/front/freeSuggest/view.do?sn=2">두 번째</a>'
+        self.assertEqual([a["text"] for a in inspect(html,"P_LIST")["first_three_linked_entries"]],["첫 제안","두 번째"])
+    def test_related_proposals_on_detail_are_not_current_listing(self):
+        html='<a href="/front/freeSuggest/view.do?sn=3">과거 관련 제안</a>'
+        self.assertEqual(inspect(html,"P3")["first_three_linked_entries"],[])
     def test_script_cannot_supply_source_text(self):
         r=inspect('<title>통계</title><script>교통 999건</script><p>교통 123건</p>')
         self.assertEqual(r["stat_values"]["교통"],123)

@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urljoin, urlparse
+from urllib.parse import parse_qs, urlparse
 from urllib.request import Request, HTTPRedirectHandler, build_opener
 
 BASE = Path(__file__).resolve().parent
@@ -85,7 +85,7 @@ class OfficialRedirect(HTTPRedirectHandler):
             raise ValueError("Redirect outside the original official HTTPS host")
         return super().redirect_request(req,fp,code,msg,headers,newurl)
 
-def inspect(html):
+def inspect(html, sample_id=""):
     page = Page(html)
     text = norm(" ".join(page.chunks))
     anchors = [{k:sanitize(v)[:400] for k,v in a.items()}
@@ -93,11 +93,17 @@ def inspect(html):
     list_entries = []
     seen = set()
     for anchor in page.anchors:
-        if ("/front/freeSuggest/view.do" in anchor["href"] or "cmdPopInfo(" in anchor["onclick"]) and anchor["text"]:
-            key = (anchor["href"],anchor["onclick"])
-            if key not in seen:
-                seen.add(key)
-                list_entries.append({k:sanitize(v)[:400] for k,v in anchor.items()})
+        key = None
+        parsed = urlparse(anchor["href"])
+        sn = parse_qs(parsed.query).get("sn",[""])[0]
+        if sample_id == "P_LIST" and parsed.path == "/front/freeSuggest/view.do" and sn.isdigit():
+            if not re.match(r"^(?:공감수|비공감수|의견수|처리상태)",anchor["text"]):
+                key = ("proposal",sn)
+        elif sample_id in ("C_LIST","C_PAYMENTS") and "cmdPopInfo(" in anchor["onclick"]:
+            key = ("contract_link",anchor["onclick"])
+        if key is not None and anchor["text"] and key not in seen:
+            seen.add(key)
+            list_entries.append({k:sanitize(v)[:400] for k,v in anchor.items()})
         if len(list_entries) == 3:
             break
     dates = list(dict.fromkeys(re.findall(r"20\d{2}[.\-/]\s*\d{1,2}[.\-/]\s*\d{1,2}",text)))[:12]
@@ -145,7 +151,7 @@ def fetch(sample_id,url):
                         pass
                 else:
                     raise ValueError("Unknown text encoding")
-                result.update(access="HTTP_TEXT_RECEIVED",**inspect(html))
+                result.update(access="HTTP_TEXT_RECEIVED",**inspect(html,sample_id))
                 result.pop("error",None)
                 break
         except (HTTPError,URLError,TimeoutError,OSError,ValueError) as exc:
