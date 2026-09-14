@@ -18,6 +18,7 @@ on:
       - "agent-system-v1/QUESTION_QUALITY_AUDIT.csv"
       - "agent-system-v1/VERIFICATION_QUEUE.csv"
       - "daily-briefing-v5/**"
+      - "source-scout-v1/**"
       - ".github/workflows/daily-briefing.yml"
   pull_request:
     paths:
@@ -26,6 +27,7 @@ on:
       - "agent-system-v1/VERIFICATION_QUEUE.csv"
       - "agent-system-v1/validate_discovery_system.py"
       - "daily-briefing-v5/**"
+      - "source-scout-v1/**"
       - ".github/workflows/daily-briefing.yml"
 
 permissions:
@@ -51,6 +53,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Collect role-separated experimental source feed
+        run: |
+          python -m py_compile source-scout-v1/scout_sources.py
+          python -m py_compile source-scout-v1/collect_daily_feed.py
+          python -m py_compile source-scout-v1/inject_feed_into_briefing.py
+          python -m py_compile source-scout-v1/evaluate_human_review.py
+          python -X utf8 source-scout-v1/collect_daily_feed.py
+
       - name: Validate source ledgers
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
 
@@ -65,6 +75,8 @@ jobs:
           fi
           python -m py_compile daily-briefing-v5/build_briefing.py
           python -X utf8 daily-briefing-v5/build_briefing.py "${args[@]}"
+          python -X utf8 source-scout-v1/inject_feed_into_briefing.py
+          python -X utf8 source-scout-v1/evaluate_human_review.py "${args[@]}"
 
       - name: Validate generated briefing
         run: >-
@@ -85,6 +97,12 @@ jobs:
             daily-briefing-v5/output/briefing_latest.md
             daily-briefing-v5/output/history/*.md
             agent-system-v1/VERIFICATION_QUEUE.csv
+            source-scout-v1/output/daily_feed_latest.json
+            source-scout-v1/output/daily_feed_latest.md
+            source-scout-v1/output/history/*.json
+            source-scout-v1/output/review_summary_latest.json
+            source-scout-v1/output/review_summary_latest.md
+            source-scout-v1/HUMAN_REVIEW_QUEUE.csv
           if-no-files-found: error
           retention-days: 30
 
@@ -105,6 +123,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Recollect role-separated experimental source feed
+        run: |
+          python -m py_compile source-scout-v1/scout_sources.py
+          python -m py_compile source-scout-v1/collect_daily_feed.py
+          python -m py_compile source-scout-v1/inject_feed_into_briefing.py
+          python -m py_compile source-scout-v1/evaluate_human_review.py
+          python -X utf8 source-scout-v1/collect_daily_feed.py
+
       - name: Rebuild verified briefing
         shell: bash
         env:
@@ -115,6 +141,8 @@ jobs:
             args+=(--as-of "$AS_OF")
           fi
           python -X utf8 daily-briefing-v5/build_briefing.py "${args[@]}"
+          python -X utf8 source-scout-v1/inject_feed_into_briefing.py
+          python -X utf8 source-scout-v1/evaluate_human_review.py "${args[@]}"
           python -X utf8 agent-system-v1/validate_discovery_system.py \
             --allow-missing-source-reports \
             --briefing daily-briefing-v5/output/briefing_latest.md
@@ -127,7 +155,13 @@ jobs:
           git add -f \
             agent-system-v1/VERIFICATION_QUEUE.csv \
             daily-briefing-v5/output/briefing_latest.md \
-            daily-briefing-v5/output/history/
+            daily-briefing-v5/output/history/ \
+            source-scout-v1/HUMAN_REVIEW_QUEUE.csv \
+            source-scout-v1/output/daily_feed_latest.json \
+            source-scout-v1/output/daily_feed_latest.md \
+            source-scout-v1/output/history/ \
+            source-scout-v1/output/review_summary_latest.json \
+            source-scout-v1/output/review_summary_latest.md
           if git diff --cached --quiet; then
             echo "No briefing changes to commit."
             exit 0
