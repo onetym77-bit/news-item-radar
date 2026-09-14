@@ -19,6 +19,7 @@ def load_module(name: str, filename: str):
     return module
 
 
+grounding = load_module("grounding", "grounding.py")
 scout = load_module("source_scout_grounding_regression", "scout_sources.py")
 feed = load_module("source_feed_grounding_regression", "collect_daily_feed.py")
 inject = load_module("source_inject_grounding_regression", "inject_feed_into_briefing.py")
@@ -1746,7 +1747,7 @@ class GroundingRegressionTests(unittest.TestCase):
         )
 
     def test_compound_korean_currency_is_one_measurement(self):
-        values = scout.extract_substantive_values(
+        values = grounding.extract_substantive_values(
             "피해액은 1조 9,860억 원이고 지연이자는 하루 1억 4,000만 원입니다."
         )
         self.assertIn("1조 9,860억 원", values)
