@@ -124,7 +124,7 @@ IMPLEMENTATION_TERMS = (
 )
 LOSS_TERMS = (
     "비용", "요금", "부담", "손실", "피해", "체불", "미지급", "환불", "생계",
-    "폐업", "소득", "대기",
+    "폐업", "소득",
 )
 ANCHOR_DEVIATION_TERMS = (
     "격차", "불균형", "급증", "급감", "증가", "감소", "지연", "미달", "초과",
@@ -540,9 +540,21 @@ def score_text(
             text,
         )
     )
-    problem = any(term in text for term in PROBLEM_TERMS) or operational_interruption
+    waiting_harm = bool(
+        re.search(
+            r"(?:\d[\d,]*(?:\.\d+)?\s*(?:시간|분).{0,12}대기"
+            r"|대기.{0,12}\d[\d,]*(?:\.\d+)?\s*(?:시간|분)"
+            r"|장시간\s*대기|대기\s*(?:행렬|줄))",
+            text,
+        )
+    )
+    problem = (
+        any(term in text for term in PROBLEM_TERMS)
+        or operational_interruption
+        or waiting_harm
+    )
     implementation = any(term in text for term in IMPLEMENTATION_TERMS)
-    loss = any(term in text for term in LOSS_TERMS)
+    loss = any(term in text for term in LOSS_TERMS) or waiting_harm
     low_value = any(term in text for term in LOW_VALUE_TERMS)
     routine_action = is_routine_action(text)
     purpose_only = routine_action and (

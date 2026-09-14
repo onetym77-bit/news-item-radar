@@ -791,5 +791,15 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertNotIn("시민 손실", reasons)
 
 
+    def test_measured_waiting_time_remains_citizen_loss(self):
+        _, reasons, _, result = scout.score_text(
+            "서울 시민이 진료 전에 평균 3시간 대기했습니다",
+            self.council,
+        )
+        self.assertTrue(result["problem"])
+        self.assertTrue(result["loss"])
+        self.assertIn("시민 손실", reasons)
+
+
 if __name__ == "__main__":
     unittest.main()
