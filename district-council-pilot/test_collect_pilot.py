@@ -1,5 +1,5 @@
 import unittest
-from collect_pilot import Page, select_rows, transcript, day, review_windows
+from collect_pilot import Page, select_rows, transcript, day, review_windows, identity_conflict
 SRC={"hosts":["example.gov"]}
 class PilotRegression(unittest.TestCase):
     def test_selection_keeps_unresolved_newest_row(self):
@@ -48,6 +48,12 @@ class PilotRegression(unittest.TestCase):
         self.assertEqual(len(parts),2)
         self.assertNotIn("의원프로필",body)
         self.assertNotIn("출석관계공무원",body)
+    def test_title_session_conflict_is_not_a_matching_record(self):
+        self.assertTrue(identity_conflict("제10대 제336회", "제7대 제235회 회의록"))
+        self.assertFalse(identity_conflict("제10대 제336회", "제10대 제336회 회의록"))
+    def test_dense_generic_topics_cannot_hide_late_problem(self):
+        parts=['위원 김가나 '+('시설 돌봄 교통 안전 주거를 말씀드립니다. '*45)+'돌봄 대기 증가로 주민 부담이 커지고 있습니다.']
+        self.assertIn("대기 증가",review_windows(parts)[0]["passage"])
     def test_invalid_date_is_not_fabricated(self):
         self.assertEqual(day("2026.02.31"),"")
     def test_speech_date_not_selected_from_footer(self):

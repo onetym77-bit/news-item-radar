@@ -136,6 +136,13 @@ def select_rows(page, base, source, count=4):
     # Official listing order is preserved. Failures are never replaced with easy pages.
     return rows[:count], len(rows)
 
+def identity_conflict(label, title):
+    for pattern in (r"제?\s*(\d+)\s*대", r"제?\s*(\d+)\s*회(?!의)"):
+        left, right = re.search(pattern,label), re.search(pattern,title)
+        if left and right and left.group(1) != right.group(1):
+            return True
+    return False
+
 def transcript(page):
     text = norm(" ".join(page.chunks))
     if ERROR_BODY.search(text):
@@ -181,11 +188,11 @@ def review_windows(parts):
             continue
         # Only short review pointers are persisted. These are not generated article questions.
         part = parts[i]
-        positions = [part.find(t) for t in signals if t in part]
-        positions += [part.find(t) for topic in topics for t in TOPICS[topic] if t in part]
-        positions = sorted(set(p for p in positions if p >= 0))
-        # Pick the densest relevant context, not the opening greetings of a long speech.
-        anchor = max(positions, key=lambda p:sum(abs(q-p)<=240 for q in positions)) if positions else 0
+        signal_positions = [m.start() for term in signals for m in re.finditer(re.escape(term),part)]
+        topic_positions = [m.start() for topic in topics for term in TOPICS[topic] for m in re.finditer(re.escape(term),part)]
+        anchors = signal_positions or [m.start() for m in NUMBER.finditer(part)] or topic_positions
+        # A selected problem/change signal must survive in the stored context.
+        anchor = max(anchors, key=lambda p:sum(abs(q-p)<=220 for q in signal_positions)*8 + sum(abs(q-p)<=220 for q in topic_positions)) if anchors else 0
         start = max(0, anchor-180)
         chosen.append({"turn_index": i, "topics": topics, "signals": signals,
                        "speaker_prefix": part[:65], "character_offset": start,
@@ -245,14 +252,19 @@ class Client:
 
 def run(source, as_of):
     client = Client(source)
-    listing = client.get(source["list_url"])
+    listing_url = source["list_url"]
+    listing = client.get(listing_url)
+    fallback = source.get("list_fallback_url")
+    if listing is None and fallback and not client.stopped and "name resolution" in client.logs[-1].get("error",""):
+        listing_url = fallback
+        listing = client.get(listing_url)
     result = {"id":source["id"], "name":source["name"], "list_url":source["list_url"],
-              "expected":4, "listing_ok":listing is not None, "listed":0, "selected":[],
+              "expected":4, "listing_ok":listing is not None, "effective_list_url":listing_url, "listed":0, "selected":[],
               "public_release_date":None, "selection":"official_first_page_order_top4"}
     if listing is None:
         result["diagnosis"] = "LIST_FETCH_FAILED"
     else:
-        selected, total = select_rows(listing, source["list_url"], source)
+        selected, total = select_rows(listing, listing_url, source)
         result["listed"] = total
         if not selected:
             result["diagnosis"] = "LIST_PARSE_EMPTY"
@@ -293,16 +305,22 @@ def run(source, as_of):
                     dates = [d for d in (row["title_date"],row["header_date"]) if d]
                     row["date_conflict"] = any(d != row["meeting_date"] for d in dates)
                     row["date_crosschecked"] = bool(dates) and not row["date_conflict"]
-                    if row["date_conflict"]:
+                    row["identity_conflict"] = identity_conflict(row["label"],row["title"])
+                    row["metadata_check"] = "CONFLICT" if row["date_conflict"] or row["identity_conflict"] else "MATCH" if row["date_crosschecked"] else "UNVERIFIED"
+                    if row["metadata_check"] == "CONFLICT":
                         row["diagnosis"] = "BODY_METADATA_CONFLICT"
+                        row["review_windows"] = []
                 else:
                     row["diagnosis"] = "DETAIL_FETCH_FAILED"
             result["selected"].append(row)
         if selected:
-            result["diagnosis"] = "SAMPLE_COMPLETE" if len(selected)==4 and all(r["body_ok"] and not r.get("date_conflict") for r in selected) else "SAMPLE_INCOMPLETE"
+            complete = len(selected)==4 and all(r["body_ok"] for r in selected)
+            metadata_ok = all(r.get("metadata_check") == "MATCH" for r in selected)
+            result["diagnosis"] = "SAMPLE_COMPLETE" if complete and metadata_ok else "SAMPLE_METADATA_REVIEW" if complete else "SAMPLE_INCOMPLETE"
     result["requests"] = client.logs
     result["bodies"] = sum(r["body_ok"] for r in result["selected"])
     result["documents_with_review_windows"] = sum(bool(r["review_windows"]) for r in result["selected"])
+    result["metadata_matched"] = sum(r.get("metadata_check") == "MATCH" for r in result["selected"])
     result["editorial_precision"] = None
     return result
 
@@ -320,7 +338,7 @@ def write(results, as_of):
              "|---|---:|---:|---:|---:|---|"]
     for r in results:
         lines.append(f"| {r['name']} | {r['listed']} | {len(r['selected'])}/4 | {r['bodies']}/4 | {r['documents_with_review_windows']} | {r['diagnosis']} |")
-        print("METRIC "+json.dumps({k:r[k] for k in ("id","listed","bodies","documents_with_review_windows","diagnosis")},ensure_ascii=False))
+        print("METRIC "+json.dumps({k:r[k] for k in ("id","listed","bodies","documents_with_review_windows","metadata_matched","diagnosis")},ensure_ascii=False))
     for r in results:
         lines += ["",f"## {r['name']}",""]
         for row in r["selected"]:

@@ -15,7 +15,8 @@
     "hosts": [
       "www.ga21c.seoul.kr",
       "ga21c.seoul.kr"
-    ]
+    ],
+    "list_fallback_url": "https://ga21c.seoul.kr/kr/minutes/late.do"
   },
   {
     "id": "nowon",
