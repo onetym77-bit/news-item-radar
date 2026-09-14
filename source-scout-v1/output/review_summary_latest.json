@@ -1,0 +1,38 @@
+{
+  "period": {
+    "start": "2026-09-08",
+    "end": "2026-09-14",
+    "days": 7
+  },
+  "generated": 4,
+  "labeled": 0,
+  "coverage": 0.0,
+  "promising": 0,
+  "useful": 0,
+  "precision": null,
+  "useful_rate": null,
+  "by_source": {
+    "council_minutes": {
+      "generated": 3,
+      "labeled": 0,
+      "promising": 0,
+      "useful": 0,
+      "precision": null,
+      "useful_rate": null
+    },
+    "eungdapso": {
+      "generated": 1,
+      "labeled": 0,
+      "promising": 0,
+      "useful": 0,
+      "precision": null,
+      "useful_rate": null
+    }
+  },
+  "labels": {
+    "PROMISING": "새 질문과 4시간 검증 경로가 모두 있는 강한 씨앗",
+    "VERIFY": "즉시 기사는 아니지만 추가 확인 가치가 있는 씨앗",
+    "NOISE": "일반 발표·정치적 주장·안내 수준",
+    "DUPLICATE": "기존 질문 가족과 동일"
+  }
+}

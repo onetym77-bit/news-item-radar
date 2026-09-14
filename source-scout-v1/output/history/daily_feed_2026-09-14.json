@@ -1,0 +1,333 @@
+{
+  "generated_at_kst": "2026-09-14T09:41:25+09:00",
+  "status": {
+    "discovery_core": "서울시의회 회의록",
+    "discovery_auxiliary": "서울시 응답소 공개민원",
+    "verification_only": [
+      "서울 열린데이터",
+      "서울 빅데이터캠퍼스"
+    ],
+    "warning": "모든 발굴 레코드는 S0 이전 질문 씨앗이며 기사 후보가 아님"
+  },
+  "metrics": [
+    {
+      "id": "eungdapso",
+      "name": "서울시 응답소 공개민원",
+      "role": "DISCOVERY",
+      "cadence": "continuous",
+      "main_url": "https://eungdapso.seoul.go.kr/main.do",
+      "http_ok": true,
+      "status": 200,
+      "error": "",
+      "requests": 3,
+      "failed_requests": 0,
+      "latency_ms": 5101,
+      "bytes": 195348,
+      "latest_date": "2026-09-14",
+      "freshness_days": 0,
+      "extracted": 2,
+      "qualified": 1,
+      "localization_leads": 0,
+      "strong": 1,
+      "qualified_rate": 50.0,
+      "median_score": 7.0
+    },
+    {
+      "id": "council_minutes",
+      "name": "서울시의회 회의록",
+      "role": "BOTH",
+      "cadence": "continuous",
+      "main_url": "https://ms.smc.seoul.kr/kr/assembly/main.do",
+      "http_ok": true,
+      "status": 200,
+      "error": "",
+      "requests": 7,
+      "failed_requests": 1,
+      "latency_ms": 15199,
+      "bytes": 1515619,
+      "latest_date": "2026-09-11",
+      "freshness_days": 3,
+      "extracted": 13,
+      "qualified": 7,
+      "localization_leads": 0,
+      "strong": 5,
+      "qualified_rate": 53.8,
+      "median_score": 6
+    },
+    {
+      "id": "seoul_open_data",
+      "name": "서울 열린데이터 신규 데이터셋",
+      "role": "VERIFICATION",
+      "cadence": "continuous",
+      "main_url": "https://data.seoul.go.kr/datasetRanking/new.do",
+      "http_ok": true,
+      "status": 200,
+      "error": "",
+      "requests": 7,
+      "failed_requests": 0,
+      "latency_ms": 12129,
+      "bytes": 616094,
+      "latest_date": "2026-09-14",
+      "freshness_days": 0,
+      "extracted": 55,
+      "qualified": 0,
+      "localization_leads": 0,
+      "strong": 0,
+      "qualified_rate": 0.0,
+      "median_score": 3
+    },
+    {
+      "id": "seoul_bigdata",
+      "name": "서울 빅데이터캠퍼스 갱신 데이터",
+      "role": "VERIFICATION",
+      "cadence": "continuous",
+      "main_url": "https://bigdata.seoul.go.kr/main.do",
+      "http_ok": true,
+      "status": 200,
+      "error": "",
+      "requests": 2,
+      "failed_requests": 0,
+      "latency_ms": 3116,
+      "bytes": 115742,
+      "latest_date": "2026-09-08",
+      "freshness_days": 6,
+      "extracted": 11,
+      "qualified": 1,
+      "localization_leads": 0,
+      "strong": 1,
+      "qualified_rate": 9.1,
+      "median_score": 3
+    }
+  ],
+  "core_discovery": [
+    {
+      "source_id": "council_minutes",
+      "source_name": "서울시의회 회의록",
+      "role": "BOTH",
+      "text": "다 갈 수 있도록 최대한 고민하면서 짜고는 있습니다. · ○ · 민경희 · 위원 · 풍수해 6월 22일 관악구 신림동 한 곳 가셨습니다. 하지만 강남역 침수지역으로 가장 피해 입었던 곳 방문하셨습니까? · ○비서실장 송광남 · 못 갔습니다. · ○ · 민경희 · 위원 · 제가 얘기하는 거는 비서실에서 자치구 방문 이력을 집계하고 관리하는 체계에 관해서 여쭤보는 겁니다. 이거는 비서실의 책임입니다. 시장님은 비서실에서 짜 준 일정에 따라서 가시게",
+      "url": "https://ms.smc.seoul.kr/record/recordView.do?key=33246dc0c62d8f05cae657449cdf89dc8839aebf6a70d455d42bfd8bba56b674c36f24d6e7532cdf",
+      "score": 9,
+      "reasons": [
+        "서울 범위",
+        "문제·변화",
+        "수치·공개근거",
+        "제도·집행",
+        "시민 손실",
+        "독립 검증원"
+      ],
+      "signals": {
+        "problem": true,
+        "evidence": true,
+        "implementation": true,
+        "loss": true,
+        "low_value": false,
+        "boilerplate": false
+      },
+      "seoul_scope": true,
+      "qualified": true,
+      "localization_lead": false,
+      "question": "공개된 총량 뒤에 어떤 지역·대상·업종 집중이 가려져 있는가?",
+      "lane": "CORE_DISCOVERY"
+    },
+    {
+      "source_id": "council_minutes",
+      "source_name": "서울시의회 회의록",
+      "role": "BOTH",
+      "text": "여러분, 전세사기라는 단어 이제는 너무 많이 들어 익숙해지셨습니까? 1만 1,664가구, 공식적으로 전세사기피해를 인정받은 서울의 피해가구 수입니다. 약 1조 9,860억 원, 해당 가구들의 임차보증금 피해액입니다. 단순 계산으로도 가구당 평균 약 1억 7,000만 원에 달합니다. 물론 정부와 서울시 그리고 우리 서울시의회가 손을 놓고 있었던 것은 아닙니다. 이를 심각한 사회문제로 받아들이고 전세사기피해자 지원 조례를 제정하는 등 제도적 개선과 문제 해결을 위해 분명 노력해 왔습니다.",
+      "url": "https://ms.smc.seoul.kr/record/recordView.do?key=b151822b84a6ace88fa739955c6d340e88dd95cbc33c81dfe55c5900725b92643c2e8446558df958",
+      "score": 9,
+      "reasons": [
+        "서울 범위",
+        "문제·변화",
+        "수치·공개근거",
+        "제도·집행",
+        "시민 손실",
+        "독립 검증원"
+      ],
+      "signals": {
+        "problem": true,
+        "evidence": true,
+        "implementation": true,
+        "loss": true,
+        "low_value": false,
+        "boilerplate": false
+      },
+      "seoul_scope": true,
+      "qualified": true,
+      "localization_lead": false,
+      "question": "공개된 총량 뒤에 어떤 지역·대상·업종 집중이 가려져 있는가?",
+      "lane": "CORE_DISCOVERY"
+    },
+    {
+      "source_id": "council_minutes",
+      "source_name": "서울시의회 회의록",
+      "role": "BOTH",
+      "text": "서울시버스운송사업조합은 소송 결과에 따라 부담할 금액을 최소 5,266억 원에서 최대 1조 216억 원으로 추산합니다. 서울시가 2024년 한 해 시내버스 적자 보전에 지원한 금액이 8,915억 원입니다. 한 해 재정 지원 전체와 맞먹거나 이를 뛰어넘는 부담이 한꺼번에 더해질 수 있다는 뜻입니다. 서울시내버스는 준공영제로 운영되고 있기 때문에 이 부담은 결국 서울시의 재정, 곧 시민의 부담으로 돌아올 수밖에 없습니다. 그런데 서울시의 대응은 어떻습니까?",
+      "url": "https://ms.smc.seoul.kr/record/recordView.do?key=2048c278a1df0c7d9db0413f63dad4d75c4f9986aa606947700ef837f5ea2744de49ea28b4b1be8f",
+      "score": 9,
+      "reasons": [
+        "서울 범위",
+        "문제·변화",
+        "수치·공개근거",
+        "제도·집행",
+        "시민 손실",
+        "독립 검증원"
+      ],
+      "signals": {
+        "problem": true,
+        "evidence": true,
+        "implementation": true,
+        "loss": true,
+        "low_value": false,
+        "boilerplate": false
+      },
+      "seoul_scope": true,
+      "qualified": true,
+      "localization_lead": false,
+      "question": "공개된 총량 뒤에 어떤 지역·대상·업종 집중이 가려져 있는가?",
+      "lane": "CORE_DISCOVERY"
+    }
+  ],
+  "auxiliary_discovery": [
+    {
+      "source_id": "eungdapso",
+      "source_name": "서울시 응답소 공개민원",
+      "role": "DISCOVERY",
+      "text": "시민님의 민원내용은 \"장애인콜택시 UD택시 이용문의”로 판단됩니다. · 2026년 7월 1일부로 시범사업으로 시행한 UD택시는 서울시 전역에서 12대가 운영 중이며, · 장애인콜택시로서의 운행시간이 06:00부터 15:00까지로 한정되어 있는 등 대수와 시간이 제한적이어서 · 이용자와 매칭이 될 확률이 높지는 않사오니 이 점 양해 부탁드립니다. · 아울러, 현재 오전 6시는 법인특장을 중심으로 소수 운영되고 있으나, 대부분의 오전 첫차는 오전",
+      "url": "https://eungdapso.seoul.go.kr/exp/pub/complaint_pub_vie.do?rceptNo=B8A06A73CB0F8CECBCE6D7872D3B7C16",
+      "score": 9,
+      "reasons": [
+        "서울 범위",
+        "문제·변화",
+        "수치·공개근거",
+        "제도·집행",
+        "시민 손실",
+        "시민 직접질문"
+      ],
+      "signals": {
+        "problem": true,
+        "evidence": true,
+        "implementation": true,
+        "loss": true,
+        "low_value": false,
+        "boilerplate": false
+      },
+      "seoul_scope": true,
+      "qualified": true,
+      "localization_lead": false,
+      "question": "이 불편은 개인 사례인가, 반복되는 제도 공백인가?",
+      "lane": "AUX_DISCOVERY"
+    }
+  ],
+  "verification_map": [
+    {
+      "source_id": "seoul_bigdata",
+      "source_name": "서울 빅데이터캠퍼스 갱신 데이터",
+      "role": "VERIFICATION",
+      "text": "데이터 · 서울시 내에 위치한 가맹점의 카드이용 건을 대상으로 내국인은 개인카드(신용카드/체크카드), 외국인은 외국인의 카드이용 내역을 포함합니다. 법인카드 이용 건은 제외하지만, 일부 데이터는 법인카드 정보를 포함합니다. 서울시민의 일 단위 또는 월 단위의 카드이용금액, 이용건수에 대해 지역별/시간대별/성별/연령대별/업종별/지역별 등으로 집계된 데이터입니다. 데이터에 따라 일부 지역 데이터가 포함되어 있습니다. 250M격자로 집계 되었던 데",
+      "url": "https://bigdata.seoul.go.kr/data/selectPageListSampleDataSet.do?r_id=P213",
+      "score": 9,
+      "reasons": [
+        "서울 범위",
+        "문제·변화",
+        "수치·공개근거",
+        "제도·집행",
+        "시민 손실",
+        "독립 검증원"
+      ],
+      "signals": {
+        "problem": true,
+        "evidence": true,
+        "implementation": true,
+        "loss": true,
+        "low_value": false,
+        "boilerplate": false
+      },
+      "seoul_scope": true,
+      "qualified": true,
+      "localization_lead": false,
+      "question": "이 자료가 발굴된 질문의 지역·대상·업종 집중을 실제로 확인할 수 있는가?",
+      "lane": "VERIFICATION_MAP"
+    },
+    {
+      "source_id": "seoul_open_data",
+      "source_name": "서울 열린데이터 신규 데이터셋",
+      "role": "VERIFICATION",
+      "text": "서울시 장애인 버스요금 환급지급 인원수",
+      "url": "https://data.seoul.go.kr/dataList/OA-23007/S/1/datasetView.do",
+      "score": 6,
+      "reasons": [
+        "서울 범위",
+        "문제·변화",
+        "시민 손실",
+        "독립 검증원"
+      ],
+      "signals": {
+        "problem": true,
+        "evidence": false,
+        "implementation": false,
+        "loss": true,
+        "low_value": false,
+        "boilerplate": false
+      },
+      "seoul_scope": true,
+      "qualified": false,
+      "localization_lead": false,
+      "question": "이 신규 데이터로 기존 발표의 총량을 지역·대상·시간대별로 분해할 수 있는가?",
+      "lane": "VERIFICATION_MAP"
+    },
+    {
+      "source_id": "seoul_open_data",
+      "source_name": "서울 열린데이터 신규 데이터셋",
+      "role": "VERIFICATION",
+      "text": "서울특별시교통실 교통운영관 생활교통안전과",
+      "url": "https://data.seoul.go.kr/datasetRanking/new.do",
+      "score": 5,
+      "reasons": [
+        "서울 범위",
+        "제도·집행",
+        "시민 손실",
+        "독립 검증원"
+      ],
+      "signals": {
+        "problem": false,
+        "evidence": false,
+        "implementation": true,
+        "loss": true,
+        "low_value": false,
+        "boilerplate": false
+      },
+      "seoul_scope": true,
+      "qualified": false,
+      "localization_lead": false,
+      "question": "이 신규 데이터로 기존 발표의 총량을 지역·대상·시간대별로 분해할 수 있는가?",
+      "lane": "VERIFICATION_MAP"
+    },
+    {
+      "source_id": "seoul_open_data",
+      "source_name": "서울 열린데이터 신규 데이터셋",
+      "role": "VERIFICATION",
+      "text": "서울특별시 쪽방주민 동행식당 현황.csv 다운로드",
+      "url": "https://data.seoul.go.kr/dataList/OA-23003/S/1/datasetView.do",
+      "score": 5,
+      "reasons": [
+        "서울 범위",
+        "수치·공개근거",
+        "독립 검증원"
+      ],
+      "signals": {
+        "problem": false,
+        "evidence": true,
+        "implementation": false,
+        "loss": false,
+        "low_value": false,
+        "boilerplate": false
+      },
+      "seoul_scope": true,
+      "qualified": false,
+      "localization_lead": false,
+      "question": "이 신규 데이터로 기존 발표의 총량을 지역·대상·시간대별로 분해할 수 있는가?",
+      "lane": "VERIFICATION_MAP"
+    }
+  ]
+}
