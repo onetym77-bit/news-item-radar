@@ -1,0 +1,40 @@
+name: Test new source candidates
+
+on:
+  pull_request:
+    paths:
+      - "source-scout-v1/**"
+      - ".github/workflows/test-new-sources.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Collect and score source candidates
+        run: python source-scout-v1/scout_sources.py
+
+      - name: Show performance report
+        if: always()
+        run: sed -n '1,320p' source-scout-v1/output/performance_latest.md
+
+      - name: Upload diagnostic result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-scout-performance
+          path: source-scout-v1/output/
+          retention-days: 14
