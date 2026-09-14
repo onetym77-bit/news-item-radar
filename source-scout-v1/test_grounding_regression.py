@@ -1176,6 +1176,9 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertFalse(
             scout.direct_seoul_scope("서울 등 전국에서 피해 1,000건이 발생했습니다")
         )
+        self.assertFalse(
+            scout.direct_seoul_scope("전국 피해 100건, 서울에서 설명회 개최")
+        )
         self.assertTrue(
             scout.direct_seoul_scope("지역: 서울 · 체불액(억 원): 2,186")
         )

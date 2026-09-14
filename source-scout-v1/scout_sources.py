@@ -723,9 +723,7 @@ def score_text(
     scope_class, scope_reason, seoul_scope = classify_scope(
         text, source, record_kind
     )
-    explicit_seoul = scope_class in {
-        "SEOUL_VALUE_BOUND", "NATIONAL_COMPARISON_WITH_SEOUL_ROW"
-    }
+    explicit_seoul = direct_seoul_scope(text)
     operational_interruption = bool(
         re.search(
             r"(?:운행|서비스|지원|급식|공급|진료|돌봄|전산|통신|시설)"
