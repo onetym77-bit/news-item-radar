@@ -30,7 +30,7 @@ def sanitize(value):
                    r"\1[REDACTED]", value)
     value = re.sub(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", "[EMAIL]", value)
     # Common Korean domestic and +82 contact formats; sanitize before truncating.
-    return re.sub(r"(?<![\w\d])(?:0\d{1,2}|\+82[- .]?(?:0?\d{1,2}))[- .)]?\d{3,4}[- .]?\d{4}(?!\d)",
+    return re.sub(r"(?<!\d)(?:0\d{1,2}|\+82[- .]?(?:0?\d{1,2}))[- .)]?\d{3,4}[- .]?\d{4}(?!\d)",
                   "[PHONE]", value)
 
 class Page(HTMLParser):

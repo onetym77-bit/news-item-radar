@@ -27,6 +27,8 @@ class ProbeTests(unittest.TestCase):
     def test_common_contact_formats_redacted(self):
         for value in ("01012345678", "010.1234.5678", "+82-10-1234-5678", "02-123-4567"):
             self.assertEqual(sanitize(value),"[PHONE]")
+    def test_korean_contact_prefixes_redacted(self):
+        self.assertEqual(sanitize("연락처01012345678 문의010-1234-5678"),"연락처[PHONE] 문의[PHONE]")
     def test_session_tokens_redacted(self):
         self.assertEqual(sanitize(";jsessionid=abc-12; DMCSESSION=token_34"),
                          ";jsessionid=[REDACTED]; DMCSESSION=[REDACTED]")
