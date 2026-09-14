@@ -90,6 +90,16 @@ def inspect(html):
     text = norm(" ".join(page.chunks))
     anchors = [{k:sanitize(v)[:400] for k,v in a.items()}
                for a in page.anchors if any(m in a["text"] for m in MARKERS)][:8]
+    list_entries = []
+    seen = set()
+    for anchor in page.anchors:
+        if ("/front/freeSuggest/view.do" in anchor["href"] or "cmdPopInfo(" in anchor["onclick"]) and anchor["text"]:
+            key = (anchor["href"],anchor["onclick"])
+            if key not in seen:
+                seen.add(key)
+                list_entries.append({k:sanitize(v)[:400] for k,v in anchor.items()})
+        if len(list_entries) == 3:
+            break
     dates = list(dict.fromkeys(re.findall(r"20\d{2}[.\-/]\s*\d{1,2}[.\-/]\s*\d{1,2}",text)))[:12]
     stats = {}
     for label in ("기간 내 민원 건 수","서울시","자치구","강남구","광진구","교통"):
@@ -105,6 +115,7 @@ def inspect(html):
         if len(snippets) == 2:
             break
     return {"title":norm(" ".join(page.title)), "text_characters":len(text),
+            "first_three_linked_entries":list_entries,
             "sample_anchors":anchors, "visible_dates":dates,
             "stat_values":stats, "diagnostic_excerpts":snippets,
             "full_record_parse":"NOT_IMPLEMENTED", "article_gate":"NOT_EVALUATED"}

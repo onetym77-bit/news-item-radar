@@ -1,6 +1,10 @@
 import unittest
 from probe_sources import Page, inspect, same_host, sanitize
 class ProbeTests(unittest.TestCase):
+    def test_linked_entries_are_ordered_and_deduplicated(self):
+        html = '<a href="/front/freeSuggest/view.do?sn=1">첫 제안</a>' * 2
+        html += '<a href="/front/freeSuggest/view.do?sn=2">두 번째</a>'
+        self.assertEqual([a["text"] for a in inspect(html)["first_three_linked_entries"]],["첫 제안","두 번째"])
     def test_script_cannot_supply_source_text(self):
         r=inspect('<title>통계</title><script>교통 999건</script><p>교통 123건</p>')
         self.assertEqual(r["stat_values"]["교통"],123)
