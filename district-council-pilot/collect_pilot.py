@@ -61,6 +61,9 @@ class Page(HTMLParser):
         self.links = []
         self.anchors = []
         self.anchor = None
+        self.speeches = []
+        self.speech_chunks = None
+        self.speech_depth = 0
         self.frames = []
         self.title = []
         self.in_title = False
@@ -74,6 +77,12 @@ class Page(HTMLParser):
             self.skip += 1
         if self.skip:
             return
+        if tag == "div":
+            if self.speech_chunks is not None:
+                self.speech_depth += 1
+            elif "speaker_area" in dict(attrs).get("class","").split():
+                self.speech_chunks = []
+                self.speech_depth = 1
         if tag == "a":
             self.anchor = {"attrs":list(attrs), "chunks":[]}
         if tag == "title":
@@ -96,6 +105,11 @@ class Page(HTMLParser):
             self.skip = max(0, self.skip - 1)
         if self.skip:
             return
+        if tag == "div" and self.speech_chunks is not None:
+            self.speech_depth -= 1
+            if self.speech_depth == 0:
+                self.speeches.append(norm(" ".join(self.speech_chunks)))
+                self.speech_chunks = None
         if tag == "a" and self.anchor is not None:
             self.anchors.append(self.anchor)
             self.anchor = None
@@ -112,6 +126,8 @@ class Page(HTMLParser):
             return
         text = norm(text)
         self.chunks.append(text)
+        if self.speech_chunks is not None:
+            self.speech_chunks.append(text)
         if self.anchor is not None:
             self.anchor['chunks'].append(text)
         if self.row is not None:
@@ -180,6 +196,8 @@ def transcript(page):
     text = norm(" ".join(page.chunks))
     if ERROR_BODY.search(text):
         return "", []
+    if len(page.speeches) >= 2 and len(re.findall(r"[가-힣]", " ".join(page.speeches))) >= 200:
+        return " ○ ".join(page.speeches), page.speeches
     speaker = re.compile(
         r"^(?:(?:위원장|부위원장|의장|부의장|위원|의원)\s*[가-힣]{2,5}"
         r"|[가-힣]{2,5}\s*(?:위원|의원)"
@@ -339,7 +357,7 @@ def run(source, as_of, count=4):
         selected, total = select_rows(listing, listing_url, source, count)
         result["listed"] = total
         if source.get("diagnostic_js") or not selected:
-            result["diagnostic_scripts"] = listing.script_sources[:12]
+            result["diagnostic_scripts"] = listing.script_sources[:32]
             inline = "\n".join(listing.script_text)
             functions = re.findall(r"function\s+fn_popup_page[\s\S]{0,2200}",inline)
             result["diagnostic_popup"] = [clean_diagnostic(f) for f in functions[:1]]
@@ -354,6 +372,9 @@ def run(source, as_of, count=4):
             result["diagnostic_rows"] = listing.rows[:5]
             result["diagnostic_anchors"] = [a for a in listing.anchors if "회의록" in norm(" ".join(a["chunks"]))][:8]
             result["page_title"] = norm(" ".join(listing.title))
+            result["diagnostic_frames"] = listing.frames
+            at = listing.raw_html.find("최근 6개월")
+            result["diagnostic_recent_markup"] = clean_diagnostic(listing.raw_html[max(0,at-300):at+2800]) if at >= 0 else ""
         for row in selected:
             row.update({"body_ok":False, "review_windows":[],
                         "age_days":(as_of-date.fromisoformat(row["meeting_date"])).days if row["meeting_date"] else None,
@@ -448,10 +469,15 @@ def main():
     parser.add_argument("--workers",type=int,choices=range(1,5),default=1)
     parser.add_argument("--output",type=Path,default=BASE/"output")
     parser.add_argument("--previous",type=Path)
+    parser.add_argument("--source-id",nargs="+")
     args = parser.parse_args()
     sources = json.loads(args.sources.read_text(encoding="utf-8"))
     if len({s["id"] for s in sources}) != len(sources):
         parser.error("Duplicate source identifiers")
+    if args.source_id:
+        if set(args.source_id) - {s["id"] for s in sources}:
+            parser.error("Unknown source identifier")
+        sources = [s for s in sources if s["id"] in args.source_id]
     old = {}
     if args.previous and args.previous.is_file():
         old = {r["id"]:r for r in json.loads(args.previous.read_text(encoding="utf-8"))["sources"]}

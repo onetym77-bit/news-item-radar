@@ -28,11 +28,11 @@ jobs:
         run: python -X utf8 -m unittest discover -s district-council-pilot -p 'test_*.py' -v
       - name: Validate existing system
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
-      - name: Check two latest records per district
+      - name: Check final two council recovery paths
         run: >-
           python -X utf8 district-council-pilot/collect_pilot.py
           --sources district-council-pilot/sources_25.json
-          --per-source 2 --workers 4
+          --per-source 2 --workers 2 --source-id seodaemun seocho
           --output district-council-pilot/output/connections
       - name: Add connection summary
         run: cat district-council-pilot/output/connections/pilot_latest.md >> "$GITHUB_STEP_SUMMARY"

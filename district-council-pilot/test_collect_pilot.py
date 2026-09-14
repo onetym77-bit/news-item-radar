@@ -60,6 +60,13 @@ class PilotRegression(unittest.TestCase):
         rows,_=select_rows(Page('<footer>오늘 2026.09.14</footer><table><tr><td>제300회 본회의 2026.09.07</td><td><a href="/record/main?uid=1">보기</a></td></tr></table>'),"https://example.gov/late",SRC)
         self.assertEqual(rows[0]["meeting_date"],"2026-09-07")
 class ConnectionRegression(unittest.TestCase):
+    def test_structured_speaker_blocks_exclude_navigation_and_attendance(self):
+        html='<span class="member_name">위원장 신가나</span><div class="speaker_area"><div class="line_name"><span>위원장</span><span>신가나</span></div><div class="line_context">'+('교통 불편을 확인하겠습니다. '*20)+'</div></div><div class="speaker_area"><div>교통과장 이다라</div><div>'+('현황 자료를 제출하겠습니다. '*20)+'</div></div><div>출석공무원 의원프로필</div>'
+        body,parts=transcript(Page(html))
+        self.assertEqual(len(parts),2)
+        self.assertNotIn("의원프로필",body)
+        self.assertNotIn("출석공무원",body)
+
     def test_verified_popup_field_order_and_temporary_version(self):
         from collect_pilot import detail_from
         source={"hosts":["example.gov"],"popup_adapter":True}
