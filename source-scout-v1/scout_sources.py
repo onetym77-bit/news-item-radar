@@ -91,7 +91,7 @@ PROBLEM_TERMS = (
 )
 EVIDENCE_TERMS = (
     "통계", "현황", "실태", "조사", "예산", "결산", "감사", "분석", "결과",
-    "집행률", "이용률", "증감", "건수", "비율", "명", "건", "원", "억", "조",
+    "집행률", "이용률", "증감", "건수", "비율", "측정값", "발생률",
 )
 IMPLEMENTATION_TERMS = (
     "대책", "지원", "운영", "제도", "조례", "정책", "사업", "집행", "대상",
@@ -108,6 +108,10 @@ LOW_VALUE_TERMS = (
 NAV_TERMS = (
     "본문 바로가기", "메뉴", "로그인", "회원가입", "개인정보처리방침", "누리집",
     "페이스북", "인스타그램", "유튜브", "맨위로", "이전", "다음", "더보기",
+)
+BOILERPLATE_TERMS = (
+    "검색어 입력", "분야 선택", "페이지", "리스트", "조회수", "파일내려받기",
+    "전체 설명보기", "오류신고", "신청기간",
 )
 KOREAN_RE = re.compile(r"[가-힣]")
 NUMBER_RE = re.compile(r"(?:\d[\d,]*(?:\.\d+)?\s*(?:%|명|건|원|억|조|대|곳|개|일|개월|년))")
@@ -270,25 +274,31 @@ def context_windows(chunks: list[str], limit: int = 45) -> list[str]:
     return windows
 
 
-def score_text(text: str, source: dict) -> tuple[int, list[str], bool]:
+def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
     score = 0
     reasons: list[str] = []
-    seoul_scope = source["local"] or any(
-        marker in text for marker in ("서울", "자치구", "한강", "수도권")
-    )
+    explicit_seoul = any(marker in text for marker in ("서울", "자치구", "한강", "수도권"))
+    seoul_scope = source["local"] or explicit_seoul
+    problem = any(term in text for term in PROBLEM_TERMS)
+    evidence = any(term in text for term in EVIDENCE_TERMS) or bool(NUMBER_RE.search(text))
+    implementation = any(term in text for term in IMPLEMENTATION_TERMS)
+    loss = any(term in text for term in LOSS_TERMS)
+    low_value = any(term in text for term in LOW_VALUE_TERMS)
+    boilerplate = any(term in text for term in BOILERPLATE_TERMS)
+
     if seoul_scope:
-        score += 2 if "서울" in text or source["local"] else 1
+        score += 2 if explicit_seoul else 1
         reasons.append("서울 범위")
-    if any(term in text for term in PROBLEM_TERMS):
+    if problem:
         score += 2
         reasons.append("문제·변화")
-    if any(term in text for term in EVIDENCE_TERMS) or NUMBER_RE.search(text):
+    if evidence:
         score += 2
         reasons.append("수치·공개근거")
-    if any(term in text for term in IMPLEMENTATION_TERMS):
+    if implementation:
         score += 1
         reasons.append("제도·집행")
-    if any(term in text for term in LOSS_TERMS):
+    if loss:
         score += 1
         reasons.append("시민 손실")
     if source["voice"] and ("?" in text or "문의" in text or "민원" in text):
@@ -297,11 +307,22 @@ def score_text(text: str, source: dict) -> tuple[int, list[str], bool]:
     if source["role"] in {"BOTH", "VERIFICATION"}:
         score += 1
         reasons.append("독립 검증원")
-    if any(term in text for term in LOW_VALUE_TERMS):
+    if low_value:
         score -= 3
         reasons.append("행사·홍보 감점")
-    return score, reasons, seoul_scope
+    if boilerplate or text.count("·") > 10:
+        score -= 3
+        reasons.append("목록·반복문구 감점")
 
+    signals = {
+        "problem": problem,
+        "evidence": evidence,
+        "implementation": implementation,
+        "loss": loss,
+        "low_value": low_value,
+        "boilerplate": boilerplate,
+    }
+    return score, reasons, seoul_scope, signals
 
 def question_for(text: str, source: dict) -> str:
     if source["voice"]:
@@ -345,7 +366,12 @@ def select_follow_links(parser: VisibleHTML, base_url: str, source: dict) -> lis
     return [url for _, url in ranked[: source["max_follow"]]]
 
 
-def extract_records(parser: VisibleHTML, page_url: str, source: dict) -> list[dict]:
+def extract_records(
+    parser: VisibleHTML,
+    page_url: str,
+    source: dict,
+    include_windows: bool,
+) -> list[dict]:
     texts: list[tuple[str, str]] = []
     for href, label in parser.anchors:
         if valid_candidate(label):
@@ -353,8 +379,9 @@ def extract_records(parser: VisibleHTML, page_url: str, source: dict) -> list[di
     for chunk in parser.chunks:
         if valid_candidate(chunk):
             texts.append((chunk, page_url))
-    for window in context_windows(parser.chunks):
-        texts.append((window, page_url))
+    if include_windows:
+        for window in context_windows(parser.chunks, limit=20):
+            texts.append((window, page_url))
 
     records: list[dict] = []
     seen: set[str] = set()
@@ -363,11 +390,15 @@ def extract_records(parser: VisibleHTML, page_url: str, source: dict) -> list[di
         if not key or key in seen:
             continue
         seen.add(key)
-        score, reasons, seoul_scope = score_text(text, source)
+        score, reasons, seoul_scope, signals = score_text(text, source)
         if score < 2:
             continue
-        qualified = score >= 5 and seoul_scope
-        localization_lead = score >= 6 and not seoul_scope
+        if source["role"] == "VERIFICATION":
+            quality_gate = signals["evidence"] and (signals["implementation"] or signals["problem"])
+        else:
+            quality_gate = signals["problem"] and (signals["evidence"] or signals["loss"])
+        qualified = score >= 6 and seoul_scope and quality_gate and not signals["low_value"]
+        localization_lead = score >= 7 and not seoul_scope and quality_gate and not signals["low_value"]
         records.append(
             {
                 "source_id": source["id"],
@@ -377,15 +408,24 @@ def extract_records(parser: VisibleHTML, page_url: str, source: dict) -> list[di
                 "url": url,
                 "score": score,
                 "reasons": reasons,
+                "signals": signals,
                 "seoul_scope": seoul_scope,
                 "qualified": qualified,
                 "localization_lead": localization_lead,
                 "question": question_for(text, source),
             }
         )
-    records.sort(key=lambda row: (row["score"], len(row["reasons"]), len(row["text"])), reverse=True)
+    records.sort(key=lambda row: (row["qualified"], row["score"], len(row["text"])), reverse=True)
     return records[:80]
 
+
+def canonical_url(url: str, fallback: str) -> str:
+    if url.startswith(("javascript:", "mailto:", "#")):
+        return fallback
+    parsed = urlparse(url)
+    if not parsed.scheme or not parsed.netloc:
+        return fallback
+    return parsed._replace(fragment="").geturl()
 
 def latest_date_from(chunks: Iterable[str]) -> str:
     found: list[date] = []
@@ -482,18 +522,26 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
             pages.append((detail.url, parse_html(detail.text)))
 
     records: list[dict] = []
-    for page_url, parser in pages:
-        records.extend(extract_records(parser, page_url, source))
+    for index, (page_url, parser) in enumerate(pages):
+        include_windows = index > 0 or source["id"] == "labor_arrears"
+        records.extend(extract_records(parser, page_url, source, include_windows))
 
-    deduped: list[dict] = []
-    seen: set[str] = set()
-    for row in sorted(records, key=lambda item: item["score"], reverse=True):
-        key = re.sub(r"[^0-9A-Za-z가-힣]", "", row["text"]).lower()
-        if key in seen:
-            continue
-        seen.add(key)
-        deduped.append(row)
-    records = deduped[:120]
+    # Performance is measured per distinct source item/page, not per matching sentence.
+    # This prevents one long council speech or dataset description from inflating yield.
+    best_by_item: dict[str, dict] = {}
+    for row in records:
+        item_key = canonical_url(row["url"], source["url"])
+        current = best_by_item.get(item_key)
+        if current is None or (row["qualified"], row["score"], len(row["text"])) > (
+            current["qualified"], current["score"], len(current["text"])
+        ):
+            row["url"] = item_key
+            best_by_item[item_key] = row
+    records = sorted(
+        best_by_item.values(),
+        key=lambda item: (item["qualified"], item["localization_lead"], item["score"]),
+        reverse=True,
+    )[:120]
 
     all_chunks = [chunk for _, parser in pages for chunk in parser.chunks]
     latest = latest_date_from(all_chunks)
@@ -517,7 +565,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         "extracted": len(records),
         "qualified": qualified,
         "localization_leads": sum(row["localization_lead"] for row in records),
-        "strong": sum(row["score"] >= 7 and row["seoul_scope"] for row in records),
+        "strong": sum(row["qualified"] and row["score"] >= 8 for row in records),
         "qualified_rate": round(qualified / len(records) * 100, 1) if records else 0.0,
         "median_score": round(statistics.median(scores), 1) if scores else 0,
     }
@@ -544,8 +592,8 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
     payload = {
         "generated_at_kst": NOW_KST.isoformat(timespec="seconds"),
         "method": {
-            "qualified": "휴리스틱 5점 이상이면서 서울 범위가 확인된 문구",
-            "strong": "휴리스틱 7점 이상이면서 서울 범위가 확인된 문구",
+            "qualified": "서로 다른 원문 단위로 문제성과 근거 또는 시민손실을 함께 충족한 서울형 사안",
+            "strong": "유효후보 중 휴리스틱 8점 이상인 사안",
             "warning": "자동 점수는 편집 승인 점수가 아니며 상위 후보를 사람이 재검토해야 함",
         },
         "youtube_baseline": baseline,
