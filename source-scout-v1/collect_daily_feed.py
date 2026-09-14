@@ -12,6 +12,7 @@ import csv
 import hashlib
 import importlib.util
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -51,6 +52,7 @@ def load_scout_module():
     if spec is None or spec.loader is None:
         raise RuntimeError(f"Cannot load {SCOUT_PATH}")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
