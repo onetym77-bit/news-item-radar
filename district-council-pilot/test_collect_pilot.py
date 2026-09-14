@@ -39,6 +39,9 @@ class PilotRegression(unittest.TestCase):
     def test_related_minutes_are_not_transcript_frames(self):
         page=Page('<a href="/record/main?uid=2">관련 회의록</a><iframe src="/record/main?uid=1"></iframe>')
         self.assertEqual(page.frames,["/record/main?uid=1"])
+    def test_chair_procedural_time_is_not_a_service_signal(self):
+        parts=['위원장 남해석 보건소장 수고하셨습니다. 다음은 질의답변 시간을 갖도록 하겠습니다. 질의답변은 원활한 회의진행을 위하여 5분 이내로 해 주시고, 질의시간이 부족할 경우에는 충분히 보충 질의시간을 드리도록 하겠습니다. 질의하실 위원은 질의하여 주시기 바랍니다.']
+        self.assertEqual(review_windows(parts),[])
     def test_invalid_date_is_not_fabricated(self):
         self.assertEqual(day("2026.02.31"),"")
     def test_speech_date_not_selected_from_footer(self):
