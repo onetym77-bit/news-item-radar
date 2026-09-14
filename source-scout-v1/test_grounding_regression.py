@@ -1926,5 +1926,68 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertNotIn("1억", values)
 
 
+    def test_same_locked_council_subject_keeps_exact_numeric_sentence(self):
+        common = {
+            "source_id": "council_minutes",
+            "source_name": "서울시의회 회의록",
+            "url": "https://ms.smc.seoul.kr/record/recordView.do?key=dedupe",
+            "context_status": "PASS",
+            "context_subject": "서울 시내버스 통상임금·노사 분쟁",
+            "speech_date": "2026-09-11",
+            "qualified": True,
+            "freshness_status": "FRESH",
+            "precheck_status": "PASS",
+            "grounding_status": "PASS",
+            "score": 8,
+        }
+        numeric = {
+            **common,
+            "text": "현재 미지급 통상임금은 약 2,900억 원입니다.",
+            "evidence_values": ["2,900억 원"],
+            "substantive_values": ["2,900억 원"],
+        }
+        procedural = {
+            **common,
+            "text": "판결 전에는 대법원의 판단을 기다려야 한다고 했습니다.",
+            "evidence_values": [],
+            "substantive_values": ["2,900억 원"],
+        }
+        selected = scout.select_distinct_council_records(
+            [procedural, numeric],
+            "https://ms.smc.seoul.kr/kr/assembly/main.do",
+        )
+        self.assertEqual(len(selected), 1)
+        self.assertEqual(selected[0]["text"], numeric["text"])
+
+    def test_year_only_expression_is_metric_period(self):
+        self.assertEqual(
+            scout.latest_period_label(["2026년 청년 1인가구 지원 실적"]),
+            "2026",
+        )
+
+    def test_nonnumeric_exact_sentence_does_not_inherit_context_metric(self):
+        row = {
+            "context_required": True,
+            "context_status": "PASS",
+            "context_missing_fields": [],
+            "context_reason": "사안·범위·대상 잠금",
+            "qualified": True,
+            "localization_lead": False,
+            "grounding_status": "PASS",
+            "grounding_issues": [],
+            "text": "판결 전에는 대법원의 판단을 기다려야 한다고 했습니다.",
+            "context_text": "미지급 통상임금 2,900억 원과 지연이자 문제",
+            "substantive_values": ["2,900억 원"],
+            "evidence_values": [],
+            "metric_scope": "서울 시내버스 운수업체 미지급 통상임금",
+        }
+        scout.finalize_council_context(row, "2026-09-11", "")
+        self.assertEqual(row["context_status"], "PASS")
+        self.assertEqual(row["metric_scope"], "")
+        self.assertEqual(row["metric_period"], "")
+        self.assertEqual(row["metric_period_status"], "NOT_APPLICABLE")
+        self.assertNotIn("수치 기준기간", row["context_missing_fields"])
+
+
 if __name__ == "__main__":
     unittest.main()

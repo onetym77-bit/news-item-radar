@@ -28,6 +28,7 @@ from grounding import (
     DATA_ROW_SPECIFIC_VALUE_HEADERS,
     analyze_content,
     build_question_payload,
+    extract_substantive_values,
 )
 
 
@@ -260,6 +261,7 @@ BOILERPLATE_TERMS = (
 KOREAN_RE = re.compile(r"[가-힣]")
 NUMBER_RE = re.compile(r"(?:\d[\d,]*(?:\.\d+)?\s*(?:%|명|건|원|억|조|대|곳|개|일|개월|년))")
 DATE_RE = re.compile(r"(?<!\d)(20\d{2})[.\-/년]\s*(\d{1,2})[.\-/월]\s*(\d{1,2})(?:일)?")
+YEAR_ONLY_RE = re.compile(r"(?<!\d)(20\d{2})\s*년(?!\s*\d{1,2}\s*월)")
 YEAR_MONTH_RE = re.compile(
     r"(?<!\d)(20\d{2})\s*(?:[.\-/]\s*(\d{1,2})|년\s*(\d{1,2})\s*월)(?!\s*\d)"
 )
@@ -1038,21 +1040,18 @@ def finalize_council_context(
     row["context_period"] = reference_period
     row["metric_source_status"] = "SPEAKER_ONLY"
 
-    quantitative = bool(row.get("substantive_values"))
+    evidence_values = list(row.get("evidence_values") or [])
+    quantitative = bool(evidence_values)
     if not quantitative:
         row["metric_scope"] = ""
-    context_for_period = normalize(
-        " · ".join(
-            value for value in (
-                row.get("context_text", ""),
-                row.get("text", ""),
-            ) if value
-        )
-    )
-    if reference_period:
+    context_for_period = normalize(row.get("text", ""))
+    if not quantitative:
+        row["metric_period"] = ""
+        row["metric_period_status"] = "NOT_APPLICABLE"
+    elif reference_period:
         row["metric_period"] = reference_period
         row["metric_period_status"] = "EXPLICIT"
-    elif quantitative and document_date and COUNCIL_RELATIVE_PERIOD_RE.search(
+    elif document_date and COUNCIL_RELATIVE_PERIOD_RE.search(
         context_for_period
     ):
         row["metric_period"] = f"{document_date} 발언 당시"
@@ -1507,6 +1506,7 @@ def extract_records(
                 "role": source["role"],
                 "record_kind": record_kind,
                 "text": text,
+                "evidence_values": extract_substantive_values(text),
                 "url": url,
                 "container_url": page_url,
                 "score": score,
@@ -1629,6 +1629,12 @@ def latest_period_label(chunks: Iterable[str]) -> str:
                 effective = TODAY
             if effective <= TODAY + timedelta(days=3):
                 found.append((effective, f"{year:04d}-{month:02d}"))
+        without_months = YEAR_MONTH_RE.sub(" ", without_full_dates)
+        for year_raw in YEAR_ONLY_RE.findall(without_months):
+            year = int(year_raw)
+            effective = TODAY if year == TODAY.year else date(year, 12, 31)
+            if effective <= TODAY + timedelta(days=3):
+                found.append((effective, f"{year:04d}"))
     return max(found, key=lambda item: item[0])[1] if found else ""
 
 
@@ -1753,6 +1759,7 @@ def record_rank(row: dict) -> tuple:
             row.get("source_id") != "council_minutes"
             or row.get("context_status") == "PASS"
         ),
+        bool(row.get("evidence_values")),
         row.get("freshness_status") == "FRESH",
         row["precheck_status"] == "PASS",
         row["grounding_status"] == "PASS",
@@ -1790,6 +1797,24 @@ def near_duplicate_context(left: dict, right: dict) -> bool:
     right_text = re.sub(r"\s+", " ", right.get("text", "")).strip()
     if not left_text or not right_text:
         return False
+    same_locked_subject = (
+        left.get("source_id") == "council_minutes"
+        and right.get("source_id") == "council_minutes"
+        and left.get("context_status") == "PASS"
+        and right.get("context_status") == "PASS"
+        and bool(left.get("context_subject"))
+        and left.get("context_subject") == right.get("context_subject")
+        and (
+            canonical_url(left.get("url", ""), "")
+            == canonical_url(right.get("url", ""), "")
+            or (
+                bool(left.get("speech_date"))
+                and left.get("speech_date") == right.get("speech_date")
+            )
+        )
+    )
+    if same_locked_subject:
+        return True
     if left_text in right_text or right_text in left_text:
         return True
     left_topics = {term for term in TOPIC_MARKERS if term in left_text}
@@ -1943,10 +1968,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
             if is_unscoped_listing_row
             else page_dates.get(canonical_record, "")
         )
-        period_inputs = [
-            row.get("context_text", ""),
-            row.get("text", ""),
-        ]
+        period_inputs = [row.get("text", "")]
         reference_period = latest_period_label(period_inputs)
         reference_effective_date = latest_date_from(period_inputs)
         if (
@@ -2161,7 +2183,7 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
         "sector_scope", "scope_exclusion", "speech_date", "event_period",
         "context_period", "metric_scope", "metric_period", "metric_period_status",
         "metric_source_status", "statement_label", "display_fact",
-        "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
+        "evidence_values", "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
         "substantive_values", "verification_usable", "verification_metadata_lead", "verification_schema_lead",
         "seoul_scope", "scope_class", "scope_reason", "qualified",
         "localization_lead", "document_date", "reference_period",
@@ -2177,8 +2199,8 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
             export = {key: row.get(key, "") for key in csv_fields}
             export["reasons"] = ", ".join(row["reasons"])
             for field in (
-                "substantive_values", "verification_axes", "grounding_issues",
-                "context_missing_fields",
+                "substantive_values", "evidence_values", "verification_axes",
+                "grounding_issues", "context_missing_fields",
             ):
                 if isinstance(export.get(field), list):
                     export[field] = ", ".join(export[field])
