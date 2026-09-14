@@ -141,7 +141,8 @@
       "minId"
     ],
     "verified_entry_on": "2026-09-14",
-    "role": "DISTRICT_CONNECTION_TEST"
+    "role": "DISTRICT_CONNECTION_TEST",
+    "inspect_list_script": "https://ams.sdmcouncil.go.kr/module/assem/js/recent.js"
   },
   {
     "id": "yangcheon",

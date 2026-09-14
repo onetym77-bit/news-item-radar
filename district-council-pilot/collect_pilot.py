@@ -367,6 +367,10 @@ def run(source, as_of, count=4):
                 result["diagnostic_list_function"] = clean_diagnostic(inline[max(0,at-500):at+2300]) if at >= 0 else ""
                 result["diagnostic_detail_anchors"] = [a for a in listing.anchors if detail_from(a["attrs"],listing_url,source)][:4]
         if not selected:
+            probe_url = source.get("inspect_list_script")
+            if probe_url:
+                script = client.get(probe_url)
+                result["diagnostic_official_script"] = clean_diagnostic(script.raw_html[:18000]) if script else ""
             result["diagnosis"] = "LIST_PARSE_EMPTY"
             result["diagnostic_links"] = [u for u in listing.links if any(s in u for s in ("record","minute","confer","recent","viewer"))][:16]
             result["diagnostic_rows"] = listing.rows[:5]
