@@ -16,8 +16,10 @@ jobs:
     timeout-minutes: 8
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
+      - name: Check out repository without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v6

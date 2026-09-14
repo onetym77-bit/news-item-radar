@@ -41,20 +41,24 @@ on:
       - ".github/workflows/daily-briefing.yml"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: daily-item-briefing-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build-validate-and-persist:
+  build-and-validate:
     runs-on: ubuntu-latest
     timeout-minutes: 12
+    permissions:
+      contents: read
 
     steps:
-      - name: Check out repository
+      - name: Check out repository without write credentials
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -99,35 +103,148 @@ jobs:
           python -X utf8 source-scout-v1/inject_feed_into_briefing.py
           python -X utf8 source-scout-v1/evaluate_human_review.py "${args[@]}"
 
-      - name: Attach run identity to the exact artifact
+      - name: Attach preview or replay identity
         shell: bash
         env:
           AS_OF: ${{ inputs.as_of || '' }}
           SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           mode=preview
-          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
-            mode=preview
-          elif [ -n "$AS_OF" ]; then
+          if [ -n "$AS_OF" ]; then
             mode=replay
-          elif [ "$GITHUB_REF" = "refs/heads/main" ]; then
-            mode=main
           fi
-          python -X utf8 daily-briefing-v5/run_provenance.py             --mode "$mode"             --run-id "$GITHUB_RUN_ID"             --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"             --code-sha "$GITHUB_SHA"             --source-sha "$SOURCE_SHA"
+          python -X utf8 daily-briefing-v5/run_provenance.py \
+            --mode "$mode" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --code-sha "$GITHUB_SHA" \
+            --source-sha "$SOURCE_SHA"
 
-      - name: Validate generated briefing and exact artifact identity
+      - name: Validate generated briefing and exact source identity
         run: |
-          python -X utf8 agent-system-v1/validate_discovery_system.py             --allow-missing-source-reports             --briefing daily-briefing-v5/output/briefing_latest.md
+          python -X utf8 agent-system-v1/validate_discovery_system.py \
+            --allow-missing-source-reports \
+            --briefing daily-briefing-v5/output/briefing_latest.md
           python -X utf8 daily-briefing-v5/run_provenance.py --verify
 
-      - name: Persist those same validated files on main
-        if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && !inputs.as_of }}
+      - name: Upload the validated build package
+        uses: actions/upload-artifact@v7
+        with:
+          name: daily-item-build-${{ github.run_id }}
+          path: |
+            daily-briefing-v5/output/briefing_latest.md
+            daily-briefing-v5/output/run_manifest_latest.json
+            daily-briefing-v5/output/history/*.md
+            agent-system-v1/VERIFICATION_QUEUE.csv
+            source-scout-v1/HUMAN_REVIEW_QUEUE.csv
+            source-scout-v1/output/daily_feed_latest.json
+            source-scout-v1/output/daily_feed_latest.md
+            source-scout-v1/output/history/*.json
+            source-scout-v1/output/review_summary_latest.json
+            source-scout-v1/output/review_summary_latest.md
+            source-scout-v1/output/editorial_review_cards_latest.json
+            source-scout-v1/output/editorial_review_cards_latest.md
+            source-scout-v1/output/legacy_anchor_rereview_latest.md
+            source-scout-v1/output/grounding_comparison_latest.md
+          if-no-files-found: error
+          retention-days: 3
+
+      - name: Add preview result to run summary
+        shell: bash
+        run: cat daily-briefing-v5/output/briefing_latest.md >> "$GITHUB_STEP_SUMMARY"
+
+  persist-main:
+    needs: build-and-validate
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && !inputs.as_of }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out the exact tested main commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Download the exact validated build package
+        uses: actions/download-artifact@v8
+        with:
+          name: daily-item-build-${{ github.run_id }}
+          path: .
+
+      - name: Mark the unchanged body and feed as the main publication
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          python -X utf8 daily-briefing-v5/run_provenance.py \
+            --mode main \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --code-sha "$GITHUB_SHA" \
+            --source-sha "$SOURCE_SHA"
+          python -X utf8 daily-briefing-v5/run_provenance.py --verify
+          python -X utf8 agent-system-v1/validate_discovery_system.py \
+            --allow-missing-source-reports \
+            --briefing daily-briefing-v5/output/briefing_latest.md
+
+      - name: Confirm protected ledgers were not changed
         shell: bash
         run: |
-          python -X utf8 daily-briefing-v5/run_provenance.py --verify
+          git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+
+      - name: Persist only the explicit generated-file allowlist
+        shell: bash
+        run: |
           git config user.name "news-item-radar-bot"
           git config user.email "news-item-radar-bot@users.noreply.github.com"
-          git add -f agent-system-v1/VERIFICATION_QUEUE.csv daily-briefing-v5/output/briefing_latest.md daily-briefing-v5/output/run_manifest_latest.json daily-briefing-v5/output/history/ source-scout-v1/HUMAN_REVIEW_QUEUE.csv source-scout-v1/output/daily_feed_latest.json source-scout-v1/output/daily_feed_latest.md source-scout-v1/output/history/ source-scout-v1/output/review_summary_latest.json source-scout-v1/output/review_summary_latest.md source-scout-v1/output/editorial_review_cards_latest.json source-scout-v1/output/editorial_review_cards_latest.md source-scout-v1/output/legacy_anchor_rereview_latest.md source-scout-v1/output/grounding_comparison_latest.md
+          git add -f \
+            agent-system-v1/VERIFICATION_QUEUE.csv \
+            daily-briefing-v5/output/briefing_latest.md \
+            daily-briefing-v5/output/run_manifest_latest.json \
+            daily-briefing-v5/output/history/ \
+            source-scout-v1/HUMAN_REVIEW_QUEUE.csv \
+            source-scout-v1/output/daily_feed_latest.json \
+            source-scout-v1/output/daily_feed_latest.md \
+            source-scout-v1/output/history/ \
+            source-scout-v1/output/review_summary_latest.json \
+            source-scout-v1/output/review_summary_latest.md \
+            source-scout-v1/output/editorial_review_cards_latest.json \
+            source-scout-v1/output/editorial_review_cards_latest.md \
+            source-scout-v1/output/legacy_anchor_rereview_latest.md \
+            source-scout-v1/output/grounding_comparison_latest.md
+          while IFS= read -r file; do
+            case "$file" in
+              agent-system-v1/VERIFICATION_QUEUE.csv|\
+              daily-briefing-v5/output/briefing_latest.md|\
+              daily-briefing-v5/output/run_manifest_latest.json|\
+              daily-briefing-v5/output/history/*|\
+              source-scout-v1/HUMAN_REVIEW_QUEUE.csv|\
+              source-scout-v1/output/daily_feed_latest.json|\
+              source-scout-v1/output/daily_feed_latest.md|\
+              source-scout-v1/output/history/*|\
+              source-scout-v1/output/review_summary_latest.json|\
+              source-scout-v1/output/review_summary_latest.md|\
+              source-scout-v1/output/editorial_review_cards_latest.json|\
+              source-scout-v1/output/editorial_review_cards_latest.md|\
+              source-scout-v1/output/legacy_anchor_rereview_latest.md|\
+              source-scout-v1/output/grounding_comparison_latest.md)
+                ;;
+              *)
+                echo "Unexpected staged path: $file" >&2
+                exit 1
+                ;;
+            esac
+          done < <(git diff --cached --name-only)
           if git diff --cached --quiet; then
             echo "No briefing changes to commit."
             exit 0
@@ -135,11 +252,11 @@ jobs:
           git commit -m "chore: update exact daily item briefing [skip ci]"
           git push origin "HEAD:${GITHUB_REF_NAME}"
 
-      - name: Add the exact result to run summary
+      - name: Add the persisted result to run summary
         shell: bash
         run: cat daily-briefing-v5/output/briefing_latest.md >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload the exact validated result
+      - name: Upload the exact persisted result
         uses: actions/upload-artifact@v7
         with:
           name: daily-item-briefing-${{ github.run_id }}

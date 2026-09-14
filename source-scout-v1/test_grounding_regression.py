@@ -774,5 +774,22 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertNotIn("확인된 증감", payload["question"])
 
 
+    def test_time_axis_schema_is_not_citizen_loss(self):
+        _, reasons, _, result = scout.score_text(
+            "서울 대기오염 측정정보는 1시간평균과 시간대별 값으로 제공합니다",
+            self.open_data,
+        )
+        self.assertFalse(result["loss"])
+        self.assertNotIn("시민 손실", reasons)
+
+    def test_safety_consideration_in_budget_is_not_citizen_loss(self):
+        _, reasons, _, result = scout.score_text(
+            "서울 교육 예산은 학생의 안전 등을 고려해 100억 원을 편성할 예정입니다",
+            self.council,
+        )
+        self.assertFalse(result["loss"])
+        self.assertNotIn("시민 손실", reasons)
+
+
 if __name__ == "__main__":
     unittest.main()

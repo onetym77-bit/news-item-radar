@@ -124,7 +124,7 @@ IMPLEMENTATION_TERMS = (
 )
 LOSS_TERMS = (
     "비용", "요금", "부담", "손실", "피해", "체불", "미지급", "환불", "생계",
-    "폐업", "소득", "안전", "대기", "시간",
+    "폐업", "소득", "대기",
 )
 ANCHOR_DEVIATION_TERMS = (
     "격차", "불균형", "급증", "급감", "증가", "감소", "지연", "미달", "초과",
@@ -595,9 +595,12 @@ def score_text(
     if source["voice"] and ("?" in text or "문의" in text or "민원" in text):
         score += 1
         reasons.append("시민 직접질문")
-    if source["role"] in {"BOTH", "VERIFICATION"}:
+    if source["role"] == "BOTH":
         score += 1
-        reasons.append("독립 검증원")
+        reasons.append("원문 근거 소스")
+    elif source["role"] == "VERIFICATION":
+        score += 1
+        reasons.append("후속 검증 데이터 경로")
     if low_value:
         penalty = 1 if evidence_anchor != "NONE" else 3
         score -= penalty
