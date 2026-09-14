@@ -34,6 +34,7 @@ class EditorialReviewTests(unittest.TestCase):
             "url": "https://example.invalid/source",
             "auto_evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
             "grounding_status": "PASS",
+            "context_status": "PASS",
         }
 
     def test_unreviewed_candidate_only_creates_card(self):
@@ -100,6 +101,28 @@ class EditorialReviewTests(unittest.TestCase):
         payload = review.build_review([row], [{"item_id": "real"}])
         self.assertIn("decision_blocker", payload["review_cards"][0])
         self.assertEqual(payload["transition_proposals"], [])
+
+    def test_council_context_hold_blocks_transition(self):
+        row = {
+            **self.base_row(),
+            "context_status": "HOLD",
+        }
+        self.assertIn(
+            "서울시의회 발언 문맥 잠금 미통과",
+            review.proposal_blockers(row),
+        )
+
+    def test_speaker_only_numeric_claim_blocks_transition(self):
+        row = {
+            **self.base_row(),
+            "metric_scope": "발언에서 제시된 피해 건수",
+            "metric_period_status": "EXPLICIT",
+            "metric_source_status": "SPEAKER_ONLY",
+        }
+        self.assertIn(
+            "수치 산정 원자료 미확인",
+            review.proposal_blockers(row),
+        )
 
     def test_legacy_missing_source_is_not_auto_anchored(self):
         audit = [{"item_id": "one", "quality_gate": "PASS", "quality_score": "12", "evidence_anchor": ""}]

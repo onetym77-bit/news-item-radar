@@ -283,8 +283,8 @@ def main() -> int:
     if CONFIG.is_file():
         try:
             config = json.loads(CONFIG.read_text(encoding="utf-8-sig"))
-            if config.get("system_version") != "1.11":
-                errors.append("관심 레이더 system_version은 1.10이어야 함")
+            if config.get("system_version") != "1.12":
+                errors.append("관심 레이더 system_version은 1.12이어야 함")
             agendas = {
                 entry.get("code")
                 for entry in config.get("agenda_domains", [])

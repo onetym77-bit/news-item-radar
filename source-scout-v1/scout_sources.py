@@ -28,6 +28,7 @@ from grounding import (
     DATA_ROW_SPECIFIC_VALUE_HEADERS,
     analyze_content,
     build_question_payload,
+    extract_substantive_values,
 )
 
 
@@ -260,6 +261,7 @@ BOILERPLATE_TERMS = (
 KOREAN_RE = re.compile(r"[가-힣]")
 NUMBER_RE = re.compile(r"(?:\d[\d,]*(?:\.\d+)?\s*(?:%|명|건|원|억|조|대|곳|개|일|개월|년))")
 DATE_RE = re.compile(r"(?<!\d)(20\d{2})[.\-/년]\s*(\d{1,2})[.\-/월]\s*(\d{1,2})(?:일)?")
+YEAR_ONLY_RE = re.compile(r"(?<!\d)(20\d{2})\s*년(?!\s*\d{1,2}\s*월)")
 YEAR_MONTH_RE = re.compile(
     r"(?<!\d)(20\d{2})\s*(?:[.\-/]\s*(\d{1,2})|년\s*(\d{1,2})\s*월)(?!\s*\d)"
 )
@@ -640,6 +642,462 @@ def context_windows(chunks: list[str], limit: int = 45) -> list[str]:
 
 
 
+COUNCIL_ROLE_PATTERN = (
+    r"(?:부위원장|위원장|부의장|의장|의원|위원|시장|부시장|"
+    r"[가-힣]{0,8}(?:실장|국장|과장|본부장|사장))"
+)
+COUNCIL_SPEAKER_NAME_ROLE_RE = re.compile(
+    rf"^[○●◯]\s*([가-힣]{{2,6}})\s*({COUNCIL_ROLE_PATTERN})(?=\s|$)"
+)
+COUNCIL_SPEAKER_ROLE_NAME_RE = re.compile(
+    rf"^[○●◯]\s*({COUNCIL_ROLE_PATTERN})\s*([가-힣]{{2,6}})(?=\s|$)"
+)
+COUNCIL_CONTEXT_RULES = (
+    {
+        "key": "seoul_bus_wage",
+        "evidence_terms": ("통상임금", "지연이자", "체불임금", "체불 임금"),
+        "subject_terms": (
+            "시내버스", "서울시내버스", "버스노동조합",
+            "버스운송사업조합", "운수회사", "운송사",
+        ),
+        "subject": "서울 시내버스 통상임금·노사 분쟁",
+        "sector_scope": "서울 시내버스 준공영제와 운수업체",
+        "affected_group": "버스 노동자·운수업체·서울시 재정·버스 이용 시민",
+        "scope_exclusion": "서울 전체 임금시장 수치가 아님",
+        "metric_scope": "발언에서 제시된 미지급 통상임금 원금과 일별 지연이자",
+    },
+    {
+        "key": "seoul_rent_fraud",
+        "evidence_terms": ("전세사기", "임차보증금", "피해가구"),
+        "subject_terms": ("전세사기", "임차보증금", "피해가구", "피해자 지원"),
+        "subject": "서울 전세사기 피해 인정·지원",
+        "sector_scope": "서울 전세사기 피해 인정 가구와 임차보증금",
+        "affected_group": "전세사기 피해 인정 가구와 임차인",
+        "scope_exclusion": "",
+        "metric_scope": "발언에서 제시된 전세사기 피해 가구·임차보증금",
+    },
+    {
+        "key": "sign_language_centers",
+        "evidence_terms": ("수어통역센터", "수어통역서비스"),
+        "subject_terms": (
+            "수어통역센터", "수어통역서비스", "수어교육",
+            "자체수입", "사업비",
+        ),
+        "subject": "서울 자치구 수어통역센터 재정·서비스",
+        "sector_scope": "서울 25개 자치구 수어통역센터",
+        "affected_group": "농인 이용자·수어통역센터 종사자",
+        "scope_exclusion": "",
+        "metric_scope": "발언에서 제시된 수어통역센터 재정·서비스 수치",
+    },
+    {
+        "key": "climate_card_loss",
+        "evidence_terms": ("기후동행카드",),
+        "subject_terms": ("기후동행카드", "교통공사", "손실금", "부채"),
+        "subject": "기후동행카드 손실 분담",
+        "sector_scope": "서울시와 서울교통공사의 기후동행카드 재정",
+        "affected_group": "서울교통공사·서울시 재정·대중교통 이용 시민",
+        "scope_exclusion": "",
+        "metric_scope": "발언에서 제시된 기후동행카드 손실 수치",
+    },
+)
+
+COUNCIL_CONTEXT_EVENT_TERMS = (
+    ("파업", "버스 파업"),
+    ("통상임금", "통상임금"),
+    ("판결", "법원 판결"),
+    ("소송", "소송"),
+    ("노사협상", "노사협상"),
+    ("교섭", "노사교섭"),
+    ("지원 조례", "피해지원 조례"),
+    ("자체수입", "자체수입 재투자 제한"),
+)
+
+
+COUNCIL_TOPIC_BOUNDARY_RE = re.compile(
+    r"^(?:(?:먼저|첫째|둘째|셋째|넷째|다섯째|다음은|다음으로|"
+    r"두\s*번째|세\s*번째|네\s*번째|마지막으로|마지막\s*질문|끝으로)"
+    r"(?:\s|[,.:：·]|$)|[1-9]\s*[.)]\s*)"
+)
+COUNCIL_SCOPE_MARKERS = (
+    "서울", "서울시", "서울특별시", "자치구",
+    "종로구", "중구", "용산구", "성동구", "광진구", "동대문구", "중랑구",
+    "성북구", "강북구", "도봉구", "노원구", "은평구", "서대문구", "마포구",
+    "양천구", "강서구", "구로구", "금천구", "영등포구", "동작구", "관악구",
+    "서초구", "강남구", "송파구", "강동구",
+)
+COUNCIL_AFFECTED_GROUP_TERMS = (
+    "시민", "주민", "이용자", "이용객", "승객", "노동자", "근로자", "종사자",
+    "임차인", "세입자", "가구", "환자", "학생", "학부모", "아동", "청소년",
+    "청년", "노인", "어르신", "장애인", "농인", "산모", "보호자", "소상공인",
+    "자영업자", "상인", "사업자", "운전자", "운수업체", "서울시 재정", "재정",
+)
+COUNCIL_SUBJECT_OBJECT_RE = re.compile(
+    r"[0-9A-Za-z가-힣·_-]{2,36}"
+    r"(?:센터|복지관|병원|학교|어린이집|조리원|공사|공단|재단|"
+    r"사업|정책|제도|조례|서비스|시설|기금|예산|재정|"
+    r"버스|택시|지하철|철도|노선|주택|상가|시장|공원|도로|"
+    r"노동자|근로자|임차인|세입자|가구|이용자|이용객|업체)"
+)
+
+
+def _council_speaker(chunk: str) -> str:
+    candidate = normalize(chunk)
+    match = COUNCIL_SPEAKER_NAME_ROLE_RE.match(candidate)
+    if match:
+        return f"{match.group(1)} {match.group(2)}"
+    match = COUNCIL_SPEAKER_ROLE_NAME_RE.match(candidate)
+    if match:
+        return f"{match.group(2)} {match.group(1)}"
+    return ""
+
+
+def _council_speaker_at(
+    chunks: list[str],
+    position: int,
+    max_parts: int = 4,
+) -> tuple[str, int | None]:
+    """Recognize a speaker even when HTML splits marker, name and role."""
+    for part_count in range(1, max_parts + 1):
+        end = position + part_count
+        if end > len(chunks):
+            break
+        candidate = normalize(" ".join(chunks[position:end]))
+        speaker = _council_speaker(candidate)
+        if speaker:
+            return speaker, end - 1
+    return "", None
+
+
+def _council_speech_type(chunks: list[str], start: int, index: int) -> tuple[str, str]:
+    nearby = "".join(chunks[max(0, start - 120) : index + 1])
+    compact = re.sub(r"[\s·]+", "", nearby)
+    if "5분자유발언" in compact:
+        return "FIVE_MINUTE_SPEECH", "5분 자유발언"
+    if "시정질문" in compact:
+        return "POLICY_QUESTION", "시정질문"
+    if "업무보고" in compact:
+        return "COMMITTEE_REPORT", "위원회 업무보고"
+    return "COUNCIL_STATEMENT", "시의회 발언"
+
+
+def _council_topic_start(chunks: list[str], start: int, index: int) -> int:
+    """Do not carry one speaker's previous issue across an explicit topic turn."""
+    for position in range(index, start - 1, -1):
+        if COUNCIL_TOPIC_BOUNDARY_RE.match(normalize(chunks[position])):
+            return position
+    return start
+
+
+def _council_local_evidence(
+    chunks: list[str],
+    start: int,
+    index: int,
+) -> str:
+    """Rejoin nearby text nodes without crossing a speaker or topic boundary."""
+    values: list[str] = []
+    left = max(start, index - 2)
+    right = min(len(chunks), index + 3)
+    for position in range(left, right):
+        if position > index:
+            speaker, _ = _council_speaker_at(chunks, position)
+            if speaker or COUNCIL_TOPIC_BOUNDARY_RE.match(normalize(chunks[position])):
+                break
+        value = normalize(chunks[position])
+        if value:
+            values.append(value)
+    return normalize(" · ".join(values))
+
+
+def _generic_council_context(segment: list[str], combined: str) -> dict:
+    """Infer a novel issue only from explicit same-topic subject, scope and stake."""
+    subject_chunk = ""
+    for chunk in reversed(segment):
+        candidate = normalize(chunk)
+        if (
+            candidate
+            and not _council_speaker(candidate)
+            and COUNCIL_SUBJECT_OBJECT_RE.search(candidate)
+        ):
+            subject_chunk = candidate[:180].rstrip()
+            break
+    scope_confirmed = any(term in combined for term in COUNCIL_SCOPE_MARKERS)
+    affected = [
+        term for term in COUNCIL_AFFECTED_GROUP_TERMS
+        if term in combined
+    ]
+    affected = list(dict.fromkeys(affected))
+    missing: list[str] = []
+    if not subject_chunk:
+        missing.append("정확한 사안")
+    if not scope_confirmed:
+        missing.append("서울·자치구 적용 범위")
+    if not affected:
+        missing.append("영향 대상·부담 주체")
+    return {
+        "subject": subject_chunk,
+        "sector_scope": (
+            f"같은 발언 블록에 명시된 대상: {subject_chunk}"
+            if subject_chunk else ""
+        ),
+        "affected_group": "·".join(affected),
+        "scope_exclusion": (
+            "해당 발언 블록에 명시된 대상·범위에 한정; "
+            "서울 전체 현상으로 확대 해석할 수 없음"
+            if subject_chunk and scope_confirmed else ""
+        ),
+        "metric_scope": (
+            f"발언에서 제시된 {subject_chunk} 관련 수치"
+            if subject_chunk else ""
+        ),
+        "missing": missing,
+    }
+
+
+def unlocked_council_context(evidence_text: str, record_kind: str) -> dict:
+    evidence = normalize(evidence_text)
+    return {
+        "context_required": True,
+        "context_status": "HOLD",
+        "context_rule": "UNLOCKED",
+        "context_subject": "",
+        "context_trigger": "",
+        "context_text": "",
+        "context_reason": (
+            f"{record_kind}은 발언자와 같은 발언 블록을 확인하지 못해 질문 생성 금지"
+        ),
+        "context_missing_fields": [
+            "발언자", "정확한 사안", "서울·자치구 적용 범위", "영향 대상·부담 주체"
+        ],
+        "source_type": "COUNCIL_MINUTES",
+        "speech_type": "UNKNOWN",
+        "speech_type_label": "발언 형식 미확인",
+        "speaker": "",
+        "affected_group": "",
+        "geography": "",
+        "sector_scope": "",
+        "scope_exclusion": "발언 블록이 연결되지 않아 서울 전체 현상으로 해석할 수 없음",
+        "speech_date": "",
+        "event_period": "",
+        "context_period": "",
+        "metric_scope": "",
+        "metric_period": "",
+        "metric_period_status": "UNKNOWN",
+        "metric_source_status": "SPEAKER_ONLY",
+        "statement_label": "발언에서 제시된 내용",
+        "display_fact": f"적용 대상 미확인 — {evidence}",
+        "_analysis_text": evidence,
+    }
+
+
+def lock_council_context(
+    chunks: list[str],
+    index: int,
+    evidence_text: str,
+) -> dict:
+    """Attach a bounded same-speaker, same-topic context before generating a question."""
+    lower_bound = max(0, index - 120)
+    speaker_index: int | None = None
+    speaker_end: int | None = None
+    speaker = ""
+    for position in range(index, lower_bound - 1, -1):
+        found, found_end = _council_speaker_at(chunks, position)
+        if found:
+            speaker_index = position
+            speaker_end = found_end
+            speaker = found
+            break
+
+    speech_start = (
+        (speaker_end + 1)
+        if speaker_end is not None
+        else max(0, index - 12)
+    )
+    topic_start = _council_topic_start(chunks, speech_start, index)
+    segment = [
+        normalize(value)
+        for value in chunks[topic_start : index + 1]
+        if normalize(value)
+    ]
+    local_evidence = _council_local_evidence(chunks, topic_start, index)
+    evidence = normalize(evidence_text)
+    combined = normalize(" · ".join(segment + [local_evidence]))
+
+    matched_rule: dict | None = None
+    for rule in COUNCIL_CONTEXT_RULES:
+        evidence_matches = any(
+            term in local_evidence for term in rule["evidence_terms"]
+        )
+        subject_matches = any(
+            term in combined for term in rule["subject_terms"]
+        )
+        if evidence_matches and subject_matches:
+            matched_rule = rule
+            break
+
+    speech_type, speech_type_label = _council_speech_type(
+        chunks,
+        speaker_index if speaker_index is not None else topic_start,
+        index,
+    )
+    missing: list[str] = []
+    if not speaker:
+        missing.append("발언자")
+
+    if matched_rule is not None:
+        subject = matched_rule["subject"]
+        sector_scope = matched_rule["sector_scope"]
+        affected_group = matched_rule["affected_group"]
+        scope_exclusion = matched_rule["scope_exclusion"]
+        metric_scope = matched_rule["metric_scope"]
+        context_rule = matched_rule["key"]
+        relevant_terms = tuple(matched_rule["evidence_terms"]) + tuple(
+            matched_rule["subject_terms"]
+        )
+        relevant_chunks = [
+            chunk for chunk in segment
+            if chunk != evidence and any(term in chunk for term in relevant_terms)
+        ][-5:]
+    else:
+        generic = _generic_council_context(segment, combined)
+        subject = generic["subject"]
+        sector_scope = generic["sector_scope"]
+        affected_group = generic["affected_group"]
+        scope_exclusion = generic["scope_exclusion"]
+        metric_scope = generic["metric_scope"]
+        context_rule = "GENERIC" if not generic["missing"] else "UNRESOLVED"
+        missing.extend(generic["missing"])
+        relevant_chunks = [
+            chunk for chunk in segment
+            if chunk != evidence
+            and not _council_speaker(chunk)
+            and not COUNCIL_TOPIC_BOUNDARY_RE.fullmatch(chunk)
+        ][-5:]
+
+    context_text = normalize(" · ".join(relevant_chunks))
+    events = [
+        label for token, label in COUNCIL_CONTEXT_EVENT_TERMS
+        if token in combined
+    ]
+    context_trigger = "·".join(dict.fromkeys(events))
+    status = "PASS" if not missing else "HOLD"
+    display_fact = (
+        f"{subject} — {evidence}" if subject
+        else f"적용 대상 미확인 — {evidence}"
+    )
+    analysis_text = normalize(" · ".join(
+        value for value in (context_text, local_evidence) if value
+    )) or evidence
+
+    return {
+        "context_required": True,
+        "context_status": status,
+        "context_rule": context_rule,
+        "context_subject": subject,
+        "context_trigger": context_trigger,
+        "context_text": context_text,
+        "context_reason": (
+            "발언자와 사안·적용 범위·영향 대상을 같은 주제 블록에서 확인"
+            if status == "PASS"
+            else "문맥 잠금 미완료: " + ", ".join(dict.fromkeys(missing))
+        ),
+        "context_missing_fields": list(dict.fromkeys(missing)),
+        "source_type": "COUNCIL_MINUTES",
+        "speech_type": speech_type,
+        "speech_type_label": speech_type_label,
+        "speaker": speaker,
+        "affected_group": affected_group,
+        "geography": "서울" if status == "PASS" else "",
+        "sector_scope": sector_scope,
+        "scope_exclusion": scope_exclusion,
+        "speech_date": "",
+        "event_period": "",
+        "context_period": "",
+        "metric_scope": metric_scope,
+        "metric_period": "",
+        "metric_period_status": "UNKNOWN",
+        "metric_source_status": "SPEAKER_ONLY",
+        "statement_label": "발언에서 제시된 내용",
+        "display_fact": display_fact,
+        "_analysis_text": analysis_text,
+    }
+
+
+COUNCIL_RELATIVE_PERIOD_RE = re.compile(
+    r"(?:현재|지금|발언\s*당시|올해|금년)"
+)
+
+
+def finalize_council_context(
+    row: dict,
+    document_date: str,
+    reference_period: str,
+) -> None:
+    """Finish the lock after document and metric dates are available."""
+    if not row.get("context_required"):
+        return
+    row["speech_date"] = document_date
+    row["event_period"] = reference_period
+    row["context_period"] = reference_period
+    row["metric_source_status"] = "SPEAKER_ONLY"
+
+    evidence_values = list(row.get("evidence_values") or [])
+    quantitative = bool(evidence_values)
+    if not quantitative:
+        row["metric_scope"] = ""
+    context_for_period = normalize(row.get("text", ""))
+    if not quantitative:
+        row["metric_period"] = ""
+        row["metric_period_status"] = "NOT_APPLICABLE"
+    elif reference_period:
+        row["metric_period"] = reference_period
+        row["metric_period_status"] = "EXPLICIT"
+    elif document_date and COUNCIL_RELATIVE_PERIOD_RE.search(
+        context_for_period
+    ):
+        row["metric_period"] = f"{document_date} 발언 당시"
+        row["metric_period_status"] = "RELATIVE_TO_DOCUMENT"
+    elif quantitative:
+        row["metric_period"] = ""
+        row["metric_period_status"] = "UNKNOWN"
+    else:
+        row["metric_period"] = ""
+        row["metric_period_status"] = "NOT_APPLICABLE"
+
+    missing = list(row.get("context_missing_fields", []))
+    if quantitative and not row.get("metric_scope"):
+        missing.append("수치 적용 범위")
+    if quantitative and row.get("metric_period_status") == "UNKNOWN":
+        missing.append("수치 기준기간")
+    row["context_missing_fields"] = list(dict.fromkeys(missing))
+
+    if row["context_missing_fields"]:
+        row["context_status"] = "HOLD"
+        row["qualified"] = False
+        row["localization_lead"] = False
+        row["grounding_status"] = "HOLD"
+        issue = (
+            "문맥 잠금 미완료: "
+            + ", ".join(row["context_missing_fields"])
+        )
+        row["context_reason"] = issue
+        issues = list(row.get("grounding_issues", []))
+        if issue not in issues:
+            issues.append(issue)
+        row["grounding_issues"] = issues
+        row["question"] = (
+            "문맥 잠금 미완료 — 사건·대상·수치 범위·기준기간을 "
+            "확인한 뒤 질문 생성"
+        )
+    elif row.get("context_status") == "PASS" and quantitative:
+        period_note = (
+            "수치 기준기간은 발언의 상대시점을 회의록 문서일에 연결"
+            if row.get("metric_period_status") == "RELATIVE_TO_DOCUMENT"
+            else "수치 기준기간을 발언문에서 확인"
+        )
+        row["context_reason"] = (
+            row.get("context_reason", "") + "; " + period_note
+        ).strip("; ")
+
 def is_routine_action(text: str) -> bool:
     """Detect an administrative action without treating 기관명 속 '공사' as a project."""
     return any(term in text for term in ROUTINE_ACTION_TERMS) or bool(
@@ -940,32 +1398,48 @@ def extract_records(
     source: dict,
     include_windows: bool,
 ) -> list[dict]:
-    texts: list[tuple[str, str, str]] = []
+    texts: list[tuple[str, str, str, dict]] = []
     if source["role"] == "VERIFICATION" or source["id"] in {"labor_arrears", "consumer_agency"}:
         for row_text in static_verification_rows(parser):
-            texts.append((row_text, page_url, "DATA_ROW"))
+            texts.append((row_text, page_url, "DATA_ROW", {}))
     if source["id"] == "labor_arrears":
         for row_text in labor_region_rows(parser):
-            texts.append((row_text, page_url, "DATA_ROW"))
+            texts.append((row_text, page_url, "DATA_ROW", {}))
     for href, label in parser.anchors:
         absolute = urljoin(page_url, href)
         if valid_candidate(label) and source_url_allowed(source["id"], absolute):
-            texts.append((label, absolute, "LINK_LABEL"))
-    for chunk in parser.chunks:
-        if valid_candidate(chunk):
-            texts.append((chunk, page_url, "PAGE_CHUNK"))
-    if include_windows:
+            texts.append((label, absolute, "LINK_LABEL", {}))
+    for index, chunk in enumerate(parser.chunks):
+        if not valid_candidate(chunk):
+            continue
+        context_payload: dict = {}
+        if (
+            source["id"] == "council_minutes"
+            and "recordView.do" in page_url
+        ):
+            context_payload = lock_council_context(parser.chunks, index, chunk)
+        texts.append((chunk, page_url, "PAGE_CHUNK", context_payload))
+    if include_windows and source["id"] != "council_minutes":
         for window in context_windows(parser.chunks, limit=20):
-            texts.append((window, page_url, "CONTEXT_WINDOW"))
+            texts.append((window, page_url, "CONTEXT_WINDOW", {}))
 
     records: list[dict] = []
     seen: set[str] = set()
-    for text, url, record_kind in texts:
+    for text, url, record_kind, raw_context in texts:
         key = re.sub(r"[^0-9A-Za-z가-힣]", "", text).lower()
         if not key or key in seen:
             continue
         seen.add(key)
-        score, reasons, seoul_scope, signals = score_text(text, source, record_kind)
+        context_payload = dict(raw_context)
+        if (
+            source["id"] == "council_minutes"
+            and not context_payload.get("context_required")
+        ):
+            context_payload = unlocked_council_context(text, record_kind)
+        analysis_text = context_payload.pop("_analysis_text", text)
+        score, reasons, seoul_scope, signals = score_text(
+            analysis_text, source, record_kind
+        )
         if score < 2 and signals["precheck_status"] == "PASS":
             continue
         if source["role"] == "VERIFICATION":
@@ -975,7 +1449,10 @@ def extract_records(
             quality_gate = (
                 signals["precheck_status"] == "PASS"
                 and signals["evidence_anchor"] != "NONE"
-                and (signals["problem"] or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE")
+                and (
+                    signals["problem"]
+                    or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE"
+                )
             )
             qualified = score >= 6 and seoul_scope and quality_gate
         localization_threshold = (
@@ -994,10 +1471,34 @@ def extract_records(
             and not seoul_scope
             and quality_gate
         )
-        question_payload = build_question_payload(text, source.get("id", ""), signals)
+        question_payload = build_question_payload(
+            analysis_text, source.get("id", ""), signals
+        )
         if question_payload["grounding_status"] != "PASS":
             qualified = False
             localization_lead = False
+
+        if (
+            context_payload.get("context_required")
+            and context_payload.get("context_status") != "PASS"
+        ):
+            qualified = False
+            localization_lead = False
+            question_payload["grounding_status"] = "HOLD"
+            issue = context_payload.get(
+                "context_reason", "문맥 잠금 미완료"
+            )
+            current_issues = list(question_payload.get("grounding_issues", []))
+            if issue not in current_issues:
+                current_issues.append(issue)
+            question_payload["grounding_issues"] = current_issues
+            question_payload["question"] = (
+                "문맥 잠금 미완료 — 정확한 사건·대상·업종 범위를 확인한 뒤 질문 생성"
+            )
+
+        if context_payload.get("display_fact"):
+            question_payload["question_basis"] = context_payload["display_fact"]
+
         records.append(
             {
                 "source_id": source["id"],
@@ -1005,6 +1506,7 @@ def extract_records(
                 "role": source["role"],
                 "record_kind": record_kind,
                 "text": text,
+                "evidence_values": extract_substantive_values(text),
                 "url": url,
                 "container_url": page_url,
                 "score": score,
@@ -1017,20 +1519,31 @@ def extract_records(
                 "substantive_values": signals["substantive_values"],
                 "claim_status": signals["claim_status"],
                 "verification_usable": signals["verification_usable"],
-                "verification_metadata_lead": signals.get("verification_metadata_lead", False),
-                "verification_schema_lead": signals.get("verification_schema_lead", False),
+                "verification_metadata_lead": signals.get(
+                    "verification_metadata_lead", False
+                ),
+                "verification_schema_lead": signals.get(
+                    "verification_schema_lead", False
+                ),
                 "evidence_anchor": signals["evidence_anchor"],
                 "seoul_scope": seoul_scope,
-                "scope_class": signals.get("scope_class", "NATIONAL_OR_UNBOUND"),
+                "scope_class": signals.get(
+                    "scope_class", "NATIONAL_OR_UNBOUND"
+                ),
                 "scope_reason": signals.get("scope_reason", ""),
                 "qualified": qualified,
                 "localization_lead": localization_lead,
+                **context_payload,
                 **question_payload,
             }
         )
     records.sort(
         key=lambda row: (
             row["qualified"],
+            (
+                row.get("source_id") != "council_minutes"
+                or row.get("context_status") == "PASS"
+            ),
             row["precheck_status"] == "PASS",
             row["score"],
             len(row["text"]),
@@ -1038,7 +1551,6 @@ def extract_records(
         reverse=True,
     )
     return records[:240]
-
 
 
 def canonical_url(url: str, fallback: str) -> str:
@@ -1117,6 +1629,12 @@ def latest_period_label(chunks: Iterable[str]) -> str:
                 effective = TODAY
             if effective <= TODAY + timedelta(days=3):
                 found.append((effective, f"{year:04d}-{month:02d}"))
+        without_months = YEAR_MONTH_RE.sub(" ", without_full_dates)
+        for year_raw in YEAR_ONLY_RE.findall(without_months):
+            year = int(year_raw)
+            effective = TODAY if year == TODAY.year else date(year, 12, 31)
+            if effective <= TODAY + timedelta(days=3):
+                found.append((effective, f"{year:04d}"))
     return max(found, key=lambda item: item[0])[1] if found else ""
 
 
@@ -1237,6 +1755,11 @@ DIVERSITY_STOPWORDS = {
 def record_rank(row: dict) -> tuple:
     return (
         row["qualified"],
+        (
+            row.get("source_id") != "council_minutes"
+            or row.get("context_status") == "PASS"
+        ),
+        bool(row.get("evidence_values")),
         row.get("freshness_status") == "FRESH",
         row["precheck_status"] == "PASS",
         row["grounding_status"] == "PASS",
@@ -1274,6 +1797,24 @@ def near_duplicate_context(left: dict, right: dict) -> bool:
     right_text = re.sub(r"\s+", " ", right.get("text", "")).strip()
     if not left_text or not right_text:
         return False
+    same_locked_subject = (
+        left.get("source_id") == "council_minutes"
+        and right.get("source_id") == "council_minutes"
+        and left.get("context_status") == "PASS"
+        and right.get("context_status") == "PASS"
+        and bool(left.get("context_subject"))
+        and left.get("context_subject") == right.get("context_subject")
+        and (
+            canonical_url(left.get("url", ""), "")
+            == canonical_url(right.get("url", ""), "")
+            or (
+                bool(left.get("speech_date"))
+                and left.get("speech_date") == right.get("speech_date")
+            )
+        )
+    )
+    if same_locked_subject:
+        return True
     if left_text in right_text or right_text in left_text:
         return True
     left_topics = {term for term in TOPIC_MARKERS if term in left_text}
@@ -1300,21 +1841,44 @@ def near_duplicate_context(left: dict, right: dict) -> bool:
 
 
 def select_distinct_council_records(records: list[dict], source_url: str) -> list[dict]:
-    """Keep multiple issues per minutes URL while collapsing overlapping windows."""
+    """Keep reviewable issues and context holds under separate per-page quotas."""
     grouped: dict[str, list[dict]] = {}
     for row in records:
         row["url"] = canonical_url(row["url"], source_url)
         grouped.setdefault(row["url"], []).append(row)
-    selected: list[dict] = []
-    for rows in grouped.values():
+
+    def choose(
+        rows: list[dict],
+        limit: int,
+        prior_rows: list[dict] | None = None,
+    ) -> list[dict]:
         chosen: list[dict] = []
+        prior_rows = prior_rows or []
         for row in sorted(rows, key=record_rank, reverse=True):
-            if any(near_duplicate_context(row, prior) for prior in chosen):
+            if any(
+                near_duplicate_context(row, prior)
+                for prior in [*prior_rows, *chosen]
+            ):
                 continue
             chosen.append(row)
-            if len(chosen) >= 3:
+            if len(chosen) >= limit:
                 break
-        selected.extend(chosen)
+        return chosen
+
+    selected: list[dict] = []
+    for rows in grouped.values():
+        passed = [
+            row for row in rows
+            if row.get("context_status") == "PASS"
+        ]
+        held = [
+            row for row in rows
+            if row.get("context_status") != "PASS"
+        ]
+        chosen_passed = choose(passed, 3)
+        chosen_held = choose(held, 6, chosen_passed)
+        selected.extend(chosen_passed)
+        selected.extend(chosen_held)
     return selected
 
 
@@ -1362,6 +1926,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 "stale_carryover": 0,
                 "archived_stale": 0,
                 "freshness_unknown": 0,
+                "context_holds": 0,
             },
             [],
         )
@@ -1403,8 +1968,9 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
             if is_unscoped_listing_row
             else page_dates.get(canonical_record, "")
         )
-        reference_period = latest_period_label([row.get("text", "")])
-        reference_effective_date = latest_date_from([row.get("text", "")])
+        period_inputs = [row.get("text", "")]
+        reference_period = latest_period_label(period_inputs)
+        reference_effective_date = latest_date_from(period_inputs)
         if (
             source["id"] in {"labor_arrears", "consumer_agency"}
             and row.get("record_kind") == "DATA_ROW"
@@ -1425,6 +1991,8 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 basis=freshness_basis,
             )
         )
+        if row.get("context_required"):
+            finalize_council_context(row, document_date, reference_period)
 
     if source["id"] == "council_minutes":
         item_records = select_distinct_council_records(records, source["url"])
@@ -1558,6 +2126,9 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
             row.get("freshness_status") in {"FRESHNESS_UNKNOWN", "FUTURE_DATED"}
             for row in records
         ),
+        "context_holds": sum(
+            row.get("context_status") == "HOLD" for row in records
+        ),
     }
     return metric, records
 
@@ -1606,7 +2177,13 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
 
     csv_fields = [
         "source_id", "source_name", "role", "record_kind", "score", "content_class",
-        "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
+        "context_status", "context_rule", "context_subject", "context_trigger", "context_text",
+        "context_reason", "context_missing_fields", "source_type", "speech_type",
+        "speech_type_label", "speaker", "affected_group", "geography",
+        "sector_scope", "scope_exclusion", "speech_date", "event_period",
+        "context_period", "metric_scope", "metric_period", "metric_period_status",
+        "metric_source_status", "statement_label", "display_fact",
+        "evidence_values", "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
         "substantive_values", "verification_usable", "verification_metadata_lead", "verification_schema_lead",
         "seoul_scope", "scope_class", "scope_reason", "qualified",
         "localization_lead", "document_date", "reference_period",
@@ -1621,7 +2198,10 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
         for row in records:
             export = {key: row.get(key, "") for key in csv_fields}
             export["reasons"] = ", ".join(row["reasons"])
-            for field in ("substantive_values", "verification_axes", "grounding_issues"):
+            for field in (
+                "substantive_values", "evidence_values", "verification_axes",
+                "grounding_issues", "context_missing_fields",
+            ):
                 if isinstance(export.get(field), list):
                     export[field] = ", ".join(export[field])
             writer.writerow(export)
