@@ -8,6 +8,7 @@ import re
 import time
 from datetime import date, datetime, timedelta, timezone
 from html.parser import HTMLParser
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse, parse_qsl, urlencode, urlunparse
@@ -51,6 +52,8 @@ class Page(HTMLParser):
         self.rows = []
         self.row = None
         self.links = []
+        self.anchors = []
+        self.anchor = None
         self.frames = []
         self.title = []
         self.in_title = False
@@ -61,6 +64,8 @@ class Page(HTMLParser):
             self.skip += 1
         if self.skip:
             return
+        if tag == "a":
+            self.anchor = {"attrs":list(attrs), "chunks":[]}
         if tag == "title":
             self.in_title = True
         if tag == "tr":
@@ -79,6 +84,9 @@ class Page(HTMLParser):
             self.skip = max(0, self.skip - 1)
         if self.skip:
             return
+        if tag == "a" and self.anchor is not None:
+            self.anchors.append(self.anchor)
+            self.anchor = None
         if tag == "title":
             self.in_title = False
         if tag == "tr" and self.row is not None:
@@ -90,6 +98,8 @@ class Page(HTMLParser):
             return
         text = norm(text)
         self.chunks.append(text)
+        if self.anchor is not None:
+            self.anchor['chunks'].append(text)
         if self.row is not None:
             self.row["chunks"].append(text)
         if self.in_title:
@@ -99,9 +109,10 @@ def allowed(url, source):
     u = urlparse(url)
     return u.scheme == "https" and u.hostname in source["hosts"]
 
-def canonical(url):
+def canonical(url, source=None):
     u = urlparse(url)
-    ids = [(k, v) for k, v in parse_qsl(u.query) if k in {"uid", "key"}]
+    keys = (source or {}).get("id_params", ["uid", "key"])
+    ids = [(k, v) for k, v in parse_qsl(u.query) if k in keys]
     return urlunparse(u._replace(query=urlencode(ids), fragment=""))
 
 def detail_from(attrs, base, source):
@@ -109,12 +120,14 @@ def detail_from(attrs, base, source):
         if key == "data-uid" and source.get("uid_path") and value.isdigit():
             url = urljoin(base, source["uid_path"]) + "?uid=" + value
             if allowed(url, source):
-                return canonical(url)
+                return canonical(url, source)
         candidates = [value] if key in {"href", "src"} else re.findall(r"""['"]([^'"]+)['"]""", value)
         for candidate in candidates:
             url = urljoin(base, candidate)
-            if allowed(url, source) and DETAIL.search(url) and any(k in {"key","uid"} for k, _ in parse_qsl(urlparse(url).query)):
-                return canonical(url)
+            pattern = source.get("detail_pattern")
+            is_detail = bool(re.search(pattern,url)) if pattern else bool(DETAIL.search(url))
+            if allowed(url, source) and is_detail and any(k in source.get("id_params",["key","uid"]) for k, _ in parse_qsl(urlparse(url).query)):
+                return canonical(url, source)
     return ""
 
 def select_rows(page, base, source, count=4):
@@ -250,7 +263,39 @@ class Client:
             result["elapsed_ms"] = round((time.monotonic()-started)*1000)
             self.logs.append(result)
 
-def run(source, as_of):
+def discover_list(page, base, source):
+    label = source.get("discover_list_label", "최근회의록")
+    for anchor in page.anchors:
+        if label not in norm(" ".join(anchor["chunks"])):
+            continue
+        for key,value in anchor["attrs"]:
+            candidates = [value] if key == "href" else re.findall(r"""['"]([^'"]+)['"]""", value or "") if key == "onclick" else []
+            for value in candidates:
+                url = urljoin(base,value)
+                if value and not value.startswith(("#","javascript:")) and allowed(url,source):
+                    return url
+    return ""
+
+def window_change(current, previous):
+    if not current["listing_ok"] or not current["selected"]:
+        return "UNKNOWN_COLLECTION"
+    rows = current["selected"]
+    if len(rows) < current["expected"] or any(not r.get("url") for r in rows):
+        return "UNKNOWN_LIST_WINDOW"
+    if previous is None:
+        return "BASELINE"
+    old = previous.get("selected", [])
+    if not previous.get("listing_ok") or not old or any(not r.get("url") for r in old):
+        return "BASELINE_AFTER_FAILURE"
+    if previous.get("expected") != current["expected"]:
+        return "BASELINE_WINDOW_CHANGED"
+    def identity(url):
+        parsed = urlparse(url)
+        return (parsed.path, tuple(sorted(parse_qsl(parsed.query))))
+    old_urls = {identity(r["url"]) for r in old}
+    return "NEW_IN_VISIBLE_WINDOW" if any(identity(r["url"]) not in old_urls for r in rows) else "NO_NEW_IN_VISIBLE_WINDOW"
+
+def run(source, as_of, count=4):
     client = Client(source)
     listing_url = source["list_url"]
     listing = client.get(listing_url)
@@ -258,17 +303,25 @@ def run(source, as_of):
     if listing is None and fallback and not client.stopped and "name resolution" in client.logs[-1].get("error",""):
         listing_url = fallback
         listing = client.get(listing_url)
+    if listing is not None and source.get("discover_list_label"):
+        discovered = discover_list(listing,listing_url,source)
+        if discovered:
+            listing_url = discovered
+            listing = client.get(discovered)
     result = {"id":source["id"], "name":source["name"], "list_url":source["list_url"],
-              "expected":4, "listing_ok":listing is not None, "effective_list_url":listing_url, "listed":0, "selected":[],
-              "public_release_date":None, "selection":"official_first_page_order_top4"}
+              "expected":count, "listing_ok":listing is not None, "effective_list_url":listing_url, "listed":0, "selected":[],
+              "public_release_date":None, "selection":f"official_first_page_order_top{count}"}
     if listing is None:
         result["diagnosis"] = "LIST_FETCH_FAILED"
     else:
-        selected, total = select_rows(listing, listing_url, source)
+        selected, total = select_rows(listing, listing_url, source, count)
         result["listed"] = total
         if not selected:
             result["diagnosis"] = "LIST_PARSE_EMPTY"
-            result["diagnostic_links"] = [u for u in listing.links if "record" in u or "minute" in u][:12]
+            result["diagnostic_links"] = [u for u in listing.links if any(s in u for s in ("record","minute","confer","recent","viewer"))][:16]
+            result["diagnostic_rows"] = listing.rows[:5]
+            result["diagnostic_anchors"] = [a for a in listing.anchors if "회의록" in norm(" ".join(a["chunks"]))][:8]
+            result["page_title"] = norm(" ".join(listing.title))
         for row in selected:
             row.update({"body_ok":False, "review_windows":[],
                         "age_days":(as_of-date.fromisoformat(row["meeting_date"])).days if row["meeting_date"] else None,
@@ -294,6 +347,7 @@ def run(source, as_of):
                                 row["body_url"] = inner
                     row["body_ok"] = bool(body)
                     row["body_characters"] = len(body)
+                    row["body_sha256"] = hashlib.sha256(body.encode("utf-8")).hexdigest() if body else ""
                     row["speech_turns"] = len(parts)
                     row["review_windows"] = review_windows(parts) if body else []
                     row["diagnosis"] = "BODY_OK" if body else "EMPTY_OR_UNPARSED_BODY"
@@ -314,7 +368,7 @@ def run(source, as_of):
                     row["diagnosis"] = "DETAIL_FETCH_FAILED"
             result["selected"].append(row)
         if selected:
-            complete = len(selected)==4 and all(r["body_ok"] for r in selected)
+            complete = len(selected)==count and all(r["body_ok"] for r in selected)
             metadata_ok = all(r.get("metadata_check") == "MATCH" for r in selected)
             result["diagnosis"] = "SAMPLE_COMPLETE" if complete and metadata_ok else "SAMPLE_METADATA_REVIEW" if complete else "SAMPLE_INCOMPLETE"
     result["requests"] = client.logs
@@ -324,23 +378,24 @@ def run(source, as_of):
     result["editorial_precision"] = None
     return result
 
-def write(results, as_of):
-    output = BASE / "output"
-    output.mkdir(exist_ok=True)
+def write(results, as_of, output=None):
+    output = output or BASE / "output"
+    output.mkdir(parents=True,exist_ok=True)
     payload = {"collected_at":datetime.now(KST).isoformat(timespec="seconds"),
-               "as_of":str(as_of), "intended_documents":20, "sources":results,
+               "as_of":str(as_of), "intended_documents":sum(r["expected"] for r in results), "sources":results,
                "editorial_precision":None, "core_source_status":"NOT_EVALUATED"}
     (output/"pilot_latest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2),encoding="utf-8")
-    lines = ["# 자치구의회 5곳 수집 시험","",f"기준일: {as_of}",
-             "공식 최신목록 첫 4건씩 선정. 접근 실패는 대체하지 않음. 공개일은 미확인.",
+    lines = [f"# 자치구의회 {len(results)}곳 수집 연결 점검","",f"기준일: {as_of}",
+             "공식 목록 앞부분을 고정 선정. 접근 실패는 대체하지 않음. 공개일은 미확인.",
              "자동 발언 단서는 편집 판정 전이며 질문 정밀도·핵심소스 승인으로 계산하지 않음.","",
              "| 구 | 목록행 | 선정 | 본문 | 검토문단 있는 문서 | 수집 판정 |",
              "|---|---:|---:|---:|---:|---|"]
     for r in results:
-        lines.append(f"| {r['name']} | {r['listed']} | {len(r['selected'])}/4 | {r['bodies']}/4 | {r['documents_with_review_windows']} | {r['diagnosis']} |")
-        print("METRIC "+json.dumps({k:r[k] for k in ("id","listed","bodies","documents_with_review_windows","metadata_matched","diagnosis")},ensure_ascii=False))
+        lines.append(f"| {r['name']} | {r['listed']} | {len(r['selected'])}/{r['expected']} | {r['bodies']}/{r['expected']} | {r['documents_with_review_windows']} | {r['diagnosis']} |")
+        print("METRIC "+json.dumps({k:r[k] for k in ("id","listed","bodies","documents_with_review_windows","metadata_matched","diagnosis","change_status")},ensure_ascii=False))
     for r in results:
-        lines += ["",f"## {r['name']}",""]
+        print("SOURCE "+json.dumps({k:v for k,v in r.items() if k not in {"selected","requests"}},ensure_ascii=False))
+        lines += ["",f"## {r['name']}","",f"- 신규 여부: {r['change_status']} (이전 관측이 있어야 판정)"]
         for row in r["selected"]:
             lines += [f"- {row['meeting_date']} · {row['label']} · {row['diagnosis']}",
                       f"  - 원문: {row['url'] or '주소 추출 실패'}",
@@ -353,10 +408,23 @@ def write(results, as_of):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--as-of",type=date.fromisoformat,default=datetime.now(KST).date())
+    parser.add_argument("--sources",type=Path,default=BASE/"sources.json")
+    parser.add_argument("--per-source",type=int,choices=range(1,5),default=4)
+    parser.add_argument("--workers",type=int,choices=range(1,5),default=1)
+    parser.add_argument("--output",type=Path,default=BASE/"output")
+    parser.add_argument("--previous",type=Path)
     args = parser.parse_args()
-    sources = json.loads((BASE/"sources.json").read_text(encoding="utf-8"))
-    results = [run(source,args.as_of) for source in sources]
-    write(results,args.as_of)
+    sources = json.loads(args.sources.read_text(encoding="utf-8"))
+    if len({s["id"] for s in sources}) != len(sources):
+        parser.error("Duplicate source identifiers")
+    old = {}
+    if args.previous and args.previous.is_file():
+        old = {r["id"]:r for r in json.loads(args.previous.read_text(encoding="utf-8"))["sources"]}
+    with ThreadPoolExecutor(max_workers=args.workers) as pool:
+        results = list(pool.map(lambda source: run(source,args.as_of,args.per_source),sources))
+    for result in results:
+        result["change_status"] = window_change(result,old.get(result["id"]))
+    write(results,args.as_of,args.output)
     # Successful diagnostic execution is distinct from source availability.
     return 0
 

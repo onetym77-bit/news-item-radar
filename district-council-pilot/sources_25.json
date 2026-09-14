@@ -1,0 +1,277 @@
+[
+  {
+    "id": "gangnam",
+    "name": "강남구",
+    "list_url": "https://www.gncouncil.go.kr/kr/minutes/late.do",
+    "hosts": [
+      "www.gncouncil.go.kr",
+      "gncouncil.go.kr"
+    ]
+  },
+  {
+    "id": "gwanak",
+    "name": "관악구",
+    "list_url": "https://www.ga21c.seoul.kr/kr/minutes/late.do",
+    "hosts": [
+      "www.ga21c.seoul.kr",
+      "ga21c.seoul.kr"
+    ],
+    "list_fallback_url": "https://ga21c.seoul.kr/kr/minutes/late.do"
+  },
+  {
+    "id": "nowon",
+    "name": "노원구",
+    "list_url": "https://council.nowon.kr/kr/assembly/late.do",
+    "hosts": [
+      "council.nowon.kr"
+    ]
+  },
+  {
+    "id": "mapo",
+    "name": "마포구",
+    "list_url": "https://council.mapo.seoul.kr/kr/assembly/late.do",
+    "hosts": [
+      "council.mapo.seoul.kr",
+      "council.mapo.go.kr"
+    ]
+  },
+  {
+    "id": "seongdong",
+    "name": "성동구",
+    "list_url": "https://sdcouncil.sd.go.kr/kr/assembly/late",
+    "hosts": [
+      "sdcouncil.sd.go.kr"
+    ],
+    "uid_path": "/record/main"
+  },
+  {
+    "id": "jongno",
+    "name": "종로구",
+    "list_url": "https://bookcouncil.jongno.go.kr/kr/assembly/late.do?menuNo=400052",
+    "hosts": [
+      "bookcouncil.jongno.go.kr",
+      "council.jongno.go.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "junggu",
+    "name": "중구",
+    "list_url": "https://council.junggu.seoul.kr/kr/minutes/late",
+    "hosts": [
+      "council.junggu.seoul.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "yongsan",
+    "name": "용산구",
+    "list_url": "https://www.yscl.go.kr/promote/minutes/late.do",
+    "hosts": [
+      "www.yscl.go.kr",
+      "yscl.go.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "seongbuk",
+    "name": "성북구",
+    "list_url": "https://www.sbc.go.kr/kr/main.do",
+    "hosts": [
+      "www.sbc.go.kr"
+    ],
+    "discover_list_label": "최근회의록",
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "gangbuk",
+    "name": "강북구",
+    "list_url": "https://council.gangbuk.go.kr/kr/minutes/search.do",
+    "hosts": [
+      "council.gangbuk.go.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "dobong",
+    "name": "도봉구",
+    "list_url": "https://www.council-dobong.seoul.kr/meeting/confer/recent.do",
+    "hosts": [
+      "www.council-dobong.seoul.kr",
+      "council-dobong.seoul.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "eunpyeong",
+    "name": "은평구",
+    "list_url": "https://council.ep.go.kr/kr/minutes/late.do",
+    "hosts": [
+      "council.ep.go.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "seodaemun",
+    "name": "서대문구",
+    "list_url": "https://www.sdmcouncil.go.kr/sdmassem/main",
+    "hosts": [
+      "www.sdmcouncil.go.kr"
+    ],
+    "discover_list_label": "전자회의록",
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "yangcheon",
+    "name": "양천구",
+    "list_url": "https://www.ycc.go.kr/kr/assembly/late",
+    "hosts": [
+      "www.ycc.go.kr"
+    ],
+    "id_params": [
+      "uid",
+      "code",
+      "view"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "gangseo",
+    "name": "강서구",
+    "list_url": "https://gsc.gangseo.seoul.kr/meeting/confer/recent.do",
+    "hosts": [
+      "gsc.gangseo.seoul.kr"
+    ],
+    "detail_pattern": "/meeting/confer/popup\\.do",
+    "id_params": [
+      "contype",
+      "ntime",
+      "num",
+      "subtype"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "gwangjin",
+    "name": "광진구",
+    "list_url": "https://council.gwangjin.go.kr/kr/assembly/late",
+    "hosts": [
+      "council.gwangjin.go.kr"
+    ],
+    "detail_pattern": "/record/main/contents",
+    "id_params": [
+      "uid"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "dongdaemun",
+    "name": "동대문구",
+    "list_url": "https://council.ddm.go.kr/kr/minutes/late.do",
+    "hosts": [
+      "council.ddm.go.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "jungnang",
+    "name": "중랑구",
+    "list_url": "https://council.jungnang.go.kr/kr/minutes/late.do",
+    "hosts": [
+      "council.jungnang.go.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "guro",
+    "name": "구로구",
+    "list_url": "https://www.guroc.go.kr/meeting/confer/main.do",
+    "hosts": [
+      "www.guroc.go.kr",
+      "guroc.go.kr",
+      "council.guroc.go.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "geumcheon",
+    "name": "금천구",
+    "list_url": "https://council.geumcheon.go.kr/council/kr/minutes/late.do",
+    "hosts": [
+      "council.geumcheon.go.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "yeongdeungpo",
+    "name": "영등포구",
+    "list_url": "https://www.ydpc.go.kr/kr/intro/cmsFunction.do",
+    "hosts": [
+      "www.ydpc.go.kr",
+      "ydpc.go.kr"
+    ],
+    "discover_list_label": "최근회의록",
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "dongjak",
+    "name": "동작구",
+    "list_url": "https://assembly.dongjak.go.kr/kr/minutes/late.do",
+    "hosts": [
+      "assembly.dongjak.go.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "seocho",
+    "name": "서초구",
+    "list_url": "https://sdc.seoul.kr/kr/main.do",
+    "hosts": [
+      "sdc.seoul.kr",
+      "www.sdc.seoul.kr",
+      "sc.council.or.kr"
+    ],
+    "discover_list_label": "최근회의록",
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "songpa",
+    "name": "송파구",
+    "list_url": "https://council.songpa.go.kr/kr/assembly/late.do",
+    "hosts": [
+      "council.songpa.go.kr",
+      "council.songpa.seoul.kr"
+    ],
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  },
+  {
+    "id": "gangdong",
+    "name": "강동구",
+    "list_url": "https://council.gangdong.go.kr/kr/main.do",
+    "hosts": [
+      "council.gangdong.go.kr"
+    ],
+    "discover_list_label": "최근회의록",
+    "verified_entry_on": "2026-09-14",
+    "role": "DISTRICT_CONNECTION_TEST"
+  }
+]

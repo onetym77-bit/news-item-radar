@@ -1,5 +1,5 @@
 import unittest
-from collect_pilot import Page, select_rows, transcript, day, review_windows, identity_conflict
+from collect_pilot import Page, select_rows, transcript, day, review_windows, identity_conflict, discover_list, window_change, canonical
 SRC={"hosts":["example.gov"]}
 class PilotRegression(unittest.TestCase):
     def test_selection_keeps_unresolved_newest_row(self):
@@ -59,5 +59,40 @@ class PilotRegression(unittest.TestCase):
     def test_speech_date_not_selected_from_footer(self):
         rows,_=select_rows(Page('<footer>오늘 2026.09.14</footer><table><tr><td>제300회 본회의 2026.09.07</td><td><a href="/record/main?uid=1">보기</a></td></tr></table>'),"https://example.gov/late",SRC)
         self.assertEqual(rows[0]["meeting_date"],"2026-09-07")
+class ConnectionRegression(unittest.TestCase):
+    def test_registry_has_all_25_unique_districts(self):
+        import json
+        from pathlib import Path
+        sources=json.loads((Path(__file__).parent/"sources_25.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(sources),25)
+        self.assertEqual(len({s["id"] for s in sources}),25)
+        self.assertEqual({s["name"] for s in sources},set("종로구 중구 용산구 성동구 광진구 동대문구 중랑구 성북구 강북구 도봉구 노원구 은평구 서대문구 마포구 양천구 강서구 구로구 금천구 영등포구 동작구 관악구 서초구 강남구 송파구 강동구".split()))
+
+    def test_official_recent_menu_discovery(self):
+        page=Page('<a href="/kr/minutes/late.do"><span>최근회의록</span></a>')
+        self.assertEqual(discover_list(page,"https://example.gov/",SRC),"https://example.gov/kr/minutes/late.do")
+    def test_discovery_does_not_leave_official_host(self):
+        page=Page('<a href="https://other.invalid/late">최근회의록</a>')
+        self.assertEqual(discover_list(page,"https://example.gov/",SRC),"")
+    def test_first_observation_is_not_no_new(self):
+        current={"listing_ok":True,"expected":1,"selected":[{"url":"https://example.gov/record/main?uid=1"}]}
+        self.assertEqual(window_change(current,None),"BASELINE")
+    def test_fetch_failure_is_not_no_new(self):
+        current={"listing_ok":False,"expected":1,"selected":[]}
+        self.assertEqual(window_change(current,{}),"UNKNOWN_COLLECTION")
+    def test_same_visible_window_with_alias_is_not_new(self):
+        current={"listing_ok":True,"expected":1,"selected":[{"url":"https://example.gov/record/main?uid=1"}]}
+        prior={**current,"selected":[{"url":"https://www.example.gov/record/main?uid=1"}]}
+        self.assertEqual(window_change(current,prior),"NO_NEW_IN_VISIBLE_WINDOW")
+    def test_new_record_is_new_in_visible_window(self):
+        current={"listing_ok":True,"expected":1,"selected":[{"url":"https://example.gov/record/main?uid=2"}]}
+        prior={**current,"selected":[{"url":"https://example.gov/record/main?uid=1"}]}
+        self.assertEqual(window_change(current,prior),"NEW_IN_VISIBLE_WINDOW")
+    def test_sampling_change_is_new_baseline(self):
+        current={"listing_ok":True,"expected":1,"selected":[{"url":"https://example.gov/record/main?uid=1"}]}
+        self.assertEqual(window_change(current,{**current,"expected":2}),"BASELINE_WINDOW_CHANGED")
+    def test_configured_legacy_identity_preserved(self):
+        self.assertEqual(canonical("https://example.gov/popup.do?contype=1&ntime=318&num=1&subtype=0&noise=x",{"id_params":["contype","ntime","num","subtype"]}),"https://example.gov/popup.do?contype=1&ntime=318&num=1&subtype=0")
+
 if __name__=="__main__":
     unittest.main()
