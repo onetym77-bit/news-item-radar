@@ -131,7 +131,7 @@
   {
     "id": "seodaemun",
     "name": "서대문구",
-    "list_url": "https://ams.sdmcouncil.go.kr/main.do",
+    "list_url": "https://ams.sdmcouncil.go.kr/assem/recent.do",
     "hosts": [
       "www.sdmcouncil.go.kr",
       "ams.sdmcouncil.go.kr"
@@ -141,8 +141,7 @@
       "minId"
     ],
     "verified_entry_on": "2026-09-14",
-    "role": "DISTRICT_CONNECTION_TEST",
-    "anchor_rows": true
+    "role": "DISTRICT_CONNECTION_TEST"
   },
   {
     "id": "yangcheon",

@@ -321,7 +321,7 @@ def run(source, as_of, count=4):
     client = Client(source)
     listing_url = source["list_url"]
     listing = client.get(listing_url)
-    fallback = source.get("list_fallback_url")
+    fallback = source.get("list_fallback_url",listing_url)
     if listing is None and fallback and not client.stopped and "name resolution" in client.logs[-1].get("error",""):
         listing_url = fallback
         listing = client.get(listing_url)
@@ -384,7 +384,7 @@ def run(source, as_of, count=4):
                     row["review_windows"] = review_windows(parts) if body else []
                     row["diagnosis"] = "BODY_OK" if body else "EMPTY_OR_UNPARSED_BODY"
                     if not body:
-                        row["diagnostic_speaker_markup"] = [clean_diagnostic(v) for v in re.findall(r".{0,110}(?:위원장|의장|의사담당|과장).{0,180}",page.raw_html)[:8]]
+                        row["diagnostic_speaker_markup"] = [clean_diagnostic(page.raw_html[max(0,m.start()-220):m.end()+550]) for m in list(re.finditer(r"위원장|의사담당",page.raw_html))[:4]]
                         row["diagnostic_text_tail"] = norm(" ".join(page.chunks))[-600:]
                     row["title"] = norm(" ".join(page.title))
                     row["title_date"] = day(row["title"])
