@@ -42,6 +42,12 @@ class PilotRegression(unittest.TestCase):
     def test_chair_procedural_time_is_not_a_service_signal(self):
         parts=['위원장 남해석 보건소장 수고하셨습니다. 다음은 질의답변 시간을 갖도록 하겠습니다. 질의답변은 원활한 회의진행을 위하여 5분 이내로 해 주시고, 질의시간이 부족할 경우에는 충분히 보충 질의시간을 드리도록 하겠습니다. 질의하실 위원은 질의하여 주시기 바랍니다.']
         self.assertEqual(review_windows(parts),[])
+    def test_attendance_and_profiles_cannot_become_speeches(self):
+        html='<p>○5분자유발언 메뉴</p><p>COPYRIGHT 2026</p><p>○위원 김가나 '+('교통 지원 현황을 확인하겠습니다. '*15)+'</p><p>○과장 이다라 확인 후 답변하겠습니다.</p><p>○출석관계공무원 돌봄시설 국장 COPYright 의원프로필 '+('돌봄 부족 대기 100명 '*50)+'</p>'
+        body,parts=transcript(Page(html))
+        self.assertEqual(len(parts),2)
+        self.assertNotIn("의원프로필",body)
+        self.assertNotIn("출석관계공무원",body)
     def test_invalid_date_is_not_fabricated(self):
         self.assertEqual(day("2026.02.31"),"")
     def test_speech_date_not_selected_from_footer(self):
