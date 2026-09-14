@@ -100,7 +100,8 @@ DATA_ROW_VALUE_HEADERS = (
 )
 DATA_ROW_SPECIFIC_VALUE_HEADERS = (
     "피해건수", "발생건수", "사고건수", "민원건수", "이용자수", "승하차",
-    "체불액", "피해액", "미지급액", "환급액", "매출", "소비", "농도",
+    "체불액", "체불 금액", "임금체불률", "체불노동자", "피해액", "미지급액",
+    "환급액", "매출", "소비", "농도",
     "지수", "측정값", "이용률", "발생률", "대기시간",
 )
 DATA_ROW_NUMERIC_RE = re.compile(
@@ -501,6 +502,13 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         and "손실" in text
         and bool(analysis.get("substantive_values"))
     )
+    labor_seoul_evidence = (
+        source_id == "labor_arrears"
+        and "서울" in text
+        and "체불액" in text
+        and "전국" in text
+        and bool(analysis.get("substantive_values"))
+    )
 
     if anchor == "NONE" and not analysis.get("verification_usable"):
         question = "근거 앵커 없음 — 질문 점수 평가 제외"
@@ -564,6 +572,18 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         ]
         question = "손실금 부담 배분은 계약·협의 절차에 부합했는가? 연도별 실제 손실과 정책 편익을 함께 보면 배분은 적정한가?"
         proposed_axes = existing_axes or ["부담 주체", "연도", "계약·협의 근거"]
+    elif labor_seoul_evidence:
+        contract = ["서울 체불액", "전국 체불액", "측정값"]
+        contract_checks = [
+            ("서울 체불액", "서울" in text and "체불액" in text),
+            ("전국 체불액", "전국" in text and "체불액" in text),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = (
+            "서울 체불액의 전국 비중은 서울의 임금총액·근로자 비중을 보정해도 높은가? "
+            "자치구·업종·사업장 규모별 어디에 집중되고, 해결액·피해노동자 수는 금액 집중과 일치하는가?"
+        )
+        proposed_axes = ["자치구", "업종", "사업장 규모", "해결률"]
     elif analysis.get("change_direction") == "POSITIVE":
         contract = ["긍정 변화", "측정값"]
         contract_checks = [
@@ -594,8 +614,11 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
             ("귀속된 주장", analysis.get("claim_status") == "ATTRIBUTED_CLAIM"),
             ("문제 근거 앵커", anchor != "NONE"),
         ]
-        question = "이 주장의 수치와 비교 기준을 원자료로 재현할 수 있는가? 다른 설명을 적용해도 차이가 남는가?"
-        proposed_axes = existing_axes or ["원자료", "비교 기준", "대안 설명"]
+        question = (
+            "이 주장의 수치와 비교 기준을 원자료로 재현할 수 있는가? "
+            "재현된다면 지역·대상·시간으로 나눈 집중이나 격차가 다른 설명을 적용해도 남는가?"
+        )
+        proposed_axes = existing_axes or ["지역", "대상", "시간", "대안 설명"]
     elif anchor == "DECOMPOSABLE_STRUCTURE":
         contract = ["분해 가능한 구조", "측정값"]
         contract_checks = [

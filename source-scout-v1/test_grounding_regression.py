@@ -231,7 +231,9 @@ class GroundingRegressionTests(unittest.TestCase):
         text = "서울 UD택시 사고 3건 발생"
         result = self.signals(text)
         payload = scout.build_question_payload(text, "council_minutes", result)
-        self.assertEqual(payload["grounding_contract"], ["문제 근거 앵커"])
+        self.assertEqual(
+            payload["grounding_contract"], ["귀속된 주장", "문제 근거 앵커"]
+        )
         self.assertNotIn("공급량", payload["question"])
         self.assertNotIn("요청량", payload["question"])
 
@@ -923,8 +925,48 @@ class GroundingRegressionTests(unittest.TestCase):
         scout.TODAY = scout.date(2026, 9, 14)
         try:
             self.assertEqual(scout.latest_date_from(["2026.7월 지역별 체불 현황"]), "2026-07-31")
+            self.assertEqual(scout.latest_date_from(["'26.7월 지역별 체불 현황"]), "2026-07-31")
         finally:
             scout.TODAY = original_today
+
+
+
+    def test_labor_wide_region_table_emits_seoul_vs_national_fact(self):
+        html = (
+            "<h3>'26.7월 지역별(17개 시도) 체불 현황</h3>"
+            "<table><tr><th>전체</th><th>서울</th><th>부산</th><th>대구</th>"
+            "<th>인천</th></tr><tr><td>10,814</td><td>2,186</td><td>648</td>"
+            "<td>386</td><td>516</td></tr></table>"
+        )
+        parser = scout.parse_html(html)
+        rows = scout.labor_region_rows(parser)
+        self.assertEqual(len(rows), 1)
+        self.assertIn("지역: 서울", rows[0])
+        self.assertIn("체불액(억 원): 2,186", rows[0])
+        self.assertIn("전국 체불액(억 원): 10,814", rows[0])
+        self.assertIn("2026-07-31", rows[0])
+        result = self.signals(rows[0], self.labor, "DATA_ROW")
+        payload = scout.build_question_payload(rows[0], "labor_arrears", result)
+        self.assertEqual(payload["grounding_status"], "PASS")
+        self.assertIn("임금총액·근로자 비중", payload["question"])
+        self.assertIn("자치구·업종·사업장 규모", payload["question"])
+
+    def test_labor_actual_table_row_becomes_fresh_localization_lead(self):
+        html = (
+            "<table><tr><th>구분</th><th>체불 금액(억 원)</th>"
+            "<th>체불 피해노동자 수(명)</th></tr>"
+            "<tr><td>'26.7월</td><td>10,814</td><td>128,048</td></tr></table>"
+        )
+        parser = scout.parse_html(html)
+        rows = scout.extract_records(
+            parser,
+            "https://labor.moel.go.kr/arrstat/sttcStusList.do",
+            {**self.labor, "cadence": "monthly"},
+            include_windows=False,
+        )
+        data_rows = [row for row in rows if row["record_kind"] == "DATA_ROW"]
+        self.assertEqual(len(data_rows), 1)
+        self.assertTrue(data_rows[0]["localization_lead"])
 
     def test_source_retry_can_recover_without_hiding_first_failure(self):
         html = "<html><body>2026-09-14 수집 정상</body></html>"

@@ -248,6 +248,9 @@ DATE_RE = re.compile(r"(?<!\d)(20\d{2})[.\-/년]\s*(\d{1,2})[.\-/월]\s*(\d{1,2}
 YEAR_MONTH_RE = re.compile(
     r"(?<!\d)(20\d{2})\s*(?:[.\-/]\s*(\d{1,2})|년\s*(\d{1,2})\s*월)(?!\s*\d)"
 )
+SHORT_YEAR_MONTH_RE = re.compile(
+    r"['’](\d{2})\s*[.\-/년]\s*(\d{1,2})\s*월?"
+)
 SPACE_RE = re.compile(r"\s+")
 
 
@@ -518,6 +521,56 @@ def static_verification_rows(parser: VisibleHTML, limit: int = 80) -> list[str]:
     return results
 
 
+def labor_region_rows(parser: VisibleHTML) -> list[str]:
+    """Convert the official wide 17-province table into a Seoul-vs-national row."""
+    region_names = {
+        "서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종",
+        "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주",
+    }
+    period = latest_date_from(
+        chunk
+        for chunk in parser.chunks
+        if "체불" in chunk and ("지역별" in chunk or "시도" in chunk)
+    )
+    results: list[str] = []
+    for table in parser.tables:
+        header_position = next(
+            (
+                index
+                for index, row in enumerate(table)
+                if len(row) >= 4 and all(tag == "th" and value for tag, value in row)
+            ),
+            None,
+        )
+        if header_position is None:
+            continue
+        headers = [value for _, value in table[header_position]]
+        if "서울" not in headers or "전체" not in headers:
+            continue
+        if sum(header in region_names for header in headers) < 3:
+            continue
+        seoul_index = headers.index("서울")
+        total_index = headers.index("전체")
+        for row in table[header_position + 1 :]:
+            cells = [value for _, value in row]
+            if len(cells) != len(headers):
+                continue
+            seoul_value = cells[seoul_index]
+            total_value = cells[total_index]
+            if not (
+                TABLE_NUMERIC_CELL_RE.fullmatch(seoul_value)
+                and TABLE_NUMERIC_CELL_RE.fullmatch(total_value)
+            ):
+                continue
+            prefix = f"기준일: {period} · " if period else ""
+            results.append(
+                f"{prefix}지역: 서울 · 체불액(억 원): {seoul_value} · "
+                f"전국 체불액(억 원): {total_value}"
+            )
+            break
+    return results
+
+
 def valid_candidate(text: str) -> bool:
     if len(text) < 12 or len(text) > 280 or not KOREAN_RE.search(text):
         return False
@@ -784,6 +837,9 @@ def extract_records(
     if source["role"] == "VERIFICATION" or source["id"] in {"labor_arrears", "consumer_agency"}:
         for row_text in static_verification_rows(parser):
             texts.append((row_text, page_url, "DATA_ROW"))
+    if source["id"] == "labor_arrears":
+        for row_text in labor_region_rows(parser):
+            texts.append((row_text, page_url, "DATA_ROW"))
     for href, label in parser.anchors:
         absolute = urljoin(page_url, href)
         if valid_candidate(label) and source_url_allowed(source["id"], absolute):
@@ -815,8 +871,9 @@ def extract_records(
                 and (signals["problem"] or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE")
             )
             qualified = score >= 6 and seoul_scope and quality_gate
+        localization_threshold = 6 if record_kind == "DATA_ROW" else 7
         localization_lead = (
-            score >= 7
+            score >= localization_threshold
             and not seoul_scope
             and quality_gate
         )
@@ -887,6 +944,14 @@ def latest_date_from(chunks: Iterable[str]) -> str:
             month = dotted_month or korean_month
             try:
                 parsed = date(int(year), int(month), monthrange(int(year), int(month))[1])
+            except ValueError:
+                continue
+            if parsed <= TODAY + timedelta(days=3):
+                found.append(parsed)
+        for short_year, month in SHORT_YEAR_MONTH_RE.findall(without_full_dates):
+            year = 2000 + int(short_year)
+            try:
+                parsed = date(year, int(month), monthrange(year, int(month))[1])
             except ValueError:
                 continue
             if parsed <= TODAY + timedelta(days=3):
