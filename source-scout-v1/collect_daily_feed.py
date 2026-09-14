@@ -468,7 +468,11 @@ def update_review_queue(feed: dict) -> None:
                 "source_revision_history": "|".join(sorted(revision_history)),
                 "auto_active_today": "true" if active_today else "false",
                 "review_eligible": "true" if review_eligible else "false",
-                "lane": row["lane"],
+                "lane": (
+                    "LOCALIZE_TO_SEOUL"
+                    if row.get("localization_lead") and not row.get("seoul_scope")
+                    else row["lane"]
+                ),
                 "source_id": row["source_id"],
                 "source_name": row["source_name"],
                 "source_date": str(row.get("source_date", "")),

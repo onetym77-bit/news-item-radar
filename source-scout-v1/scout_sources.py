@@ -107,6 +107,8 @@ SOURCES = [
         "voice": False,
         "follow": r"recordView\.do",
         "max_follow": 6,
+        "timeout": 35,
+        "detail_retry": 1,
     },
     {
         "id": "seoul_open_data",
@@ -305,8 +307,12 @@ class VisibleHTML(HTMLParser):
         attrs_map = {key.lower(): value or "" for key, value in attrs}
         if tag == "time" and attrs_map.get("datetime"):
             content = attrs_map["datetime"]
+            marker = " ".join(f"{key}={value}" for key, value in attrs_map.items()).lower()
             self.date_hints.append(content)
-            self.publication_date_hints.append(content)
+            if any(token in marker for token in ("modified", "updated")):
+                self.modification_date_hints.append(content)
+            else:
+                self.publication_date_hints.append(content)
         elif tag == "meta":
             meta_name = (attrs_map.get("name") or attrs_map.get("property") or "").lower()
             if any(token in meta_name for token in ("date", "publish", "modified", "created", "updated")):
@@ -1114,9 +1120,13 @@ def latest_period_label(chunks: Iterable[str]) -> str:
     return max(found, key=lambda item: item[0])[1] if found else ""
 
 
-DOCUMENT_DATE_LABEL_RE = re.compile(
-    r"(?:게시일|등록일|작성일|발행일|공개일|수정일|회의일|회의일시|개최일"
+PUBLICATION_DATE_LABEL_RE = re.compile(
+    r"(?:게시일|등록일|작성일|발행일|공개일|회의일|회의일시|개최일"
     r"|(?<![가-힣])일\s*시(?=\s*(?:[:：]|(?:19|20)\d{2}\s*년|$)))"
+)
+MODIFICATION_DATE_LABEL_RE = re.compile(r"(?:수정일|갱신일)")
+DOCUMENT_DATE_LABEL_RE = re.compile(
+    rf"(?:{PUBLICATION_DATE_LABEL_RE.pattern}|{MODIFICATION_DATE_LABEL_RE.pattern})"
 )
 
 
@@ -1128,18 +1138,26 @@ def document_date_from(parser: VisibleHTML) -> str:
     modified = latest_date_from(parser.modification_date_hints)
     if modified:
         return modified
-    candidates: list[str] = []
+    publication_candidates: list[str] = []
+    modification_candidates: list[str] = []
     for index, chunk in enumerate(parser.chunks):
-        if DOCUMENT_DATE_LABEL_RE.search(chunk):
-            candidates.extend(parser.chunks[index : index + 2])
-    return latest_date_from(candidates)
+        if PUBLICATION_DATE_LABEL_RE.search(chunk):
+            publication_candidates.extend(parser.chunks[index : index + 2])
+        elif MODIFICATION_DATE_LABEL_RE.search(chunk):
+            modification_candidates.extend(parser.chunks[index : index + 2])
+    return (
+        latest_date_from(publication_candidates)
+        or latest_date_from(modification_candidates)
+    )
 
 
 def labeled_document_date_from_text(text: str) -> str:
     """Use a listing-row date only when the row itself labels it as a document date."""
-    if not DOCUMENT_DATE_LABEL_RE.search(text or ""):
-        return ""
-    return latest_date_from([text])
+    if PUBLICATION_DATE_LABEL_RE.search(text or ""):
+        return latest_date_from([text])
+    if MODIFICATION_DATE_LABEL_RE.search(text or ""):
+        return latest_date_from([text])
+    return ""
 
 
 def youtube_baseline() -> dict:
@@ -1350,6 +1368,11 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     for detail_url in select_follow_links(main_parser, main.url, source):
         detail = fetch(detail_url, timeout=timeout)
         fetches.append(detail)
+        for _ in range(int(source.get("detail_retry", 0))):
+            if detail.ok:
+                break
+            detail = fetch(detail_url, timeout=timeout)
+            fetches.append(detail)
         if detail.ok:
             pages.append((detail.url, parse_html(detail.text)))
 
@@ -1368,7 +1391,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         container_page = canonical_url(row.get("container_url", ""), source["url"])
         main_page = canonical_url(main.url, source["url"])
         is_unscoped_listing_row = (
-            len(pages) > 1
+            bool(source.get("follow"))
             and container_page == main_page
             and canonical_record == main_page
         )

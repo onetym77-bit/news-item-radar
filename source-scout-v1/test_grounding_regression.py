@@ -1302,10 +1302,14 @@ class GroundingRegressionTests(unittest.TestCase):
                 for saved_row in saved:
                     prior.update(feed.revision_history_values(saved_row))
                 second = feed.build_feed(FakeModule, prior)
+                feed.update_review_queue(second)
+                saved_again = feed.read_review_queue()
             finally:
                 feed.QUEUE = original_queue
         self.assertEqual(second["localization_discovery"], [])
         self.assertEqual(len(second["rediscovered_carryover"]), 1)
+        self.assertEqual(saved_again[0]["lane"], "LOCALIZE_TO_SEOUL")
+        self.assertEqual(saved_again[0]["review_eligible"], "false")
 
 
     def test_avoidance_verb_is_not_citizen_harm(self):
@@ -1503,6 +1507,95 @@ class GroundingRegressionTests(unittest.TestCase):
         question = scout.question_for(text, self.council)
         self.assertIn("초기 설계·조사에서 빠진 조건", question)
         self.assertIn("불가피한 변경", question)
+
+
+
+    def test_detail_retry_recovers_a_council_record(self):
+        main_url = "https://example.test/kr/assembly/main.do"
+        main_html = (
+            '<a href="/record/recordView.do?key=x">'
+            "서울 피해 현황 회의록 자세히 보기"
+            "</a>"
+        )
+        detail_html = (
+            '<meta property="article:published_time" content="2026-09-14T08:00:00+09:00">'
+            "<p>서울 피해 37건이 발생했습니다.</p>"
+        )
+        original_fetch = scout.fetch
+        detail_attempts = 0
+
+        def fake_fetch(url, timeout=22):
+            nonlocal detail_attempts
+            if "recordView.do" not in url:
+                return scout.FetchResult(main_url, True, 200, 1, len(main_html), main_html)
+            detail_attempts += 1
+            if detail_attempts == 1:
+                return scout.FetchResult(url, False, 0, 1, 0, "", error="Timeout")
+            return scout.FetchResult(url, True, 200, 1, len(detail_html), detail_html)
+
+        scout.fetch = fake_fetch
+        source = {
+            **self.council,
+            "url": main_url,
+            "follow": r"recordView\.do",
+            "max_follow": 1,
+            "detail_retry": 1,
+            "cadence": "event_driven",
+        }
+        try:
+            metric, rows = scout.run_source(source)
+        finally:
+            scout.fetch = original_fetch
+        self.assertEqual(detail_attempts, 2)
+        self.assertEqual(metric["requests"], 3)
+        self.assertEqual(metric["failed_requests"], 1)
+        self.assertTrue(any("피해 37건" in row["text"] for row in rows))
+
+
+
+    def test_screen_publication_date_precedes_screen_modified_date(self):
+        parser = scout.parse_html(
+            "<p>발행일 2026-08-01</p><p>수정일 2026-09-14</p>"
+        )
+        self.assertEqual(scout.document_date_from(parser), "2026-08-01")
+        timed = scout.parse_html(
+            '<time itemprop="datePublished" datetime="2026-08-01"></time>'
+            '<time itemprop="dateModified" datetime="2026-09-14"></time>'
+        )
+        self.assertEqual(scout.document_date_from(timed), "2026-08-01")
+
+    def test_listing_date_stays_unassigned_when_all_details_fail(self):
+        main_url = "https://example.test/kr/assembly/main.do"
+        main_html = (
+            "<p>등록일: 2026-09-14</p>"
+            "<p>서울 오래된 피해 37건이 발생했습니다.</p>"
+            '<a href="/record/recordView.do?key=x">서울 피해 회의록 자세히 보기</a>'
+        )
+        original_fetch = scout.fetch
+
+        def fake_fetch(url, timeout=22):
+            if "recordView.do" in url:
+                return scout.FetchResult(url, False, 0, 1, 0, "", error="Timeout")
+            return scout.FetchResult(main_url, True, 200, 1, len(main_html), main_html)
+
+        scout.fetch = fake_fetch
+        source = {
+            **self.council,
+            "url": main_url,
+            "follow": r"recordView\.do",
+            "max_follow": 1,
+            "cadence": "event_driven",
+        }
+        try:
+            _, rows = scout.run_source(source)
+        finally:
+            scout.fetch = original_fetch
+        listing_row = next(
+            row for row in rows
+            if row["text"] == "서울 오래된 피해 37건이 발생했습니다."
+        )
+        self.assertEqual(listing_row["document_date"], "")
+        self.assertEqual(listing_row["freshness_status"], "FRESHNESS_UNKNOWN")
 
 
 
