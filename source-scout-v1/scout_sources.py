@@ -52,8 +52,9 @@ def freshness_metadata(
     observed_date: str,
     *,
     basis: str = "document_date",
-    today: date = TODAY,
+    today: date | None = None,
 ) -> dict:
+    today = today or TODAY
     cadence = source.get("cadence", "continuous")
     fresh_days, carryover_days = FRESHNESS_POLICY_DAYS.get(
         cadence, FRESHNESS_POLICY_DAYS["continuous"]
@@ -163,6 +164,16 @@ SOURCES = [
         "max_follow": 6,
     },
 ]
+
+AVOIDANCE_VERB_RE = re.compile(
+    r"(?:피해갈|피해가려|피해가기|피하려|피하고자|피할\s*수|회피하려|회피할)"
+)
+
+
+def harm_scan_text(text: str) -> str:
+    """Remove Korean avoidance verbs so '피해갈' is not read as citizen harm."""
+    return AVOIDANCE_VERB_RE.sub(" ", text or "")
+
 
 PROBLEM_TERMS = (
     "격차", "불균형", "부족", "불편", "피해", "손실", "사고", "체불", "미지급", "폐업",
@@ -276,6 +287,8 @@ class VisibleHTML(HTMLParser):
         self.anchors: list[tuple[str, str]] = []
         self.chunks: list[str] = []
         self.date_hints: list[str] = []
+        self.publication_date_hints: list[str] = []
+        self.modification_date_hints: list[str] = []
         self.tables: list[list[list[tuple[str, str]]]] = []
         self.table_depth = 0
         self.current_table: list[list[tuple[str, str]]] = []
@@ -291,13 +304,19 @@ class VisibleHTML(HTMLParser):
             return
         attrs_map = {key.lower(): value or "" for key, value in attrs}
         if tag == "time" and attrs_map.get("datetime"):
-            self.date_hints.append(attrs_map["datetime"])
+            content = attrs_map["datetime"]
+            self.date_hints.append(content)
+            self.publication_date_hints.append(content)
         elif tag == "meta":
             meta_name = (attrs_map.get("name") or attrs_map.get("property") or "").lower()
             if any(token in meta_name for token in ("date", "publish", "modified", "created", "updated")):
                 content = attrs_map.get("content", "")
                 if content:
                     self.date_hints.append(content)
+                    if any(token in meta_name for token in ("modified", "updated")):
+                        self.modification_date_hints.append(content)
+                    else:
+                        self.publication_date_hints.append(content)
         if tag == "table":
             if self.table_depth == 0:
                 self.current_table = []
@@ -585,7 +604,7 @@ def labor_region_rows(parser: VisibleHTML) -> list[str]:
 
 
 def valid_candidate(text: str) -> bool:
-    if len(text) < 12 or len(text) > 280 or not KOREAN_RE.search(text):
+    if len(text) < 12 or len(text) > 720 or not KOREAN_RE.search(text):
         return False
     if any(term in text for term in NAV_TERMS):
         return False
@@ -741,13 +760,14 @@ def score_text(
             text,
         )
     )
+    semantic_text = harm_scan_text(text)
     problem = (
-        any(term in text for term in PROBLEM_TERMS)
+        any(term in semantic_text for term in PROBLEM_TERMS)
         or operational_interruption
         or waiting_harm
     )
     implementation = any(term in text for term in IMPLEMENTATION_TERMS)
-    loss = any(term in text for term in LOSS_TERMS) or waiting_harm
+    loss = any(term in semantic_text for term in LOSS_TERMS) or waiting_harm
     low_value = any(term in text for term in LOW_VALUE_TERMS)
     routine_action = is_routine_action(text)
     purpose_only = routine_action and (
@@ -838,8 +858,9 @@ def score_text(
 
 
 def question_for(text: str, source: dict, record_kind: str = "PAGE_CHUNK") -> str:
-    problem = any(term in text for term in PROBLEM_TERMS)
-    loss = any(term in text for term in LOSS_TERMS)
+    semantic_text = harm_scan_text(text)
+    problem = any(term in semantic_text for term in PROBLEM_TERMS)
+    loss = any(term in semantic_text for term in LOSS_TERMS)
     routine_action = is_routine_action(text)
     purpose_only = routine_action and (
         bool(PURPOSE_CLAUSE_RE.search(text))
@@ -979,6 +1000,7 @@ def extract_records(
                 "record_kind": record_kind,
                 "text": text,
                 "url": url,
+                "container_url": page_url,
                 "score": score,
                 "ranking_score_note": "수집 정렬점수이며 편집 승인 점수가 아님",
                 "reasons": reasons,
@@ -1093,20 +1115,31 @@ def latest_period_label(chunks: Iterable[str]) -> str:
 
 
 DOCUMENT_DATE_LABEL_RE = re.compile(
-    r"(?:게시일|등록일|작성일|발행일|공개일|수정일|회의일|회의일시|개최일|일\s*시)"
+    r"(?:게시일|등록일|작성일|발행일|공개일|수정일|회의일|회의일시|개최일"
+    r"|(?<![가-힣])일\s*시(?=\s*[:：]))"
 )
 
 
 def document_date_from(parser: VisibleHTML) -> str:
     """Return a page publication/meeting date, never an arbitrary cited statistic date."""
-    hinted = latest_date_from(parser.date_hints)
-    if hinted:
-        return hinted
+    published = latest_date_from(parser.publication_date_hints)
+    if published:
+        return published
+    modified = latest_date_from(parser.modification_date_hints)
+    if modified:
+        return modified
     candidates: list[str] = []
     for index, chunk in enumerate(parser.chunks):
         if DOCUMENT_DATE_LABEL_RE.search(chunk):
             candidates.extend(parser.chunks[index : index + 2])
     return latest_date_from(candidates)
+
+
+def labeled_document_date_from_text(text: str) -> str:
+    """Use a listing-row date only when the row itself labels it as a document date."""
+    if not DOCUMENT_DATE_LABEL_RE.search(text or ""):
+        return ""
+    return latest_date_from([text])
 
 
 def youtube_baseline() -> dict:
@@ -1154,12 +1187,23 @@ def youtube_baseline() -> dict:
 
 
 TOPIC_MARKERS = {
-    "전세사기", "임차보증금", "피해가구",
+    "전세사기", "임차보증금", "피해가구", "지원실적",
     "기후동행카드", "교통공사", "손실금", "전가",
-    "미지급", "통상임금", "지연이자",
+    "미지급", "통상임금", "체불임금", "지연이자",
     "출생아", "난임", "부모급여",
     "시내버스", "소송", "보조금",
     "정비사업", "전담인력",
+    "중투심", "공공임대주택",
+}
+
+ISSUE_FAMILIES = {
+    "rent_fraud": ("전세사기", "임차보증금", "피해가구", "지원실적"),
+    "transit_loss": ("기후동행카드", "교통공사", "손실금", "전가"),
+    "unpaid_bus_wage": ("미지급", "통상임금", "체불임금", "지연이자"),
+    "birth_policy": ("출생아", "난임", "부모급여"),
+    "bus_litigation": ("시내버스", "소송", "보조금"),
+    "investment_review": ("중투심",),
+    "public_rental": ("공공임대주택",),
 }
 
 
@@ -1188,6 +1232,22 @@ def content_tokens(text: str) -> set[str]:
     }
 
 
+def issue_family_hits(text: str) -> set[str]:
+    return {
+        family
+        for family, terms in ISSUE_FAMILIES.items()
+        if any(term in (text or "") for term in terms)
+    }
+
+
+def normalized_substantive_values(row: dict) -> set[str]:
+    return {
+        re.sub(r"[\s,]", "", str(value))
+        for value in row.get("substantive_values", [])
+        if str(value).strip()
+    }
+
+
 def near_duplicate_context(left: dict, right: dict) -> bool:
     left_text = re.sub(r"\s+", " ", left.get("text", "")).strip()
     right_text = re.sub(r"\s+", " ", right.get("text", "")).strip()
@@ -1199,6 +1259,17 @@ def near_duplicate_context(left: dict, right: dict) -> bool:
     right_topics = {term for term in TOPIC_MARKERS if term in right_text}
     if len(left_topics & right_topics) >= 2:
         return True
+    shared_families = issue_family_hits(left_text) & issue_family_hits(right_text)
+    if shared_families:
+        same_source_page = canonical_url(
+            left.get("url", ""), ""
+        ) == canonical_url(right.get("url", ""), "")
+        shared_values = (
+            normalized_substantive_values(left)
+            & normalized_substantive_values(right)
+        )
+        if same_source_page or shared_values:
+            return True
     left_tokens = content_tokens(left_text)
     right_tokens = content_tokens(right_text)
     if not left_tokens or not right_tokens:
@@ -1294,7 +1365,18 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
 
     for row in records:
         canonical_record = canonical_url(row.get("url", ""), source["url"])
-        document_date = page_dates.get(canonical_record, "")
+        container_page = canonical_url(row.get("container_url", ""), source["url"])
+        main_page = canonical_url(main.url, source["url"])
+        is_unscoped_listing_row = (
+            len(pages) > 1
+            and container_page == main_page
+            and canonical_record == main_page
+        )
+        document_date = (
+            labeled_document_date_from_text(row.get("text", ""))
+            if is_unscoped_listing_row
+            else page_dates.get(canonical_record, "")
+        )
         reference_period = latest_period_label([row.get("text", "")])
         reference_effective_date = latest_date_from([row.get("text", "")])
         if (

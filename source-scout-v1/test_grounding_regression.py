@@ -1,3 +1,4 @@
+import csv
 import importlib.util
 import sys
 import tempfile
@@ -1148,6 +1149,8 @@ class GroundingRegressionTests(unittest.TestCase):
             "<p>서울에서 2024-01-31 기준 피해 37건이 발생했습니다.</p>"
         )
         original_fetch = scout.fetch
+        original_today = scout.TODAY
+        scout.TODAY = scout.date(2026, 9, 14)
 
         def fake_fetch(url, timeout=22):
             return scout.FetchResult(url, True, 200, 1, len(html), html)
@@ -1164,6 +1167,7 @@ class GroundingRegressionTests(unittest.TestCase):
             _, rows = scout.run_source(source)
         finally:
             scout.fetch = original_fetch
+            scout.TODAY = original_today
         row = next(item for item in rows if "피해 37건" in item["text"])
         self.assertEqual(row["document_date"], "2026-09-14")
         self.assertEqual(row["reference_period"], "2024-01-31")
@@ -1302,6 +1306,169 @@ class GroundingRegressionTests(unittest.TestCase):
                 feed.QUEUE = original_queue
         self.assertEqual(second["localization_discovery"], [])
         self.assertEqual(len(second["rediscovered_carryover"]), 1)
+
+
+    def test_avoidance_verb_is_not_citizen_harm(self):
+        score, _, _, result = scout.score_text(
+            "서울 사업비를 300억 밑으로 낮추면 중투심 제동을 피해갈 수 있습니다",
+            self.council,
+        )
+        self.assertFalse(result["problem"])
+        self.assertEqual(result["evidence_anchor"], "NONE")
+        self.assertFalse(score >= 6 and result["precheck_status"] == "PASS")
+
+    def test_reported_unpaid_interest_accepts_chained_wage_synonym(self):
+        text = (
+            "서울 시내버스 체불임금이 지연이자를 포함해 약 2,953억 원이고 "
+            "하루 1억 4,000만 원씩 늘어난다고 합니다."
+        )
+        result = self.signals(text)
+        self.assertEqual(result["evidence_anchor"], "MEASURED_PROBLEM_SIGNAL")
+        question = scout.question_for(text, self.council)
+        self.assertIn("미지급 원금과 지연이자의 산정 근거", question)
+
+    def test_cross_url_same_wage_issue_uses_fact_signature(self):
+        left = {
+            "url": "https://example.test/record/a",
+            "text": "현재 미지급 통상임금은 약 2,900억 원이고 지연이자가 하루 1억 4,000만 원씩 늘어납니다.",
+            "substantive_values": ["2,900억 원", "1억 4,000만 원"],
+        }
+        right = {
+            "url": "https://example.test/record/b",
+            "text": "체불임금이 지연이자를 포함해 2,953억 원이며 하루 1억 4,000만 원씩 늘어난다는 추산입니다.",
+            "substantive_values": ["2,953억 원", "1억 4,000만 원"],
+        }
+        self.assertTrue(scout.near_duplicate_context(left, right))
+
+    def test_listing_page_date_is_not_shared_with_unlabeled_issue_row(self):
+        main_url = "https://example.test/kr/assembly/main.do"
+        detail_url = "https://example.test/record/recordView.do?key=x"
+        main_html = (
+            "<p>등록일: 2026-09-14</p>"
+            "<p>서울 오래된 피해 37건이 발생했습니다.</p>"
+            '<a href="/record/recordView.do?key=x">최근 회의록 보기</a>'
+        )
+        detail_html = (
+            '<meta property="article:published_time" content="2026-09-14T08:00:00+09:00">'
+            "<p>서울 별도 피해 12건이 발생했습니다.</p>"
+        )
+        original_fetch = scout.fetch
+
+        def fake_fetch(url, timeout=22):
+            html = detail_html if "recordView.do" in url else main_html
+            resolved = detail_url if "recordView.do" in url else main_url
+            return scout.FetchResult(resolved, True, 200, 1, len(html), html)
+
+        scout.fetch = fake_fetch
+        source = {
+            **self.council,
+            "url": main_url,
+            "follow": r"recordView\.do",
+            "max_follow": 1,
+            "cadence": "event_driven",
+        }
+        try:
+            _, rows = scout.run_source(source)
+        finally:
+            scout.fetch = original_fetch
+        listing_row = next(
+            row for row in rows
+            if row["text"] == "서울 오래된 피해 37건이 발생했습니다."
+        )
+        self.assertEqual(listing_row["document_date"], "")
+        self.assertEqual(listing_row["freshness_status"], "FRESHNESS_UNKNOWN")
+
+    def test_service_temporarily_stopped_is_not_a_document_date_label(self):
+        self.assertEqual(
+            scout.labeled_document_date_from_text(
+                "서울 서비스가 일시 중단돼 피해 37건이 발생했습니다."
+            ),
+            "",
+        )
+
+    def test_reviewed_rediscovery_remains_review_eligible(self):
+        row = {
+            "lane": "REDISCOVERED_CARRYOVER",
+            "source_id": "council_minutes",
+            "source_name": "서울시의회 회의록",
+            "source_date": "2026-09-14",
+            "freshness_days": 0,
+            "freshness_window_days": 14,
+            "freshness_status": "FRESH",
+            "cadence": "event_driven",
+            "score": 9,
+            "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+            "claim_status": "ATTRIBUTED_CLAIM",
+            "precheck_status": "PASS",
+            "precheck_reason": "구체 문장",
+            "grounding_status": "PASS",
+            "question_basis": "서울 피해 37건이 발생했다는 의회 발언",
+            "text": "서울 피해 37건이 발생했다는 의회 발언",
+            "question": "어느 자치구에 집중되는가?",
+            "verification_axes": ["자치구"],
+            "url": "https://example.test/record/a",
+        }
+        revision = feed.source_revision_for_row(row)
+        candidate = feed.candidate_id(row)
+        with tempfile.TemporaryDirectory() as tmp:
+            original_queue = feed.QUEUE
+            feed.QUEUE = Path(tmp) / "review.csv"
+            prior = {field: "" for field in feed.REVIEW_FIELDS}
+            prior.update(
+                {
+                    "first_seen": "2026-09-14",
+                    "last_seen": "2026-09-14",
+                    "candidate_id": candidate,
+                    "source_revision": revision,
+                    "source_revision_history": revision,
+                    "auto_active_today": "true",
+                    "review_eligible": "true",
+                    "lane": "CORE_DISCOVERY",
+                    "editor_judgment": "PROMISING",
+                    "review_revision": revision,
+                }
+            )
+            try:
+                with feed.QUEUE.open("w", encoding="utf-8-sig", newline="") as handle:
+                    writer = csv.DictWriter(handle, fieldnames=feed.REVIEW_FIELDS)
+                    writer.writeheader()
+                    writer.writerow(prior)
+                feed.update_review_queue(
+                    {
+                        "generated_at_kst": "2026-09-15T09:00:00+09:00",
+                        "core_discovery": [],
+                        "auxiliary_discovery": [],
+                        "localization_discovery": [],
+                        "rediscovered_carryover": [row],
+                    }
+                )
+                saved = feed.read_review_queue()[0]
+            finally:
+                feed.QUEUE = original_queue
+        self.assertEqual(saved["auto_active_today"], "false")
+        self.assertEqual(saved["review_eligible"], "true")
+        self.assertEqual(saved["editor_judgment"], "PROMISING")
+
+
+
+    def test_publication_date_precedes_later_modified_metadata(self):
+        parser = scout.parse_html(
+            '<meta property="article:published_time" content="2026-08-01T08:00:00+09:00">'
+            '<meta property="article:modified_time" content="2026-09-14T08:00:00+09:00">'
+            "<p>서울 피해 37건이 발생했습니다.</p>"
+        )
+        self.assertEqual(scout.document_date_from(parser), "2026-08-01")
+
+    def test_long_substantive_paragraph_is_not_discarded(self):
+        text = (
+            "서울 전세사기 피해 인정 가구는 1만 1,664가구이고 임차보증금 피해액은 "
+            "약 1조 9,860억 원입니다. "
+            + "피해자 지원 신청과 실제 집행 사이의 병목을 확인해야 합니다. " * 8
+        )
+        self.assertGreater(len(text), 280)
+        self.assertLessEqual(len(text), 720)
+        self.assertTrue(scout.valid_candidate(text))
+
 
 
 if __name__ == "__main__":

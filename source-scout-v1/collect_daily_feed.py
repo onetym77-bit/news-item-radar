@@ -48,6 +48,7 @@ REVIEW_FIELDS = [
     "source_revision",
     "source_revision_history",
     "auto_active_today",
+    "review_eligible",
     "lane",
     "source_id",
     "source_name",
@@ -434,6 +435,7 @@ def update_review_queue(feed: dict) -> None:
             normalized["auto_evidence_anchor"] or old.get("evidence_anchor", "")
         )
         normalized["auto_active_today"] = "false"
+        normalized["review_eligible"] = "false"
         if normalized["candidate_id"]:
             by_id[normalized["candidate_id"]] = normalized
 
@@ -450,6 +452,13 @@ def update_review_queue(feed: dict) -> None:
         revision_history = revision_history_values(current)
         revision_history.add(source_revision)
         active_today = row.get("lane") in {"CORE_DISCOVERY", "AUX_DISCOVERY"}
+        reviewed_current_revision = bool(current.get("editor_judgment", "").strip()) and (
+            current.get("review_revision", "").strip() == source_revision
+        )
+        review_eligible = active_today or (
+            row.get("lane") == "REDISCOVERED_CARRYOVER"
+            and reviewed_current_revision
+        )
         current.update(
             {
                 "first_seen": current.get("first_seen") or today,
@@ -458,6 +467,7 @@ def update_review_queue(feed: dict) -> None:
                 "source_revision": source_revision,
                 "source_revision_history": "|".join(sorted(revision_history)),
                 "auto_active_today": "true" if active_today else "false",
+                "review_eligible": "true" if review_eligible else "false",
                 "lane": row["lane"],
                 "source_id": row["source_id"],
                 "source_name": row["source_name"],

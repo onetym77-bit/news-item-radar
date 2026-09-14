@@ -86,7 +86,13 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
         judgment = text(row, "editor_judgment").upper()
         active_raw = text(row, "auto_active_today")
         active_today = active_raw.lower() == "true"
-        if not active_today and not judgment:
+        eligible_raw = text(row, "review_eligible")
+        review_eligible = (
+            eligible_raw.lower() == "true"
+            if eligible_raw
+            else active_today
+        )
+        if not review_eligible and not judgment:
             continue
         candidate_id = text(row, "candidate_id")
         if judgment and judgment not in VALID_JUDGMENTS:
@@ -107,6 +113,7 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
             "editor_judgment": judgment or "PENDING",
             "transition_state": text(row, "transition_state") or "미승인",
             "active_today": active_today,
+            "review_eligible": review_eligible,
         }
         cards.append(card)
 
@@ -115,9 +122,9 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
                 "서울 원자료 미확보 지역화 단서 — 편집 전이·킬러테스트 생성 금지"
             )
             continue
-        if not active_today:
+        if not review_eligible:
             card["decision_blocker"] = (
-                "오늘 활성 후보 아님 — 과거 판정 보관만, 전이·킬러테스트 생성 금지"
+                "현재 검토 대상 아님 — 과거 판정 보관만, 전이·킬러테스트 생성 금지"
             )
             continue
 
@@ -239,7 +246,7 @@ def render_cards(payload: dict) -> str:
                 f"- 제안 질문: {card['question'] or '-'}",
                 f"- 아직 확인할 변수: {card['verification_axes'] or '-'}",
                 f"- 사람 판정: {card['editor_judgment']}",
-                f"- 오늘 활성: {'예' if card['active_today'] else '아니오'} · 신선도 {card['freshness_status']}",
+                f"- 오늘 신규: {'예' if card['active_today'] else '아니오'} · 검토 유지: {'예' if card['review_eligible'] else '아니오'} · 신선도 {card['freshness_status']}",
                 f"- 원문 최신일: {card['source_date'] or '-'}",
                 f"- 원문: {card['url'] or '-'}",
                 f"- 전이 상태: {card['transition_state']} — 장부 변경 없음",

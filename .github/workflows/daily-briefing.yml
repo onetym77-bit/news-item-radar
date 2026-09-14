@@ -137,6 +137,12 @@ jobs:
             --briefing daily-briefing-v5/output/briefing_latest.md
           python -X utf8 daily-briefing-v5/run_provenance.py --verify
 
+      - name: Show generated editorial cards
+        run: sed -n '1,260p' source-scout-v1/output/editorial_review_cards_latest.md
+
+      - name: Show generated briefing
+        run: sed -n '1,420p' daily-briefing-v5/output/briefing_latest.md
+
       - name: Upload the validated build package
         uses: actions/upload-artifact@v7
         with:

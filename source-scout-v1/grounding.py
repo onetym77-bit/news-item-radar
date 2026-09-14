@@ -489,13 +489,27 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
     rent_evidence = "전세사기" in text and "피해" in text and bool(
         analysis.get("substantive_values")
     )
+    rent_support_execution_evidence = (
+        rent_evidence
+        and any(term in text for term in ("지원실적", "지원 실적", "유지보수", "안전관리"))
+    )
+    transit_loss_evidence = (
+        "교통공사" in text
+        and any(term in text for term in ("손실", "전가", "부채"))
+        and bool(analysis.get("substantive_values"))
+    )
+    public_rental_cap_evidence = (
+        "공공임대주택" in text
+        and "비율" in text
+        and bool(analysis.get("substantive_values"))
+    )
     bus_lawsuit_evidence = (
         "시내버스" in text
         and "소송" in text
         and bool(analysis.get("substantive_values"))
     )
     unpaid_interest_evidence = (
-        "미지급" in text
+        any(term in text for term in ("미지급", "체불임금", "체불 임금"))
         and "지연이자" in text
         and bool(analysis.get("substantive_values"))
     )
@@ -534,6 +548,45 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         ]
         question = "공급량과 운영시간을 실제 요청량 자료와 대조하면 어느 시간대와 지역에서 수요·공급 차이가 나타나는가?"
         proposed_axes = existing_axes or ["시간대", "지역", "요청량"]
+    elif rent_support_execution_evidence:
+        contract = ["전세사기 피해", "지원 집행", "측정값"]
+        contract_checks = [
+            ("전세사기 피해", "전세사기" in text and "피해" in text),
+            ("지원 집행", any(term in text for term in ("지원실적", "지원 실적", "유지보수", "안전관리"))),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = (
+            "피해 인정 규모에 견줘 안전관리·유지보수 지원 실적이 낮은 이유는 무엇인가? "
+            "신청·심사·집행 단계별 이탈과 자치구·주택유형별 차이를 타 시도와 대조하면 "
+            "예산, 대상 기준, 신청 절차 중 어디가 병목인가?"
+        )
+        proposed_axes = ["자치구", "주택유형", "신청·심사·집행", "타 시도"]
+    elif transit_loss_evidence:
+        contract = ["교통공사", "손실 또는 부채 전가", "측정값"]
+        contract_checks = [
+            ("교통공사", "교통공사" in text),
+            ("손실 또는 부채 전가", any(term in text for term in ("손실", "전가", "부채"))),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = (
+            "교통공사에 전가됐다는 손실은 어느 사업·회계 항목에서 생겼으며 산정 근거는 무엇인가? "
+            "서울시 부담과 공사 부채의 연도별 흐름을 계약·협약과 대조하면 비용이 요금·서비스·"
+            "시민 이동 기회로 넘어간 경로가 확인되는가?"
+        )
+        proposed_axes = ["사업·회계 항목", "연도", "부담 주체", "요금·서비스"]
+    elif public_rental_cap_evidence:
+        contract = ["공공임대주택", "비율 상한", "측정값"]
+        contract_checks = [
+            ("공공임대주택", "공공임대주택" in text),
+            ("비율 상한", "비율" in text),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = (
+            "수서·일원·세곡의 공공임대주택 비율은 강남구와 서울 평균보다 실제로 높은가? "
+            "제안된 20% 상한을 적용하면 공급 물량과 대기자에게 미치는 영향은 누구에게 집중되며, "
+            "지역 부담 주장과 주거 수요 중 어느 근거가 더 강한가?"
+        )
+        proposed_axes = ["지역별 비율", "서울·강남구 비교", "공급 물량", "대기자"]
     elif rent_evidence:
         contract = ["전세사기", "피해", "측정값"]
         contract_checks = [
@@ -559,7 +612,7 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
     elif unpaid_interest_evidence:
         contract = ["미지급", "지연이자", "측정값"]
         contract_checks = [
-            ("미지급", "미지급" in text),
+            ("미지급 또는 체불임금", any(term in text for term in ("미지급", "체불임금", "체불 임금"))),
             ("지연이자", "지연이자" in text),
             ("측정값", bool(analysis.get("substantive_values"))),
         ]
