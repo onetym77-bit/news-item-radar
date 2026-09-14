@@ -10,6 +10,15 @@ on:
         description: Optional briefing date in YYYY-MM-DD
         required: false
         type: string
+  push:
+    branches:
+      - main
+    paths:
+      - "agent-system-v1/ITEM_LEDGER.csv"
+      - "agent-system-v1/QUESTION_QUALITY_AUDIT.csv"
+      - "agent-system-v1/VERIFICATION_QUEUE.csv"
+      - "daily-briefing-v5/**"
+      - ".github/workflows/daily-briefing.yml"
   pull_request:
     paths:
       - "agent-system-v1/ITEM_LEDGER.csv"
