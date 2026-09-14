@@ -115,7 +115,13 @@ def discovery_question(row: dict) -> str:
 
 
 
-def unique_top(rows: list[dict], limit: int, *, dedupe_by: str = "text") -> list[dict]:
+def unique_top(
+    rows: list[dict],
+    limit: int,
+    *,
+    dedupe_by: str = "text",
+    near_duplicate=None,
+) -> list[dict]:
     selected: list[dict] = []
     seen: set[str] = set()
     for row in sorted(rows, key=lambda item: item.get("score", 0), reverse=True):
@@ -125,6 +131,8 @@ def unique_top(rows: list[dict], limit: int, *, dedupe_by: str = "text") -> list
             key = re.sub(r"[^0-9A-Za-z가-힣]", "", row.get("text", "")).lower()
             key = key or row.get("url")
         if not key or key in seen:
+            continue
+        if near_duplicate and any(near_duplicate(row, prior) for prior in selected):
             continue
         seen.add(key)
         selected.append(row)
@@ -157,6 +165,7 @@ def build_feed(module) -> dict:
             and row.get("grounding_status") == "PASS"
         ],
         3,
+        near_duplicate=module.near_duplicate_context,
     )
     auxiliary = unique_top(
         [

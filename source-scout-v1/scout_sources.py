@@ -109,7 +109,7 @@ SOURCES = [
 
 PROBLEM_TERMS = (
     "격차", "불균형", "부족", "불편", "피해", "손실", "사고", "체불", "미지급", "폐업",
-    "급증", "급감", "증가", "감소", "지연", "혼잡", "위험", "미달", "초과",
+    "지연", "혼잡", "위험", "미달", "초과",
     "사각지대", "제한", "불용", "삭감", "적자", "위반", "민원", "환불", "해지",
     "부실", "제외", "갈등", "논란", "노후", "고령", "폭염",
     "침수", "붕괴", "과밀", "공백", "부담", "취약", "분쟁",
@@ -429,7 +429,17 @@ def score_text(
         reasons.append("문제·변화")
     if evidence:
         score += 2
-        reasons.append("실제 수치·관찰근거")
+        if (
+            source["role"] == "VERIFICATION"
+            and not analysis["verification_usable"]
+            and (
+                analysis["verification_schema_lead"]
+                or analysis["verification_metadata_lead"]
+            )
+        ):
+            reasons.append("데이터 구조·갱신 설명")
+        else:
+            reasons.append("실제 수치·관찰근거")
     if evidence_anchor == "DECOMPOSABLE_STRUCTURE" and not problem:
         score += 2
         reasons.append("분해 가능한 구조 자료")

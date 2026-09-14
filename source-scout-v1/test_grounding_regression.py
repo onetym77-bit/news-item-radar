@@ -596,5 +596,84 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertEqual(payload["grounding_status"], "PASS")
 
 
+    def test_generic_increase_is_neutral_structure_not_problem(self):
+        text = "서울 공공도서관 이용자가 30% 증가했습니다"
+        score, reasons, _, result = scout.score_text(text, self.council)
+        self.assertFalse(result["problem"])
+        self.assertEqual(result["change_direction"], "UNCLASSIFIED_CHANGE")
+        self.assertEqual(result["evidence_anchor"], "DECOMPOSABLE_STRUCTURE")
+        payload = scout.build_question_payload(text, "council_minutes", result)
+        self.assertEqual(payload["grounding_status"], "PASS")
+        self.assertIn("증감", payload["question"])
+        self.assertNotIn("문제 징후", payload["question"])
+        self.assertNotIn("문제·변화", reasons)
+        self.assertGreaterEqual(score, 6)
+
+    def test_generic_decrease_is_not_automatically_harm(self):
+        text = "서울 인구는 비교 기간에 5% 감소했습니다"
+        result = self.signals(text)
+        self.assertFalse(result["problem"])
+        self.assertEqual(result["change_direction"], "UNCLASSIFIED_CHANGE")
+        payload = scout.build_question_payload(text, "council_minutes", result)
+        self.assertNotIn("문제 징후", payload["question"])
+
+    def test_comparison_word_and_duration_do_not_turn_budget_plan_into_result(self):
+        text = "3개월 페이백은 전년도부터 계획해 2026년 본예산에 반영할 예정입니다"
+        result = self.signals(text)
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_bigdata_schema_description_is_held_not_grounded_as_result(self):
+        bigdata = {
+            "id": "seoul_bigdata",
+            "name": "서울 빅데이터캠퍼스",
+            "local": True,
+            "voice": False,
+            "role": "VERIFICATION",
+        }
+        text = "서울 생활이동 데이터는 자치구별 1시간 단위로 갱신됩니다"
+        score, reasons, _, result = scout.score_text(text, bigdata)
+        self.assertTrue(result["verification_schema_lead"])
+        self.assertFalse(result["verification_usable"])
+        payload = scout.build_question_payload(text, "seoul_bigdata", result)
+        self.assertEqual(payload["grounding_status"], "HOLD")
+        self.assertIn("실제 값 확보 전", payload["question"])
+        self.assertIn("데이터 구조·갱신 설명", reasons)
+        self.assertNotIn("실제 수치·관찰근거", reasons)
+        self.assertGreater(score, 0)
+
+    def test_citywide_observed_extent_is_preserved_in_both_word_orders(self):
+        first = self.signals("서울 25개 자치구 전체에서 침수 피해가 발생했습니다")
+        second = self.signals("침수 피해가 서울 25개 자치구 모두에서 발생했습니다")
+        self.assertIn("25개 자치구", first["substantive_values"])
+        self.assertIn("25개 자치구", second["substantive_values"])
+
+    def test_core_selection_dedupes_same_issue_across_different_urls(self):
+        rows = [
+            {
+                "score": 10,
+                "text": "서울 통상임금 미지급 2,900억 원과 하루 지연이자 1.4억 원이 발생했다",
+                "url": "https://example.test/minutes/1",
+            },
+            {
+                "score": 9,
+                "text": "서울 통상임금 미지급 2,953억 원, 지연이자는 하루 1.4억 원이라는 지적",
+                "url": "https://example.test/minutes/2",
+            },
+            {
+                "score": 8,
+                "text": "서울 전세사기 피해 1조 원이 자치구별로 집계됐다",
+                "url": "https://example.test/minutes/3",
+            },
+        ]
+        selected = feed.unique_top(
+            rows,
+            3,
+            near_duplicate=scout.near_duplicate_context,
+        )
+        self.assertEqual(len(selected), 2)
+        self.assertEqual(selected[0]["url"], "https://example.test/minutes/1")
+        self.assertEqual(selected[1]["url"], "https://example.test/minutes/3")
+
+
 if __name__ == "__main__":
     unittest.main()

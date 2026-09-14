@@ -94,14 +94,17 @@ def normalize(text: str) -> str:
 
 def _strip_static_scope_counts(text: str) -> str:
     def replace(match: re.Match) -> str:
-        tail = text[match.end() : match.end() + 60]
-        observed_extent = re.search(
-            r"(?:전체|모두|각각|에서)?.{0,20}"
-            r"(?:피해|침수|사고|체불|불편).{0,16}"
-            r"(?:발생했|확인됐|집계됐|기록됐|나타났)",
-            tail,
+        # Scope counts are measurements only when the same local clause says that
+        # harm was actually observed across that scope. Support both Korean word
+        # orders: "25개 자치구에서 피해 발생" and "피해가 25개 자치구에서 발생".
+        context = text[max(0, match.start() - 60) : match.end() + 70]
+        has_harm = any(
+            term in context for term in ("피해", "침수", "사고", "체불", "불편")
         )
-        return match.group(0) if observed_extent else " "
+        has_observed = bool(
+            re.search(r"(?:발생했|확인됐|집계됐|기록됐|나타났)", context)
+        )
+        return match.group(0) if has_harm and has_observed else " "
 
     return SCOPE_COUNT_RE.sub(replace, text)
 
@@ -208,13 +211,16 @@ def analyze_content(
         term in text
         for term in ("피해", "사고", "누락", "체불", "미지급", "적자", "부담", "분쟁")
     )
+    neutral_change = any(term in text for term in ("증가", "감소", "급증", "급감", "증감"))
     positive_change = (
         not negative_harm
         and ("증가" in text or "반등" in text or "회복" in text)
         and any(term in text for term in POSITIVE_CHANGE_TERMS)
     )
     change_direction = "POSITIVE" if positive_change else (
-        "NEGATIVE" if negative_harm else "AMBIGUOUS"
+        "NEGATIVE" if negative_harm else (
+            "UNCLASSIFIED_CHANGE" if neutral_change else "AMBIGUOUS"
+        )
     )
 
     content_class = "REPORTABLE_TEXT"
@@ -313,8 +319,14 @@ def analyze_content(
         and not positive_change
         and not (routine_action and purpose_only and not observed)
     )
+    comparison_only_terms = ("전년", "전월", "지난해")
+    structural_terms = tuple(
+        term for term in STRUCTURAL_TERMS if term not in comparison_only_terms
+    )
     structural = bool(values) and (
-        any(term in text for term in STRUCTURAL_TERMS) or positive_change
+        any(term in text for term in structural_terms)
+        or positive_change
+        or neutral_change
     )
 
     anchor = "NONE"
@@ -420,11 +432,16 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
     if anchor == "NONE" and not analysis.get("verification_usable"):
         question = "근거 앵커 없음 — 질문 점수 평가 제외"
         proposed_axes: list[str] = []
-    elif source_id == "seoul_open_data" or analysis.get("verification_usable"):
-        contract = ["검증 가능한 데이터 구조"]
-        contract_checks = [("검증 가능한 데이터 구조", bool(analysis.get("verification_usable")))]
+    elif analysis.get("verification_usable"):
+        contract = ["검증 가능한 실제 데이터값"]
+        contract_checks = [("검증 가능한 실제 데이터값", True)]
         question = "이 자료의 실제 값과 분류항목으로 기존 발표의 총량 또는 집중 현상을 검증할 수 있는가?"
         proposed_axes = existing_axes or ["지역", "대상", "시간"]
+    elif analysis.get("verification_schema_lead") or analysis.get("verification_metadata_lead"):
+        contract = ["검증 가능한 실제 데이터값"]
+        contract_checks = [("검증 가능한 실제 데이터값", False)]
+        question = "데이터 설명만 확인됨 — 실제 값 확보 전 질문 점수 평가 제외"
+        proposed_axes = existing_axes or ["실제 값", "분류항목", "기준시점"]
     elif ud_supply_evidence:
         contract = ["운행", "요청 또는 매칭", "시간 측정값"]
         contract_checks = [
@@ -477,6 +494,14 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
             ("측정값", bool(analysis.get("substantive_values"))),
         ]
         question = "확인된 증가·회복은 어느 지역·대상에서 나타났으며, 인구구조 변화와 정책 효과를 구분할 비교자료는 무엇인가?"
+        proposed_axes = existing_axes or ["지역", "대상", "비교기간"]
+    elif analysis.get("change_direction") == "UNCLASSIFIED_CHANGE":
+        contract = ["중립 증감", "측정값"]
+        contract_checks = [
+            ("중립 증감", analysis.get("change_direction") == "UNCLASSIFIED_CHANGE"),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = "확인된 증감은 어느 지역·대상·기간에서 나타났으며, 규모 변화와 구성·집계방식 변화 중 무엇이 설명하는가?"
         proposed_axes = existing_axes or ["지역", "대상", "비교기간"]
     elif analysis.get("claim_status") == "ATTRIBUTED_CLAIM":
         contract = ["귀속된 주장", "문제 근거 앵커"]
