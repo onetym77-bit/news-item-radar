@@ -35,6 +35,7 @@ REVIEW_FIELDS = [
     "last_seen",
     "candidate_id",
     "source_revision",
+    "auto_active_today",
     "lane",
     "source_id",
     "source_name",
@@ -226,6 +227,7 @@ def update_review_queue(feed: dict) -> None:
         normalized["auto_evidence_anchor"] = (
             normalized["auto_evidence_anchor"] or old.get("evidence_anchor", "")
         )
+        normalized["auto_active_today"] = "false"
         if normalized["candidate_id"]:
             by_id[normalized["candidate_id"]] = normalized
 
@@ -240,6 +242,7 @@ def update_review_queue(feed: dict) -> None:
                 "last_seen": today,
                 "candidate_id": item_id,
                 "source_revision": source_revision,
+                "auto_active_today": "true",
                 "lane": row["lane"],
                 "source_id": row["source_id"],
                 "source_name": row["source_name"],

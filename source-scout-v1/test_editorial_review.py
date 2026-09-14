@@ -40,6 +40,11 @@ class EditorialReviewTests(unittest.TestCase):
         self.assertIsNone(payload["killer_test"])
         self.assertFalse(payload["safety"]["scheduled_apply"])
 
+    def test_inactive_unreviewed_candidate_is_not_shown(self):
+        row = {**self.base_row(), "auto_active_today": "false"}
+        payload = review.build_review([row], [])
+        self.assertEqual(payload["review_cards"], [])
+
     def test_incomplete_promising_is_blocked(self):
         row = {**self.base_row(), "editor_judgment": "PROMISING"}
         payload = review.build_review([row], [])

@@ -79,6 +79,10 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
 
     for row in queue_rows:
         judgment = text(row, "editor_judgment").upper()
+        active_raw = text(row, "auto_active_today")
+        active_today = active_raw.lower() == "true" if active_raw else True
+        if not active_today and not judgment:
+            continue
         candidate_id = text(row, "candidate_id")
         if judgment and judgment not in VALID_JUDGMENTS:
             invalid_labels.append(candidate_id)
@@ -95,6 +99,7 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
             "verification_axes": text(row, "verification_axes"),
             "editor_judgment": judgment or "PENDING",
             "transition_state": text(row, "transition_state") or "미승인",
+            "active_today": active_today,
         }
         cards.append(card)
 
