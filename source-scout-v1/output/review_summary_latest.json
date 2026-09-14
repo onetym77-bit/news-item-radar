@@ -4,7 +4,7 @@
     "end": "2026-09-14",
     "days": 7
   },
-  "generated": 7,
+  "generated": 10,
   "labeled": 0,
   "coverage": 0.0,
   "promising": 0,
@@ -13,7 +13,7 @@
   "useful_rate": null,
   "by_source": {
     "council_minutes": {
-      "generated": 6,
+      "generated": 8,
       "labeled": 0,
       "promising": 0,
       "useful": 0,
@@ -21,6 +21,14 @@
       "useful_rate": null
     },
     "eungdapso": {
+      "generated": 1,
+      "labeled": 0,
+      "promising": 0,
+      "useful": 0,
+      "precision": null,
+      "useful_rate": null
+    },
+    "labor_arrears": {
       "generated": 1,
       "labeled": 0,
       "promising": 0,
