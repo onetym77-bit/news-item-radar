@@ -24,6 +24,21 @@ class ProbeTests(unittest.TestCase):
             self.assertFalse(same_host(u,"https://example.gov/a"))
     def test_contact_values_redacted(self):
         self.assertEqual(sanitize("a@example.com 010-1234-5678"),"[EMAIL] [PHONE]")
+    def test_common_contact_formats_redacted(self):
+        for value in ("01012345678", "010.1234.5678", "+82-10-1234-5678", "02-123-4567"):
+            self.assertEqual(sanitize(value),"[PHONE]")
+    def test_session_tokens_redacted(self):
+        self.assertEqual(sanitize(";jsessionid=abc-12; DMCSESSION=token_34"),
+                         ";jsessionid=[REDACTED]; DMCSESSION=[REDACTED]")
+    def test_title_redacted_and_bounded(self):
+        result=inspect("<title>01012345678 "+("가"*400)+"</title>")
+        self.assertTrue(result["title"].startswith("[PHONE]"))
+        self.assertLessEqual(len(result["title"]),300)
+    def test_contacts_redacted_before_excerpt_boundary(self):
+        result=inspect("<p>다자녀 "+("가"*440)+" 01012345678 abc@example.com</p>")
+        text=result["diagnostic_excerpts"][0]["text"]
+        self.assertNotIn("010",text)
+        self.assertNotIn("abc@",text)
     def test_markup_does_not_count_as_a_new_question(self):
         self.assertEqual(inspect("<p>민원</p>")["article_gate"],"NOT_EVALUATED")
 if __name__=="__main__":

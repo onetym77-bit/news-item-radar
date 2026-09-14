@@ -26,9 +26,12 @@ def norm(value):
     return re.sub(r"\s+", " ", value).strip()
 
 def sanitize(value):
-    value = re.sub(r";jsessionid=[A-Za-z0-9]+", ";jsessionid=[REDACTED]", value, flags=re.I)
+    value = re.sub(r"(?i)((?:jsessionid|dmcsession|sessionid)\s*[=:]\s*[\"']?)[A-Za-z0-9._~-]+",
+                   r"\1[REDACTED]", value)
     value = re.sub(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", "[EMAIL]", value)
-    return re.sub(r"(?<!\d)0\d{1,2}[- )]\d{3,4}[- ]\d{4}(?!\d)", "[PHONE]", value)
+    # Common Korean domestic and +82 contact formats; sanitize before truncating.
+    return re.sub(r"(?<![\w\d])(?:0\d{1,2}|\+82[- .]?(?:0?\d{1,2}))[- .)]?\d{3,4}[- .]?\d{4}(?!\d)",
+                  "[PHONE]", value)
 
 class Page(HTMLParser):
     def __init__(self, html):
@@ -87,7 +90,7 @@ class OfficialRedirect(HTTPRedirectHandler):
 
 def inspect(html, sample_id=""):
     page = Page(html)
-    text = norm(" ".join(page.chunks))
+    text = sanitize(norm(" ".join(page.chunks)))
     anchors = [{k:sanitize(v)[:400] for k,v in a.items()}
                for a in page.anchors if any(m in a["text"] for m in MARKERS)][:8]
     list_entries = []
@@ -117,10 +120,10 @@ def inspect(html, sample_id=""):
     for marker in MARKERS:
         at = text.find(marker)
         if at >= 0:
-            snippets.append({"marker":marker,"text":sanitize(text[at:at+450])})
+            snippets.append({"marker":marker,"text":text[at:at+450]})
         if len(snippets) == 2:
             break
-    return {"title":norm(" ".join(page.title)), "text_characters":len(text),
+    return {"title":sanitize(norm(" ".join(page.title)))[:300], "text_characters":len(text),
             "first_three_linked_entries":list_entries,
             "sample_anchors":anchors, "visible_dates":dates,
             "stat_values":stats, "diagnostic_excerpts":snippets,
