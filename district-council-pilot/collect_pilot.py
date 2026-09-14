@@ -27,7 +27,7 @@ TOPICS = {
     "노동경제": ("노동", "상권", "소상공인", "임금", "일자리"),
 }
 SIGNALS = ("격차", "부족", "불편", "증가", "감소", "배제", "미달", "지연",
-           "이용률", "집행률", "없습니다", "불용", "대기", "시간", "부담", "편중")
+           "이용률", "집행률", "불용", "대기", "부담", "편중")
 NUMBER = re.compile(r"\d[\d,.]*\s*(?:%|명|건|원|억|만|곳|대|개)")
 UA = "Mozilla/5.0 (compatible; NewsItemRadarPilot/1.0; +https://github.com/onetym77-bit/news-item-radar)"
 
@@ -155,6 +155,8 @@ def review_windows(parts):
     ranked = []
     for i, part in enumerate(parts):
         if len(part) < 90:
+            continue
+        if re.match(r"(?:위원장|부위원장|의장|부의장)\s", part) and len(part) < 1200 and any(t in part for t in ("질의하실", "개의를 선포", "안건순서", "성원이 되었으므로")):
             continue
         topics = [k for k, terms in TOPICS.items() if any(t in part for t in terms)]
         signals = [s for s in SIGNALS if s in part]
