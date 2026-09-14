@@ -151,7 +151,6 @@ def analyze_content(
         values
         and any(term in text for term in POLICY_ACTION_TERMS)
         and not observed
-        and not cost_problem
     ):
         content_class, precheck_status = "POLICY_ANNOUNCEMENT", "HOLD"
         precheck_reason = "정책 투입액만 있고 결과 관찰값 없음"
