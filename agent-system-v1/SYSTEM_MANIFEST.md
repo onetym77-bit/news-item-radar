@@ -17,6 +17,9 @@
 | 실행 계측 | agent-system-v1/RUN_METRICS_TEMPLATE.md |
 | 출처군·독립성 | agent-system-v1/SOURCE_FAMILY_REGISTRY.md |
 | 운영 소스 역할 | source-scout-v1/SOURCE_ROLE_REGISTRY.md |
+| 자치구의회 25곳 연결 등록(수동 점검, 핵심소스 승인 전) | district-council-pilot/sources_25.json |
+| 자치구의회 연결 점검기 | district-council-pilot/collect_pilot.py |
+| 비회기 보완소스 시험안(미편입) | district-council-pilot/OFF_SESSION_SOURCE_PLAN.md |
 | 역할 분리형 신규 소스 수집 | source-scout-v1/collect_daily_feed.py |
 | 신규 소스 사람 판정 대기열 | source-scout-v1/HUMAN_REVIEW_QUEUE.csv |
 | 7일 정밀도 평가 | source-scout-v1/evaluate_human_review.py |

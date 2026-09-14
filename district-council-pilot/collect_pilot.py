@@ -337,6 +337,8 @@ def window_change(current, previous):
 
 def run(source, as_of, count=4):
     client = Client(source)
+    probe_url = source.get("inspect_list_script")
+    probe = client.get(probe_url) if probe_url else None
     listing_url = source["list_url"]
     listing = client.get(listing_url)
     fallback = source.get("list_fallback_url",listing_url)
@@ -351,6 +353,8 @@ def run(source, as_of, count=4):
     result = {"id":source["id"], "name":source["name"], "list_url":source["list_url"],
               "expected":count, "listing_ok":listing is not None, "effective_list_url":listing_url, "listed":0, "selected":[],
               "public_release_date":None, "selection":f"official_first_page_order_top{count}"}
+    if probe is not None:
+        result["diagnostic_official_script"] = clean_diagnostic(probe.raw_html[:18000])
     if listing is None:
         result["diagnosis"] = "LIST_FETCH_FAILED"
     else:
@@ -367,10 +371,6 @@ def run(source, as_of, count=4):
                 result["diagnostic_list_function"] = clean_diagnostic(inline[max(0,at-500):at+2300]) if at >= 0 else ""
                 result["diagnostic_detail_anchors"] = [a for a in listing.anchors if detail_from(a["attrs"],listing_url,source)][:4]
         if not selected:
-            probe_url = source.get("inspect_list_script")
-            if probe_url:
-                script = client.get(probe_url)
-                result["diagnostic_official_script"] = clean_diagnostic(script.raw_html[:18000]) if script else ""
             result["diagnosis"] = "LIST_PARSE_EMPTY"
             result["diagnostic_links"] = [u for u in listing.links if any(s in u for s in ("record","minute","confer","recent","viewer"))][:16]
             result["diagnostic_rows"] = listing.rows[:5]
