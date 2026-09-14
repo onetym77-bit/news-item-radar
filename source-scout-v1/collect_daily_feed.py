@@ -165,7 +165,7 @@ def build_feed(module) -> dict:
             and row.get("grounding_status") == "PASS"
         ],
         3,
-        near_duplicate=module.near_duplicate_context,
+        near_duplicate=getattr(module, "near_duplicate_context", None),
     )
     auxiliary = unique_top(
         [

@@ -87,6 +87,22 @@ AXIS_MAP = {
     "채널별": "채널", "주택유형": "주택유형", "운송사": "운송사",
 }
 
+DATA_ROW_AXIS_HEADERS = {
+    "자치구": "자치구", "지역": "지역", "구분": "구분", "행정동": "행정동",
+    "법정동": "법정동", "연령": "연령", "성별": "성별", "업종": "업종",
+    "대상": "대상", "시설": "시설", "측정소": "측정소", "노선": "노선",
+    "기간": "기간", "년월": "년월", "일자": "일자", "시간대": "시간대",
+}
+DATA_ROW_VALUE_HEADERS = (
+    "건수", "인원수", "인원", "금액", "피해액", "비율", "이용률", "발생률",
+    "이용자수", "발생건수", "승하차", "매출", "소비", "농도", "지수",
+    "측정값", "합계", "평균",
+)
+DATA_ROW_NUMERIC_RE = re.compile(
+    r"^[+-]?\d[\d,]*(?:\.\d+)?"
+    r"(?:\s*(?:%|원|명|건|가구|대|곳|개|회|시간|분|개월|km|㎞))?$"
+)
+
 
 def normalize(text: str) -> str:
     return SPACE_RE.sub(" ", text or "").strip()
@@ -123,15 +139,40 @@ def extract_substantive_values(text: str) -> list[str]:
     return values
 
 
+def extract_data_row_values(text: str) -> list[str]:
+    """Read only numeric cells paired with an allowed analytical header."""
+    values: list[str] = []
+    for part in re.split(r"\s*·\s*", text or ""):
+        header, separator, raw_value = part.partition(":")
+        if not separator:
+            continue
+        header = normalize(header)
+        raw_value = normalize(raw_value)
+        if not any(term in header for term in DATA_ROW_VALUE_HEADERS):
+            continue
+        if DATA_ROW_NUMERIC_RE.fullmatch(raw_value) and raw_value not in values:
+            values.append(raw_value)
+    return values
+
+
 def numeric_keys(text: str) -> set[str]:
     return {re.sub(r"[\s,]", "", value) for value in extract_substantive_values(text)}
 
 
-def _axis_terms(text: str) -> list[str]:
+def _axis_terms(text: str, record_kind: str = "PAGE_CHUNK") -> list[str]:
     axes: list[str] = []
     for token, label in AXIS_MAP.items():
         if token in text and label not in axes:
             axes.append(label)
+    if record_kind == "DATA_ROW":
+        for part in re.split(r"\s*·\s*", text or ""):
+            header, separator, _ = part.partition(":")
+            if not separator:
+                continue
+            header = normalize(header)
+            for token, label in DATA_ROW_AXIS_HEADERS.items():
+                if token in header and label not in axes:
+                    axes.append(label)
     return axes
 
 
@@ -152,6 +193,14 @@ def analyze_content(
         else text
     )
     values = extract_substantive_values(measurement_text)
+    table_values = (
+        extract_data_row_values(measurement_text)
+        if record_kind == "DATA_ROW"
+        else []
+    )
+    for value in table_values:
+        if value not in values:
+            values.append(value)
     evidence_segments = [
         normalize(segment)
         for segment in EVIDENCE_SEGMENT_RE.split(measurement_text)
@@ -159,7 +208,7 @@ def analyze_content(
     ]
     nav_hits = [term for term in NAV_TERMS if term in text]
     procedure_hits = [term for term in PROCEDURE_TERMS if term in text]
-    axes = _axis_terms(text)
+    axes = _axis_terms(text, record_kind)
     source_id = source.get("id", "")
     role = source.get("role", "")
     purpose_change = bool(re.search(r"(?:증가|감소|격차|사고).{0,20}(?:위한|위해|목표)", text))
@@ -211,7 +260,17 @@ def analyze_content(
         term in text
         for term in ("피해", "사고", "누락", "체불", "미지급", "적자", "부담", "분쟁")
     )
-    neutral_change = any(term in text for term in ("증가", "감소", "급증", "급감", "증감"))
+    administrative_change = bool(
+        re.search(
+            r"(?:증감\s*(?:조정|편성|반영)|(?:예산안|계획|예정|목표).{0,20}증감)",
+            text,
+        )
+    )
+    neutral_change = (
+        any(term in text for term in ("증가", "감소", "급증", "급감", "증감"))
+        and not purpose_change
+        and not administrative_change
+    )
     positive_change = (
         not negative_harm
         and ("증가" in text or "반등" in text or "회복" in text)
@@ -344,7 +403,7 @@ def analyze_content(
         )
     )
     actual_data_value = bool(
-        record_kind == "DATA_ROW"
+        (record_kind == "DATA_ROW" and table_values)
         or re.search(
             r"(?:집계됐|기록됐|발생했|나타났|증가했|감소했|확인됐|"
             r"지급됐|관측됐|측정됐|집계 결과|실제 값)",
@@ -493,7 +552,11 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
             ("긍정 변화", analysis.get("change_direction") == "POSITIVE"),
             ("측정값", bool(analysis.get("substantive_values"))),
         ]
-        question = "확인된 증가·회복은 어느 지역·대상에서 나타났으며, 인구구조 변화와 정책 효과를 구분할 비교자료는 무엇인가?"
+        question = (
+            "제시된 증가·회복 주장은 원자료로 재현되는가? 재현된다면 어느 지역·대상에서 나타났고 인구구조 변화와 정책 효과를 어떻게 구분할 수 있는가?"
+            if analysis.get("claim_status") == "ATTRIBUTED_CLAIM"
+            else "확인된 증가·회복은 어느 지역·대상에서 나타났으며, 인구구조 변화와 정책 효과를 구분할 비교자료는 무엇인가?"
+        )
         proposed_axes = existing_axes or ["지역", "대상", "비교기간"]
     elif analysis.get("change_direction") == "UNCLASSIFIED_CHANGE":
         contract = ["중립 증감", "측정값"]
@@ -501,7 +564,11 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
             ("중립 증감", analysis.get("change_direction") == "UNCLASSIFIED_CHANGE"),
             ("측정값", bool(analysis.get("substantive_values"))),
         ]
-        question = "확인된 증감은 어느 지역·대상·기간에서 나타났으며, 규모 변화와 구성·집계방식 변화 중 무엇이 설명하는가?"
+        question = (
+            "제시된 증감 주장은 원자료로 재현되는가? 재현된다면 어느 지역·대상·기간에서 나타났고 규모 변화와 구성·집계방식 변화 중 무엇이 설명하는가?"
+            if analysis.get("claim_status") == "ATTRIBUTED_CLAIM"
+            else "확인된 증감은 어느 지역·대상·기간에서 나타났으며, 규모 변화와 구성·집계방식 변화 중 무엇이 설명하는가?"
+        )
         proposed_axes = existing_axes or ["지역", "대상", "비교기간"]
     elif analysis.get("claim_status") == "ATTRIBUTED_CLAIM":
         contract = ["귀속된 주장", "문제 근거 앵커"]

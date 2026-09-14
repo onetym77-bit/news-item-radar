@@ -212,6 +212,12 @@ class VisibleHTML(HTMLParser):
         self.anchor_parts: list[str] = []
         self.anchors: list[tuple[str, str]] = []
         self.chunks: list[str] = []
+        self.tables: list[list[list[tuple[str, str]]]] = []
+        self.table_depth = 0
+        self.current_table: list[list[tuple[str, str]]] = []
+        self.current_row: list[tuple[str, str]] | None = None
+        self.current_cell_tag: str | None = None
+        self.current_cell_parts: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         if tag in {"script", "style", "noscript", "svg"}:
@@ -219,6 +225,19 @@ class VisibleHTML(HTMLParser):
             return
         if self.skip_depth:
             return
+        if tag == "table":
+            if self.table_depth == 0:
+                self.current_table = []
+            self.table_depth += 1
+        elif tag == "tr" and self.table_depth == 1:
+            self.current_row = []
+        elif (
+            tag in {"th", "td"}
+            and self.table_depth == 1
+            and self.current_row is not None
+        ):
+            self.current_cell_tag = tag
+            self.current_cell_parts = []
         if tag == "a":
             self.href = dict(attrs).get("href")
             self.anchor_parts = []
@@ -230,6 +249,29 @@ class VisibleHTML(HTMLParser):
             return
         if self.skip_depth:
             return
+        if (
+            tag in {"th", "td"}
+            and self.current_cell_tag == tag
+            and self.current_row is not None
+        ):
+            self.current_row.append(
+                (tag, normalize(" ".join(self.current_cell_parts)))
+            )
+            self.current_cell_tag = None
+            self.current_cell_parts = []
+        elif tag == "tr" and self.table_depth == 1:
+            if self.current_row and any(value for _, value in self.current_row):
+                self.current_table.append(self.current_row)
+            self.current_row = None
+        elif tag == "table" and self.table_depth:
+            if self.table_depth == 1:
+                if self.current_table:
+                    self.tables.append(self.current_table)
+                self.current_table = []
+                self.current_row = None
+                self.current_cell_tag = None
+                self.current_cell_parts = []
+            self.table_depth -= 1
         if tag == "a" and self.href is not None:
             label = normalize(" ".join(self.anchor_parts))
             if label:
@@ -246,6 +288,8 @@ class VisibleHTML(HTMLParser):
         self.chunks.append(cleaned)
         if self.href is not None:
             self.anchor_parts.append(cleaned)
+        if self.current_cell_tag is not None:
+            self.current_cell_parts.append(cleaned)
 
 
 def normalize(value: str) -> str:
@@ -313,6 +357,103 @@ def parse_html(html: str) -> VisibleHTML:
     parser.feed(html)
     parser.close()
     return parser
+
+
+TABLE_AXIS_HEADERS = (
+    "자치구", "지역", "구분", "행정동", "법정동", "연령", "성별", "업종",
+    "대상", "시설", "측정소", "노선", "기간", "년월", "일자", "시간대",
+)
+TABLE_VALUE_HEADERS = (
+    "건수", "인원수", "인원", "금액", "피해액", "비율", "이용률", "발생률",
+    "이용자수", "발생건수", "승하차", "매출", "소비", "농도", "지수",
+    "측정값", "합계", "평균",
+)
+TABLE_FILE_METADATA_HEADERS = ("파일명", "용량", "수정일", "내려받기", "다운로드")
+TABLE_INFO_METADATA_HEADERS = (
+    "공개일자", "개방일", "갱신일", "제공기관", "제공부서", "담당자",
+    "연락처", "원본시스템",
+)
+TABLE_NUMERIC_CELL_RE = re.compile(
+    r"^[+-]?\d[\d,]*(?:\.\d+)?"
+    r"(?:\s*(?:%|원|명|건|가구|대|곳|개|회|시간|분|개월|km|㎞))?$"
+)
+
+
+def _matching_header_indexes(headers: list[str], terms: tuple[str, ...]) -> list[int]:
+    return [
+        index
+        for index, header in enumerate(headers)
+        if any(term in header for term in terms)
+    ]
+
+
+def static_verification_rows(parser: VisibleHTML, limit: int = 80) -> list[str]:
+    """Return only source-visible statistical rows, never portal metadata tables."""
+    results: list[str] = []
+    seen: set[str] = set()
+    for table in parser.tables:
+        header_position = next(
+            (
+                index
+                for index, row in enumerate(table)
+                if len(row) >= 2
+                and all(tag == "th" and value for tag, value in row)
+            ),
+            None,
+        )
+        if header_position is None:
+            continue
+        headers = [value for _, value in table[header_position]]
+        file_meta_hits = sum(
+            any(term in header for header in headers)
+            for term in TABLE_FILE_METADATA_HEADERS
+        )
+        info_meta_hits = sum(
+            any(term in header for header in headers)
+            for term in TABLE_INFO_METADATA_HEADERS
+        )
+        if file_meta_hits >= 2 or info_meta_hits >= 2:
+            continue
+        axis_indexes = _matching_header_indexes(headers, TABLE_AXIS_HEADERS)
+        value_indexes = _matching_header_indexes(headers, TABLE_VALUE_HEADERS)
+        if not axis_indexes or not value_indexes:
+            continue
+        selected_indexes = sorted(set(axis_indexes + value_indexes))
+        for row in table[header_position + 1 :]:
+            cells = [value for _, value in row]
+            if len(cells) != len(headers):
+                continue
+            if not any(cells[index] for index in axis_indexes):
+                continue
+            numeric_value_indexes = [
+                index
+                for index in value_indexes
+                if cells[index] and TABLE_NUMERIC_CELL_RE.fullmatch(cells[index])
+            ]
+            if not numeric_value_indexes:
+                continue
+            included = sorted(set(axis_indexes + numeric_value_indexes))
+            row_text = normalize(
+                " · ".join(
+                    f"{headers[index]}: {cells[index]}"
+                    for index in included
+                    if cells[index]
+                )
+            )
+            key = re.sub(r"[^0-9A-Za-z가-힣]", "", row_text).lower()
+            if (
+                len(row_text) < 12
+                or len(row_text) > 280
+                or not KOREAN_RE.search(row_text)
+                or not key
+                or key in seen
+            ):
+                continue
+            seen.add(key)
+            results.append(row_text)
+            if len(results) >= limit:
+                return results
+    return results
 
 
 def valid_candidate(text: str) -> bool:
@@ -563,6 +704,9 @@ def extract_records(
     include_windows: bool,
 ) -> list[dict]:
     texts: list[tuple[str, str, str]] = []
+    if source["role"] == "VERIFICATION":
+        for row_text in static_verification_rows(parser):
+            texts.append((row_text, page_url, "DATA_ROW"))
     for href, label in parser.anchors:
         absolute = urljoin(page_url, href)
         if valid_candidate(label) and source_url_allowed(source["id"], absolute):
@@ -836,10 +980,14 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     else:
         best_by_item: dict[str, dict] = {}
         for row in records:
-            item_key = canonical_url(row["url"], source["url"])
+            canonical = canonical_url(row["url"], source["url"])
+            item_key = canonical
+            if source["role"] == "VERIFICATION" and row.get("record_kind") == "DATA_ROW":
+                text_key = re.sub(r"[^0-9A-Za-z가-힣]", "", row["text"]).lower()
+                item_key = f"{canonical}#data-row:{text_key}"
             current = best_by_item.get(item_key)
             if current is None or record_rank(row) > record_rank(current):
-                row["url"] = item_key
+                row["url"] = canonical
                 best_by_item[item_key] = row
         if source["id"] == "eungdapso" and any(
             key != source["url"] and row["qualified"] for key, row in best_by_item.items()

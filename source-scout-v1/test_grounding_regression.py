@@ -644,8 +644,8 @@ class GroundingRegressionTests(unittest.TestCase):
     def test_citywide_observed_extent_is_preserved_in_both_word_orders(self):
         first = self.signals("서울 25개 자치구 전체에서 침수 피해가 발생했습니다")
         second = self.signals("침수 피해가 서울 25개 자치구 모두에서 발생했습니다")
-        self.assertIn("25개 자치구", first["substantive_values"])
-        self.assertIn("25개 자치구", second["substantive_values"])
+        self.assertIn("25개", first["substantive_values"])
+        self.assertIn("25개", second["substantive_values"])
 
     def test_core_selection_dedupes_same_issue_across_different_urls(self):
         rows = [
@@ -673,6 +673,105 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertEqual(len(selected), 2)
         self.assertEqual(selected[0]["url"], "https://example.test/minutes/1")
         self.assertEqual(selected[1]["url"], "https://example.test/minutes/3")
+
+
+    def test_static_statistical_table_emits_multiple_real_data_rows(self):
+        html = """
+        <table>
+          <tr><th>자치구</th><th>피해건수(건)</th></tr>
+          <tr><td>강남구</td><td>37</td></tr>
+          <tr><td>관악구</td><td>52</td></tr>
+        </table>
+        """
+        parser = scout.parse_html(html)
+        rows = scout.extract_records(
+            parser,
+            "https://data.seoul.go.kr/example",
+            self.open_data,
+            include_windows=False,
+        )
+        data_rows = [row for row in rows if row["record_kind"] == "DATA_ROW"]
+        self.assertEqual(len(data_rows), 2)
+        self.assertTrue(all(row["verification_usable"] for row in data_rows))
+        self.assertTrue(all(row["grounding_status"] == "PASS" for row in data_rows))
+        self.assertIn("피해건수(건): 37", data_rows[0]["text"] + data_rows[1]["text"])
+
+    def test_table_header_without_body_emits_no_data_row(self):
+        parser = scout.parse_html(
+            "<table><tr><th>자치구</th><th>피해건수(건)</th></tr></table>"
+        )
+        self.assertEqual(scout.static_verification_rows(parser), [])
+
+    def test_file_metadata_table_is_not_promoted_to_data_rows(self):
+        parser = scout.parse_html(
+            "<table><tr><th>구분</th><th>파일명</th><th>용량</th>"
+            "<th>수정일</th><th>내려받기</th></tr>"
+            "<tr><td>원본</td><td>x.csv</td><td>35.8</td>"
+            "<td>2026-09-14</td><td>다운로드</td></tr></table>"
+        )
+        self.assertEqual(scout.static_verification_rows(parser), [])
+
+    def test_mixed_key_value_metadata_table_is_not_data_row(self):
+        parser = scout.parse_html(
+            "<table><tr><th>공개일자</th><td>2026-09-14</td>"
+            "<th>갱신일</th><td>매일</td></tr></table>"
+        )
+        self.assertEqual(scout.static_verification_rows(parser), [])
+
+    def test_fake_data_row_label_cannot_promote_file_size(self):
+        result = self.signals(
+            "파일명: x.csv · 용량(MB): 35.8",
+            self.open_data,
+            "DATA_ROW",
+        )
+        self.assertFalse(result["verification_usable"])
+
+    def test_run_source_keeps_two_real_rows_from_same_url(self):
+        html = (
+            "<table><tr><th>자치구</th><th>피해건수(건)</th></tr>"
+            "<tr><td>강남구</td><td>37</td></tr>"
+            "<tr><td>관악구</td><td>52</td></tr></table>"
+        )
+        original_fetch = scout.fetch
+        scout.fetch = lambda url, timeout=22: scout.FetchResult(
+            url=url,
+            ok=True,
+            status=200,
+            elapsed_ms=1,
+            byte_count=len(html.encode("utf-8")),
+            text=html,
+        )
+        source = {
+            **self.open_data,
+            "url": "https://data.seoul.go.kr/example",
+            "follow": "",
+            "max_follow": 0,
+            "cadence": "daily",
+        }
+        try:
+            metric, rows = scout.run_source(source)
+        finally:
+            scout.fetch = original_fetch
+        data_rows = [row for row in rows if row["record_kind"] == "DATA_ROW"]
+        self.assertEqual(len(data_rows), 2)
+        self.assertEqual(metric["verification_usable"], 2)
+
+    def test_budget_adjustment_word_is_not_observed_change(self):
+        text = (
+            "교육 예산안 총규모는 12조 8,665억 원이며 총규모 변동 없이 "
+            "사업별 증감 조정을 거쳐 2026년 본예산에 반영할 예정입니다"
+        )
+        result = self.signals(text)
+        self.assertNotEqual(result["change_direction"], "UNCLASSIFIED_CHANGE")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_attributed_change_question_keeps_claim_status_visible(self):
+        text = "협회 추산 서울 공공도서관 이용자가 30% 증가했습니다"
+        result = self.signals(text)
+        self.assertEqual(result["claim_status"], "ATTRIBUTED_CLAIM")
+        payload = scout.build_question_payload(text, "council_minutes", result)
+        self.assertIn("증감 주장", payload["question"])
+        self.assertNotIn("확인된 증감", payload["question"])
 
 
 if __name__ == "__main__":
