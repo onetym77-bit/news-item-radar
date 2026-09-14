@@ -687,6 +687,64 @@ def youtube_baseline() -> dict:
     return result
 
 
+DIVERSITY_STOPWORDS = {
+    "서울", "서울시", "시장님", "의원님", "그리고", "그러나", "대해서", "관련", "말씀",
+    "지금", "이렇게", "있습니다", "것입니다", "합니다", "했습니다", "대한",
+}
+
+
+def record_rank(row: dict) -> tuple:
+    return (
+        row["qualified"],
+        row["precheck_status"] == "PASS",
+        row["grounding_status"] == "PASS",
+        row["score"],
+        len(row["text"]),
+    )
+
+
+def content_tokens(text: str) -> set[str]:
+    return {
+        token
+        for token in re.findall(r"[0-9A-Za-z가-힣]{2,}", (text or "").lower())
+        if token not in DIVERSITY_STOPWORDS
+    }
+
+
+def near_duplicate_context(left: dict, right: dict) -> bool:
+    left_text = re.sub(r"\s+", " ", left.get("text", "")).strip()
+    right_text = re.sub(r"\s+", " ", right.get("text", "")).strip()
+    if not left_text or not right_text:
+        return False
+    if left_text in right_text or right_text in left_text:
+        return True
+    left_tokens = content_tokens(left_text)
+    right_tokens = content_tokens(right_text)
+    if not left_tokens or not right_tokens:
+        return False
+    overlap = len(left_tokens & right_tokens) / len(left_tokens | right_tokens)
+    return overlap >= 0.62
+
+
+def select_distinct_council_records(records: list[dict], source_url: str) -> list[dict]:
+    """Keep multiple issues per minutes URL while collapsing overlapping windows."""
+    grouped: dict[str, list[dict]] = {}
+    for row in records:
+        row["url"] = canonical_url(row["url"], source_url)
+        grouped.setdefault(row["url"], []).append(row)
+    selected: list[dict] = []
+    for rows in grouped.values():
+        chosen: list[dict] = []
+        for row in sorted(rows, key=record_rank, reverse=True):
+            if any(near_duplicate_context(row, prior) for prior in chosen):
+                continue
+            chosen.append(row)
+            if len(chosen) >= 3:
+                break
+        selected.extend(chosen)
+    return selected
+
+
 def run_source(source: dict) -> tuple[dict, list[dict]]:
     main = fetch(source["url"])
     fetches = [main]
@@ -736,42 +794,31 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         }
         records.extend(extract_records(parser, page_url, source, include_windows))
 
-    best_by_item: dict[str, dict] = {}
-    for row in records:
-        item_key = canonical_url(row["url"], source["url"])
-        current = best_by_item.get(item_key)
-        row_rank = (
-            row["qualified"],
-            row["precheck_status"] == "PASS",
-            row["grounding_status"] == "PASS",
-            row["score"],
-            len(row["text"]),
-        )
-        current_rank = (
-            current["qualified"],
-            current["precheck_status"] == "PASS",
-            current["grounding_status"] == "PASS",
-            current["score"],
-            len(current["text"]),
-        ) if current else None
-        if current is None or row_rank > current_rank:
-            row["url"] = canonical_url(row["url"], source["url"])
-            best_by_item[item_key] = row
-    if source["id"] == "eungdapso" and any(
-        key != source["url"] and row["qualified"] for key, row in best_by_item.items()
-    ):
-        best_by_item.pop(source["url"], None)
-    item_records = list(best_by_item.values())
-    if source["role"] == "VERIFICATION":
-        deduped: dict[str, dict] = {}
-        for row in item_records:
-            text_key = re.sub(r"[^0-9A-Za-z가-힣]", "", row["text"]).lower()
-            current = deduped.get(text_key)
-            if current is None or (row["qualified"], row["score"]) > (
-                current["qualified"], current["score"]
-            ):
-                deduped[text_key] = row
-        item_records = list(deduped.values())
+    if source["id"] == "council_minutes":
+        item_records = select_distinct_council_records(records, source["url"])
+    else:
+        best_by_item: dict[str, dict] = {}
+        for row in records:
+            item_key = canonical_url(row["url"], source["url"])
+            current = best_by_item.get(item_key)
+            if current is None or record_rank(row) > record_rank(current):
+                row["url"] = item_key
+                best_by_item[item_key] = row
+        if source["id"] == "eungdapso" and any(
+            key != source["url"] and row["qualified"] for key, row in best_by_item.items()
+        ):
+            best_by_item.pop(source["url"], None)
+        item_records = list(best_by_item.values())
+        if source["role"] == "VERIFICATION":
+            deduped: dict[str, dict] = {}
+            for row in item_records:
+                text_key = re.sub(r"[^0-9A-Za-z가-힣]", "", row["text"]).lower()
+                current = deduped.get(text_key)
+                if current is None or (row["qualified"], row["score"]) > (
+                    current["qualified"], current["score"]
+                ):
+                    deduped[text_key] = row
+            item_records = list(deduped.values())
     records = sorted(
         item_records,
         key=lambda item: (
@@ -831,7 +878,11 @@ def recommendation(metric: dict) -> str:
         return "보류: 본문 값·데이터 설명 추출 개선 필요"
     if not metric["http_ok"] or metric["failed_requests"] > max(1, metric["requests"] // 2):
         return "보류: 접속 안정성 개선 필요"
-    if metric["role"] == "VERIFICATION" and metric["extracted"] >= 3:
+    if (
+        metric["role"] == "VERIFICATION"
+        and metric.get("verification_usable", 0) >= 1
+        and metric.get("qualified", 0) >= 1
+    ):
         return "검증 데이터 지도에 편입"
     if metric.get("cadence") == "monthly" and metric["qualified"] >= 1:
         return "월간 구조신호로 시험 편입"

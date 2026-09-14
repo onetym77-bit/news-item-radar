@@ -246,6 +246,104 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertEqual(payload["grounding_status"], "PASS")
         self.assertNotIn("관리 공백", payload["question"])
 
+    def test_council_issue_mention_with_only_speaking_time_is_held(self):
+        result = self.signals(
+            "삼성역 철근 누락 사고 이야기하겠습니다. 남은 시간이 12분입니다. "
+            "4년 동안 40분씩 1 대 1로 시정질문을 했습니다."
+        )
+        self.assertEqual(result["content_class"], "ISSUE_MENTION_ONLY")
+        self.assertEqual(result["precheck_status"], "HOLD")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_complaint_volume_dashboard_is_not_a_problem_candidate(self):
+        result = self.signals(
+            "(2026. 09. 14 현재) 민원 현황판 오늘 4,714건, "
+            "4월 234,504건, 5월 238,771건, 6월 243,815건 · 월별 민원접수 건수",
+            {
+                "id": "eungdapso", "name": "응답소", "local": True,
+                "voice": True, "role": "DISCOVERY",
+            },
+            "CONTEXT_WINDOW",
+        )
+        self.assertEqual(result["content_class"], "AGGREGATE_ACTIVITY_DASHBOARD")
+        self.assertEqual(result["precheck_status"], "HOLD")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_harm_increase_cannot_be_labeled_positive(self):
+        text = "서울 임금체불은 100건으로 급증하며 증가세를 보였습니다"
+        result = self.signals(text)
+        self.assertEqual(result["change_direction"], "NEGATIVE")
+        self.assertEqual(result["evidence_anchor"], "MEASURED_PROBLEM_SIGNAL")
+        payload = scout.build_question_payload(text, "council_minutes", result)
+        self.assertNotIn("증가·회복", payload["question"])
+
+    def test_distinct_issues_on_one_minutes_url_survive_overlap_dedup(self):
+        common = {
+            "qualified": True,
+            "precheck_status": "PASS",
+            "grounding_status": "PASS",
+            "score": 8,
+            "url": "https://ms.smc.seoul.kr/record/one",
+        }
+        rows = [
+            {**common, "text": "전세사기 피해 100가구, 보증금 피해액 200억 원"},
+            {**common, "text": "전세사기 피해 100가구, 보증금 피해액 200억 원이 서울에서 확인됐다"},
+            {**common, "text": "시내버스 소송 부담 500억 원, 운송사별 보조금 검증 필요"},
+        ]
+        selected = scout.select_distinct_council_records(
+            rows, "https://ms.smc.seoul.kr/kr/assembly/main.do"
+        )
+        self.assertEqual(len(selected), 2)
+        self.assertTrue(any("전세사기" in row["text"] for row in selected))
+        self.assertTrue(any("시내버스" in row["text"] for row in selected))
+
+    def test_feed_keeps_distinct_core_issues_with_same_url(self):
+        base = {
+            "source_id": "council_minutes",
+            "source_name": "서울시의회 회의록",
+            "score": 8,
+            "qualified": True,
+            "grounding_status": "PASS",
+            "precheck_status": "PASS",
+            "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+            "url": "https://ms.smc.seoul.kr/record/one",
+        }
+        rows = [
+            {**base, "text": "전세사기 피해 100가구", "question": "어디에 집중됐나?"},
+            {**base, "text": "시내버스 소송 부담 500억 원", "question": "누가 부담하나?"},
+        ]
+
+        class FakeModule:
+            @staticmethod
+            def run_source(source):
+                metric = {
+                    "id": source["id"], "name": source["name"], "role": source["role"],
+                    "http_ok": True, "status": 200, "status_detail": "OK",
+                    "requests": 1, "failed_requests": 0, "extracted": 2,
+                    "precheck_pass": 2, "grounded": 2, "qualified": 2,
+                }
+                return metric, rows
+
+        FakeModule.SOURCES = [self.council]
+        built = feed.build_feed(FakeModule)
+        self.assertEqual(len(built["core_discovery"]), 2)
+
+    def test_verification_source_is_not_recommended_without_usable_asset(self):
+        metric = {
+            "role": "VERIFICATION",
+            "status_detail": "OK",
+            "http_ok": True,
+            "failed_requests": 0,
+            "requests": 1,
+            "extracted": 10,
+            "verification_usable": 0,
+            "qualified": 0,
+            "cadence": "continuous",
+            "localization_leads": 0,
+            "strong": 0,
+        }
+        self.assertNotEqual(scout.recommendation(metric), "검증 데이터 지도에 편입")
+
     def test_high_score_navigation_cannot_reenter_verification_map(self):
         fake_record = {
             "source_id": "seoul_open_data",

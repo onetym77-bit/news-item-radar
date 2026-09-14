@@ -108,6 +108,24 @@ CASES = [
         "council",
     ),
     (
+        "의회 쟁점 언급과 발언시간",
+        "삼성역 철근 누락 사고 이야기하겠습니다. 남은 시간이 12분입니다. 4년 동안 40분씩 1 대 1로 시정질문을 했습니다.",
+        "MEASURED_PROBLEM_SIGNAL",
+        "council",
+    ),
+    (
+        "응답소 단순 접수 현황판",
+        "(2026. 09. 14 현재) 민원 현황판 오늘 4,714건, 4월 234,504건, 5월 238,771건 · 월별 민원접수 건수",
+        "DIRECT_PROBLEM_SIGNAL",
+        "eungdapso",
+    ),
+    (
+        "임금체불 증가",
+        "서울 임금체불은 100건으로 급증하며 증가세를 보였습니다",
+        "긍정 회복으로 오분류",
+        "council",
+    ),
+    (
         "외국인 카드 총액",
         "서울 외국인 카드소비 총액 1조 원 자치구별·업종별 현황",
         "NONE",
@@ -132,6 +150,7 @@ SOURCES = {
     "open_data": {"id": "seoul_open_data", "name": "열린데이터", "local": True, "voice": False, "role": "VERIFICATION"},
     "research": {"id": "seoul_research", "name": "서울연구원", "local": True, "voice": False, "role": "BOTH"},
     "labor": {"id": "labor_arrears", "name": "체불통계", "local": False, "voice": False, "role": "BOTH"},
+    "eungdapso": {"id": "eungdapso", "name": "응답소", "local": True, "voice": True, "role": "DISCOVERY"},
 }
 
 
@@ -151,7 +170,7 @@ def main() -> int:
     lines = [
         "# 질문 근거 검사 수정 전후 비교",
         "",
-        "- 동일 자료: 2026-09-14 실제 실행에서 확인된 오탐·오분류 16건과 보존해야 할 양성 3건",
+        "- 동일 자료: 2026-09-14 실제 실행에서 확인된 오탐·오분류 19건과 보존해야 할 양성 3건",
         "- 수정 전은 당시 실행 결과·질문을 요약했고, 수정 후는 현재 분류기를 같은 문장에 다시 적용한 값",
         "",
         "| 사례 | 수정 전 | 수정 후 | 자동 처리 |",

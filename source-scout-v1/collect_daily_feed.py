@@ -13,6 +13,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -114,11 +115,15 @@ def discovery_question(row: dict) -> str:
 
 
 
-def unique_top(rows: list[dict], limit: int) -> list[dict]:
+def unique_top(rows: list[dict], limit: int, *, dedupe_by: str = "text") -> list[dict]:
     selected: list[dict] = []
     seen: set[str] = set()
     for row in sorted(rows, key=lambda item: item.get("score", 0), reverse=True):
-        key = row.get("url") or row.get("text")
+        if dedupe_by == "url":
+            key = row.get("url") or row.get("text")
+        else:
+            key = re.sub(r"[^0-9A-Za-z가-힣]", "", row.get("text", "")).lower()
+            key = key or row.get("url")
         if not key or key in seen:
             continue
         seen.add(key)
@@ -162,6 +167,7 @@ def build_feed(module) -> dict:
             and row.get("grounding_status") == "PASS"
         ],
         1,
+        dedupe_by="url",
     )
     verification = unique_top(
         [
@@ -176,6 +182,7 @@ def build_feed(module) -> dict:
             and row.get("grounding_status") == "PASS"
         ],
         4,
+        dedupe_by="url",
     )
     held = unique_top(
         [

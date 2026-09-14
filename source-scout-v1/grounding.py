@@ -41,7 +41,7 @@ HYPOTHETICAL_TERMS = (
     "예를 들어", "예를 들면", "이라고 치면",
 )
 POSITIVE_CHANGE_TERMS = (
-    "출생아", "회복세", "반등", "개선됐다", "개선되었습니다", "증가세",
+    "출생아", "회복세", "반등", "개선됐다", "개선되었습니다",
 )
 
 CONCERN_TERMS = (
@@ -131,16 +131,38 @@ def analyze_content(
             text,
         )
     )
+    problem_value_link = cost_problem or bool(
+        re.search(
+            r"(?:피해|사고|누락|체불|미지급|적자|불편|대기|중단|분쟁|접수|증가|감소|급증|급감)"
+            r".{0,36}\d[\d,]*(?:\.\d+)?\s*(?:%|조\s*원|억\s*원|만\s*원|원|명|가구|건|곳|개|개월|km|㎞)"
+            r"|\d[\d,]*(?:\.\d+)?\s*(?:%|조\s*원|억\s*원|만\s*원|원|명|가구|건|곳|개|개월|km|㎞)"
+            r".{0,36}(?:피해|사고|누락|체불|미지급|적자|불편|대기|중단|분쟁|접수|증가|감소|급증|급감)",
+            text,
+        )
+    )
+    issue_mention_only = bool(
+        source_id == "council_minutes"
+        and re.search(r"(?:사고|누락|문제).{0,30}(?:이야기|말씀|질문)(?:하겠|드리겠)", text)
+        and not problem_value_link
+    )
+    aggregate_complaint_dashboard = bool(
+        source_id == "eungdapso"
+        and ("민원 현황판" in text or "월별 민원접수 건수" in text)
+    )
     concern = any(term in text for term in CONCERN_TERMS)
     speech = any(term in text for term in SPEECH_TERMS)
     hypothetical = any(term in text for term in HYPOTHETICAL_TERMS)
+    negative_harm = any(
+        term in text
+        for term in ("피해", "사고", "누락", "체불", "미지급", "적자", "부담", "분쟁")
+    )
     positive_change = (
-        ("증가" in text or "반등" in text or "회복" in text)
+        not negative_harm
+        and ("증가" in text or "반등" in text or "회복" in text)
         and any(term in text for term in POSITIVE_CHANGE_TERMS)
-        and not any(term in text for term in ("피해 증가", "부담 증가", "사고 증가", "체불 증가"))
     )
     change_direction = "POSITIVE" if positive_change else (
-        "NEGATIVE" if any(term in text for term in ("피해", "사고", "체불", "미지급", "적자", "부담")) else "AMBIGUOUS"
+        "NEGATIVE" if negative_harm else "AMBIGUOUS"
     )
 
     content_class = "REPORTABLE_TEXT"
@@ -159,9 +181,15 @@ def analyze_content(
     elif any(term in text for term in PLATFORM_NOTICE_TERMS):
         content_class, precheck_status = "PLATFORM_NOTICE", "FAIL"
         precheck_reason = "데이터 포털 이용 안내"
+    elif aggregate_complaint_dashboard:
+        content_class, precheck_status = "AGGREGATE_ACTIVITY_DASHBOARD", "HOLD"
+        precheck_reason = "단순 접수 총량이며 이상·피해 또는 시민 경험은 확인되지 않음"
     elif hypothetical:
         content_class, precheck_status = "HYPOTHETICAL_EXAMPLE", "HOLD"
         precheck_reason = "가정값·예시이며 실제 관찰값 아님"
+    elif issue_mention_only:
+        content_class, precheck_status = "ISSUE_MENTION_ONLY", "HOLD"
+        precheck_reason = "쟁점 언급과 발언시간만 있고 문제 규모의 관찰값은 없음"
     elif len(nav_hits) >= 2 or (text.count("·") >= 9 and not values):
         content_class, precheck_status = "NAVIGATION", "FAIL"
         precheck_reason = "메뉴·반복 문구"
@@ -213,6 +241,7 @@ def analyze_content(
         bool(values)
         and problem
         and (observed or cost_problem)
+        and problem_value_link
         and not positive_change
         and not (routine_action and purpose_only and not observed)
     )
@@ -268,6 +297,7 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
     basis = text if anchor != "NONE" or analysis.get("verification_usable") else ""
     existing_axes = list(analysis.get("breakdown_axes", []))
     contract: list[str] = []
+    contract_checks: list[tuple[str, bool]] = []
     ud_supply_evidence = (
         ("장애인콜택시" in text or "UD택시" in text)
         and bool(analysis.get("substantive_values"))
@@ -288,38 +318,75 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         question = "근거 앵커 없음 — 질문 점수 평가 제외"
         proposed_axes: list[str] = []
     elif source_id == "seoul_open_data" or analysis.get("verification_usable"):
+        contract = ["검증 가능한 데이터 구조"]
+        contract_checks = [("검증 가능한 데이터 구조", bool(analysis.get("verification_usable")))]
         question = "이 자료의 실제 값과 분류항목으로 기존 발표의 총량 또는 집중 현상을 검증할 수 있는가?"
         proposed_axes = existing_axes or ["지역", "대상", "시간"]
     elif ud_supply_evidence:
         contract = ["운행", "요청 또는 매칭", "시간 측정값"]
+        contract_checks = [
+            ("운행", "운행" in text or "운영시간" in text),
+            ("요청 또는 매칭", "요청" in text or "매칭" in text),
+            ("시간 측정값", any("시" in value or "시간" in value for value in analysis.get("substantive_values", []))),
+        ]
         question = "공급량과 운영시간을 실제 요청량 자료와 대조하면 어느 시간대와 지역에서 수요·공급 차이가 나타나는가?"
         proposed_axes = existing_axes or ["시간대", "지역", "요청량"]
     elif rent_evidence:
         contract = ["전세사기", "피해", "측정값"]
+        contract_checks = [
+            ("전세사기", "전세사기" in text),
+            ("피해", "피해" in text),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
         question = "확인된 피해 규모를 자치구·주택유형별로 나누면 집중이 있는가? 지원 대상·금액 분포와 일치하는가?"
         proposed_axes = existing_axes or ["자치구", "주택유형", "지원 대상"]
     elif bus_lawsuit_evidence:
         contract = ["시내버스", "소송", "측정값"]
+        contract_checks = [
+            ("시내버스", "시내버스" in text),
+            ("소송", "소송" in text),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
         question = "제시된 소송 부담 추산은 운송사별·회계연도별로 어디에 집중되는가? 보조금·계약자료로 추산을 확인할 수 있는가?"
         proposed_axes = existing_axes or ["운송사", "회계연도", "보조금"]
     elif analysis.get("change_direction") == "POSITIVE":
+        contract = ["긍정 변화", "측정값"]
+        contract_checks = [
+            ("긍정 변화", analysis.get("change_direction") == "POSITIVE"),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
         question = "확인된 증가·회복은 어느 지역·대상에서 나타났으며, 인구구조 변화와 정책 효과를 구분할 비교자료는 무엇인가?"
         proposed_axes = existing_axes or ["지역", "대상", "비교기간"]
     elif anchor == "DECOMPOSABLE_STRUCTURE":
+        contract = ["분해 가능한 구조", "측정값"]
+        contract_checks = [
+            ("분해 가능한 구조", anchor == "DECOMPOSABLE_STRUCTURE"),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
         question = "원문 수치를 지역·대상·시간 등 확인 가능한 분류항목으로 나누면 어떤 집중이나 격차가 나타나는가?"
         proposed_axes = existing_axes or ["지역", "대상", "시간"]
     elif analysis.get("claim_status") == "ATTRIBUTED_CLAIM":
+        contract = ["귀속된 주장", "문제 근거 앵커"]
+        contract_checks = [
+            ("귀속된 주장", analysis.get("claim_status") == "ATTRIBUTED_CLAIM"),
+            ("문제 근거 앵커", anchor != "NONE"),
+        ]
         question = "이 주장의 수치와 비교 기준을 원자료로 재현할 수 있는가? 다른 설명을 적용해도 차이가 남는가?"
         proposed_axes = existing_axes or ["원자료", "비교 기준", "대안 설명"]
     else:
+        contract = ["문제 근거 앵커"]
+        contract_checks = [("문제 근거 앵커", anchor in {"DIRECT_PROBLEM_SIGNAL", "MEASURED_PROBLEM_SIGNAL"})]
         question = "확인된 문제 징후는 어느 범위에서 반복되며, 정상 변동과 구분할 비교자료는 무엇인가?"
         proposed_axes = existing_axes or ["범위", "기간", "비교집단"]
 
     source_numbers = numeric_keys(text)
     question_numbers = numeric_keys(question)
     issues: list[str] = []
-    if basis and basis not in text:
-        issues.append("질문 근거가 원문과 불일치")
+    if basis and not analysis.get("anchor_facts") and not analysis.get("verification_usable"):
+        issues.append("질문 근거로 확인된 앵커 문장이 없음")
+    for label, supported in contract_checks:
+        if not supported:
+            issues.append(f"질문 템플릿 필수 근거 없음: {label}")
     unsupported = sorted(question_numbers - source_numbers)
     if unsupported:
         issues.append("질문에 원문 밖 수치: " + ", ".join(unsupported))
