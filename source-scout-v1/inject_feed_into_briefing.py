@@ -41,13 +41,14 @@ def render(feed: dict) -> str:
     else:
         lines.extend(
             [
-                "| 관찰 단서 | 붙일 질문 | 점수 | 원문 |",
-                "|---|---|---:|---|",
+                "| 관찰 단서 | 근거 앵커 | 붙일 질문 | 점수 | 원문 |",
+                "|---|---|---|---:|---|",
             ]
         )
         for row in core:
             lines.append(
-                f"| {md(row.get('text', ''))} | {md(row.get('question', ''))} | "
+                f"| {md(row.get('text', ''))} | {row.get('evidence_anchor', 'NONE')} | "
+                f"{md(row.get('question', ''))} | "
                 f"{row.get('score', 0)} | [원문]({row.get('url', '')}) |"
             )
         lines.append("")
@@ -60,6 +61,7 @@ def render(feed: dict) -> str:
             lines.extend(
                 [
                     f"- 단서: {md(row.get('text', ''))}",
+                    f"- 근거 앵커: {row.get('evidence_anchor', 'NONE')}",
                     f"- 질문: {md(row.get('question', ''))}",
                     f"- [원문]({row.get('url', '')})",
                     "",

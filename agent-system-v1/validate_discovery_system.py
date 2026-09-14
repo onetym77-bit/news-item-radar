@@ -72,7 +72,7 @@ REQUIRED_CORE_AGENDAS = {
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="서울 기획 아이템 발굴 시스템 v1.5 검증")
+    parser = argparse.ArgumentParser(description="서울 기획 아이템 발굴 시스템 v1.6 검증")
     parser.add_argument("--briefing", type=Path, help="계측 모순까지 확인할 브리핑 파일")
     parser.add_argument("--as-of", type=date.fromisoformat, default=date.today())
     parser.add_argument(
@@ -215,19 +215,25 @@ def main() -> int:
                     errors.append(f"질문 품질 장부 중복 item_id {audit_id}")
                 audit_rows[audit_id] = audit_row
                 gate = (audit_row.get("quality_gate") or "").strip()
-                try:
-                    score = int((audit_row.get("quality_score") or "").strip())
-                except ValueError:
-                    errors.append(f"{audit_id}: 질문 품질 점수가 정수가 아님")
-                    continue
-                if not 0 <= score <= 12:
-                    errors.append(f"{audit_id}: 질문 품질 점수 범위 오류 {score}")
-                if gate == "PASS" and score < 8:
-                    errors.append(f"{audit_id}: 품질 PASS인데 점수 {score}/12")
-                if gate == "HOLD" and score < 5:
-                    errors.append(f"{audit_id}: 품질 HOLD인데 점수 {score}/12")
-                if gate == "FAIL" and score > 4:
-                    errors.append(f"{audit_id}: 품질 FAIL인데 점수 {score}/12")
+                score_text = (audit_row.get("quality_score") or "").strip()
+                if score_text == "N/A":
+                    if gate not in {"HOLD", "FAIL"}:
+                        errors.append(f"{audit_id}: 품질 {gate}인데 점수가 N/A")
+                    score = None
+                else:
+                    try:
+                        score = int(score_text)
+                    except ValueError:
+                        errors.append(f"{audit_id}: 질문 품질 점수가 정수 또는 N/A가 아님")
+                        continue
+                    if not 0 <= score <= 12:
+                        errors.append(f"{audit_id}: 질문 품질 점수 범위 오류 {score}")
+                    if gate == "PASS" and score < 8:
+                        errors.append(f"{audit_id}: 품질 PASS인데 점수 {score}/12")
+                    if gate == "HOLD" and score < 5:
+                        errors.append(f"{audit_id}: 품질 HOLD인데 점수 {score}/12")
+                    if gate == "FAIL" and score > 4:
+                        errors.append(f"{audit_id}: 품질 FAIL인데 점수 {score}/12")
                 if gate not in VALID_UPSTREAM_GATES:
                     errors.append(f"{audit_id}: 잘못된 quality_gate {gate!r}")
                 if gate == "PASS":
@@ -258,8 +264,8 @@ def main() -> int:
     if CONFIG.is_file():
         try:
             config = json.loads(CONFIG.read_text(encoding="utf-8-sig"))
-            if config.get("system_version") != "1.5":
-                errors.append("관심 레이더 system_version은 1.5여야 함")
+            if config.get("system_version") != "1.6":
+                errors.append("관심 레이더 system_version은 1.6이어야 함")
             agendas = {
                 entry.get("code")
                 for entry in config.get("agenda_domains", [])
@@ -277,7 +283,7 @@ def main() -> int:
             if missing_axes:
                 errors.append("질문 프레임 필수 축 누락: " + ", ".join(sorted(missing_axes)))
             entry_requirements = set(framework.get("entry_requirements", []))
-            missing_entries = {"객관적 현상", "시민 이해관계", "검증 경로"} - entry_requirements
+            missing_entries = {"근거 앵커", "객관적 현상", "시민 이해관계", "검증 경로"} - entry_requirements
             if missing_entries:
                 errors.append("질문 품질 진입 조건 누락: " + ", ".join(sorted(missing_entries)))
             quality_dimensions = set(framework.get("quality_dimensions", []))
@@ -296,6 +302,14 @@ def main() -> int:
             required_mandatory = {"시민 손실·권리", "경쟁 가설", "반증·판정선"}
             if not required_mandatory.issubset(mandatory_dimensions):
                 errors.append("질문 품질 필수 항목 설정 누락")
+            if framework.get("evidence_anchor_required") is not True:
+                errors.append("질문 점수 전 근거 앵커가 필요함")
+            if set(framework.get("evidence_anchor_routes", [])) != {"구체적인 문제 징후", "분해 가능한 구조 자료"}:
+                errors.append("근거 앵커는 문제 징후·구조 자료 두 경로여야 함")
+            if framework.get("administrative_record_alone_fails") is not True:
+                errors.append("사업명·단일 행정기록만인 질문은 진입 FAIL이어야 함")
+            if framework.get("unscored_gate_value") != "N/A":
+                errors.append("진입 전 미채점 값은 N/A여야 함")
             if framework.get("pass_score") != 8 or framework.get("max_score") != 12:
                 errors.append("질문 품질 PASS 기준은 8/12여야 함")
             if framework.get("minimum_competing_hypotheses") != 2:
@@ -385,6 +399,7 @@ def main() -> int:
             )
             if has_question_rows:
                 required_quality_labels = [
+                    "근거 앵커",
                     "질문 품질 점수",
                     "중심 질문",
                     "시민 손실 가설",

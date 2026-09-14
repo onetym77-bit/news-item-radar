@@ -37,6 +37,7 @@ REVIEW_FIELDS = [
     "source_id",
     "source_name",
     "auto_score",
+    "evidence_anchor",
     "text",
     "question",
     "url",
@@ -75,6 +76,9 @@ def verification_question(row: dict) -> str:
 
 def discovery_question(row: dict) -> str:
     text = row.get("text", "")
+    anchor = row.get("evidence_anchor") or row.get("signals", {}).get("evidence_anchor", "NONE")
+    if anchor == "NONE":
+        return "근거 앵커 없음 — 질문 점수 평가 제외"
     if "장애인콜택시" in text or "UD택시" in text:
         return (
             "서울 전역 12대와 06~15시 운행은 실제 요청량과 병원 이동 수요를 감당하는가, "
@@ -102,12 +106,12 @@ def discovery_question(row: dict) -> str:
         )
     if "예산" in text or "추경" in text:
         return (
-            "발표된 예산 중 실제 시민에게 집행되는 몫은 얼마이며, "
-            "사업·자치구별 집행률과 수혜 배제는 어떻게 다른가?"
+            "계획한 예산과 실제 집행 사이에 확인되는 차이는 얼마이며, "
+            "그 차이가 서비스 대상·자치구별 이용에 어떤 영향을 주는가?"
         )
     return (
-        "이 발언의 핵심 사실은 원자료로 확인되는가, 확인된다면 "
-        "어떤 시민 집단이 비용·시간·안전의 손실을 더 크게 떠안는가?"
+        "이 발언에서 확인된 문제 징후 또는 구조 자료는 무엇이며, "
+        "어떤 비교가 정상 변동과 구조적 반복을 가르는가?"
     )
 
 
@@ -174,7 +178,7 @@ def build_feed(module) -> dict:
             "discovery_core": "서울시의회 회의록",
             "discovery_auxiliary": "서울시 응답소 공개민원",
             "verification_only": ["서울 열린데이터", "서울 빅데이터캠퍼스"],
-            "warning": "모든 발굴 레코드는 S0 이전 질문 씨앗이며 기사 후보가 아님",
+            "warning": "근거 앵커를 통과한 레코드도 S0 이전 질문 씨앗이며 기사 후보가 아님",
         },
         "metrics": metrics,
         "core_discovery": core,
@@ -206,6 +210,7 @@ def update_review_queue(feed: dict) -> None:
                 "source_id": row["source_id"],
                 "source_name": row["source_name"],
                 "auto_score": str(row["score"]),
+                "evidence_anchor": row.get("evidence_anchor", "NONE"),
                 "text": concise(row["text"], 500),
                 "question": row["question"],
                 "url": row["url"],
@@ -242,6 +247,7 @@ def render_markdown(feed: dict) -> str:
                 [
                     f"### {concise(row['text'], 100)}",
                     "",
+                    f"- 근거 앵커: {row.get('evidence_anchor', 'NONE')}",
                     f"- 붙일 질문: {row['question']}",
                     f"- 자동 점수: {row['score']}점",
                     f"- 원문: {row['url']}",
@@ -258,6 +264,7 @@ def render_markdown(feed: dict) -> str:
             lines.extend(
                 [
                     f"- 단서: {concise(row['text'])}",
+                    f"- 근거 앵커: {row.get('evidence_anchor', 'NONE')}",
                     f"- 붙일 질문: {row['question']}",
                     f"- 원문: {row['url']}",
                     "",

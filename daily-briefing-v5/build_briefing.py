@@ -67,6 +67,18 @@ def quality_score(audit: dict[str, str] | None) -> int:
         return 0
 
 
+def display_quality_score(audit: dict[str, str] | None) -> str:
+    value = ((audit or {}).get("quality_score") or "미기록").strip()
+    return value if value == "N/A" else f"{value}/12"
+
+
+def evidence_anchor_label(row: dict[str, str]) -> str:
+    evidence = (row.get("new_evidence") or "").strip()
+    if not evidence:
+        return "미기록 — v1.6 근거 앵커 재심사 필요"
+    return f"{evidence} — 문제 징후/구조 자료 유형 재심사 필요"
+
+
 def due_status(review_by: str, as_of: date) -> str:
     due = parse_day(review_by)
     if due is None:
@@ -222,7 +234,8 @@ def render_verification_card(
         "",
         f"- item_id / S·E / 검토기한: {row.get('item_id')} / {row.get('stage_s')}·{row.get('editorial_e')} / {row.get('review_by') or '미정'}",
         f"- 질문 게이트: {row.get('question_gate')}",
-        f"- 질문 품질 점수: {audit.get('quality_score', '미기록')}/12",
+        f"- 근거 앵커: {markdown(evidence_anchor_label(row))}",
+        f"- 질문 품질 점수: {display_quality_score(audit)}",
         f"- 중심 질문: {markdown(audit.get('central_question') or row.get('structural_question'))}",
         f"- 시민 손실 가설: {markdown(audit.get('citizen_stake'))}",
         f"- 경쟁 가설: {markdown(audit.get('competing_hypotheses') or row.get('question_hypothesis'))}",
@@ -392,15 +405,16 @@ def render_briefing(
     else:
         lines.extend(
             [
-                "| 현상 | 질문 게이트·점수 | 중심 질문 | 시민 이해관계 | 다음 확인 | S·E |",
-                "|---|---|---|---|---|---|",
+                "| 현상 | 근거 앵커 | 질문 게이트·점수 | 중심 질문 | 시민 이해관계 | 다음 확인 | S·E |",
+                "|---|---|---|---|---|---|---|",
             ]
         )
         for row in raw_rows:
             audit = audit_by_id.get(row.get("item_id", ""), {})
             lines.append(
                 f"| {markdown(row.get('canonical_topic'))} | "
-                f"{row.get('question_gate')}·{audit.get('quality_score', '미기록')}/12 | "
+                f"{markdown(evidence_anchor_label(row))} | "
+                f"{row.get('question_gate')}·{display_quality_score(audit)} | "
                 f"{markdown(audit.get('central_question') or row.get('structural_question'))} | "
                 f"{markdown(audit.get('citizen_stake'))} | "
                 f"{markdown(row.get('next_check'))} | "
@@ -422,7 +436,7 @@ def render_briefing(
             "",
             "## 기록 필드 기준",
             "",
-            "- 질문 품질 점수 / 중심 질문 / 시민 손실 가설 / 경쟁 가설 / 판정선",
+            "- 근거 앵커 / 질문 품질 점수 / 중심 질문 / 시민 손실 가설 / 경쟁 가설 / 판정선",
             "- 출처 프레임 / 편집적 추가 / 독창성 게이트 / 왜 지금 유형 / 질문 가족",
             "- 시민 손실 근거 탐색 / 반대 근거 탐색 / 최소 판정 실험",
             "",

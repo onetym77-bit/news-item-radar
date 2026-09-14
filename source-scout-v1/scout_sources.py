@@ -123,6 +123,24 @@ LOSS_TERMS = (
     "비용", "요금", "부담", "손실", "피해", "체불", "미지급", "환불", "생계",
     "폐업", "소득", "안전", "대기", "시간",
 )
+ANCHOR_DEVIATION_TERMS = (
+    "격차", "불균형", "급증", "급감", "증가", "감소", "지연", "미달", "초과",
+    "불용", "삭감", "적자", "위반", "체불", "미지급", "폐업", "사고", "붕괴",
+    "과밀", "공백", "분쟁", "반복", "연장", "변경", "취소",
+)
+STRUCTURAL_DATA_TERMS = (
+    "총액", "평균", "비율", "건수", "이용률", "집행률", "발생률", "통계", "현황",
+    "실태", "조사", "지역별", "자치구별", "대상별", "업종별", "시간대별", "채널별",
+    "전년", "전월", "지난해", "추이", "분포",
+)
+DIRECT_EXPERIENCE_TERMS = (
+    "겪", "불편", "피해", "못하", "못했", "거절", "대기", "부담", "위험", "민원",
+    "문의", "이용 포기", "우회",
+)
+ROUTINE_ACTION_TERMS = (
+    "공사", "조성", "정비", "보수", "개선", "설치", "개관", "준공", "지원사업",
+)
+
 LOW_VALUE_TERMS = (
     "행사", "축제", "공연", "공모", "모집", "채용", "홍보", "관광", "견학",
     "체험", "수상", "기념", "개최", "캠페인", "전시",
@@ -296,6 +314,42 @@ def context_windows(chunks: list[str], limit: int = 45) -> list[str]:
     return windows
 
 
+def classify_evidence_anchor(
+    text: str,
+    source: dict,
+    *,
+    problem: bool,
+    evidence: bool,
+    loss: bool,
+) -> str:
+    """Return an evidence route, not a story or harm verdict."""
+    direct_experience = (
+        source.get("voice", False)
+        and problem
+        and any(term in text for term in DIRECT_EXPERIENCE_TERMS)
+    )
+    measured_problem = (
+        problem
+        and any(term in text for term in ANCHOR_DEVIATION_TERMS)
+        and (evidence or loss)
+    )
+    structural_data = (
+        bool(NUMBER_RE.search(text))
+        and any(term in text for term in STRUCTURAL_DATA_TERMS)
+        and not (
+            any(term in text for term in ROUTINE_ACTION_TERMS)
+            and not any(term in text for term in ANCHOR_DEVIATION_TERMS)
+        )
+    )
+    if direct_experience:
+        return "DIRECT_PROBLEM_SIGNAL"
+    if measured_problem:
+        return "MEASURED_PROBLEM_SIGNAL"
+    if structural_data:
+        return "DECOMPOSABLE_STRUCTURE"
+    return "NONE"
+
+
 def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
     score = 0
     reasons: list[str] = []
@@ -307,6 +361,10 @@ def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
     loss = any(term in text for term in LOSS_TERMS)
     low_value = any(term in text for term in LOW_VALUE_TERMS)
     boilerplate = any(term in text for term in BOILERPLATE_TERMS)
+    evidence_anchor = classify_evidence_anchor(
+        text, source, problem=problem, evidence=evidence, loss=loss
+    )
+    routine_action = any(term in text for term in ROUTINE_ACTION_TERMS)
 
     if seoul_scope:
         score += 2 if explicit_seoul else 1
@@ -317,6 +375,11 @@ def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
     if evidence:
         score += 2
         reasons.append("수치·공개근거")
+    if evidence_anchor == "DECOMPOSABLE_STRUCTURE" and not problem:
+        score += 2
+        reasons.append("분해 가능한 구조 자료")
+    if evidence_anchor == "NONE" and routine_action:
+        reasons.append("사업·공사명 단독")
     if implementation:
         score += 1
         reasons.append("제도·집행")
@@ -343,10 +406,22 @@ def score_text(text: str, source: dict) -> tuple[int, list[str], bool, dict]:
         "loss": loss,
         "low_value": low_value,
         "boilerplate": boilerplate,
+        "evidence_anchor": evidence_anchor,
+        "routine_action": routine_action,
     }
     return score, reasons, seoul_scope, signals
 
 def question_for(text: str, source: dict) -> str:
+    problem = any(term in text for term in PROBLEM_TERMS)
+    evidence = any(term in text for term in EVIDENCE_TERMS) or bool(NUMBER_RE.search(text))
+    loss = any(term in text for term in LOSS_TERMS)
+    anchor = classify_evidence_anchor(
+        text, source, problem=problem, evidence=evidence, loss=loss
+    )
+    if anchor == "NONE":
+        return "근거 앵커 없음 — 질문 점수 평가 제외"
+    if anchor == "DECOMPOSABLE_STRUCTURE":
+        return "이 실제 총량·평균·추이를 지역·대상·시간으로 나눴을 때 어떤 차이가 확인되는가?"
     if source["voice"]:
         return "이 불편은 개인 사례인가, 반복되는 제도 공백인가?"
     if any(term in text for term in ("격차", "불균형", "집중", "편중")):
@@ -356,8 +431,8 @@ def question_for(text: str, source: dict) -> str:
     if NUMBER_RE.search(text) or any(term in text for term in ("통계", "현황", "조사")):
         return "공개된 총량 뒤에 어떤 지역·대상·업종 집중이 가려져 있는가?"
     if any(term in text for term in LOSS_TERMS):
-        return "누가 비용·시간·안전의 손실을 떠안고 있으며 왜 지금 드러났는가?"
-    return "이 변화는 일시적 사례인가, 구조적으로 반복되는 현상인가?"
+        return "확인된 손실 주장은 어떤 조건에서 반복되며, 다른 설명과 어떻게 구분되는가?"
+    return "확인된 문제 징후는 일시적 사례인가, 구조적으로 반복되는 현상인가?"
 
 
 def select_follow_links(parser: VisibleHTML, base_url: str, source: dict) -> list[str]:
@@ -440,7 +515,9 @@ def extract_records(
         if source["role"] == "VERIFICATION":
             quality_gate = signals["evidence"] and (signals["implementation"] or signals["problem"])
         else:
-            quality_gate = signals["problem"] and (signals["evidence"] or signals["loss"])
+            quality_gate = signals["evidence_anchor"] != "NONE" and (
+                signals["problem"] or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE"
+            )
         qualified = score >= 6 and seoul_scope and quality_gate and not signals["low_value"]
         localization_lead = score >= 7 and not seoul_scope and quality_gate and not signals["low_value"]
         records.append(
@@ -453,6 +530,7 @@ def extract_records(
                 "score": score,
                 "reasons": reasons,
                 "signals": signals,
+                "evidence_anchor": signals["evidence_anchor"],
                 "seoul_scope": seoul_scope,
                 "qualified": qualified,
                 "localization_lead": localization_lead,
@@ -644,7 +722,7 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
     payload = {
         "generated_at_kst": NOW_KST.isoformat(timespec="seconds"),
         "method": {
-            "qualified": "서로 다른 원문 단위로 문제성과 근거 또는 시민손실을 함께 충족한 서울형 사안",
+            "qualified": "사업명과 독립된 문제 징후 또는 분해 가능한 구조 자료를 갖춘 서울형 사안",
             "strong": "유효후보 중 휴리스틱 8점 이상인 사안",
             "warning": "자동 점수는 편집 승인 점수가 아니며 상위 후보를 사람이 재검토해야 함",
         },
@@ -657,7 +735,7 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
     )
 
     csv_fields = [
-        "source_id", "source_name", "role", "score", "seoul_scope", "qualified",
+        "source_id", "source_name", "role", "score", "evidence_anchor", "seoul_scope", "qualified",
         "localization_lead", "text", "question", "reasons", "url",
     ]
     with (OUTPUT / "candidates_latest.csv").open("w", encoding="utf-8-sig", newline="") as handle:
@@ -725,6 +803,7 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
                     f"### {index}. {tag} · {row['score']}점",
                     "",
                     f"- 단서: {row['text']}",
+                    f"- 근거 앵커: {row['evidence_anchor']}",
                     f"- 붙일 질문: {row['question']}",
                     f"- 근거 요소: {', '.join(row['reasons'])}",
                     f"- 원문: {row['url']}",
