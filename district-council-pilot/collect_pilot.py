@@ -262,15 +262,20 @@ class Client:
         self.logs = []
         self.stopped = False
 
-    def get(self, url):
+    def get(self, url, form=None):
         if not allowed(url, self.source) or self.stopped or len(self.logs) >= 10:
             return None
         if self.logs:
             time.sleep(1)
         started = time.monotonic()
-        result = {"url": url, "status": 0, "bytes": 0}
+        result = {"url": url, "status": 0, "bytes": 0, "method":"POST" if form is not None else "GET"}
         try:
-            with urlopen(Request(url, headers={"User-Agent": UA, "Accept-Language":"ko"}), timeout=18) as res:
+            headers = {"User-Agent":UA,"Accept-Language":"ko"}
+            data = urlencode(form).encode("utf-8") if form is not None else None
+            if form is not None:
+                headers["Content-Type"] = "application/x-www-form-urlencoded"
+                headers["X-Requested-With"] = "XMLHttpRequest"
+            with urlopen(Request(url, data=data, headers=headers), timeout=18) as res:
                 result["status"] = res.status
                 result["final_url"] = clean_diagnostic(res.url)
                 if not allowed(res.url, self.source):
@@ -335,30 +340,69 @@ def window_change(current, previous):
     old_urls = {identity(r["url"]) for r in old}
     return "NEW_IN_VISIBLE_WINDOW" if any(identity(r["url"]) not in old_urls for r in rows) else "NO_NEW_IN_VISIBLE_WINDOW"
 
+def recent_api_rows(records, base, source):
+    distinct = {}
+    for record in records:
+        identity = str(record.get("minId",""))
+        when = day(str(record.get("mtgDate","")))
+        if not identity.isdigit() or not when:
+            raise ValueError("Recent API record lacks a valid identifier or meeting date")
+        label = ("[임시회의록] " if record.get("tmpMinYn") == "Y" else "")
+        label += f"제 {record.get('lsnNo','')}대 {record.get('ssnNo','')}회 {record.get('ssnTpNm','')} "
+        label += f"{record.get('sessNo','')}차 {record.get('mtgCerClssNm','')} {record.get('mtgNm','')} {when}"
+        url = urljoin(base,"/assem/viewer.do")+"?minId="+identity
+        distinct.setdefault(identity,{"chunks":[label],"attrs":[["href",url]],"sort_date":when,"sort_id":int(identity)})
+    return sorted(distinct.values(),key=lambda row:(row["sort_date"],row["sort_id"]),reverse=True)
+
+def load_recent_tabs(client, source):
+    records = []
+    endpoint = urljoin(source["list_url"],"/assem/recent/LoadingList.json")
+    # Exact read-only requests made by the official recent.js: temporary/main/standing/special tabs.
+    for group in ("","B","S","T"):
+        page = client.get(endpoint,form={"searchMtgClssGrp":group,
+                         "searchTmpMinYn":"Y" if not group else "",
+                         "pageIndex":"1","recordCountPerPage":"5"})
+        if page is None:
+            raise ValueError("Recent API tab fetch failed; partial tab results are not substituted")
+        payload = json.loads(page.raw_html)
+        if not isinstance(payload,dict) or not isinstance(payload.get("list"),list):
+            raise ValueError("Recent API list schema not recognized")
+        if any(not isinstance(row,dict) for row in payload["list"]):
+            raise ValueError("Recent API row schema not recognized")
+        records.extend(payload["list"])
+    page = Page("")
+    page.rows = recent_api_rows(records,source["list_url"],source)
+    return page
+
 def run(source, as_of, count=4):
     client = Client(source)
-    probe_url = source.get("inspect_list_script")
-    probe = client.get(probe_url) if probe_url else None
     listing_url = source["list_url"]
     listing = client.get(listing_url)
     fallback = source.get("list_fallback_url",listing_url)
     if listing is None and fallback and not client.stopped and "name resolution" in client.logs[-1].get("error",""):
         listing_url = fallback
         listing = client.get(listing_url)
-    if listing is not None and probe_url and probe is None and not client.stopped:
-        probe = client.get(probe_url)
     if listing is not None and source.get("discover_list_label"):
         discovered = discover_list(listing,listing_url,source)
         if discovered:
             listing_url = discovered
             listing = client.get(discovered)
+    api_error = ""
+    if listing is not None and source.get("recent_tabs_api"):
+        try:
+            listing = load_recent_tabs(client,source)
+        except (ValueError,TypeError) as exc:
+            listing = None
+            api_error = str(exc)
     result = {"id":source["id"], "name":source["name"], "list_url":source["list_url"],
               "expected":count, "listing_ok":listing is not None, "effective_list_url":listing_url, "listed":0, "selected":[],
               "public_release_date":None, "selection":f"official_first_page_order_top{count}"}
-    if probe is not None:
-        result["diagnostic_official_script"] = clean_diagnostic(probe.raw_html[:18000])
+    if source.get("recent_tabs_api"):
+        result["selection"] = f"official_recent_4_tabs_deduplicated_meeting_date_top{count}"
+    if api_error:
+        result["api_error"] = api_error
     if listing is None:
-        result["diagnosis"] = "LIST_FETCH_FAILED"
+        result["diagnosis"] = "LIST_API_FAILED" if api_error else "LIST_FETCH_FAILED"
     else:
         selected, total = select_rows(listing, listing_url, source, count)
         result["listed"] = total

@@ -107,7 +107,6 @@
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
     "list_fallback_url": "https://council-dobong.seoul.kr/meeting/confer/recent.do",
-    "diagnostic_js": true,
     "popup_adapter": true,
     "detail_pattern": "/meeting/confer/popup\\.do",
     "id_params": [
@@ -142,7 +141,7 @@
     ],
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
-    "inspect_list_script": "https://ams.sdmcouncil.go.kr/module/assem/js/recent.js"
+    "recent_tabs_api": true
   },
   {
     "id": "yangcheon",
@@ -176,7 +175,6 @@
     ],
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
-    "diagnostic_js": true,
     "popup_adapter": true
   },
   {
@@ -224,7 +222,6 @@
     ],
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
-    "diagnostic_js": true,
     "popup_adapter": true,
     "detail_pattern": "/meeting/confer/popup\\.do",
     "id_params": [
@@ -258,7 +255,6 @@
     ],
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
-    "diagnostic_js": true,
     "detail_pattern": "/mnts/asvr/cnts/mnt/mntViewer\\.php",
     "id_params": [
       "params"
@@ -310,7 +306,6 @@
     ],
     "verified_entry_on": "2026-09-14",
     "role": "DISTRICT_CONNECTION_TEST",
-    "diagnostic_js": true,
     "popup_adapter": true,
     "detail_pattern": "/meeting/confer/popup\\.do",
     "id_params": [
