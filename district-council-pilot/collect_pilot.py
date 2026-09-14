@@ -345,6 +345,8 @@ def run(source, as_of, count=4):
     if listing is None and fallback and not client.stopped and "name resolution" in client.logs[-1].get("error",""):
         listing_url = fallback
         listing = client.get(listing_url)
+    if listing is not None and probe_url and probe is None and not client.stopped:
+        probe = client.get(probe_url)
     if listing is not None and source.get("discover_list_label"):
         discovered = discover_list(listing,listing_url,source)
         if discovered:
