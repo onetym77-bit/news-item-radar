@@ -22,6 +22,7 @@ QUEUE_FIELDS = [
     "editorial_e",
     "quality_gate",
     "quality_score",
+    "evidence_anchor",
     "central_question",
     "citizen_stake",
     "competing_hypotheses",
@@ -43,6 +44,10 @@ QUEUE_FIELDS = [
 CLOSED_STATUSES = {"탈락", "채택"}
 DIRECT_SCENES = {"관찰됨", "당사자 진술"}
 EDITORIAL_RANK = {"E3": 3, "E2": 2, "E1": 1, "E0": 0}
+EVIDENCE_ANCHOR_LABELS = {
+    "PROBLEM_SIGNAL": "구체 문제 징후",
+    "STRUCTURAL_DATA": "분해 가능한 구조 자료",
+}
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -65,6 +70,57 @@ def quality_score(audit: dict[str, str] | None) -> int:
         return int((audit or {}).get("quality_score", "0"))
     except ValueError:
         return 0
+
+
+def display_quality_score(audit: dict[str, str] | None) -> str:
+    value = ((audit or {}).get("quality_score") or "미기록").strip()
+    return value if value == "N/A" else f"{value}/12"
+
+
+def evidence_anchor_value(audit: dict[str, str] | None) -> str:
+    return ((audit or {}).get("evidence_anchor") or "").strip()
+
+
+def evidence_anchor_confirmed(audit: dict[str, str] | None) -> bool:
+    return evidence_anchor_value(audit) in EVIDENCE_ANCHOR_LABELS
+
+
+def audit_gate_confirmed(
+    row: dict[str, str],
+    audit: dict[str, str] | None,
+    allowed_gates: set[str],
+) -> bool:
+    audit = audit or {}
+    gate = (audit.get("quality_gate") or "").strip()
+    return (
+        evidence_anchor_confirmed(audit)
+        and gate in allowed_gates
+        and gate == (row.get("question_gate") or "").strip()
+    )
+
+
+def evidence_anchor_label(audit: dict[str, str] | None) -> str:
+    value = evidence_anchor_value(audit)
+    if value in EVIDENCE_ANCHOR_LABELS:
+        return EVIDENCE_ANCHOR_LABELS[value]
+    if value == "NONE":
+        return "없음 — 질문 점수 평가 제외"
+    if value == "UNRESOLVED":
+        return "성립 여부 미확인 — 질문 점수 평가 제외"
+    return "미기록 — v1.6 근거 앵커 재심사 필요"
+
+
+def anchor_recheck_reason(
+    row: dict[str, str], audit: dict[str, str] | None
+) -> str:
+    value = evidence_anchor_value(audit)
+    if not value:
+        return "근거 앵커 미기록"
+    if value not in EVIDENCE_ANCHOR_LABELS:
+        return evidence_anchor_label(audit)
+    if (audit or {}).get("quality_gate") != row.get("question_gate"):
+        return "품질 장부와 아이템 장부 판정 불일치"
+    return "재심사 필요"
 
 
 def due_status(review_by: str, as_of: date) -> str:
@@ -169,6 +225,7 @@ def merge_queue(
                 "editorial_e": row.get("editorial_e", ""),
                 "quality_gate": audit.get("quality_gate") or row.get("question_gate", ""),
                 "quality_score": audit.get("quality_score", ""),
+                "evidence_anchor": evidence_anchor_value(audit) or "PENDING_REVIEW",
                 "central_question": audit.get("central_question") or row.get("structural_question", ""),
                 "citizen_stake": audit.get("citizen_stake", ""),
                 "competing_hypotheses": audit.get("competing_hypotheses")
@@ -188,7 +245,12 @@ def merge_queue(
                 "last_updated": as_of.isoformat(),
             }
         )
-        current["blocker"] = bottleneck_for(row, current)
+        if not evidence_anchor_confirmed(audit):
+            current["blocker"] = "근거 앵커 재심사 필요"
+        elif (audit.get("quality_gate") or "").strip() != row.get("question_gate"):
+            current["blocker"] = "품질 장부와 아이템 장부 판정 불일치"
+        else:
+            current["blocker"] = bottleneck_for(row, current)
         merged.append(current)
     return sorted(
         merged,
@@ -222,7 +284,8 @@ def render_verification_card(
         "",
         f"- item_id / S·E / 검토기한: {row.get('item_id')} / {row.get('stage_s')}·{row.get('editorial_e')} / {row.get('review_by') or '미정'}",
         f"- 질문 게이트: {row.get('question_gate')}",
-        f"- 질문 품질 점수: {audit.get('quality_score', '미기록')}/12",
+        f"- 근거 앵커: {markdown(evidence_anchor_label(audit))}",
+        f"- 질문 품질 점수: {display_quality_score(audit)}",
         f"- 중심 질문: {markdown(audit.get('central_question') or row.get('structural_question'))}",
         f"- 시민 손실 가설: {markdown(audit.get('citizen_stake'))}",
         f"- 경쟁 가설: {markdown(audit.get('competing_hypotheses') or row.get('question_hypothesis'))}",
@@ -253,7 +316,9 @@ def render_briefing(
         row
         for row in active
         if row.get("stage_s") in {"S2", "S3"}
-        and row.get("question_gate") == "PASS"
+        and audit_gate_confirmed(
+            row, audit_by_id.get(row.get("item_id", "")), {"PASS"}
+        )
         and row.get("upstream_gate") == "PASS"
         and row.get("scene_status") in DIRECT_SCENES
     ]
@@ -269,7 +334,11 @@ def render_briefing(
     verification_source = [
         row
         for row in active
-        if row.get("item_id") in queue_by_id and row.get("stage_s") == "S1"
+        if row.get("item_id") in queue_by_id
+        and row.get("stage_s") == "S1"
+        and audit_gate_confirmed(
+            row, audit_by_id.get(row.get("item_id", "")), {"PASS"}
+        )
     ]
     verification_source.sort(key=lambda row: sort_key(row, audit_by_id, as_of))
     verification_rows = verification_source[:4]
@@ -280,7 +349,9 @@ def render_briefing(
         row
         for row in active
         if row.get("item_id") not in verification_ids | final_ids
-        and row.get("question_gate") in {"PASS", "HOLD"}
+        and audit_gate_confirmed(
+            row, audit_by_id.get(row.get("item_id", "")), {"PASS", "HOLD"}
+        )
     ]
     raw_rows.sort(key=lambda row: sort_key(row, audit_by_id, as_of))
     raw_rows = raw_rows[:10]
@@ -289,15 +360,50 @@ def render_briefing(
         row
         for row in active
         if row.get("stage_s") == "S1"
-        and row.get("question_gate") == "PASS"
+        and audit_gate_confirmed(
+            row, audit_by_id.get(row.get("item_id", "")), {"PASS"}
+        )
         and due_status(row.get("review_by", ""), as_of) == "OVERDUE"
     ]
     overdue.sort(key=lambda row: sort_key(row, audit_by_id, as_of))
 
-    question_pass = sum(row.get("question_gate") == "PASS" for row in active)
-    article_pass = sum(row.get("upstream_gate") == "PASS" for row in active)
-    s2_s3 = sum(row.get("stage_s") in {"S2", "S3"} for row in active)
-    scene_ready = sum(row.get("scene_status") in DIRECT_SCENES for row in active)
+    anchor_recheck = [
+        row
+        for row in active
+        if row.get("question_gate") in {"PASS", "HOLD"}
+        and not audit_gate_confirmed(
+            row, audit_by_id.get(row.get("item_id", "")), {"PASS", "HOLD"}
+        )
+    ]
+    anchor_recheck.sort(key=lambda row: sort_key(row, audit_by_id, as_of))
+
+    question_pass = sum(
+        audit_gate_confirmed(
+            row, audit_by_id.get(row.get("item_id", "")), {"PASS"}
+        )
+        for row in active
+    )
+    article_pass = sum(
+        row.get("upstream_gate") == "PASS"
+        and audit_gate_confirmed(
+            row, audit_by_id.get(row.get("item_id", "")), {"PASS"}
+        )
+        for row in active
+    )
+    s2_s3 = sum(
+        row.get("stage_s") in {"S2", "S3"}
+        and audit_gate_confirmed(
+            row, audit_by_id.get(row.get("item_id", "")), {"PASS"}
+        )
+        for row in active
+    )
+    scene_ready = sum(
+        row.get("scene_status") in DIRECT_SCENES
+        and audit_gate_confirmed(
+            row, audit_by_id.get(row.get("item_id", "")), {"PASS", "HOLD"}
+        )
+        for row in active
+    )
 
     lines = [
         "# 서울 기획기사 데일리 브리핑 v5",
@@ -312,7 +418,12 @@ def render_briefing(
         f"- S2·S3: {s2_s3}건",
         f"- 관찰·당사자 시민 장면 확보: {scene_ready}건",
         f"- 검토기한 경과 S1: {len(overdue)}건",
-        f"- 오늘의 핵심 병목: 질문 생성보다 독창성·최소 실험·손실/반대 근거·시민 장면 확인이 늦어지는 전환 병목",
+        f"- 근거 앵커 재심사 대기: {len(anchor_recheck)}건",
+        (
+            f"- 오늘의 핵심 병목: 기존 PASS/HOLD {len(anchor_recheck)}건의 근거 앵커 재심사"
+            if anchor_recheck
+            else "- 오늘의 핵심 병목: 독창성·최소 실험·손실/반대 근거·시민 장면 확인"
+        ),
         "",
         "## A. 오늘의 편집 제안",
         "",
@@ -333,6 +444,7 @@ def render_briefing(
                     f"### {markdown(row.get('canonical_topic'))}",
                     "",
                     f"- item_id / 등급: {row.get('item_id')} / {row.get('stage_s')}·{row.get('editorial_e')}·{row.get('production_p')}",
+                    f"- 근거 앵커: {markdown(evidence_anchor_label(audit))}",
                     f"- 중심 질문: {markdown(audit.get('central_question') or row.get('structural_question'))}",
                     f"- 시민 손실: {markdown(audit.get('citizen_stake'))}",
                     f"- 검증된 새 사실: {markdown(row.get('new_evidence'))}",
@@ -355,7 +467,12 @@ def render_briefing(
         ]
     )
     if not verification_rows:
-        lines.extend(["오늘 배정할 S1 질문 품질 PASS 항목 없음.", ""])
+        lines.extend(
+            [
+                "오늘 배정할 근거 앵커 확인 완료 S1 질문 품질 PASS 항목 없음.",
+                "",
+            ]
+        )
     else:
         for row in verification_rows:
             item_id = row.get("item_id", "")
@@ -392,20 +509,45 @@ def render_briefing(
     else:
         lines.extend(
             [
-                "| 현상 | 질문 게이트·점수 | 중심 질문 | 시민 이해관계 | 다음 확인 | S·E |",
-                "|---|---|---|---|---|---|",
+                "| 현상 | 근거 앵커 | 질문 게이트·점수 | 중심 질문 | 시민 이해관계 | 다음 확인 | S·E |",
+                "|---|---|---|---|---|---|---|",
             ]
         )
         for row in raw_rows:
             audit = audit_by_id.get(row.get("item_id", ""), {})
             lines.append(
                 f"| {markdown(row.get('canonical_topic'))} | "
-                f"{row.get('question_gate')}·{audit.get('quality_score', '미기록')}/12 | "
+                f"{markdown(evidence_anchor_label(audit))} | "
+                f"{row.get('question_gate')}·{display_quality_score(audit)} | "
                 f"{markdown(audit.get('central_question') or row.get('structural_question'))} | "
                 f"{markdown(audit.get('citizen_stake'))} | "
                 f"{markdown(row.get('next_check'))} | "
                 f"{row.get('stage_s')}·{row.get('editorial_e')} |"
             )
+        lines.append("")
+
+    lines.extend(["### v1.6 근거 앵커 재심사 대기", ""])
+    if not anchor_recheck:
+        lines.extend(["- 없음", ""])
+    else:
+        lines.extend(
+            [
+                "**아래 항목은 이전 판정을 보존한 재심사 목록이며, B·C 후보 수에는 포함하지 않는다.**",
+                "",
+                "| 항목 | 이전 판정·점수 | 보류 이유 | 다음 확인 |",
+                "|---|---|---|---|",
+            ]
+        )
+        for row in anchor_recheck[:10]:
+            audit = audit_by_id.get(row.get("item_id", ""), {})
+            lines.append(
+                f"| {markdown(row.get('canonical_topic'))} | "
+                f"{row.get('question_gate')}·{display_quality_score(audit)} | "
+                f"{markdown(anchor_recheck_reason(row, audit))} | "
+                f"{markdown(row.get('next_check'))} |"
+            )
+        if len(anchor_recheck) > 10:
+            lines.append(f"| 외 {len(anchor_recheck) - 10}건 |  |  |  |")
         lines.append("")
 
     editorial_result = (
@@ -422,7 +564,7 @@ def render_briefing(
             "",
             "## 기록 필드 기준",
             "",
-            "- 질문 품질 점수 / 중심 질문 / 시민 손실 가설 / 경쟁 가설 / 판정선",
+            "- 근거 앵커 / 질문 품질 점수 / 중심 질문 / 시민 손실 가설 / 경쟁 가설 / 판정선",
             "- 출처 프레임 / 편집적 추가 / 독창성 게이트 / 왜 지금 유형 / 질문 가족",
             "- 시민 손실 근거 탐색 / 반대 근거 탐색 / 최소 판정 실험",
             "",

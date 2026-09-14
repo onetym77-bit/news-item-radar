@@ -1,6 +1,6 @@
 {
   "version": "2026-09-09-v2.3",
-  "system_version": "1.5",
+  "system_version": "1.6",
   "purpose": "새 현상과 축적 통계에서 출처 프레임을 넘어 시민 손실·경쟁 가설·최소 판정 실험을 갖춘 기획 질문을 생성하기 위한 생활 의제 렌즈",
   "agenda_domains": [
     {"code": "HOUSING", "label": "주거", "core_daily": true},
@@ -19,7 +19,11 @@
     "optional_axes": ["자연스러움", "책임·대책"],
     "decomposition_dimensions": ["지역", "집단", "업종", "시간", "채널"],
     "phenomenon_patterns": ["임계치 돌파", "급증·급감", "총액·평균", "집중·이탈", "성과 발표", "제도 변경 후 결과"],
-    "entry_requirements": ["객관적 현상", "시민 이해관계", "검증 경로"],
+    "entry_requirements": ["근거 앵커", "객관적 현상", "시민 이해관계", "검증 경로"],
+    "evidence_anchor_required": true,
+    "evidence_anchor_routes": ["구체적인 문제 징후", "분해 가능한 구조 자료"],
+    "administrative_record_alone_fails": true,
+    "unscored_gate_value": "N/A",
     "quality_dimensions": ["긴장·반전", "시민 손실·권리", "분포·배제", "경쟁 가설", "책임·변경 가능성", "반증·판정선"],
     "mandatory_dimensions": ["시민 손실·권리", "경쟁 가설", "반증·판정선"],
     "pass_score": 8,
