@@ -33,7 +33,7 @@ SOURCES = [
     {
         "id": "eungdapso",
         "name": "서울시 응답소 공개민원",
-        "url": "https://eungdapso.seoul.go.kr/exp/pub/complaint_pub_lis.do",
+        "url": "https://eungdapso.seoul.go.kr/main.do",
         "role": "DISCOVERY",
         "local": True,
         "voice": True,
@@ -58,6 +58,26 @@ SOURCES = [
         "local": True,
         "voice": False,
         "follow": r"datasetView\.do",
+        "max_follow": 6,
+    },
+    {
+        "id": "seoul_bigdata",
+        "name": "서울 빅데이터캠퍼스 갱신 데이터",
+        "url": "https://bigdata.seoul.go.kr/main.do",
+        "role": "VERIFICATION",
+        "local": True,
+        "voice": False,
+        "follow": r"data/select.*Data",
+        "max_follow": 4,
+    },
+    {
+        "id": "seoul_research",
+        "name": "서울연구원 정책·연구 자료",
+        "url": "https://si.re.kr/",
+        "role": "BOTH",
+        "local": True,
+        "voice": False,
+        "follow": r"bbs/view\.do",
         "max_follow": 6,
     },
     {
@@ -358,6 +378,13 @@ def select_follow_links(parser: VisibleHTML, base_url: str, source: dict) -> lis
             )
             if relevance == 0:
                 continue
+        elif source["id"] == "seoul_research":
+            relevance = sum(
+                term in label
+                for term in ("정책리포트", "연구", "서울경제동향", "인포그래픽", "실태", "분석")
+            )
+            if relevance == 0 or any(term in label for term in LOW_VALUE_TERMS):
+                continue
         else:
             relevance = 1
         seen.add(absolute)
@@ -523,7 +550,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
 
     records: list[dict] = []
     for index, (page_url, parser) in enumerate(pages):
-        include_windows = index > 0 or source["id"] == "labor_arrears"
+        include_windows = index > 0 or source["id"] in {"labor_arrears", "eungdapso"}
         records.extend(extract_records(parser, page_url, source, include_windows))
 
     # Performance is measured per distinct source item/page, not per matching sentence.
