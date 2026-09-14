@@ -498,6 +498,21 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         and any(term in text for term in ("손실", "전가", "부채"))
         and bool(analysis.get("substantive_values"))
     )
+    sign_language_center_funding_evidence = (
+        "수어통역센터" in text
+        and bool(analysis.get("substantive_values"))
+        and any(term in text for term in ("사업비", "보조금", "자체수입", "수익금", "재정"))
+    )
+    housing_supply_mix_evidence = (
+        "주거" in text
+        and bool(analysis.get("substantive_values"))
+        and any(term in text for term in ("호", "주거 비율", "학교 부지", "공간의 구성"))
+    )
+    project_cost_overrun_evidence = (
+        len(analysis.get("substantive_values", [])) >= 2
+        and any(term in text for term in ("배", "증가", "늘", "증액"))
+        and any(term in text for term in ("구조진단", "지반조사", "설계", "공사", "방식"))
+    )
     public_rental_cap_evidence = (
         "공공임대주택" in text
         and "비율" in text
@@ -574,6 +589,45 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
             "시민 이동 기회로 넘어간 경로가 확인되는가?"
         )
         proposed_axes = ["사업·회계 항목", "연도", "부담 주체", "요금·서비스"]
+    elif sign_language_center_funding_evidence:
+        contract = ["수어통역센터", "재정·수입 제약", "측정값"]
+        contract_checks = [
+            ("수어통역센터", "수어통역센터" in text),
+            ("재정·수입 제약", any(term in text for term in ("사업비", "보조금", "자체수입", "수익금", "재정"))),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = (
+            "자치구별 수어통역센터 지원액과 자체수입 사용 승인 관행은 얼마나 다른가? "
+            "지원액이 실제 통역 건수·이용자 수요와 무관하게 배분되거나 재투자 제한이 통역 대기·"
+            "교육 축소로 이어진다면, 어느 자치구에서 서비스 격차가 가장 큰가?"
+        )
+        proposed_axes = ["자치구", "지원액", "통역 건수·수요", "자체수입 승인"]
+    elif housing_supply_mix_evidence:
+        contract = ["주거 공급 규모", "대안 규모", "측정값"]
+        contract_checks = [
+            ("주거 공급 규모", "주거" in text and "호" in text),
+            ("대안 규모", any(term in text for term in ("비율", "합의", "양보", "학교 부지"))),
+            ("측정값", bool(analysis.get("substantive_values"))),
+        ]
+        question = (
+            "언급된 주택 공급안별로 원래 공간 구성 목표, 주거 수요, 학교·교통 수용력을 함께 비교하면 "
+            "어떤 규모가 가능한가? 규모를 늘리거나 줄일 때 주거 안정의 편익과 업무·교육 기반의 손실은 "
+            "어느 집단과 지역에 돌아가는가?"
+        )
+        proposed_axes = ["공급안별 규모", "학교·교통 수용력", "주거 수요", "토지 이용"]
+    elif project_cost_overrun_evidence:
+        contract = ["비용 증가", "설계·조사 원인", "복수 측정값"]
+        contract_checks = [
+            ("비용 증가", any(term in text for term in ("배", "증가", "늘", "증액"))),
+            ("설계·조사 원인", any(term in text for term in ("구조진단", "지반조사", "설계", "공사", "방식"))),
+            ("복수 측정값", len(analysis.get("substantive_values", [])) >= 2),
+        ]
+        question = (
+            "초기 설계·조사에서 빠진 조건은 무엇이며 어떤 변경이 사업비 증가분을 만들었는가? "
+            "원안 산출서, 구조·지반조사 시점, 설계 변경과 의사결정 기록을 대조하면 예측 가능한 "
+            "누락이었는지 불가피한 변경이었는지 가를 수 있는가?"
+        )
+        proposed_axes = ["원안·변경 산출서", "조사 시점", "설계 변경", "책임 주체"]
     elif public_rental_cap_evidence:
         contract = ["공공임대주택", "비율 상한", "측정값"]
         contract_checks = [

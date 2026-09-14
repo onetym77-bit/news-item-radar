@@ -1471,5 +1471,38 @@ class GroundingRegressionTests(unittest.TestCase):
 
 
 
+    def test_standalone_meeting_datetime_label_uses_following_value(self):
+        parser = scout.parse_html("<p>일 시</p><p>2026-09-11 10:00</p>")
+        self.assertEqual(scout.document_date_from(parser), "2026-09-11")
+
+    def test_sign_language_center_budget_gets_service_gap_question(self):
+        text = (
+            "서울 25개 자치구 수어통역센터의 복지 사업비는 800만 원 수준이고 "
+            "자체수입을 목적사업에 재투자하기 어렵습니다."
+        )
+        question = scout.question_for(text, self.council)
+        self.assertIn("통역 건수·이용자 수요", question)
+        self.assertIn("서비스 격차", question)
+
+    def test_housing_supply_scenarios_get_capacity_tradeoff_question(self):
+        text = (
+            "서울 주거 비율을 높여 1만 호를 넣으면 5 대 5가 되고, "
+            "6,000호 합의 뒤 학교 부지를 전제로 8,000호까지 검토합니다."
+        )
+        question = scout.question_for(text, self.council)
+        self.assertIn("학교·교통 수용력", question)
+        self.assertIn("공간 구성 목표", question)
+
+    def test_cost_overrun_gets_design_omission_question(self):
+        text = (
+            "서울 시설의 앵커 방식에서 파일 방식으로 바꾸며 사업비가 "
+            "39억 원에서 113억 원으로 3배 늘었고 구조진단과 지반조사가 늦었습니다."
+        )
+        question = scout.question_for(text, self.council)
+        self.assertIn("초기 설계·조사에서 빠진 조건", question)
+        self.assertIn("불가피한 변경", question)
+
+
+
 if __name__ == "__main__":
     unittest.main()
