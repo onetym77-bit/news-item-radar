@@ -36,6 +36,14 @@ PROCEDURE_TERMS = (
     "의사봉", "상정", "표결", "전자투표", "위원 선임", "위원을 선임", "안건 처리",
     "개의하겠습니다", "산회를 선포", "회의규칙",
 )
+HYPOTHETICAL_TERMS = (
+    "가정하면", "가정할 때", "이용한다고 했을 때", "라고 했을 때",
+    "예를 들어", "예를 들면", "이라고 치면",
+)
+POSITIVE_CHANGE_TERMS = (
+    "출생아", "회복세", "반등", "개선됐다", "개선되었습니다", "증가세",
+)
+
 CONCERN_TERMS = (
     "우려", "수 있다", "가능성이", "전망", "예상", "주장", "촉구", "반대한다",
     "필요하다", "필요합니다",
@@ -125,19 +133,35 @@ def analyze_content(
     )
     concern = any(term in text for term in CONCERN_TERMS)
     speech = any(term in text for term in SPEECH_TERMS)
+    hypothetical = any(term in text for term in HYPOTHETICAL_TERMS)
+    positive_change = (
+        ("증가" in text or "반등" in text or "회복" in text)
+        and any(term in text for term in POSITIVE_CHANGE_TERMS)
+        and not any(term in text for term in ("피해 증가", "부담 증가", "사고 증가", "체불 증가"))
+    )
+    change_direction = "POSITIVE" if positive_change else (
+        "NEGATIVE" if any(term in text for term in ("피해", "사고", "체불", "미지급", "적자", "부담")) else "AMBIGUOUS"
+    )
 
     content_class = "REPORTABLE_TEXT"
     precheck_status = "PASS"
     precheck_reason = "구체 문장"
     if (
-        ("문의" in text or "전화" in text or "민원처리 안내" in text)
-        and (CONTACT_RE.search(text) or "서울특별시청" in text)
+        "민원처리안내" in text
+        or "민원처리 안내" in text
+        or (
+            ("문의" in text or "전화" in text)
+            and (CONTACT_RE.search(text) or "서울특별시청" in text)
+        )
     ):
         content_class, precheck_status = "CONTACT_BOILERPLATE", "FAIL"
         precheck_reason = "기관 연락처·푸터"
     elif any(term in text for term in PLATFORM_NOTICE_TERMS):
         content_class, precheck_status = "PLATFORM_NOTICE", "FAIL"
         precheck_reason = "데이터 포털 이용 안내"
+    elif hypothetical:
+        content_class, precheck_status = "HYPOTHETICAL_EXAMPLE", "HOLD"
+        precheck_reason = "가정값·예시이며 실제 관찰값 아님"
     elif len(nav_hits) >= 2 or (text.count("·") >= 9 and not values):
         content_class, precheck_status = "NAVIGATION", "FAIL"
         precheck_reason = "메뉴·반복 문구"
@@ -189,9 +213,12 @@ def analyze_content(
         bool(values)
         and problem
         and (observed or cost_problem)
+        and not positive_change
         and not (routine_action and purpose_only and not observed)
     )
-    structural = bool(values) and any(term in text for term in STRUCTURAL_TERMS)
+    structural = bool(values) and (
+        any(term in text for term in STRUCTURAL_TERMS) or positive_change
+    )
 
     anchor = "NONE"
     if precheck_status == "PASS":
@@ -202,8 +229,10 @@ def analyze_content(
         elif structural:
             anchor = "DECOMPOSABLE_STRUCTURE"
 
-    claim_status = "ATTRIBUTED_CLAIM" if any(term in text for term in ATTRIBUTION_TERMS) else (
-        "OBSERVED_OR_PUBLISHED" if anchor != "NONE" else "UNRESOLVED"
+    claim_status = "HYPOTHETICAL" if hypothetical else (
+        "ATTRIBUTED_CLAIM" if any(term in text for term in ATTRIBUTION_TERMS) else (
+            "OBSERVED_OR_PUBLISHED" if anchor != "NONE" else "UNRESOLVED"
+        )
     )
     verification_usable = (
         precheck_status == "PASS"
@@ -228,6 +257,7 @@ def analyze_content(
         "anchor_facts": anchor_facts,
         "evidence_anchor": anchor,
         "claim_status": claim_status,
+        "change_direction": change_direction,
         "verification_usable": verification_usable,
     }
 
@@ -237,6 +267,22 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
     anchor = analysis.get("evidence_anchor", "NONE")
     basis = text if anchor != "NONE" or analysis.get("verification_usable") else ""
     existing_axes = list(analysis.get("breakdown_axes", []))
+    contract: list[str] = []
+    ud_supply_evidence = (
+        ("장애인콜택시" in text or "UD택시" in text)
+        and bool(analysis.get("substantive_values"))
+        and ("운행" in text or "운영시간" in text)
+        and ("요청" in text or "매칭" in text)
+        and any("시" in value or "시간" in value for value in analysis.get("substantive_values", []))
+    )
+    rent_evidence = "전세사기" in text and "피해" in text and bool(
+        analysis.get("substantive_values")
+    )
+    bus_lawsuit_evidence = (
+        "시내버스" in text
+        and "소송" in text
+        and bool(analysis.get("substantive_values"))
+    )
 
     if anchor == "NONE" and not analysis.get("verification_usable"):
         question = "근거 앵커 없음 — 질문 점수 평가 제외"
@@ -244,15 +290,21 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
     elif source_id == "seoul_open_data" or analysis.get("verification_usable"):
         question = "이 자료의 실제 값과 분류항목으로 기존 발표의 총량 또는 집중 현상을 검증할 수 있는가?"
         proposed_axes = existing_axes or ["지역", "대상", "시간"]
-    elif "장애인콜택시" in text or "UD택시" in text:
+    elif ud_supply_evidence:
+        contract = ["운행", "요청 또는 매칭", "시간 측정값"]
         question = "공급량과 운영시간을 실제 요청량 자료와 대조하면 어느 시간대와 지역에서 수요·공급 차이가 나타나는가?"
         proposed_axes = existing_axes or ["시간대", "지역", "요청량"]
-    elif "전세사기" in text:
+    elif rent_evidence:
+        contract = ["전세사기", "피해", "측정값"]
         question = "확인된 피해 규모를 자치구·주택유형별로 나누면 집중이 있는가? 지원 대상·금액 분포와 일치하는가?"
         proposed_axes = existing_axes or ["자치구", "주택유형", "지원 대상"]
-    elif "시내버스" in text and ("소송" in text or "준공영제" in text):
+    elif bus_lawsuit_evidence:
+        contract = ["시내버스", "소송", "측정값"]
         question = "제시된 소송 부담 추산은 운송사별·회계연도별로 어디에 집중되는가? 보조금·계약자료로 추산을 확인할 수 있는가?"
         proposed_axes = existing_axes or ["운송사", "회계연도", "보조금"]
+    elif analysis.get("change_direction") == "POSITIVE":
+        question = "확인된 증가·회복은 어느 지역·대상에서 나타났으며, 인구구조 변화와 정책 효과를 구분할 비교자료는 무엇인가?"
+        proposed_axes = existing_axes or ["지역", "대상", "비교기간"]
     elif anchor == "DECOMPOSABLE_STRUCTURE":
         question = "원문 수치를 지역·대상·시간 등 확인 가능한 분류항목으로 나누면 어떤 집중이나 격차가 나타나는가?"
         proposed_axes = existing_axes or ["지역", "대상", "시간"]
@@ -280,4 +332,5 @@ def build_question_payload(text: str, source_id: str, analysis: dict) -> dict:
         "verification_axes": proposed_axes,
         "grounding_status": grounding_status,
         "grounding_issues": issues,
+        "grounding_contract": contract,
     }

@@ -53,6 +53,7 @@ class ProvenanceTests(unittest.TestCase):
             code_sha="abcdef1234567890",
             source_sha="abcdef1234567890",
             verify=False,
+            at_time="2026-09-14T10:05:00+09:00",
         )
 
     def test_preview_is_visibly_not_persisted(self):
@@ -83,6 +84,14 @@ class ProvenanceTests(unittest.TestCase):
             self.assertFalse(manifest["publishable"])
             self.assertIn("과거 날짜 재실행", args.briefing.read_text(encoding="utf-8"))
 
+    def test_expired_artifact_fails_at_read_time(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = self.make_args(Path(tmp), "preview")
+            provenance.write(args)
+            args.at_time = "2026-09-15T12:00:01+09:00"
+            with self.assertRaisesRegex(RuntimeError, "artifact expired"):
+                provenance.verify(args)
+
     def test_feed_tamper_fails_verification(self):
         with tempfile.TemporaryDirectory() as tmp:
             args = self.make_args(Path(tmp), "preview")
@@ -100,6 +109,11 @@ class ProvenanceTests(unittest.TestCase):
         self.assertNotIn("Recollect", workflow)
         self.assertIn("run_provenance.py --verify", workflow)
         self.assertIn("actions/upload-artifact@v7", workflow)
+        self.assertIn("interest-radar-v2/config/editorial_lenses.json", workflow)
+        self.assertLess(
+            workflow.index("Persist those same validated files on main"),
+            workflow.index("Upload the exact validated result"),
+        )
 
 
 if __name__ == "__main__":

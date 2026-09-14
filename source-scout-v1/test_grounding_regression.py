@@ -128,6 +128,18 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertEqual(result["content_class"], "PLATFORM_NOTICE")
         self.assertFalse(result["verification_usable"])
 
+    def test_no_space_complaint_footer_is_rejected(self):
+        result = self.signals(
+            "다 - 듣겠습니다 · 서울시 불편사항 응답소에 얘기해주세요. · 민원처리안내",
+            {
+                "id": "eungdapso", "name": "응답소", "local": True,
+                "voice": True, "role": "DISCOVERY",
+            },
+            "CONTEXT_WINDOW",
+        )
+        self.assertEqual(result["content_class"], "CONTACT_BOILERPLATE")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
     def test_complaint_request_title_without_experience_is_not_direct(self):
         result = self.signals(
             '귀하의 민원내용은 "도로시설물 단차 점검 및 보수·보강 요청"에 관한 것입니다',
@@ -167,6 +179,35 @@ class GroundingRegressionTests(unittest.TestCase):
         result = self.signals("ㅇ 운영주체 : 시립쪽방상담소(5개소)", self.open_data)
         self.assertFalse(result["verification_usable"])
 
+    def test_hypothetical_policy_example_is_held(self):
+        result = self.signals(
+            "똑같이 100명이 이용한다고 했을 때 K-패스 서울시 부담률은 60%, 다른 카드는 100%입니다"
+        )
+        self.assertEqual(result["content_class"], "HYPOTHETICAL_EXAMPLE")
+        self.assertEqual(result["precheck_status"], "HOLD")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_positive_change_uses_neutral_decomposition_question(self):
+        text = "서울 출생아 수는 2024년 4월 이후 26개월 연속 증가세를 보이고 있습니다"
+        result = self.signals(text)
+        self.assertEqual(result["change_direction"], "POSITIVE")
+        self.assertEqual(result["evidence_anchor"], "DECOMPOSABLE_STRUCTURE")
+        payload = scout.build_question_payload(text, "council_minutes", result)
+        self.assertNotIn("문제 징후", payload["question"])
+        self.assertIn("증가·회복", payload["question"])
+
+    def test_event_with_measured_harm_is_not_hard_excluded(self):
+        text = "서울 축제 압사사고 12건 발생 자치구별 안전인력 격차"
+        parser = scout.parse_html(f"<p>{text}</p>")
+        rows = scout.extract_records(
+            parser,
+            "https://ms.smc.seoul.kr/record/example",
+            self.council,
+            include_windows=False,
+        )
+        self.assertTrue(rows)
+        self.assertTrue(rows[0]["qualified"])
+
     def test_foreign_card_total_is_decomposable(self):
         result = self.signals("서울 외국인 카드소비 총액 1조 원 자치구별·업종별 현황")
         self.assertEqual(result["precheck_status"], "PASS")
@@ -184,6 +225,14 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertEqual(payload["grounding_status"], "PASS")
         self.assertNotIn("병원", payload["question"])
         self.assertNotIn("미배차", payload["question"])
+
+    def test_ud_name_alone_cannot_trigger_supply_question(self):
+        text = "서울 UD택시 사고 3건 발생"
+        result = self.signals(text)
+        payload = scout.build_question_payload(text, "council_minutes", result)
+        self.assertEqual(payload["grounding_contract"], [])
+        self.assertNotIn("공급량", payload["question"])
+        self.assertNotIn("요청량", payload["question"])
 
     def test_bus_claim_keeps_attribution_and_neutral_question(self):
         text = (

@@ -39,10 +39,10 @@ def read_policy_version(path: Path) -> str:
 
 def render_block(manifest: dict) -> str:
     mode = manifest["publication_mode"]
-    if manifest["stale"]:
+    if manifest["stale_at_generation"]:
         status = "구판 사용 금지"
     elif mode == "main" and manifest["persisted"]:
-        status = "MAIN 게시본"
+        status = "MAIN 게시본 — 유효 시한 이후에는 구판"
     elif mode == "replay":
         status = "과거 날짜 재실행 — 미리보기만"
     else:
@@ -62,7 +62,7 @@ def render_block(manifest: dict) -> str:
         "",
         f"- 원본 지문: `{manifest['feed_sha256'][:16]}`",
         f"- 본문 지문: `{manifest['briefing_body_sha256'][:16]}`",
-        f"- 구판 판정: {'예' if manifest['stale'] else '아니오'}"
+        f"- 생성 시 구판 판정: {'예' if manifest['stale_at_generation'] else '아니오'}"
         + (f" ({', '.join(manifest['stale_reasons'])})" if manifest["stale_reasons"] else ""),
         END,
         "",
@@ -95,9 +95,10 @@ def create_manifest(args: argparse.Namespace) -> dict:
         "publication_mode": args.mode,
         "publishable": args.mode == "main",
         "persisted": persisted,
-        "stale": bool(stale_reasons),
+        "stale_at_generation": bool(stale_reasons),
         "stale_reasons": stale_reasons,
         "stale_after_kst": stale_after.isoformat(timespec="seconds"),
+        "stale_evaluation": "verify_at_read_time",
         "feed_sha256": sha256_bytes(feed_bytes),
         "briefing_body_sha256": sha256_bytes(
             body_without_metadata(briefing_text).encode("utf-8")
@@ -142,6 +143,19 @@ def verify(args: argparse.Namespace) -> int:
     if manifest.get("policy_version") != current_policy:
         errors.append("policy version mismatch")
     mode = manifest.get("publication_mode")
+    at_time_raw = getattr(args, "at_time", "") or ""
+    at_time = (
+        datetime.fromisoformat(at_time_raw)
+        if at_time_raw
+        else datetime.now(ZoneInfo("Asia/Seoul"))
+    )
+    if at_time.tzinfo is None:
+        at_time = at_time.replace(tzinfo=ZoneInfo("Asia/Seoul"))
+    stale_after = datetime.fromisoformat(manifest["stale_after_kst"])
+    if at_time > stale_after:
+        errors.append(
+            f"artifact expired at {manifest['stale_after_kst']}; regenerate before use"
+        )
     if mode == "main" and manifest.get("persisted") is not True:
         errors.append("main briefing not marked persisted")
     if mode in {"preview", "replay"} and manifest.get("publishable") is True:
@@ -168,6 +182,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--code-sha", default="local")
     parser.add_argument("--source-sha", default="")
     parser.add_argument("--verify", action="store_true")
+    parser.add_argument("--at-time", default="", help="ISO time override for deterministic validation")
     return parser.parse_args()
 
 

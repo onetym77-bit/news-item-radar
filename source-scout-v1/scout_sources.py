@@ -439,8 +439,9 @@ def score_text(
         score += 1
         reasons.append("독립 검증원")
     if low_value:
-        score -= 3
-        reasons.append("행사·홍보 감점")
+        penalty = 1 if evidence_anchor != "NONE" else 3
+        score -= penalty
+        reasons.append("행사·홍보 맥락 감점" if penalty == 1 else "행사·홍보 감점")
     if analysis["precheck_status"] == "HOLD":
         score -= 2
         reasons.append("본문 근거 확인 대기")
@@ -566,19 +567,18 @@ def extract_records(
             continue
         if source["role"] == "VERIFICATION":
             quality_gate = signals["verification_usable"]
-            qualified = score >= 4 and seoul_scope and quality_gate and not signals["low_value"]
+            qualified = score >= 4 and seoul_scope and quality_gate
         else:
             quality_gate = (
                 signals["precheck_status"] == "PASS"
                 and signals["evidence_anchor"] != "NONE"
                 and (signals["problem"] or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE")
             )
-            qualified = score >= 6 and seoul_scope and quality_gate and not signals["low_value"]
+            qualified = score >= 6 and seoul_scope and quality_gate
         localization_lead = (
             score >= 7
             and not seoul_scope
             and quality_gate
-            and not signals["low_value"]
         )
         question_payload = build_question_payload(text, source.get("id", ""), signals)
         if question_payload["grounding_status"] != "PASS":
@@ -739,9 +739,6 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     best_by_item: dict[str, dict] = {}
     for row in records:
         item_key = canonical_url(row["url"], source["url"])
-        if source["role"] == "VERIFICATION":
-            text_key = re.sub(r"[^0-9A-Za-z가-힣]", "", row["text"]).lower()
-            item_key = f"text:{text_key}" if text_key else item_key
         current = best_by_item.get(item_key)
         row_rank = (
             row["qualified"],
@@ -764,8 +761,19 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         key != source["url"] and row["qualified"] for key, row in best_by_item.items()
     ):
         best_by_item.pop(source["url"], None)
+    item_records = list(best_by_item.values())
+    if source["role"] == "VERIFICATION":
+        deduped: dict[str, dict] = {}
+        for row in item_records:
+            text_key = re.sub(r"[^0-9A-Za-z가-힣]", "", row["text"]).lower()
+            current = deduped.get(text_key)
+            if current is None or (row["qualified"], row["score"]) > (
+                current["qualified"], current["score"]
+            ):
+                deduped[text_key] = row
+        item_records = list(deduped.values())
     records = sorted(
-        best_by_item.values(),
+        item_records,
         key=lambda item: (
             item["qualified"],
             item["precheck_status"] == "PASS",
