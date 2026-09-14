@@ -153,8 +153,20 @@ ROUTINE_ACTION_TERMS = (
 )
 ROUTINE_PURPOSE_TERMS = (
     "예방", "방지", "대응", "해소", "개선", "지원", "보호", "저감",
+    "위한", "위해", "목표",
 )
-ROUTINE_ACTION_RE = re.compile(r"(?:공사비|공사\s*기간|공사\s*계약|착공|준공)")
+ROUTINE_ACTION_RE = re.compile(
+    r"(?:공사비|공사\s*기간|공사\s*계약|착공|준공|"
+    r"(?:예방|방지|대응|해소|저감|개선|정비|보수|설치|조성)\s*공사)"
+)
+PURPOSE_CLAUSE_RE = re.compile(
+    r"(?:사고|피해|민원|붕괴|분쟁|체불|미지급|위험|장애|침수)"
+    r"(?:을|를)?\s*(?:예방|방지|대응|해소|개선|지원|보호|저감)"
+    r"(?:공사|사업|시설|대책)?"
+    r"|(?:격차|불균형|사고|피해|민원|위험|증가|감소|지연)"
+    r"(?:을|를)?\s*(?:줄이기\s*)?(?:위한|위해|목표(?:로)?)"
+    r"|(?:사고|피해|민원|위험)(?:을|를)?\s*(?:줄이|낮추|막기)"
+)
 OBSERVED_EVENT_RE = re.compile(
     r"(?:사고|피해|민원|붕괴|분쟁|체불|미지급).{0,24}"
     r"(?:\d[\d,]*(?:건|명|회)|발생|접수|확인|반복|증가|감소|지연|초과|미달)"
@@ -351,9 +363,10 @@ def classify_evidence_anchor(
     """Return an evidence route, not a story or harm verdict."""
     routine_action = is_routine_action(text)
     purpose_only = routine_action and any(term in text for term in ROUTINE_PURPOSE_TERMS)
-    observed_event = bool(OBSERVED_EVENT_RE.search(text))
-    observed_change = any(term in text for term in OBSERVED_CHANGE_TERMS)
-    adverse_state = any(term in text for term in ANCHOR_DEVIATION_TERMS)
+    observation_text = PURPOSE_CLAUSE_RE.sub(" ", text)
+    observed_event = bool(OBSERVED_EVENT_RE.search(observation_text))
+    observed_change = any(term in observation_text for term in OBSERVED_CHANGE_TERMS)
+    adverse_state = any(term in observation_text for term in ANCHOR_DEVIATION_TERMS)
     direct_experience = (
         source.get("voice", False)
         and problem

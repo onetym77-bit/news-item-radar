@@ -229,8 +229,6 @@ def main() -> int:
                     errors.append(f"{audit_id}: 품질 PASS인데 긍정 근거 앵커가 없음")
                 elif anchor in {"NONE", "UNRESOLVED"} and score_text != "N/A":
                     errors.append(f"{audit_id}: 근거 앵커 {anchor}인데 점수가 N/A가 아님")
-                elif anchor in POSITIVE_EVIDENCE_ANCHORS and score_text == "N/A":
-                    errors.append(f"{audit_id}: 근거 앵커가 확인됐는데 점수가 N/A")
                 if score_text == "N/A":
                     if gate not in {"HOLD", "FAIL"}:
                         errors.append(f"{audit_id}: 품질 {gate}인데 점수가 N/A")

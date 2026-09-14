@@ -66,6 +66,16 @@ class EvidenceAnchorTests(unittest.TestCase):
         self.assertEqual(signals["evidence_anchor"], "NONE")
         self.assertFalse(score >= 6 and signals["evidence_anchor"] != "NONE")
 
+    def test_prevention_compound_without_spacing_is_not_an_accident_signal(self):
+        text = "서울 어린이 안전사고 예방공사 5억원"
+        _, _, _, signals = scout.score_text(text, self.council)
+        self.assertEqual(signals["evidence_anchor"], "NONE")
+
+    def test_change_word_in_a_project_goal_is_not_observed_change(self):
+        text = "서울 사고 감소를 위한 안전시설 설치 5억원"
+        _, _, _, signals = scout.score_text(text, self.council)
+        self.assertEqual(signals["evidence_anchor"], "NONE")
+
     def test_agency_name_does_not_block_structural_data(self):
         text = "서울교통공사 2026년 월별 이용률 70%"
         _, _, _, signals = scout.score_text(text, self.council)
