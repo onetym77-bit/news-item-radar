@@ -138,14 +138,25 @@ def select_rows(page, base, source, count=4):
 
 def transcript(page):
     text = norm(" ".join(page.chunks))
-    markers = list(re.finditer(r"[○◯]", text))
-    if ERROR_BODY.search(text) or len(markers) < 2:
+    if ERROR_BODY.search(text):
         return "", []
-    parts = [text[m.end(): markers[i+1].start() if i+1 < len(markers) else len(text)]
-             for i, m in enumerate(markers)]
-    # At least two speech turns and meaningful Korean content, not a successful HTTP shell.
+    speaker = re.compile(
+        r"^(?:(?:위원장|부위원장|의장|부의장)\s*[가-힣]{2,5}"
+        r"|[가-힣]{2,5}\s*(?:위원|의원)"
+        r"|[가-힣·]{2,30}(?:과장|국장|팀장|소장|동장|이사장|대표이사|구청장|담당관|전문위원)\s*[가-힣]{2,5})"
+    )
+    parts = []
+    for chunk in re.split(r"[○◯]", text)[1:]:
+        chunk = chunk.strip()
+        if parts and re.match(r"(?:출석|결석|청가|서명|기록)", chunk):
+            break
+        chunk = re.split(r"COPYRIGHT|copyright", chunk, maxsplit=1)[0].strip()
+        if speaker.match(chunk):
+            parts.append(chunk)
+        elif parts and chunk:
+            parts[-1] += " ○ " + chunk
     body = " ○ ".join(parts)
-    if len(re.findall(r"[가-힣]", body)) < 200:
+    if len(parts) < 2 or len(re.findall(r"[가-힣]", body)) < 200:
         return "", []
     return body, parts
 
