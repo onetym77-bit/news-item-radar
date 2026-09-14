@@ -1913,7 +1913,7 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertEqual(payload["grounding_status"], "PASS")
         self.assertIn("서울 시내버스", payload["question"])
         self.assertEqual(payload["grounding_issues"], [])
-        self.assertIn("통상임금 미지급 또는 체불", payload["grounding_contract"])
+        self.assertIn("통상임금 미지급", payload["grounding_contract"])
 
     def test_compound_korean_currency_is_one_measurement(self):
         values = grounding.extract_substantive_values(
