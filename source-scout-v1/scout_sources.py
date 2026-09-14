@@ -51,6 +51,7 @@ def freshness_metadata(
     source: dict,
     observed_date: str,
     *,
+    basis: str = "document_date",
     today: date = TODAY,
 ) -> dict:
     cadence = source.get("cadence", "continuous")
@@ -64,7 +65,7 @@ def freshness_metadata(
         "carryover_until_days": carryover_days,
         "freshness_status": "FRESHNESS_UNKNOWN",
         "cadence": cadence,
-        "freshness_basis": "record_or_detail_page_latest_date",
+        "freshness_basis": basis,
     }
     if not observed_date:
         return payload
@@ -133,6 +134,7 @@ SOURCES = [
         "role": "BOTH",
         "cadence": "monthly",
         "local": True,
+        "scope_requires_content": True,
         "voice": False,
         "follow": r"bbs/view\.do",
         "max_follow": 6,
@@ -273,6 +275,7 @@ class VisibleHTML(HTMLParser):
         self.anchor_parts: list[str] = []
         self.anchors: list[tuple[str, str]] = []
         self.chunks: list[str] = []
+        self.date_hints: list[str] = []
         self.tables: list[list[list[tuple[str, str]]]] = []
         self.table_depth = 0
         self.current_table: list[list[tuple[str, str]]] = []
@@ -286,6 +289,15 @@ class VisibleHTML(HTMLParser):
             return
         if self.skip_depth:
             return
+        attrs_map = {key.lower(): value or "" for key, value in attrs}
+        if tag == "time" and attrs_map.get("datetime"):
+            self.date_hints.append(attrs_map["datetime"])
+        elif tag == "meta":
+            meta_name = (attrs_map.get("name") or attrs_map.get("property") or "").lower()
+            if any(token in meta_name for token in ("date", "publish", "modified", "created", "updated")):
+                content = attrs_map.get("content", "")
+                if content:
+                    self.date_hints.append(content)
         if tag == "table":
             if self.table_depth == 0:
                 self.current_table = []
@@ -527,7 +539,7 @@ def labor_region_rows(parser: VisibleHTML) -> list[str]:
         "서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종",
         "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주",
     }
-    period = latest_date_from(
+    period = latest_period_label(
         chunk
         for chunk in parser.chunks
         if "체불" in chunk and ("지역별" in chunk or "시도" in chunk)
@@ -562,7 +574,8 @@ def labor_region_rows(parser: VisibleHTML) -> list[str]:
                 and TABLE_NUMERIC_CELL_RE.fullmatch(total_value)
             ):
                 continue
-            prefix = f"기준일: {period} · " if period else ""
+            period_label = "기준월" if len(period) == 7 else "기준일"
+            prefix = f"{period_label}: {period} · " if period else ""
             results.append(
                 f"{prefix}지역: 서울 · 체불액(억 원): {seoul_value} · "
                 f"전국 체불액(억 원): {total_value}"
@@ -637,6 +650,69 @@ def classify_evidence_anchor(
 
 
 
+def classify_scope(
+    text: str,
+    source: dict,
+    record_kind: str = "PAGE_CHUNK",
+) -> tuple[str, str, bool]:
+    """Separate an institution's location from the geography actually measured."""
+    if source.get("local") and not source.get("scope_requires_content", False):
+        return "SEOUL_SOURCE_TRUSTED", "서울 행정·의정 원문 자체가 관측 범위를 한정", True
+
+    normalized = normalize(text)
+    if re.search(r"지역\s*[:：]\s*서울(?:\s|·|$)", normalized):
+        scope_class = (
+            "NATIONAL_COMPARISON_WITH_SEOUL_ROW"
+            if any(marker in normalized for marker in ("전국", "전체"))
+            else "SEOUL_VALUE_BOUND"
+        )
+        return scope_class, "구조화 행에서 서울 값이 직접 결합", True
+
+    if "수도권" in normalized and "서울" not in normalized:
+        return "METRO_ONLY", "수도권은 서울 단독 관측값이 아님", False
+
+    excluded_context = re.search(
+        r"(?:서울연구원|서울(?:에서|에|소재|주소|연락처|본사|지사).{0,18}"
+        r"(?:설명회|세미나|행사|회의|개최|주소|전화|문의|본사|지사))",
+        normalized,
+    )
+    unbound_national = re.search(
+        r"서울\s*(?:등|포함).{0,12}(?:전국|전역|전\s*지역)",
+        normalized,
+    )
+    if excluded_context or unbound_national:
+        return "NATIONAL_OR_UNBOUND", "서울이 행사·기관·전국 열거에만 등장", False
+
+    seoul_marker = re.compile(
+        r"(?:서울특별시|서울시|서울지역|서울\s*(?:시민|주민|근로자|노동자|"
+        r"소비자|피해자|사업장|자치구)|서울)"
+    )
+    numeric = re.compile(
+        r"\d[\d,]*(?:\.\d+)?\s*(?:%|％|원|억원|억\s*원|조원|조\s*원|"
+        r"건|명|가구|개|곳|회|시간|분|일|개월|배)"
+    )
+    metric_terms = (
+        *PROBLEM_TERMS,
+        "체불액", "피해액", "건수", "인원", "금액", "비율",
+        "증가율", "감소율", "사업장", "근로자", "소비자",
+    )
+    for segment in re.split(r"[.!?。]|\n", normalized):
+        if (
+            seoul_marker.search(segment)
+            and numeric.search(segment)
+            and any(term in segment for term in metric_terms)
+        ):
+            return "SEOUL_VALUE_BOUND", "같은 문장에서 서울·문제지표·실제 값이 결합", True
+    return "NATIONAL_OR_UNBOUND", "서울 관측값이 실질 지표와 직접 결합되지 않음", False
+
+
+def direct_seoul_scope(text: str) -> bool:
+    return classify_scope(
+        text,
+        {"local": False, "scope_requires_content": True},
+    )[2]
+
+
 def score_text(
     text: str,
     source: dict,
@@ -644,8 +720,12 @@ def score_text(
 ) -> tuple[int, list[str], bool, dict]:
     score = 0
     reasons: list[str] = []
-    explicit_seoul = any(marker in text for marker in ("서울", "자치구", "한강", "수도권"))
-    seoul_scope = source["local"] or explicit_seoul
+    scope_class, scope_reason, seoul_scope = classify_scope(
+        text, source, record_kind
+    )
+    explicit_seoul = scope_class in {
+        "SEOUL_VALUE_BOUND", "NATIONAL_COMPARISON_WITH_SEOUL_ROW"
+    }
     operational_interruption = bool(
         re.search(
             r"(?:운행|서비스|지원|급식|공급|진료|돌봄|전산|통신|시설)"
@@ -749,6 +829,8 @@ def score_text(
         "loss": loss,
         "low_value": low_value,
         "boilerplate": boilerplate,
+        "scope_class": scope_class,
+        "scope_reason": scope_reason,
         "evidence_anchor": evidence_anchor,
         "routine_action": routine_action,
         **analysis,
@@ -871,7 +953,17 @@ def extract_records(
                 and (signals["problem"] or signals["evidence_anchor"] == "DECOMPOSABLE_STRUCTURE")
             )
             qualified = score >= 6 and seoul_scope and quality_gate
-        localization_threshold = 6 if record_kind == "DATA_ROW" else 7
+        localization_threshold = (
+            6
+            if record_kind == "DATA_ROW"
+            or (
+                not source["local"]
+                and signals["evidence_anchor"] in {
+                    "MEASURED_PROBLEM_SIGNAL", "DECOMPOSABLE_STRUCTURE"
+                }
+            )
+            else 7
+        )
         localization_lead = (
             score >= localization_threshold
             and not seoul_scope
@@ -903,6 +995,8 @@ def extract_records(
                 "verification_schema_lead": signals.get("verification_schema_lead", False),
                 "evidence_anchor": signals["evidence_anchor"],
                 "seoul_scope": seoul_scope,
+                "scope_class": signals.get("scope_class", "NATIONAL_OR_UNBOUND"),
+                "scope_reason": signals.get("scope_reason", ""),
                 "qualified": qualified,
                 "localization_lead": localization_lead,
                 **question_payload,
@@ -917,7 +1011,7 @@ def extract_records(
         ),
         reverse=True,
     )
-    return records[:80]
+    return records[:240]
 
 
 
@@ -946,6 +1040,8 @@ def latest_date_from(chunks: Iterable[str]) -> str:
                 parsed = date(int(year), int(month), monthrange(int(year), int(month))[1])
             except ValueError:
                 continue
+            if parsed.year == TODAY.year and parsed.month == TODAY.month:
+                parsed = TODAY
             if parsed <= TODAY + timedelta(days=3):
                 found.append(parsed)
         for short_year, month in SHORT_YEAR_MONTH_RE.findall(without_full_dates):
@@ -954,9 +1050,65 @@ def latest_date_from(chunks: Iterable[str]) -> str:
                 parsed = date(year, int(month), monthrange(year, int(month))[1])
             except ValueError:
                 continue
+            if parsed.year == TODAY.year and parsed.month == TODAY.month:
+                parsed = TODAY
             if parsed <= TODAY + timedelta(days=3):
                 found.append(parsed)
     return max(found).isoformat() if found else ""
+
+
+
+def latest_period_label(chunks: Iterable[str]) -> str:
+    """Return a stable canonical period label for source text and revision hashes."""
+    found: list[tuple[date, str]] = []
+    for text in chunks:
+        for year, month, day in DATE_RE.findall(text):
+            try:
+                parsed = date(int(year), int(month), int(day))
+            except ValueError:
+                continue
+            if parsed <= TODAY + timedelta(days=3):
+                found.append((parsed, parsed.isoformat()))
+        without_full_dates = DATE_RE.sub(" ", text)
+        for year, dotted_month, korean_month in YEAR_MONTH_RE.findall(without_full_dates):
+            month = int(dotted_month or korean_month)
+            try:
+                effective = date(int(year), month, monthrange(int(year), month)[1])
+            except ValueError:
+                continue
+            if effective.year == TODAY.year and effective.month == TODAY.month:
+                effective = TODAY
+            if effective <= TODAY + timedelta(days=3):
+                found.append((effective, f"{int(year):04d}-{month:02d}"))
+        for short_year, month_raw in SHORT_YEAR_MONTH_RE.findall(without_full_dates):
+            year = 2000 + int(short_year)
+            month = int(month_raw)
+            try:
+                effective = date(year, month, monthrange(year, month)[1])
+            except ValueError:
+                continue
+            if effective.year == TODAY.year and effective.month == TODAY.month:
+                effective = TODAY
+            if effective <= TODAY + timedelta(days=3):
+                found.append((effective, f"{year:04d}-{month:02d}"))
+    return max(found, key=lambda item: item[0])[1] if found else ""
+
+
+DOCUMENT_DATE_LABEL_RE = re.compile(
+    r"(?:게시일|등록일|작성일|발행일|공개일|수정일|회의일|회의일시|개최일|일\s*시)"
+)
+
+
+def document_date_from(parser: VisibleHTML) -> str:
+    """Return a page publication/meeting date, never an arbitrary cited statistic date."""
+    hinted = latest_date_from(parser.date_hints)
+    if hinted:
+        return hinted
+    candidates: list[str] = []
+    for index, chunk in enumerate(parser.chunks):
+        if DOCUMENT_DATE_LABEL_RE.search(chunk):
+            candidates.extend(parser.chunks[index : index + 2])
+    return latest_date_from(candidates)
 
 
 def youtube_baseline() -> dict:
@@ -1021,8 +1173,8 @@ DIVERSITY_STOPWORDS = {
 
 def record_rank(row: dict) -> tuple:
     return (
-        row.get("freshness_status") == "FRESH",
         row["qualified"],
+        row.get("freshness_status") == "FRESH",
         row["precheck_status"] == "PASS",
         row["grounding_status"] == "PASS",
         row["score"],
@@ -1136,7 +1288,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     page_dates: dict[str, str] = {}
     for index, (page_url, parser) in enumerate(pages):
         canonical_page = canonical_url(page_url, source["url"])
-        page_dates[canonical_page] = latest_date_from(parser.chunks)
+        page_dates[canonical_page] = document_date_from(parser)
         include_windows = index > 0 or source["id"] in {
             "labor_arrears", "eungdapso", "seoul_research"
         }
@@ -1144,9 +1296,29 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
 
     for row in records:
         canonical_record = canonical_url(row.get("url", ""), source["url"])
-        record_date = latest_date_from([row.get("text", "")])
-        observed_date = record_date or page_dates.get(canonical_record, "")
-        row.update(freshness_metadata(source, observed_date))
+        document_date = page_dates.get(canonical_record, "")
+        reference_period = latest_period_label([row.get("text", "")])
+        reference_effective_date = latest_date_from([row.get("text", "")])
+        if (
+            source["id"] in {"labor_arrears", "consumer_agency"}
+            and row.get("record_kind") == "DATA_ROW"
+            and reference_effective_date
+        ):
+            observed_date = reference_effective_date
+            freshness_basis = "reference_period"
+        else:
+            observed_date = document_date
+            freshness_basis = "document_date"
+        row["document_date"] = document_date
+        row["reference_period"] = reference_period
+        row["reference_period_effective_date"] = reference_effective_date
+        row.update(
+            freshness_metadata(
+                source,
+                observed_date,
+                basis=freshness_basis,
+            )
+        )
 
     if source["id"] == "council_minutes":
         item_records = select_distinct_council_records(records, source["url"])
@@ -1180,8 +1352,8 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     records = sorted(
         item_records,
         key=lambda item: (
-            item.get("freshness_status") == "FRESH",
             item["qualified"],
+            item.get("freshness_status") == "FRESH",
             item["precheck_status"] == "PASS",
             item["grounding_status"] == "PASS",
             item["localization_lead"],
@@ -1190,8 +1362,15 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         reverse=True,
     )[:120]
 
-    all_chunks = [chunk for _, parser in pages for chunk in parser.chunks]
-    latest = latest_date_from(all_chunks)
+    known_dates = [
+        value
+        for value in (
+            list(page_dates.values())
+            + [row.get("source_date", "") for row in records]
+        )
+        if value
+    ]
+    latest = max(known_dates) if known_dates else ""
     freshness = (TODAY - date.fromisoformat(latest)).days if latest else None
     scores = [row["score"] for row in records]
     qualified = sum(row["qualified"] for row in records)
@@ -1322,9 +1501,11 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
     csv_fields = [
         "source_id", "source_name", "role", "record_kind", "score", "content_class",
         "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
-        "substantive_values", "verification_usable", "verification_metadata_lead", "verification_schema_lead", "seoul_scope", "qualified",
-        "localization_lead", "source_date", "freshness_days", "freshness_window_days",
-        "carryover_until_days", "freshness_status", "cadence", "freshness_basis",
+        "substantive_values", "verification_usable", "verification_metadata_lead", "verification_schema_lead",
+        "seoul_scope", "scope_class", "scope_reason", "qualified",
+        "localization_lead", "document_date", "reference_period",
+        "reference_period_effective_date", "source_date", "freshness_days", "freshness_window_days", "carryover_until_days",
+        "freshness_status", "cadence", "freshness_basis",
         "question_basis", "question", "verification_axes",
         "grounding_status", "grounding_issues", "text", "reasons", "url",
     ]

@@ -25,6 +25,9 @@ class EditorialReviewTests(unittest.TestCase):
         return {
             "candidate_id": "abc123",
             "source_revision": "rev123",
+            "source_id": "council_minutes",
+            "auto_active_today": "true",
+            "lane": "CORE_DISCOVERY",
             "text": "서울 피해 37건 발생",
             "question_basis": "서울 피해 37건 발생",
             "question": "어디에서 반복되는가?",
@@ -132,6 +135,38 @@ class EditorialReviewTests(unittest.TestCase):
         self.assertEqual(payload["transition_proposals"], [])
         self.assertIsNone(payload["killer_test"])
         self.assertIn("오늘 활성 후보 아님", payload["review_cards"][0]["decision_blocker"])
+
+
+    def test_localization_lane_never_transitions_or_plans_killer_test(self):
+        row = {
+            **self.base_row(),
+            "lane": "LOCALIZE_TO_SEOUL",
+            "editor_judgment": "PROMISING",
+            "editor_evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+            "anchor_detail": "전국 체불액 1조 원",
+            "anchor_scope": "전국·2026년",
+            "central_question": "서울에서도 같은 집중이 나타나는가?",
+            "citizen_stake": "임금 미지급",
+            "competing_hypotheses": "산업구성 차이; 신고 차이",
+            "decision_rule": "서울 원자료에서 전국 대비 초과 집중",
+            "minimum_test": "서울 지역 원자료를 확보한다",
+            "test_timebox_hours": "4",
+            "test_pass_rule": "서울 값과 비교 기준 확보",
+            "test_kill_rule": "서울 값 미확보",
+            "reviewed_by": "editor",
+            "reviewed_at": "2026-09-14T12:00:00+09:00",
+            "review_revision": "rev123",
+        }
+        payload = review.build_review([row], [])
+        self.assertEqual(payload["transition_proposals"], [])
+        self.assertIsNone(payload["killer_test"])
+        self.assertIn("서울 원자료 미확보", payload["review_cards"][0]["decision_blocker"])
+
+    def test_blank_activity_flag_fails_closed(self):
+        row = self.base_row()
+        row.pop("auto_active_today")
+        payload = review.build_review([row], [])
+        self.assertEqual(payload["review_cards"], [])
 
 
 if __name__ == "__main__":

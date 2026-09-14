@@ -1,6 +1,6 @@
 {
-  "version": "2026-09-14-v2.6",
-  "system_version": "1.9",
+  "version": "2026-09-14-v2.7",
+  "system_version": "1.10",
   "purpose": "새 현상과 축적 통계에서 출처 프레임을 넘어 시민 손실·경쟁 가설·최소 판정 실험을 갖춘 기획 질문을 생성하기 위한 생활 의제 렌즈",
   "agenda_domains": [
     {"code": "HOUSING", "label": "주거", "core_daily": true},

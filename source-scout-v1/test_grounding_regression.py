@@ -1,5 +1,6 @@
 import importlib.util
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -309,6 +310,7 @@ class GroundingRegressionTests(unittest.TestCase):
             "grounding_status": "PASS",
             "precheck_status": "PASS",
             "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+            "freshness_status": "FRESH",
             "url": "https://ms.smc.seoul.kr/record/one",
         }
         rows = [
@@ -821,6 +823,7 @@ class GroundingRegressionTests(unittest.TestCase):
             "text": "서울 자치구별 돌봄 공백 120건이 집계됐습니다",
             "question": "어느 자치구와 대상에 집중됐는가?",
             "verification_axes": ["자치구", "대상"],
+            "freshness_status": "FRESH",
             "url": "https://example.test/research/1",
         }
 
@@ -944,7 +947,7 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertIn("지역: 서울", rows[0])
         self.assertIn("체불액(억 원): 2,186", rows[0])
         self.assertIn("전국 체불액(억 원): 10,814", rows[0])
-        self.assertIn("2026-07-31", rows[0])
+        self.assertIn("기준월: 2026-07", rows[0])
         result = self.signals(rows[0], self.labor, "DATA_ROW")
         payload = scout.build_question_payload(rows[0], "labor_arrears", result)
         self.assertEqual(payload["grounding_status"], "PASS")
@@ -1122,6 +1125,180 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertIn("certificate verify failed", rendered)
         self.assertIn("STALE_CARRYOVER — 오늘 후보 제외", rendered)
         self.assertIn("오늘 카드·재활성화·S0 제안 제외", rendered)
+
+
+    def test_current_month_period_is_clamped_to_today(self):
+        original_today = scout.TODAY
+        scout.TODAY = scout.date(2026, 9, 14)
+        try:
+            self.assertEqual(
+                scout.latest_date_from(["'26.9월 지역별 체불 현황"]),
+                "2026-09-14",
+            )
+            self.assertEqual(
+                scout.latest_period_label(["'26.9월 지역별 체불 현황"]),
+                "2026-09",
+            )
+        finally:
+            scout.TODAY = original_today
+
+    def test_document_date_is_separate_from_cited_reference_period(self):
+        html = (
+            '<meta property="article:published_time" content="2026-09-14T08:00:00+09:00">'
+            "<p>서울에서 2024-01-31 기준 피해 37건이 발생했습니다.</p>"
+        )
+        original_fetch = scout.fetch
+
+        def fake_fetch(url, timeout=22):
+            return scout.FetchResult(url, True, 200, 1, len(html), html)
+
+        scout.fetch = fake_fetch
+        source = {
+            **self.council,
+            "url": "https://example.test/minutes",
+            "follow": "",
+            "max_follow": 0,
+            "cadence": "event_driven",
+        }
+        try:
+            _, rows = scout.run_source(source)
+        finally:
+            scout.fetch = original_fetch
+        row = next(item for item in rows if "피해 37건" in item["text"])
+        self.assertEqual(row["document_date"], "2026-09-14")
+        self.assertEqual(row["reference_period"], "2024-01-31")
+        self.assertEqual(row["source_date"], "2026-09-14")
+        self.assertEqual(row["freshness_basis"], "document_date")
+        self.assertEqual(row["freshness_status"], "FRESH")
+
+    def test_national_mentions_do_not_masquerade_as_seoul_observations(self):
+        self.assertFalse(scout.direct_seoul_scope("수도권 피해 1,000건이 발생했습니다"))
+        self.assertFalse(
+            scout.direct_seoul_scope("서울 등 전국에서 피해 1,000건이 발생했습니다")
+        )
+        self.assertTrue(
+            scout.direct_seoul_scope("지역: 서울 · 체불액(억 원): 2,186")
+        )
+        _, _, seoul_scope, _ = scout.score_text(
+            "전국에서 체불 피해 10,814억 원이 발생했습니다",
+            {**self.research, "scope_requires_content": True},
+        )
+        self.assertFalse(seoul_scope)
+
+    def test_revision_uses_full_text_but_ignores_date_only_changes(self):
+        common = "서울 피해 " + ("가" * 600)
+        first = {
+            "source_id": "council_minutes",
+            "url": "https://example.test/item",
+            "text": common + " A",
+            "source_date": "2026-09-13",
+        }
+        changed_after_500 = {**first, "text": common + " B"}
+        date_only = {**first, "source_date": "2026-09-14"}
+        self.assertNotEqual(
+            feed.source_revision_for_row(first),
+            feed.source_revision_for_row(changed_after_500),
+        )
+        self.assertEqual(
+            feed.source_revision_for_row(first),
+            feed.source_revision_for_row(date_only),
+        )
+
+    def test_missing_freshness_fails_closed_into_date_hold(self):
+        row = {
+            "source_id": "council_minutes",
+            "source_name": "서울시의회 회의록",
+            "score": 9,
+            "qualified": True,
+            "localization_lead": False,
+            "grounding_status": "PASS",
+            "precheck_status": "PASS",
+            "content_class": "REPORTABLE_TEXT",
+            "verification_usable": False,
+            "verification_metadata_lead": False,
+            "verification_schema_lead": False,
+            "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+            "claim_status": "ATTRIBUTED_CLAIM",
+            "question_basis": "서울 피해 37건",
+            "text": "서울 피해 37건",
+            "question": "원자료로 재현되는가?",
+            "verification_axes": ["자치구"],
+            "url": "https://example.test/missing-date",
+        }
+
+        class FakeModule:
+            SOURCES = [{"id": "council_minutes", "name": "서울시의회", "role": "BOTH"}]
+            FRESHNESS_POLICY_DAYS = {"event_driven": (14, 28)}
+
+            @staticmethod
+            def run_source(source):
+                return {
+                    "id": source["id"], "name": source["name"], "role": source["role"],
+                    "status": 200, "requests": 1, "extracted": 1,
+                    "precheck_pass": 1, "grounded": 1, "qualified": 1,
+                }, [row]
+
+        built = feed.build_feed(FakeModule)
+        self.assertEqual(built["core_discovery"], [])
+        self.assertEqual(len(built["freshness_holds"]), 1)
+
+    def test_localization_revision_is_remembered_and_then_rediscovered(self):
+        row = {
+            "source_id": "labor_arrears",
+            "source_name": "고용노동부 임금체불 통계",
+            "score": 8,
+            "qualified": False,
+            "localization_lead": True,
+            "grounding_status": "PASS",
+            "precheck_status": "PASS",
+            "precheck_reason": "",
+            "content_class": "REPORTABLE_TEXT",
+            "verification_usable": False,
+            "verification_metadata_lead": False,
+            "verification_schema_lead": False,
+            "evidence_anchor": "MEASURED_PROBLEM_SIGNAL",
+            "claim_status": "OBSERVED_OR_PUBLISHED",
+            "question_basis": "전국 임금체불액 1조 원",
+            "text": "전국 임금체불액 1조 원",
+            "question": "기존 질문",
+            "verification_axes": ["지역"],
+            "url": "https://example.test/labor",
+            "freshness_status": "FRESH",
+            "source_date": "2026-08-31",
+            "freshness_days": 14,
+            "freshness_window_days": 45,
+            "cadence": "monthly",
+        }
+
+        class FakeModule:
+            SOURCES = [{"id": "labor_arrears", "name": "고용노동부", "role": "BOTH"}]
+            FRESHNESS_POLICY_DAYS = {"monthly": (45, 90)}
+
+            @staticmethod
+            def run_source(source):
+                return {
+                    "id": source["id"], "name": source["name"], "role": source["role"],
+                    "status": 200, "requests": 1, "extracted": 1,
+                    "precheck_pass": 1, "grounded": 1, "qualified": 0,
+                }, [row]
+
+        original_queue = feed.QUEUE
+        with tempfile.TemporaryDirectory() as tmp:
+            feed.QUEUE = Path(tmp) / "queue.csv"
+            try:
+                first = feed.build_feed(FakeModule)
+                self.assertEqual(len(first["localization_discovery"]), 1)
+                feed.update_review_queue(first)
+                saved = feed.read_review_queue()
+                self.assertEqual(saved[0]["auto_active_today"], "false")
+                prior = set()
+                for saved_row in saved:
+                    prior.update(feed.revision_history_values(saved_row))
+                second = feed.build_feed(FakeModule, prior)
+            finally:
+                feed.QUEUE = original_queue
+        self.assertEqual(second["localization_discovery"], [])
+        self.assertEqual(len(second["rediscovered_carryover"]), 1)
 
 
 if __name__ == "__main__":

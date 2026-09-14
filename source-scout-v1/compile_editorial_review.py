@@ -39,14 +39,17 @@ def text(row: dict[str, str], key: str, legacy: str = "") -> str:
 
 
 def candidate_revision(row: dict[str, str]) -> str:
-    basis = f"{text(row, 'url')}|{text(row, 'text')}|{text(row, 'source_date')}"
+    normalized_text = " ".join(text(row, "text").split())
+    basis = f"{text(row, 'source_id')}|{text(row, 'url')}|{normalized_text}"
     return hashlib.sha1(basis.encode("utf-8")).hexdigest()[:12]
 
 
 def proposal_blockers(row: dict[str, str]) -> list[str]:
     blockers: list[str] = []
-    if text(row, "auto_active_today").lower() == "false":
+    if text(row, "auto_active_today").lower() != "true":
         blockers.append("오늘 활성 후보 아님")
+    if text(row, "lane").upper() == "LOCALIZE_TO_SEOUL":
+        blockers.append("서울 원자료 미확보 지역화 단서")
     if text(row, "editor_judgment").upper() != "PROMISING":
         blockers.append("PROMISING 판정 아님")
     if text(row, "editor_evidence_anchor").upper() not in POSITIVE_ANCHORS:
@@ -82,7 +85,7 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
     for row in queue_rows:
         judgment = text(row, "editor_judgment").upper()
         active_raw = text(row, "auto_active_today")
-        active_today = active_raw.lower() == "true" if active_raw else True
+        active_today = active_raw.lower() == "true"
         if not active_today and not judgment:
             continue
         candidate_id = text(row, "candidate_id")
@@ -107,6 +110,11 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
         }
         cards.append(card)
 
+        if text(row, "lane").upper() == "LOCALIZE_TO_SEOUL":
+            card["decision_blocker"] = (
+                "서울 원자료 미확보 지역화 단서 — 편집 전이·킬러테스트 생성 금지"
+            )
+            continue
         if not active_today:
             card["decision_blocker"] = (
                 "오늘 활성 후보 아님 — 과거 판정 보관만, 전이·킬러테스트 생성 금지"

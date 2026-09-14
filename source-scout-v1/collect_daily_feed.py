@@ -46,6 +46,7 @@ REVIEW_FIELDS = [
     "last_seen",
     "candidate_id",
     "source_revision",
+    "source_revision_history",
     "auto_active_today",
     "lane",
     "source_id",
@@ -115,11 +116,23 @@ def candidate_id(row: dict) -> str:
 
 
 def source_revision_for_row(row: dict) -> str:
+    normalized_text = " ".join(str(row.get("text", "")).split())
     basis = (
-        f"{row.get('url', '')}|{concise(row.get('text', ''), 500)}|"
-        f"{row.get('source_date', '')}"
+        f"{row.get('source_id', '')}|{row.get('url', '')}|{normalized_text}"
     )
     return hashlib.sha1(basis.encode("utf-8")).hexdigest()[:12]
+
+
+def revision_history_values(row: dict) -> set[str]:
+    values = {
+        value.strip()
+        for value in str(row.get("source_revision_history", "")).split("|")
+        if value.strip()
+    }
+    current = str(row.get("source_revision", "")).strip()
+    if current:
+        values.add(current)
+    return values
 
 def verification_question(row: dict) -> str:
     return row.get("question") or (
@@ -145,11 +158,12 @@ def localization_question(row: dict) -> str:
 
 
 def is_fresh(row: dict) -> bool:
-    return row.get("freshness_status", "FRESH") == "FRESH"
+    return row.get("freshness_status") == "FRESH"
 
 
 def is_freshness_hold(row: dict) -> bool:
-    return row.get("freshness_status") in {"FRESHNESS_UNKNOWN", "FUTURE_DATED"}
+    status = row.get("freshness_status") or "FRESHNESS_UNKNOWN"
+    return status in {"FRESHNESS_UNKNOWN", "FUTURE_DATED"}
 
 
 def unique_top(
@@ -321,6 +335,18 @@ def build_feed(
         2,
         dedupe_by="url",
     )
+    archived_stale = unique_top(
+        [
+            {**row, "lane": "ARCHIVED_STALE"}
+            for row in records
+            if row["source_id"] in (SUPPLEMENTARY_DISCOVERY_IDS | {"council_minutes"})
+            and (row.get("qualified") or row.get("localization_lead"))
+            and row.get("grounding_status") == "PASS"
+            and row.get("freshness_status") == "ARCHIVED_STALE"
+        ],
+        5,
+        near_duplicate=getattr(module, "near_duplicate_context", None),
+    )
     held = unique_top(
         [
             {**row, "lane": "HOLD_FOR_SOURCE_DETAIL"}
@@ -379,6 +405,7 @@ def build_feed(
         "localization_discovery": localization,
         "rediscovered_carryover": rediscovered_carryover,
         "stale_carryover": stale_carryover,
+        "archived_stale": archived_stale,
         "freshness_holds": freshness_holds,
         "activity_baselines": activity_baselines,
         "verification_metadata_leads": verification_leads,
@@ -410,24 +437,34 @@ def update_review_queue(feed: dict) -> None:
         if normalized["candidate_id"]:
             by_id[normalized["candidate_id"]] = normalized
 
-    for row in feed["core_discovery"] + feed["auxiliary_discovery"]:
+    queue_rows = (
+        feed["core_discovery"]
+        + feed["auxiliary_discovery"]
+        + feed.get("localization_discovery", [])
+        + feed.get("rediscovered_carryover", [])
+    )
+    for row in queue_rows:
         item_id = candidate_id(row)
         current = by_id.get(item_id, {field: "" for field in REVIEW_FIELDS})
         source_revision = source_revision_for_row(row)
+        revision_history = revision_history_values(current)
+        revision_history.add(source_revision)
+        active_today = row.get("lane") in {"CORE_DISCOVERY", "AUX_DISCOVERY"}
         current.update(
             {
                 "first_seen": current.get("first_seen") or today,
                 "last_seen": today,
                 "candidate_id": item_id,
                 "source_revision": source_revision,
-                "auto_active_today": "true",
+                "source_revision_history": "|".join(sorted(revision_history)),
+                "auto_active_today": "true" if active_today else "false",
                 "lane": row["lane"],
                 "source_id": row["source_id"],
                 "source_name": row["source_name"],
                 "source_date": str(row.get("source_date", "")),
                 "freshness_days": str(row.get("freshness_days", "")),
                 "freshness_window_days": str(row.get("freshness_window_days", "")),
-                "freshness_status": str(row.get("freshness_status", "FRESH")),
+                "freshness_status": str(row.get("freshness_status") or "FRESHNESS_UNKNOWN"),
                 "cadence": str(row.get("cadence", "")),
                 "ranking_score": str(row["score"]),
                 "auto_evidence_anchor": row.get("evidence_anchor", "NONE"),
@@ -572,6 +609,19 @@ def render_markdown(feed: dict) -> str:
             )
         lines.append("")
 
+    archived = feed.get("archived_stale", [])
+    lines.extend(["## 보관 종료 단서 · 감사용 표본", ""])
+    if not archived:
+        lines.extend(["- 보관 기한을 넘긴 유효 단서 표본 없음", ""])
+    else:
+        for row in archived:
+            lines.append(
+                f"- {concise(row.get('question_basis') or row.get('text', ''), 180)} — "
+                f"{row.get('source_date', '날짜 미상')} 기준 {row.get('freshness_days', '?')}일 경과; "
+                f"오늘 후보 제외, 감사용 원문: {row.get('url', '')}"
+            )
+        lines.append("")
+
     freshness_holds = feed.get("freshness_holds", [])
     lines.extend(["## 날짜 확인 대기 · 오늘 판정 제외", ""])
     if not freshness_holds:
@@ -615,6 +665,7 @@ def render_markdown(feed: dict) -> str:
         for row in schema_leads:
             lines.append(
                 f"- {concise(row['text'], 160)} — 분류·갱신 구조만 확인; 실제 데이터 행 수집 전 검증 자산 사용 금지 "
+                f"(자료일 {row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'}) "
                 f"([{row.get('source_name', '원문')}]({row.get('url', '')}))"
             )
         lines.append("")
@@ -627,6 +678,7 @@ def render_markdown(feed: dict) -> str:
         for row in metadata_leads:
             lines.append(
                 f"- {concise(row['text'], 140)} — 제목만 발견; 컬럼·실제 값 확인 전에는 검증 자산으로 사용 금지 "
+                f"(자료일 {row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'}) "
                 f"([{row.get('source_name', '원문')}]({row.get('url', '')}))"
             )
         lines.append("")
@@ -637,13 +689,14 @@ def render_markdown(feed: dict) -> str:
     else:
         lines.extend(
             [
-                "| 자료 | 검증 질문 | 원문 |",
-                "|---|---|---|",
+                "| 자료 | 자료일·상태 | 검증 질문 | 원문 |",
+                "|---|---|---|---|",
             ]
         )
         for row in feed["verification_map"]:
             lines.append(
                 f"| {concise(row['text'], 120).replace('|', '·')} | "
+                f"{row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'} | "
                 f"{row['question']} | {row['url']} |"
             )
         lines.append("")
@@ -677,11 +730,9 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     module = load_scout_module()
-    prior_revisions = {
-        row.get("source_revision", "")
-        for row in read_review_queue()
-        if row.get("source_revision")
-    }
+    prior_revisions: set[str] = set()
+    for row in read_review_queue():
+        prior_revisions.update(revision_history_values(row))
     feed = build_feed(module, prior_revisions)
     OUTPUT.mkdir(parents=True, exist_ok=True)
     (OUTPUT / "daily_feed_latest.json").write_text(

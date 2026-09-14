@@ -131,7 +131,7 @@ def render_block(manifest: dict) -> str:
     elif mode == "main" and manifest["persisted"]:
         status = "MAIN 게시본 — 유효 시한 이후에는 구판"
     elif mode == "replay":
-        status = "과거 장부 기준·현재 소스 혼합 — 미리보기만"
+        status = "현재 장부를 지정일 기준으로 재계산 + 현재 소스 — 미리보기만"
     else:
         status = "PR·브랜치 미리보기 — main 최신본 아님"
     rows = [
@@ -155,7 +155,7 @@ def render_block(manifest: dict) -> str:
     if mode == "replay":
         rows.extend([
             f"- 적용 기준일: {manifest.get('requested_as_of') or '미지정'}",
-            "- 소스 시점: 과거 자료 재현이 아니라 실행 시점의 현재 소스를 수집함",
+            "- 재현 한계: 과거 장부 스냅샷이 아니며, 현재 장부와 실행 시점의 현재 소스를 함께 사용함",
         ])
     rows.extend([END, ""])
     return "\n".join(rows)
@@ -182,7 +182,11 @@ def create_manifest(args: argparse.Namespace) -> dict:
     manifest = {
         "schema_version": "1.1",
         "requested_as_of": requested_as_of,
-        "source_snapshot_semantics": "current_at_execution",
+        "source_snapshot_semantics": (
+            "current_ledger_recalculated_as_of_plus_current_sources"
+            if args.mode == "replay"
+            else "current_at_execution"
+        ),
         "run_id": args.run_id,
         "run_url": args.run_url,
         "code_sha": args.code_sha,

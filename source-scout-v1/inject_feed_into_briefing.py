@@ -32,6 +32,7 @@ def render(feed: dict, review: dict | None = None) -> str:
     localization = feed.get("localization_discovery", [])
     rediscovered = feed.get("rediscovered_carryover", [])
     stale = feed.get("stale_carryover", [])
+    archived = feed.get("archived_stale", [])
     freshness_holds = feed.get("freshness_holds", [])
     baselines = feed.get("activity_baselines", [])
     metadata_leads = feed.get("verification_metadata_leads", [])
@@ -79,7 +80,7 @@ def render(feed: dict, review: dict | None = None) -> str:
     else:
         lines.extend(
             [
-                "| 관찰된 사실 | 자동 앵커 | 붙일 질문 | 질문 일치 | 수집 정렬점수 | 원문 최신일 | 원문 |",
+                "| 관찰된 사실 | 자동 앵커 | 붙일 질문 | 질문 일치 | 수집 정렬점수 | 신선도 기준일 | 원문 |",
                 "|---|---|---|---|---:|---|---|",
             ]
         )
@@ -103,7 +104,7 @@ def render(feed: dict, review: dict | None = None) -> str:
                     f"- 출처: {row.get('source_name', row.get('source_id', '미상'))}",
                     f"- 단서: {md(row.get('text', ''))}",
                     f"- 근거 앵커: {row.get('evidence_anchor', 'NONE')}",
-                    f"- 원문 최신일: {row.get('source_date', '미상')} · 경과 {row.get('freshness_days', '미상')}일",
+                    f"- 신선도 기준일: {row.get('source_date') or '미상'} · {row.get('freshness_basis') or '기준 미상'} · 경과 {row.get('freshness_days', '미상')}일",
                     f"- 질문: {md(row.get('question', ''))}",
                     f"- [원문]({row.get('url', '')})",
                     "",
@@ -120,6 +121,7 @@ def render(feed: dict, review: dict | None = None) -> str:
                     f"- 전국 단서: {md(row.get('question_basis') or row.get('text', ''), 220)}",
                     f"- 서울 검증 질문: {md(row.get('question', ''), 220)}",
                     f"- 출처: {row.get('source_name', row.get('source_id', '미상'))}",
+                    f"- 신선도 기준일: {row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'}",
                     f"- [원문]({row.get('url', '')})",
                     "- 상태: 서울 수치 미확보 — 편집 카드·S0 전이 대상 아님",
                     "",
@@ -145,6 +147,18 @@ def render(feed: dict, review: dict | None = None) -> str:
                 f"- {md(row.get('question_basis') or row.get('text', ''), 190)} — "
                 f"{row.get('source_date', '날짜 미상')} 기준 {row.get('freshness_days', '?')}일 경과; "
                 "오늘 카드·재활성화·S0 제안 제외"
+            )
+        lines.append("")
+
+    lines.extend(["### 보관 종료 단서 — 감사용 표본", ""])
+    if not archived:
+        lines.extend(["- 보관 기한을 넘긴 유효 단서 표본 없음", ""])
+    else:
+        for row in archived:
+            lines.append(
+                f"- {md(row.get('question_basis') or row.get('text', ''), 190)} — "
+                f"{row.get('source_date', '날짜 미상')} 기준 {row.get('freshness_days', '?')}일 경과; "
+                f"오늘 후보 제외 · [원문]({row.get('url', '')})"
             )
         lines.append("")
 
@@ -175,6 +189,7 @@ def render(feed: dict, review: dict | None = None) -> str:
         for row in schema_leads:
             lines.append(
                 f"- {md(row.get('text', ''), 170)} — 실제 데이터 행 수집 전 검증 자산 사용 금지 "
+                f"(자료일 {row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'}) "
                 f"([원문]({row.get('url', '')}))"
             )
         lines.append("")
@@ -186,6 +201,7 @@ def render(feed: dict, review: dict | None = None) -> str:
         for row in metadata_leads:
             lines.append(
                 f"- {md(row.get('text', ''), 160)} — 컬럼·실제 값 확인 전 검증 자산 사용 금지 "
+                f"(자료일 {row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'}) "
                 f"([원문]({row.get('url', '')}))"
             )
         lines.append("")
@@ -196,14 +212,15 @@ def render(feed: dict, review: dict | None = None) -> str:
     else:
         lines.extend(
             [
-                "| 자료 단서 | 사용할 때 | 원문 |",
-                "|---|---|---|",
+                "| 자료 단서 | 자료일·상태 | 사용할 때 | 원문 |",
+                "|---|---|---|---|",
             ]
         )
         for row in verification:
             lines.append(
-                f"| {md(row.get('text', ''), 140)} | {md(row.get('question', ''), 120)} | "
-                f"[원문]({row.get('url', '')}) |"
+                f"| {md(row.get('text', ''), 140)} | "
+                f"{row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'} | "
+                f"{md(row.get('question', ''), 120)} | [원문]({row.get('url', '')}) |"
             )
         lines.append("")
 

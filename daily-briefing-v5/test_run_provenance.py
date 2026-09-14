@@ -87,7 +87,9 @@ class ProvenanceTests(unittest.TestCase):
             provenance.write(args)
             manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
             self.assertFalse(manifest["publishable"])
-            self.assertIn("과거 장부 기준·현재 소스 혼합", args.briefing.read_text(encoding="utf-8"))
+            rendered = args.briefing.read_text(encoding="utf-8")
+            self.assertIn("현재 장부를 지정일 기준으로 재계산 + 현재 소스", rendered)
+            self.assertIn("과거 장부 스냅샷이 아니며", rendered)
 
     def test_expired_artifact_fails_at_read_time(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -125,10 +127,16 @@ class ProvenanceTests(unittest.TestCase):
         self.assertEqual(
             workflow.count('- "agent-system-v1/validate_discovery_system.py"'), 2
         )
-        self.assertIn("briefing_*_${{ github.run_id }}.md", workflow)
-        self.assertIn("daily_feed_*_${{ github.run_id }}.json", workflow)
+        self.assertNotIn("briefing_*_${{ github.run_id }}.md", workflow)
+        self.assertNotIn("daily_feed_*_${{ github.run_id }}.json", workflow)
         self.assertNotIn("daily-briefing-v5/output/history/*.md", workflow)
         self.assertNotIn("source-scout-v1/output/history/*.json", workflow)
+        self.assertIn("${{ steps.provenance.outputs.briefing_history }}", workflow)
+        self.assertIn("${{ steps.provenance.outputs.feed_history }}", workflow)
+        self.assertIn("${{ steps.publication.outputs.briefing_history }}", workflow)
+        self.assertIn("${{ steps.publication.outputs.feed_history }}", workflow)
+        self.assertEqual(workflow.count("id: provenance"), 1)
+        self.assertEqual(workflow.count("id: publication"), 1)
         self.assertIn(
             "git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv",
             workflow,
@@ -180,9 +188,21 @@ class ProvenanceTests(unittest.TestCase):
             manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
             rendered = args.briefing.read_text(encoding="utf-8")
             self.assertEqual(manifest["requested_as_of"], "2026-09-01")
-            self.assertEqual(manifest["source_snapshot_semantics"], "current_at_execution")
-            self.assertIn("과거 장부 기준·현재 소스 혼합", rendered)
-            self.assertIn("실행 시점의 현재 소스", rendered)
+            self.assertEqual(
+                manifest["source_snapshot_semantics"],
+                "current_ledger_recalculated_as_of_plus_current_sources",
+            )
+            self.assertIn("현재 장부를 지정일 기준으로 재계산 + 현재 소스", rendered)
+            self.assertIn("과거 장부 스냅샷이 아니며", rendered)
+
+
+    def test_expected_source_sha_mismatch_fails_verification(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = self.make_args(Path(tmp), "preview")
+            provenance.write(args)
+            args.source_sha = "different-source-sha"
+            with self.assertRaisesRegex(RuntimeError, "source sha mismatch"):
+                provenance.verify(args)
 
 
 if __name__ == "__main__":

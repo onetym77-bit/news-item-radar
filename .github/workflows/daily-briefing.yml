@@ -105,6 +105,7 @@ jobs:
           python -X utf8 source-scout-v1/evaluate_human_review.py "${args[@]}"
 
       - name: Attach preview or replay identity
+        id: provenance
         shell: bash
         env:
           AS_OF: ${{ inputs.as_of || '' }}
@@ -121,6 +122,13 @@ jobs:
             --code-sha "$GITHUB_SHA" \
             --source-sha "$SOURCE_SHA" \
             --as-of "$AS_OF"
+          run_day="$(python -c 'import json; print(json.load(open("source-scout-v1/output/daily_feed_latest.json", encoding="utf-8"))["generated_at_kst"][:10])')"
+          briefing_history="daily-briefing-v5/output/history/briefing_${run_day}_${GITHUB_RUN_ID}.md"
+          feed_history="source-scout-v1/output/history/daily_feed_${run_day}_${GITHUB_RUN_ID}.json"
+          test -f "$briefing_history"
+          test -f "$feed_history"
+          echo "briefing_history=$briefing_history" >> "$GITHUB_OUTPUT"
+          echo "feed_history=$feed_history" >> "$GITHUB_OUTPUT"
 
       - name: Validate generated briefing and exact source identity
         run: |
@@ -136,12 +144,12 @@ jobs:
           path: |
             daily-briefing-v5/output/briefing_latest.md
             daily-briefing-v5/output/run_manifest_latest.json
-            daily-briefing-v5/output/history/briefing_*_${{ github.run_id }}.md
+            ${{ steps.provenance.outputs.briefing_history }}
             agent-system-v1/VERIFICATION_QUEUE.csv
             source-scout-v1/HUMAN_REVIEW_QUEUE.csv
             source-scout-v1/output/daily_feed_latest.json
             source-scout-v1/output/daily_feed_latest.md
-            source-scout-v1/output/history/daily_feed_*_${{ github.run_id }}.json
+            ${{ steps.provenance.outputs.feed_history }}
             source-scout-v1/output/review_summary_latest.json
             source-scout-v1/output/review_summary_latest.md
             source-scout-v1/output/editorial_review_cards_latest.json
@@ -183,6 +191,7 @@ jobs:
           path: .
 
       - name: Mark the unchanged body and feed as the main publication
+        id: publication
         shell: bash
         env:
           SOURCE_SHA: ${{ github.sha }}
@@ -199,6 +208,13 @@ jobs:
           python -X utf8 agent-system-v1/validate_discovery_system.py \
             --allow-missing-source-reports \
             --briefing daily-briefing-v5/output/briefing_latest.md
+          run_day="$(python -c 'import json; print(json.load(open("source-scout-v1/output/daily_feed_latest.json", encoding="utf-8"))["generated_at_kst"][:10])')"
+          briefing_history="daily-briefing-v5/output/history/briefing_${run_day}_${GITHUB_RUN_ID}.md"
+          feed_history="source-scout-v1/output/history/daily_feed_${run_day}_${GITHUB_RUN_ID}.json"
+          test -f "$briefing_history"
+          test -f "$feed_history"
+          echo "briefing_history=$briefing_history" >> "$GITHUB_OUTPUT"
+          echo "feed_history=$feed_history" >> "$GITHUB_OUTPUT"
 
       - name: Confirm protected ledgers were not changed
         shell: bash
@@ -276,12 +292,12 @@ jobs:
           path: |
             daily-briefing-v5/output/briefing_latest.md
             daily-briefing-v5/output/run_manifest_latest.json
-            daily-briefing-v5/output/history/briefing_*_${{ github.run_id }}.md
+            ${{ steps.publication.outputs.briefing_history }}
             agent-system-v1/VERIFICATION_QUEUE.csv
             source-scout-v1/HUMAN_REVIEW_QUEUE.csv
             source-scout-v1/output/daily_feed_latest.json
             source-scout-v1/output/daily_feed_latest.md
-            source-scout-v1/output/history/daily_feed_*_${{ github.run_id }}.json
+            ${{ steps.publication.outputs.feed_history }}
             source-scout-v1/output/review_summary_latest.json
             source-scout-v1/output/review_summary_latest.md
             source-scout-v1/output/editorial_review_cards_latest.json
