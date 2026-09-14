@@ -46,8 +46,14 @@ def candidate_revision(row: dict[str, str]) -> str:
 
 def proposal_blockers(row: dict[str, str]) -> list[str]:
     blockers: list[str] = []
-    if text(row, "auto_active_today").lower() != "true":
-        blockers.append("오늘 활성 후보 아님")
+    eligible_raw = text(row, "review_eligible")
+    review_eligible = (
+        eligible_raw.lower() == "true"
+        if eligible_raw
+        else text(row, "auto_active_today").lower() == "true"
+    )
+    if not review_eligible:
+        blockers.append("현재 검토 대상 아님")
     if text(row, "lane").upper() == "LOCALIZE_TO_SEOUL":
         blockers.append("서울 원자료 미확보 지역화 단서")
     if text(row, "editor_judgment").upper() != "PROMISING":
