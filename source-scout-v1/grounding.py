@@ -133,13 +133,21 @@ def analyze_content(
     )
     problem_value_link = cost_problem or bool(
         re.search(
-            r"(?:피해|사고|누락|체불|미지급|적자|불편|대기|중단|분쟁|접수|증가|감소|급증|급감)"
-            r".{0,36}\d[\d,]*(?:\.\d+)?\s*(?:%|조\s*원|억\s*원|만\s*원|원|명|가구|건|곳|개|개월|km|㎞)"
-            r"|\d[\d,]*(?:\.\d+)?\s*(?:%|조\s*원|억\s*원|만\s*원|원|명|가구|건|곳|개|개월|km|㎞)"
-            r".{0,36}(?:피해|사고|누락|체불|미지급|적자|불편|대기|중단|분쟁|접수|증가|감소|급증|급감)",
+            r"(?:피해|사고|누락|체불|미지급|적자|불편|대기|중단|분쟁|제한|낮아|접수|증가|감소|급증|급감)"
+            r".{0,36}\d[\d,]*(?:\.\d+)?\s*(?:%|조\s*원|억\s*원|만\s*원|원|명|가구|건|대|곳|개|시간|분|시|개월|km|㎞)"
+            r"|\d[\d,]*(?:\.\d+)?\s*(?:%|조\s*원|억\s*원|만\s*원|원|명|가구|건|대|곳|개|시간|분|시|개월|km|㎞)"
+            r".{0,36}(?:피해|사고|누락|체불|미지급|적자|불편|대기|중단|분쟁|제한|낮아|접수|증가|감소|급증|급감)",
             text,
         )
     )
+    procedural_measurements_only = bool(
+        source_id == "council_minutes"
+        and any(term in text for term in ("남은 시간", "발언시간", "질의시간", "시정질문"))
+        and values
+        and all(re.search(r"(?:대|시간|분|시)$", value) for value in values)
+    )
+    if procedural_measurements_only:
+        problem_value_link = False
     issue_mention_only = bool(
         source_id == "council_minutes"
         and re.search(r"(?:사고|누락|문제).{0,30}(?:이야기|말씀|질문)(?:하겠|드리겠)", text)

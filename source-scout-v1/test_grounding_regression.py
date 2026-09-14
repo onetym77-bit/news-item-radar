@@ -230,7 +230,7 @@ class GroundingRegressionTests(unittest.TestCase):
         text = "서울 UD택시 사고 3건 발생"
         result = self.signals(text)
         payload = scout.build_question_payload(text, "council_minutes", result)
-        self.assertEqual(payload["grounding_contract"], [])
+        self.assertEqual(payload["grounding_contract"], ["문제 근거 앵커"])
         self.assertNotIn("공급량", payload["question"])
         self.assertNotIn("요청량", payload["question"])
 
