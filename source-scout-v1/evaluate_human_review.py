@@ -30,6 +30,10 @@ def ratio(numerator: int, denominator: int) -> float | None:
     return round(numerator / denominator * 100, 1) if denominator else None
 
 
+def percent_text(value: float | None) -> str:
+    return "판정 대기" if value is None else f"{value}%"
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--queue", type=Path, default=DEFAULT_QUEUE)
@@ -104,8 +108,8 @@ def main() -> int:
         f"- 기간: {start.isoformat()} ~ {as_of.isoformat()}",
         f"- 생성 후보: {len(rows)}건",
         f"- 사람 판정 완료: {len(labeled)}건 ({summary['coverage'] if summary['coverage'] is not None else '-'}%)",
-        f"- 강한 질문 씨앗 정밀도: {summary['precision'] if summary['precision'] is not None else '판정 대기'}%",
-        f"- 추가 확인 가치 포함 유효율: {summary['useful_rate'] if summary['useful_rate'] is not None else '판정 대기'}%",
+        f"- 강한 질문 씨앗 정밀도: {percent_text(summary['precision'])}",
+        f"- 추가 확인 가치 포함 유효율: {percent_text(summary['useful_rate'])}",
         "",
         "## 소스별",
         "",
@@ -115,7 +119,7 @@ def main() -> int:
     for source_id, item in by_source.items():
         lines.append(
             f"| {source_id} | {item['generated']} | {item['labeled']} | {item['promising']} | "
-            f"{item['useful']} | {item['precision'] if item['precision'] is not None else '-'}% |"
+            f"{item['useful']} | {percent_text(item['precision'])} |"
         )
     lines.extend(
         [
