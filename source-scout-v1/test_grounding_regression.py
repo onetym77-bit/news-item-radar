@@ -493,12 +493,17 @@ class GroundingRegressionTests(unittest.TestCase):
                 "text": "서울시 장애인 버스요금 환급지급 인원수",
                 "url": "https://data.seoul.go.kr/example",
             }],
+            "verification_schema_leads": [{
+                "text": "서울 대기오염 측정정보를 1시간평균으로 제공합니다",
+                "url": "https://data.seoul.go.kr/schema",
+            }],
             "verification_map": [],
         }
         rendered = inject.render(feed_payload, {})
         self.assertIn("활동량 기준선 — 후보 아님", rendered)
         self.assertIn("전일·전월 누적 비교 전", rendered)
         self.assertIn("데이터셋 후보 — 스키마·값 미확인", rendered)
+        self.assertIn("데이터 구조 확인 — 실제 값 미수집", rendered)
         self.assertIn("검증 자산 사용 금지", rendered)
 
     def test_protest_end_is_not_service_interruption(self):
@@ -512,6 +517,49 @@ class GroundingRegressionTests(unittest.TestCase):
     def test_operational_service_interruption_remains_a_problem(self):
         result = self.signals("서울 지하철 운행이 3시간 중단돼 시민이 불편을 겪었습니다")
         self.assertEqual(result["evidence_anchor"], "MEASURED_PROBLEM_SIGNAL")
+
+    def test_same_climate_card_loss_topic_is_deduplicated(self):
+        left = {
+            "text": "기후동행카드 손실금 50%를 교통공사에 전가했고 운영 예산은 3,580억입니다",
+        }
+        right = {
+            "text": "교통공사 부채를 드러내지 않도록 손실금을 전가했고 재정 40%를 확보했습니다",
+        }
+        self.assertTrue(scout.near_duplicate_context(left, right))
+
+    def test_council_opinion_marker_keeps_claim_attributed(self):
+        text = (
+            "저는 이 사업이 빚잔치로 마감된다고 생각합니다. "
+            "기후동행카드 손실금 50%를 교통공사에 전가했습니다"
+        )
+        result = self.signals(text)
+        self.assertEqual(result["claim_status"], "ATTRIBUTED_CLAIM")
+
+    def test_citywide_observed_extent_keeps_full_district_count(self):
+        result = self.signals(
+            "서울 25개 자치구 전체에서 침수 피해가 발생했다고 확인됐습니다"
+        )
+        self.assertIn("25개", result["substantive_values"])
+        self.assertEqual(result["evidence_anchor"], "MEASURED_PROBLEM_SIGNAL")
+
+    def test_schema_description_is_not_an_actual_verification_asset(self):
+        result = self.signals(
+            "서울 대기오염물질 측정정보를 1시간평균으로 보정해 매시 5분에 "
+            "각 자치구 측정소에서 제공합니다",
+            self.open_data,
+            "PAGE_CHUNK",
+        )
+        self.assertTrue(result["verification_schema_lead"])
+        self.assertFalse(result["verification_usable"])
+
+    def test_data_row_with_observed_value_can_be_verification_asset(self):
+        result = self.signals(
+            "서울 자치구별 대기오염 측정값이 실제 값 37건으로 확인됐습니다",
+            self.open_data,
+            "DATA_ROW",
+        )
+        self.assertTrue(result["verification_usable"])
+        self.assertFalse(result["verification_schema_lead"])
 
     def test_high_score_navigation_cannot_reenter_verification_map(self):
         fake_record = {

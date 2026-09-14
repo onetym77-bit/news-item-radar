@@ -31,6 +31,7 @@ def render(feed: dict, review: dict | None = None) -> str:
     auxiliary = feed.get("auxiliary_discovery", [])
     baselines = feed.get("activity_baselines", [])
     metadata_leads = feed.get("verification_metadata_leads", [])
+    schema_leads = feed.get("verification_schema_leads", [])
     verification = feed.get("verification_map", [])
     lines = [
         "## C-실험. 신규 소스 질문 씨앗",
@@ -82,6 +83,17 @@ def render(feed: dict, review: dict | None = None) -> str:
         for row in baselines:
             lines.append(
                 f"- {md(row.get('text', ''), 180)} — 전일·전월 누적 비교 전에는 이상 신호로 사용하지 않음"
+            )
+        lines.append("")
+
+    lines.extend(["### 데이터 구조 확인 — 실제 값 미수집", ""])
+    if not schema_leads:
+        lines.extend(["- 오늘 구조만 확인된 데이터셋 없음", ""])
+    else:
+        for row in schema_leads:
+            lines.append(
+                f"- {md(row.get('text', ''), 170)} — 실제 데이터 행 수집 전 검증 자산 사용 금지 "
+                f"([원문]({row.get('url', '')}))"
             )
         lines.append("")
 

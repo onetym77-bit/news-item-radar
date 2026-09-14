@@ -17,7 +17,7 @@ DATE_TOKEN_RE = re.compile(
     r"(?<!\d)(?:19|20)\d{2}(?:\s*년|[.\-/]\s*\d{1,2}(?:\s*월|[.\-/]\s*\d{1,2}\s*일?)?)?"
 )
 SCOPE_COUNT_RE = re.compile(
-    r"(?<!\d)(?:25\s*개\s*자치구|17\s*개\s*시도)(?=\s|마다|전체|각각|에서|의|,|\.|$)"
+    r"(?<!\d)(?:25\s*개\s*자치구|17\s*개\s*시도)"
 )
 PROCEDURAL_VALUE_RE = re.compile(
     r"(?:남은\s*(?:발언|질의)?\s*시간(?:이|은|을)?|발언\s*시간|질의\s*시간)"
@@ -78,7 +78,7 @@ OBSERVED_TERMS = (
 )
 ATTRIBUTION_TERMS = (
     "주장", "추산", "추정", "예상", "전망", "우려", "밝혔다", "밝혔", "협회",
-    "한다고 합니다", "다고 합니다", "라고 합니다", "다는 얘기", "라는 얘기", "들었", "전언", "지적",
+    "한다고 합니다", "다고 합니다", "라고 합니다", "다는 얘기", "라는 얘기", "들었", "전언", "지적", "본 의원", "생각합니다", "판단합니다",
 )
 DIRECT_TERMS = ("겪", "불편", "피해", "못하", "거절", "대기", "이용 포기", "우회")
 AXIS_MAP = {
@@ -92,12 +92,26 @@ def normalize(text: str) -> str:
     return SPACE_RE.sub(" ", text or "").strip()
 
 
+def _strip_static_scope_counts(text: str) -> str:
+    def replace(match: re.Match) -> str:
+        tail = text[match.end() : match.end() + 60]
+        observed_extent = re.search(
+            r"(?:전체|모두|각각|에서)?.{0,20}"
+            r"(?:피해|침수|사고|체불|불편).{0,16}"
+            r"(?:발생했|확인됐|집계됐|기록됐|나타났)",
+            tail,
+        )
+        return match.group(0) if observed_extent else " "
+
+    return SCOPE_COUNT_RE.sub(replace, text)
+
+
 def extract_substantive_values(text: str) -> list[str]:
     """Extract measurements after removing legal, ordinal and calendar numbers."""
     cleaned = LAW_RE.sub(" ", text or "")
     cleaned = ORDINAL_RE.sub(" ", cleaned)
     cleaned = DATE_TOKEN_RE.sub(" ", cleaned)
-    cleaned = SCOPE_COUNT_RE.sub(" ", cleaned)
+    cleaned = _strip_static_scope_counts(cleaned)
     values: list[str] = []
     for match in list(TIME_RANGE_RE.finditer(cleaned)) + list(MEASUREMENT_RE.finditer(cleaned)):
         value = normalize(match.group(0))
@@ -317,10 +331,19 @@ def analyze_content(
             "OBSERVED_OR_PUBLISHED" if anchor != "NONE" else "UNRESOLVED"
         )
     )
+    actual_data_value = bool(
+        record_kind == "DATA_ROW"
+        or re.search(
+            r"(?:집계됐|기록됐|발생했|나타났|증가했|감소했|확인됐|"
+            r"지급됐|관측됐|측정됐|집계 결과|실제 값)",
+            text,
+        )
+    )
     verification_usable = (
         precheck_status == "PASS"
         and role == "VERIFICATION"
         and bool(values)
+        and actual_data_value
         and (
             bool(axes)
             or any(term in text.lower() for term in STRUCTURAL_TERMS + DATASET_TERMS)
@@ -331,6 +354,17 @@ def analyze_content(
         and role == "VERIFICATION"
         and content_class == "DATASET_METADATA"
         and not verification_usable
+    )
+    verification_schema_lead = (
+        precheck_status == "PASS"
+        and role == "VERIFICATION"
+        and not verification_usable
+        and not verification_metadata_lead
+        and (
+            bool(axes)
+            or any(term in text.lower() for term in STRUCTURAL_TERMS + DATASET_TERMS)
+            or any(term in text for term in ("측정정보", "측정소", "좌표계", "갱신일자", "제공 기관"))
+        )
     )
     anchor_facts = [text] if anchor != "NONE" else []
     return {
@@ -346,6 +380,7 @@ def analyze_content(
         "change_direction": change_direction,
         "verification_usable": verification_usable,
         "verification_metadata_lead": verification_metadata_lead,
+        "verification_schema_lead": verification_schema_lead,
     }
 
 

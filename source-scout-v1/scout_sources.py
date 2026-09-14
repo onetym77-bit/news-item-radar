@@ -612,6 +612,7 @@ def extract_records(
                 "claim_status": signals["claim_status"],
                 "verification_usable": signals["verification_usable"],
                 "verification_metadata_lead": signals.get("verification_metadata_lead", False),
+                "verification_schema_lead": signals.get("verification_schema_lead", False),
                 "evidence_anchor": signals["evidence_anchor"],
                 "seoul_scope": seoul_scope,
                 "qualified": qualified,
@@ -697,6 +698,16 @@ def youtube_baseline() -> dict:
     return result
 
 
+TOPIC_MARKERS = {
+    "전세사기", "임차보증금", "피해가구",
+    "기후동행카드", "교통공사", "손실금", "전가",
+    "미지급", "통상임금", "지연이자",
+    "출생아", "난임", "부모급여",
+    "시내버스", "소송", "보조금",
+    "정비사업", "전담인력",
+}
+
+
 DIVERSITY_STOPWORDS = {
     "서울", "서울시", "시장님", "의원님", "그리고", "그러나", "대해서", "관련", "말씀",
     "지금", "이렇게", "있습니다", "것입니다", "합니다", "했습니다", "대한",
@@ -727,6 +738,10 @@ def near_duplicate_context(left: dict, right: dict) -> bool:
     if not left_text or not right_text:
         return False
     if left_text in right_text or right_text in left_text:
+        return True
+    left_topics = {term for term in TOPIC_MARKERS if term in left_text}
+    right_topics = {term for term in TOPIC_MARKERS if term in right_text}
+    if len(left_topics & right_topics) >= 2:
         return True
     left_tokens = content_tokens(left_text)
     right_tokens = content_tokens(right_text)
@@ -781,6 +796,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
                 "grounded": 0,
                 "verification_usable": 0,
                 "verification_metadata_leads": 0,
+                "verification_schema_leads": 0,
                 "qualified": 0,
                 "localization_leads": 0,
                 "strong": 0,
@@ -851,9 +867,19 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
     verification_metadata_leads = sum(
         row.get("verification_metadata_lead", False) for row in records
     )
+    verification_schema_leads = sum(
+        row.get("verification_schema_lead", False) for row in records
+    )
     values_found = sum(bool(row["substantive_values"]) for row in records)
     status_detail = "OK"
     if (
+        source["role"] == "VERIFICATION"
+        and records
+        and not verification_usable
+        and verification_schema_leads
+    ):
+        status_detail = "DEGRADED_SCHEMA_ONLY"
+    elif (
         source["role"] == "VERIFICATION"
         and records
         and not verification_usable
@@ -885,6 +911,7 @@ def run_source(source: dict) -> tuple[dict, list[dict]]:
         "grounded": sum(row["grounding_status"] == "PASS" for row in records),
         "verification_usable": verification_usable,
         "verification_metadata_leads": verification_metadata_leads,
+        "verification_schema_leads": verification_schema_leads,
         "qualified": qualified,
         "localization_leads": sum(row["localization_lead"] for row in records),
         "strong": sum(row["qualified"] and row["score"] >= 8 for row in records),
@@ -938,7 +965,7 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
     csv_fields = [
         "source_id", "source_name", "role", "record_kind", "score", "content_class",
         "precheck_status", "precheck_reason", "evidence_anchor", "claim_status",
-        "substantive_values", "verification_usable", "verification_metadata_lead", "seoul_scope", "qualified",
+        "substantive_values", "verification_usable", "verification_metadata_lead", "verification_schema_lead", "seoul_scope", "qualified",
         "localization_lead", "question_basis", "question", "verification_axes",
         "grounding_status", "grounding_issues", "text", "reasons", "url",
     ]
@@ -994,7 +1021,13 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
     for metric in metrics:
         subset = [
             row for row in records
-            if row["source_id"] == metric["id"] and (row["qualified"] or row["localization_lead"])
+            if row["source_id"] == metric["id"]
+            and (
+                row["qualified"]
+                or row["localization_lead"]
+                or row.get("verification_schema_lead")
+                or row.get("verification_metadata_lead")
+            )
         ][:6]
         lines.extend(["", f"## {metric['name']}", ""])
         if not subset:
@@ -1003,6 +1036,8 @@ def write_outputs(metrics: list[dict], records: list[dict], baseline: dict) -> N
         for index, row in enumerate(subset, 1):
             tag = (
                 "검증 자산" if row["role"] == "VERIFICATION" and row["qualified"]
+                else "스키마 확인·값 미수집" if row.get("verification_schema_lead")
+                else "데이터셋 제목·스키마 미확인" if row.get("verification_metadata_lead")
                 else "서울형 유효후보" if row["qualified"]
                 else "서울 현지화 필요"
             )
