@@ -73,6 +73,44 @@ def verification_question(row: dict) -> str:
     return "이 자료가 발굴된 질문의 지역·대상·업종 집중을 실제로 확인할 수 있는가?"
 
 
+def discovery_question(row: dict) -> str:
+    text = row.get("text", "")
+    if "장애인콜택시" in text or "UD택시" in text:
+        return (
+            "서울 전역 12대와 06~15시 운행은 실제 요청량과 병원 이동 수요를 감당하는가, "
+            "자치구·시간대별 미배차 격차는 얼마나 큰가?"
+        )
+    if "전세사기" in text:
+        return (
+            "인정 피해 1만 1,664가구와 약 1조 9,860억 원은 어느 자치구·주택유형·"
+            "임대인 관계망에 집중됐고, 현행 지원은 그 집중도와 맞는가?"
+        )
+    if "시내버스" in text and ("소송" in text or "준공영제" in text):
+        return (
+            "최대 1조 원대 소송 부담은 운송사·서울시·시민 사이에 어떻게 배분되며, "
+            "준공영제의 어떤 계약·관리 공백이 이 비용을 만들었는가?"
+        )
+    if "침수" in text and ("방문" in text or "이력" in text):
+        return (
+            "침수 피해 규모가 큰 지역일수록 현장 점검과 후속 조치가 우선됐는가, "
+            "시장 방문·지원 일정은 자치구별로 편중됐는가?"
+        )
+    if "긴급교실안심" in text or "SEM" in text:
+        return (
+            "긴급교실안심SEM 도입 뒤 교사의 개입과 학생 보호는 실제로 늘었는가, "
+            "사건 유형·학교별 이용 격차와 미개입 사유는 무엇인가?"
+        )
+    if "예산" in text or "추경" in text:
+        return (
+            "발표된 예산 중 실제 시민에게 집행되는 몫은 얼마이며, "
+            "사업·자치구별 집행률과 수혜 배제는 어떻게 다른가?"
+        )
+    return (
+        "이 발언의 핵심 사실은 원자료로 확인되는가, 확인된다면 "
+        "어떤 시민 집단이 비용·시간·안전의 손실을 더 크게 떠안는가?"
+    )
+
+
 def unique_top(rows: list[dict], limit: int) -> list[dict]:
     selected: list[dict] = []
     seen: set[str] = set()
@@ -103,7 +141,7 @@ def build_feed(module) -> dict:
 
     core = unique_top(
         [
-            {**row, "lane": "CORE_DISCOVERY"}
+            {**row, "lane": "CORE_DISCOVERY", "question": discovery_question(row)}
             for row in records
             if row["source_id"] == "council_minutes" and row.get("qualified")
         ],
@@ -111,7 +149,7 @@ def build_feed(module) -> dict:
     )
     auxiliary = unique_top(
         [
-            {**row, "lane": "AUX_DISCOVERY"}
+            {**row, "lane": "AUX_DISCOVERY", "question": discovery_question(row)}
             for row in records
             if row["source_id"] == "eungdapso" and row.get("qualified")
         ],
