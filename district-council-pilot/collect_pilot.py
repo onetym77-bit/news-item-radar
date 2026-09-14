@@ -457,6 +457,7 @@ def run(source, as_of, count=4):
                     if not body:
                         row["diagnostic_speaker_markup"] = [clean_diagnostic(page.raw_html[max(0,m.start()-220):m.end()+550]) for m in list(re.finditer(r"위원장|의사담당",page.raw_html))[:4]]
                         row["diagnostic_text_tail"] = norm(" ".join(page.chunks))[-600:]
+                        row["diagnostic_speech_dom"] = [clean_diagnostic(page.raw_html[max(0,m.start()-1300):m.end()+600]) for m in list(re.finditer(r"의석을 정돈|성원이 되었|안녕하십니까",page.raw_html))[:3]]
                     row["title"] = norm(" ".join(page.title))
                     row["title_date"] = day(row["title"])
                     rawtext = norm(" ".join(page.chunks))
