@@ -25,12 +25,14 @@ class EvidenceAnchorTests(unittest.TestCase):
     def setUp(self):
         self.council = {
             "id": "council_minutes",
+            "name": "서울시의회 회의록",
             "local": True,
             "voice": False,
             "role": "BOTH",
         }
         self.voice = {
             "id": "eungdapso",
+            "name": "서울시 응답소 공개민원",
             "local": True,
             "voice": True,
             "role": "DISCOVERY",
