@@ -48,6 +48,10 @@ class Page(HTMLParser):
     def __init__(self, html):
         super().__init__(convert_charrefs=True)
         self.skip = 0
+        self.in_script = False
+        self.script_sources = []
+        self.script_text = []
+        self.raw_html = html
         self.chunks = []
         self.rows = []
         self.row = None
@@ -60,6 +64,9 @@ class Page(HTMLParser):
         self.feed(html)
 
     def handle_starttag(self, tag, attrs):
+        if tag == "script":
+            self.in_script = True
+            self.script_sources.extend(v for k,v in attrs if k == "src" and v)
         if tag in {"script", "style", "noscript"}:
             self.skip += 1
         if self.skip:
@@ -80,6 +87,8 @@ class Page(HTMLParser):
                     self.frames.append(value)
 
     def handle_endtag(self, tag):
+        if tag == "script":
+            self.in_script = False
         if tag in {"script", "style", "noscript"}:
             self.skip = max(0, self.skip - 1)
         if self.skip:
@@ -94,6 +103,8 @@ class Page(HTMLParser):
             self.row = None
 
     def handle_data(self, text):
+        if self.in_script:
+            self.script_text.append(text)
         if self.skip or not norm(text):
             return
         text = norm(text)
@@ -126,7 +137,7 @@ def detail_from(attrs, base, source):
             url = urljoin(base, candidate)
             pattern = source.get("detail_pattern")
             is_detail = bool(re.search(pattern,url)) if pattern else bool(DETAIL.search(url))
-            if allowed(url, source) and is_detail and any(k in source.get("id_params",["key","uid"]) for k, _ in parse_qsl(urlparse(url).query)):
+            if allowed(url, source) and is_detail and (source.get("path_identity") or any(k in source.get("id_params",["key","uid"]) for k, _ in parse_qsl(urlparse(url).query))):
                 return canonical(url, source)
     return ""
 
@@ -289,6 +300,8 @@ def window_change(current, previous):
         return "BASELINE_AFTER_FAILURE"
     if previous.get("expected") != current["expected"]:
         return "BASELINE_WINDOW_CHANGED"
+    if len(old) < previous["expected"]:
+        return "BASELINE_AFTER_FAILURE"
     def identity(url):
         parsed = urlparse(url)
         return (parsed.path, tuple(sorted(parse_qsl(parsed.query))))
@@ -316,6 +329,13 @@ def run(source, as_of, count=4):
     else:
         selected, total = select_rows(listing, listing_url, source, count)
         result["listed"] = total
+        if source.get("diagnostic_js") or not selected:
+            result["diagnostic_scripts"] = listing.script_sources[:12]
+            inline = "\n".join(listing.script_text)
+            functions = re.findall(r"function\s+fn_popup_page[\s\S]{0,2200}",inline)
+            result["diagnostic_popup"] = functions[:1]
+            if not selected:
+                result["diagnostic_inline_routes"] = re.findall(r".{0,60}(?:location|ajax|url\s*:|\.do).{0,180}",inline)[:12]
         if not selected:
             result["diagnosis"] = "LIST_PARSE_EMPTY"
             result["diagnostic_links"] = [u for u in listing.links if any(s in u for s in ("record","minute","confer","recent","viewer"))][:16]

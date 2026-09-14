@@ -91,6 +91,10 @@ class ConnectionRegression(unittest.TestCase):
     def test_sampling_change_is_new_baseline(self):
         current={"listing_ok":True,"expected":1,"selected":[{"url":"https://example.gov/record/main?uid=1"}]}
         self.assertEqual(window_change(current,{**current,"expected":2}),"BASELINE_WINDOW_CHANGED")
+    def test_partial_prior_list_is_not_new_publication(self):
+        current={"listing_ok":True,"expected":2,"selected":[{"url":"https://example.gov/record/main?uid=1"},{"url":"https://example.gov/record/main?uid=2"}]}
+        prior={**current,"selected":current["selected"][:1]}
+        self.assertEqual(window_change(current,prior),"BASELINE_AFTER_FAILURE")
     def test_configured_legacy_identity_preserved(self):
         self.assertEqual(canonical("https://example.gov/popup.do?contype=1&ntime=318&num=1&subtype=0&noise=x",{"id_params":["contype","ntime","num","subtype"]}),"https://example.gov/popup.do?contype=1&ntime=318&num=1&subtype=0")
 
