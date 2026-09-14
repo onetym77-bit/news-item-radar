@@ -128,6 +128,45 @@ class GroundingRegressionTests(unittest.TestCase):
         self.assertEqual(result["content_class"], "PLATFORM_NOTICE")
         self.assertFalse(result["verification_usable"])
 
+    def test_complaint_request_title_without_experience_is_not_direct(self):
+        result = self.signals(
+            '귀하의 민원내용은 "도로시설물 단차 점검 및 보수·보강 요청"에 관한 것입니다',
+            {
+                "id": "eungdapso", "name": "응답소", "local": True,
+                "voice": True, "role": "DISCOVERY",
+            },
+        )
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_phone_only_complaint_footer_is_rejected(self):
+        result = self.signals(
+            "02)2133-7860 · 민원처리 안내: 민원담당관 · 02)2133-7935",
+            {
+                "id": "eungdapso", "name": "응답소", "local": True,
+                "voice": True, "role": "DISCOVERY",
+            },
+        )
+        self.assertEqual(result["content_class"], "CONTACT_BOILERPLATE")
+
+    def test_education_budget_promise_is_not_outcome(self):
+        result = self.signals(
+            "교육복지를 강화하겠습니다. 3세 보육비 지원 확대에 111억 원을 편성하여 학부모 부담을 덜겠습니다"
+        )
+        self.assertEqual(result["content_class"], "POLICY_ANNOUNCEMENT")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_labor_table_structure_with_region_count_is_held(self):
+        result = self.signals(
+            "구분, 전체, 서울, 부산으로 구성된 26.7월 지역별(17개 시도) 체불 현황의 첫번째 테이블",
+            self.labor,
+        )
+        self.assertEqual(result["content_class"], "TABLE_SCHEMA_WITHOUT_VALUE")
+        self.assertEqual(result["evidence_anchor"], "NONE")
+
+    def test_isolated_verification_number_is_not_a_dataset_asset(self):
+        result = self.signals("ㅇ 운영주체 : 시립쪽방상담소(5개소)", self.open_data)
+        self.assertFalse(result["verification_usable"])
+
     def test_foreign_card_total_is_decomposable(self):
         result = self.signals("서울 외국인 카드소비 총액 1조 원 자치구별·업종별 현황")
         self.assertEqual(result["precheck_status"], "PASS")

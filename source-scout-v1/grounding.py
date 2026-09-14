@@ -25,11 +25,11 @@ NAV_TERMS = (
 CONTACT_RE = re.compile(r"(?:\(?0\d{1,2}\)?[- )]\d{2,4}[- ]?\d{3,4}|\(0\d{4,5}\)|우편번호)")
 PLATFORM_NOTICE_TERMS = (
     "가장 최근에 개방된", "데이터만 표시", "최대", "노출됩니다",
-    "전체 데이터는 CSV", "내려받아 확인", "sheet는",
+    "전체 데이터는 CSV", "내려받아 확인", "sheet는", "Sheet/OpenAPI", "최근 1개월치",
 )
 POLICY_ACTION_TERMS = (
     "예산을 편성", "추경을 편성", "지원한", "지원했습니다", "재원을 투입",
-    "발행을 확대", "시행", "도입", "조성공사", "설치공사",
+    "발행을 확대", "지원 확대", "편성", "반영하여", "시행", "도입", "조성공사", "설치공사",
 )
 
 PROCEDURE_TERMS = (
@@ -59,7 +59,7 @@ OBSERVED_TERMS = (
     "불편", "대기", "중단", "분쟁", "낮아", "높아",
 )
 ATTRIBUTION_TERMS = ("주장", "추산", "추정", "예상", "전망", "우려", "밝혔다", "밝혔", "협회")
-DIRECT_TERMS = ("겪", "불편", "피해", "못하", "거절", "대기", "민원", "문의", "이용 포기", "우회")
+DIRECT_TERMS = ("겪", "불편", "피해", "못하", "거절", "대기", "이용 포기", "우회")
 AXIS_MAP = {
     "지역별": "지역", "자치구별": "자치구", "대상별": "대상", "업종별": "업종",
     "연령별": "연령", "성별": "성별", "월별": "월", "시간대별": "시간대",
@@ -130,7 +130,7 @@ def analyze_content(
     precheck_status = "PASS"
     precheck_reason = "구체 문장"
     if (
-        ("문의" in text or "전화" in text)
+        ("문의" in text or "전화" in text or "민원처리 안내" in text)
         and (CONTACT_RE.search(text) or "서울특별시청" in text)
     ):
         content_class, precheck_status = "CONTACT_BOILERPLATE", "FAIL"
@@ -147,9 +147,14 @@ def analyze_content(
     ):
         content_class, precheck_status = "PARLIAMENTARY_PROCEDURE", "FAIL"
         precheck_reason = "회의 진행 절차"
+    elif source_id == "labor_arrears" and (
+        "테이블" in text or "구분, 전체" in text
+    ):
+        content_class, precheck_status = "TABLE_SCHEMA_WITHOUT_VALUE", "HOLD"
+        precheck_reason = "표 구조 설명만 있고 실제 지역 값 없음"
     elif (
         values
-        and any(term in text for term in POLICY_ACTION_TERMS)
+        and (any(term in text for term in POLICY_ACTION_TERMS) or speech)
         and not observed
     ):
         content_class, precheck_status = "POLICY_ANNOUNCEMENT", "HOLD"
@@ -204,9 +209,12 @@ def analyze_content(
         precheck_status == "PASS"
         and role == "VERIFICATION"
         and (
-            bool(values)
-            or content_class == "DATASET_METADATA"
-            or len(axes) >= 2
+            content_class == "DATASET_METADATA"
+            or bool(axes)
+            or (
+                bool(values)
+                and any(term in text.lower() for term in STRUCTURAL_TERMS + DATASET_TERMS)
+            )
         )
     )
     anchor_facts = [text] if anchor != "NONE" else []

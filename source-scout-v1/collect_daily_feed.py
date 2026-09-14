@@ -59,6 +59,7 @@ REVIEW_FIELDS = [
     "central_question",
     "citizen_stake",
     "competing_hypotheses",
+    "decision_rule",
     "minimum_test",
     "test_timebox_hours",
     "test_pass_rule",
@@ -68,6 +69,9 @@ REVIEW_FIELDS = [
     "review_revision",
     "transition_state",
     "transitioned_item_id",
+    "question_newness",
+    "four_hour_testable",
+    "notes",
 ]
 
 
