@@ -1,0 +1,47 @@
+[
+  {
+    "id": "gangnam",
+    "name": "강남구",
+    "list_url": "https://www.gncouncil.go.kr/kr/minutes/late.do",
+    "hosts": [
+      "www.gncouncil.go.kr",
+      "gncouncil.go.kr"
+    ]
+  },
+  {
+    "id": "gwanak",
+    "name": "관악구",
+    "list_url": "https://www.ga21c.seoul.kr/kr/minutes/late.do",
+    "hosts": [
+      "www.ga21c.seoul.kr",
+      "ga21c.seoul.kr"
+    ],
+    "list_fallback_url": "https://ga21c.seoul.kr/kr/minutes/late.do"
+  },
+  {
+    "id": "nowon",
+    "name": "노원구",
+    "list_url": "https://council.nowon.kr/kr/assembly/late.do",
+    "hosts": [
+      "council.nowon.kr"
+    ]
+  },
+  {
+    "id": "mapo",
+    "name": "마포구",
+    "list_url": "https://council.mapo.seoul.kr/kr/assembly/late.do",
+    "hosts": [
+      "council.mapo.seoul.kr",
+      "council.mapo.go.kr"
+    ]
+  },
+  {
+    "id": "seongdong",
+    "name": "성동구",
+    "list_url": "https://sdcouncil.sd.go.kr/kr/assembly/late",
+    "hosts": [
+      "sdcouncil.sd.go.kr"
+    ],
+    "uid_path": "/record/main"
+  }
+]
