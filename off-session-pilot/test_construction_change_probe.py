@@ -31,6 +31,25 @@ class ChangeLinkTests(unittest.TestCase):
         self.assertEqual(len(result["exact_project_id_matches"]), 1)
         self.assertEqual(result["title_only_join"], "NOT_ACCEPTED")
 
+    def test_first_argument_requires_official_pjt_cd_route(self):
+        items = [{
+            "title": "사업 A",
+            "link": {
+                "project_ids_named": [],
+                "first_arg_project_candidate": "6112026091499",
+            },
+        }]
+        contracts = [{"record_key": "6112026091499", "title": "사업 A"}]
+        route = {
+            "function_status": "FOUND",
+            "popup_expression": 'window.open("/PopInfo.action?pjt_cd="+pjt_cd);',
+        }
+        result = exact_contract_join(items, contracts, route)
+        self.assertEqual(result["first_argument_semantics"],
+                         "ROUTE_CONFIRMED_AS_PJT_CD")
+        self.assertEqual(len(result["first_argument_overlaps"]), 1)
+        self.assertEqual(result["exact_project_id_matches"], [])
+
     def test_same_title_without_id_cannot_join(self):
         items = [{
             "title": "사업 A",
