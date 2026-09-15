@@ -37,12 +37,15 @@
 | 실행 식별·원본 지문 | daily-briefing-v5/run_provenance.py |
 | 예약 실행 | .github/workflows/daily-briefing.yml |
 | 자동 검증 | agent-system-v1/validate_discovery_system.py |
+| 건설알림이 변화 관측 시험(일일 브리핑 미편입) | construction-watch-pilot/watch.py |
+| 건설알림이 시험 예약·파생 상태 저장 | .github/workflows/construction-watch-pilot.yml |
 
 ## 예약 흐름
 
 1. 관심 레이더: 매일 08:00, 12:00, 17:30 KST
 2. 역할 분리형 신규 소스 입력과 일일 브리핑: 매일 09:30 KST
 3. 주간 감사: 매주 월요일 09:00 KST
+4. 건설알림이 변화 관측 시험: 매일 11:15 KST. 네 공식 목록의 첫 페이지를 비교하며, 출처 실패 시 기존 상태를 덮어쓰지 않는다. 일일 브리핑과 장부는 건드리지 않는다.
 
 현재 일일 신규 소스 입력과 브리핑의 실행기는 GitHub Actions다. 읽기 전용 작업에서 소스를 한 번만 수집·검증해 artifact로 넘기고, main 전용 쓰기 작업만 그 동일 산출물을 저장한다. PR, 다른 브랜치, 과거 날짜 재실행에는 쓰기 권한과 Git 자격증명을 주지 않으며 main 최신본을 덮어쓰지 않는다. 비회기에도 원석이 끊기지 않도록 응답소뿐 아니라 서울연구원·고용노동부 임금체불 통계·한국소비자원 자료를 매일 보완 발굴 입력에 포함한다.
 
