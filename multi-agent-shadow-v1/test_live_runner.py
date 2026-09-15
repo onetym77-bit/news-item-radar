@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+import argparse
 import asyncio
 import importlib.util
 import inspect
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 SPEC = importlib.util.spec_from_file_location("shadow_live_runner", HERE / "live_runner.py")
@@ -99,6 +101,58 @@ class LiveRunnerTests(unittest.TestCase):
         self.assertEqual(output["mode"], "PREFLIGHT")
         self.assertEqual(output["paid_calls_made"], 0)
         self.assertFalse(output["official_state_mutation_allowed"])
+
+    def test_zero_candidate_result_carries_qualification_paths_without_calls(self):
+        original = make_snapshot(primary=False)
+        feed = original["feed"]
+        feed["context_holds"] = []
+        feed["qualification_paths"] = {
+            "qualified": 9, "fresh_new": 0, "fresh_repeat": 3,
+            "stale": 5, "archived": 1, "date_hold": 0,
+            "failed_sources": [{"source_id": "labor_arrears", "reason": "timeout"}],
+        }
+        source = freeze.build_snapshot(feed, run_id="zero-path", code_sha="abc")
+        plan = make_plan(source)
+        limits = live.RuntimeLimits().validate()
+        preflight = live.preflight(source, plan, limits)
+        self.assertEqual(preflight["status"], "NO_ELIGIBLE_CANDIDATE")
+        self.assertEqual(preflight["qualification_paths"]["fresh_repeat"], 3)
+        output = asyncio.run(
+            live.execute(source, plan, model="test-model", limits=limits)
+        )
+        self.assertEqual(output["model_calls_used"], 0)
+        self.assertEqual(output["qualification_paths"]["stale"], 5)
+        self.assertIn("자동 유효 9건", live.render_markdown_summary(output))
+
+    def test_zero_only_cli_creates_result_without_api_key_or_sdk(self):
+        original = make_snapshot(primary=False)
+        feed = original["feed"]
+        feed["context_holds"] = []
+        source = freeze.build_snapshot(feed, run_id="zero-cli", code_sha="abc")
+        plan = make_plan(source)
+        args = argparse.Namespace(
+            snapshot=Path("unused-snapshot.json"),
+            plan=Path("unused-plan.json"),
+            output=Path("unused-result.json"),
+            summary_output=None,
+            model="test-model",
+            candidate_limit=1,
+            max_model_calls=4,
+            max_output_tokens=2400,
+            max_input_chars=18000,
+            preflight=False,
+            zero_only=True,
+            validate_sdk=False,
+            confirm_paid_run="",
+        )
+        written = []
+        with patch.object(live, "parse_args", return_value=args), \
+             patch.object(live, "load_json", side_effect=[source, plan]), \
+             patch.object(live, "write_json", side_effect=lambda _, value: written.append(value)), \
+             patch.dict(live.os.environ, {"OPENAI_API_KEY": ""}):
+            self.assertEqual(live.main(), 0)
+        self.assertEqual(written[0]["status"], "NO_ELIGIBLE_CANDIDATE")
+        self.assertEqual(written[0]["model_calls_used"], 0)
 
     def test_unrelated_verification_rows_are_not_attached(self):
         source = make_snapshot()

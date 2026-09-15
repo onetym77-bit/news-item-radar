@@ -941,6 +941,7 @@ async def execute(
         "model_calls_used": budget.used,
         "usage": asdict(totals),
         "selected_candidates": selected,
+        "qualification_paths": snapshot["feed"].get("qualification_paths", {}),
         "blocked_recovery_context_count": blocked_recovery_context_count(snapshot, plan),
         "blocked_recovery_repeat_count": blocked_recovery_repeat_count(plan),
         "candidate_runs": candidate_runs,
@@ -965,6 +966,27 @@ def render_markdown_summary(payload: dict) -> str:
         "- 공식 브리핑 반영: 안 함",
         "",
     ]
+    if not payload.get("candidate_runs"):
+        paths = payload.get("qualification_paths", {})
+        lines.extend([
+            "## 이번 실행에서 후보가 없는 이유",
+            "",
+            (
+                f"- 자동 유효 {paths.get('qualified', '?')}건 → "
+                f"새 원문 {paths.get('fresh_new', '?')}건 · "
+                f"기존 원문 {paths.get('fresh_repeat', '?')}건 · "
+                f"신선도 초과 {paths.get('stale', '?')}건 · "
+                f"보관 종료 {paths.get('archived', '?')}건"
+            ),
+            f"- 중복 보충 제외: {payload.get('blocked_recovery_repeat_count', 0)}건",
+            f"- 문맥 보류 제외: {payload.get('blocked_recovery_context_count', 0)}건",
+            *[
+                f"- 수집 실패: {item.get('source_id', '?')} — {item.get('reason', '')}"
+                for item in paths.get("failed_sources", [])
+            ],
+            "- 0건은 현상 부재를 뜻하지 않으며 수집 실패와 새 증거 확보 상태를 따로 봐야 합니다.",
+            "",
+        ])
     for index, run in enumerate(payload.get("candidate_runs", []), start=1):
         final = run.get("final")
         latest = next(
@@ -1062,6 +1084,7 @@ def preflight(snapshot: dict, plan: dict, limits: RuntimeLimits) -> dict:
         "official_state_mutation_allowed": False,
         "limits": asdict(limits),
         "selected_candidates": selected,
+        "qualification_paths": snapshot["feed"].get("qualification_paths", {}),
         "blocked_recovery_context_count": blocked_recovery_context_count(snapshot, plan),
         "blocked_recovery_repeat_count": blocked_recovery_repeat_count(plan),
         "paid_calls_made": 0,
@@ -1079,6 +1102,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-output-tokens", type=int, default=2400)
     parser.add_argument("--max-input-chars", type=int, default=18000)
     parser.add_argument("--preflight", action="store_true")
+    parser.add_argument("--zero-only", action="store_true")
     parser.add_argument("--validate-sdk", action="store_true")
     parser.add_argument("--confirm-paid-run", default="")
     return parser.parse_args()
@@ -1093,6 +1117,8 @@ def main() -> int:
     ).validate()
     snapshot = load_json(args.snapshot)
     plan = load_json(args.plan)
+    if args.preflight and args.zero_only:
+        raise SystemExit("--preflight and --zero-only are mutually exclusive")
     if args.preflight:
         output = preflight(snapshot, plan, limits)
         if args.validate_sdk:
@@ -1100,6 +1126,14 @@ def main() -> int:
                 args.model,
                 limits.max_output_tokens_per_call,
             )
+    elif args.zero_only:
+        if preflight(snapshot, plan, limits)["selected_candidates"]:
+            raise SystemExit("--zero-only refuses an eligible candidate")
+        output = asyncio.run(
+            execute(snapshot, plan, model=args.model, limits=limits)
+        )
+        if output["model_calls_used"] != 0:
+            raise SystemExit("--zero-only must not make model calls")
     else:
         if args.confirm_paid_run != CONFIRMATION:
             raise SystemExit(

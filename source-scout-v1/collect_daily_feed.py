@@ -293,6 +293,62 @@ def fail_closed_council_context(row: dict) -> None:
     )
 
 
+
+def qualification_paths(
+    records: list[dict],
+    prior_source_revisions: set[str],
+    metrics: list[dict],
+) -> dict:
+    """Explain the qualified-to-new funnel without relaxing any selection gate."""
+    paths = {
+        "qualified": 0,
+        "fresh_new": 0,
+        "fresh_repeat": 0,
+        "stale": 0,
+        "archived": 0,
+        "date_hold": 0,
+    }
+    by_source: dict[str, dict[str, int]] = {}
+    for row in records:
+        if not row.get("qualified"):
+            continue
+        source_id = row.get("source_id", "")
+        source_paths = by_source.setdefault(
+            source_id, {key: 0 for key in paths}
+        )
+        status = row.get("freshness_status")
+        if status == "FRESH":
+            key = (
+                "fresh_repeat"
+                if source_revision_for_row(row) in prior_source_revisions
+                else "fresh_new"
+            )
+        elif status == "STALE_CARRYOVER":
+            key = "stale"
+        elif status == "ARCHIVED_STALE":
+            key = "archived"
+        else:
+            key = "date_hold"
+        paths["qualified"] += 1
+        source_paths["qualified"] += 1
+        paths[key] += 1
+        source_paths[key] += 1
+    failed_sources = [
+        {"source_id": metric.get("source_id", ""), "reason": metric.get("error", "")}
+        for metric in metrics
+        if not metric.get("http_ok")
+    ]
+    return {
+        **paths,
+        "by_source": by_source,
+        "failed_sources": failed_sources,
+        "zero_new_reason": (
+            "NO_NEW_FRESH_QUALIFIED" if paths["fresh_new"] == 0 else ""
+        ),
+        "note": "원자료 판정 경로이며 후보 상한·근접중복 선별 전의 건수",
+    }
+
+
 def build_feed(
     module,
     prior_source_revisions: set[str] | None = None,
@@ -488,6 +544,7 @@ def build_feed(
         5,
     )
     failed_count = sum(row.get("precheck_status") == "FAIL" for row in records)
+    paths = qualification_paths(records, prior_source_revisions, metrics)
     return {
         "generated_at_kst": datetime.now(ZoneInfo("Asia/Seoul")).isoformat(timespec="seconds"),
         "status": {
@@ -527,6 +584,7 @@ def build_feed(
             "activity_baselines": len(activity_baselines),
         },
         "metrics": metrics,
+        "qualification_paths": paths,
         "core_discovery": core,
         "auxiliary_discovery": auxiliary,
         "localization_discovery": localization,
@@ -699,6 +757,34 @@ def render_markdown(feed: dict) -> str:
             f"날짜 확인 대기 {funnel.get('freshness_holds', 0)}건 · "
             f"문맥 확인 대기 {funnel.get('context_holds', 0)}건"
         ),
+        "",
+        "## 유효 원문이 오늘 후보로 이어진 경로",
+        "",
+        (
+            f"- 자동 유효 {feed['qualification_paths']['qualified']}건 → "
+            f"오늘 새 원문 {feed['qualification_paths']['fresh_new']}건 · "
+            f"이미 본 원문 {feed['qualification_paths']['fresh_repeat']}건 · "
+            f"신선도 초과 {feed['qualification_paths']['stale']}건 · "
+            f"보관 종료 {feed['qualification_paths']['archived']}건 · "
+            f"날짜 보류 {feed['qualification_paths']['date_hold']}건"
+        ),
+        "- 이 수치는 원자료 기준이며 후보 상한·근접중복 선별 전입니다.",
+        *[
+            (
+                f"- {source_id}: 유효 {counts['qualified']}건 · "
+                f"새 원문 {counts['fresh_new']}건 · "
+                f"기존 원문 {counts['fresh_repeat']}건 · "
+                f"신선도 초과 {counts['stale']}건 · "
+                f"보관 종료 {counts['archived']}건"
+            )
+            for source_id, counts in sorted(
+                feed["qualification_paths"]["by_source"].items()
+            )
+        ],
+        *[
+            f"- 수집 실패: {item['source_id']} — {item['reason']}"
+            for item in feed["qualification_paths"]["failed_sources"]
+        ],
         "",
         "## 오늘 판정이 필요한 카드",
         "",
