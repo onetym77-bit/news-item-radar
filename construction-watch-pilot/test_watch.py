@@ -71,6 +71,18 @@ class WatchTests(unittest.TestCase):
         self.assertTrue(all(x["article_gate"] == "NOT_EVALUATED"
                             for x in next_state["last_run"]["signals"]))
 
+    def test_multiple_penalties_make_one_verification_question(self):
+        current = compare(empty_state(), observed([
+            event("PENALTY", "1112021020598", "1221", "영동대로 공사"),
+            event("PENALTY", "1112021020598", "1222", "영동대로 공사"),
+            event("PENALTY", "1112021020598", "1223", "영동대로 공사"),
+        ]), AT1)
+        signals = [x for x in current["last_run"]["signals"]
+                   if x["kind"] == "MULTIPLE_PENALTIES"]
+        self.assertEqual(len(signals), 1)
+        self.assertIn("중복 게시인지 확인", signals[0]["observation"])
+        self.assertEqual(signals[0]["article_gate"], "NOT_EVALUATED")
+
     def test_penalty_with_change_not_causal_claim(self):
         old = compare(empty_state(), observed([
             event("DESIGN", "1112021020598", "21970|1"),
