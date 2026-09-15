@@ -129,6 +129,46 @@ KEYWORD_STOPWORDS = {
 }
 MIN_EVIDENCE_RELEVANCE = 5
 
+class GroundingFailure(ValueError):
+    """A cited fact failed local support checks; keep only bounded diagnostics."""
+
+    def __init__(self, message: str, details: dict | None = None):
+        super().__init__(message)
+        self.details = details or {}
+
+
+def claim_numbers(value: str) -> set[str]:
+    return {
+        token.replace(",", "")
+        for token in re.findall(r"\d[\d,]*(?:\.\d+)?%?", value)
+    }
+
+
+def claim_places(value: str) -> set[str]:
+    places = re.findall(
+        r"(?<![가-힣])(?:서울(?:특별시|시)|[가-힣]{2,3}구)(?![가-힣])",
+        value,
+    )
+    return {"서울시" if place == "서울특별시" else place for place in places}
+
+
+def fact_quote_relevance_score(statement: str, quote: str) -> int:
+    """A conservative lexical screen, not a semantic proof of a fact."""
+    def roots(value: str) -> set[str]:
+        tokens = row_keywords({"text": value})
+        suffixes = ("에서는", "에서", "으로", "에게", "까지", "부터", "은", "는", "이", "가", "을", "를", "의", "에")
+        result: set[str] = set()
+        for token in tokens:
+            suffix = next((part for part in suffixes if token.endswith(part)), None)
+            if suffix and len(token) > len(suffix) + 2:
+                result.add(token[:-len(suffix)])
+            else:
+                result.add(token)
+        return result
+
+    shared = roots(statement) & roots(quote)
+    return sum(min(len(token) + 1, 8) for token in shared)
+
 
 def row_keywords(row: dict) -> set[str]:
     parts: list[str] = []
@@ -358,6 +398,8 @@ def build_prompt(
         "evidence_refs의 ref_id, source_id, url은 제공된 값만 사용하고 exact_text는 해당 자료에 실제 존재하는 연속 문구만 인용하라. "
         "confirmed_facts와 unverified_claims의 source_ref_ids는 반드시 1개 이상이며 제공된 ref_id만 사용하라. "
         "근거가 없는 주장은 만들지 말고, 자료 부재를 말할 때도 그 부재를 확인한 후보 ref_id를 인용하라. "
+        "confirmed_facts는 인용 원문에 가까운 표현으로 사실 하나씩 쓰고 원문에 없는 숫자·기관·인물·지역·인과를 추가하지 마라. "
+        "원문을 넘어서는 해석·추정은 confirmed_facts가 아니라 unverified_claims 또는 competing_hypotheses로 옮겨라. "
         "모든 필드를 한국어로 간결하게 작성하라. ORCHESTRATOR가 아니라면 evidence_refs 2개 이하, "
         "confirmed_facts와 unverified_claims 각 3개 이하, competing_hypotheses 2개, "
         "verification_plan과 kill_criteria 각 3개 이하로 제한하라. "
@@ -413,21 +455,40 @@ def validate_exact_grounding(
     ):
         raise ValueError("issue framing is not supported by the candidate source")
 
-    for statement in payload.get("confirmed_facts", []):
+    for index, statement in enumerate(payload.get("confirmed_facts", [])):
         quoted = " ".join(
             str(evidence_by_id[ref_id]["exact_text"])
             for ref_id in statement.get("source_ref_ids", [])
             if ref_id in evidence_by_id
         )
+        claim = str(statement.get("text", ""))
+        missing_numbers = sorted(claim_numbers(claim) - claim_numbers(quoted))
+        missing_places = sorted(claim_places(claim) - claim_places(quoted))
+        relevance = fact_quote_relevance_score(claim, quoted)
         if (
             not quoted
-            or evidence_relevance_score(
-                {"text": str(statement.get("text", ""))},
-                {"text": quoted},
-            )
-            < MIN_EVIDENCE_RELEVANCE
+            or missing_numbers
+            or missing_places
+            or relevance < MIN_EVIDENCE_RELEVANCE
         ):
-            raise ValueError("confirmed fact is not supported by its exact quotes")
+            raise GroundingFailure(
+                "confirmed fact is not supported by its exact quotes",
+                {
+                    "field": "confirmed_facts",
+                    "index": index,
+                    "statement": claim[:600],
+                    "quotes": quoted[:1600],
+                    "relevance_score": relevance,
+                    "missing_numbers": missing_numbers,
+                    "missing_places": missing_places,
+                    "reason": (
+                        "UNCITED_SOURCE" if not quoted else
+                        "NEW_NUMBER" if missing_numbers else
+                        "NEW_PLACE" if missing_places else
+                        "LOW_LEXICAL_RELEVANCE"
+                    ),
+                },
+            )
 
 def build_output_model():
     from typing import Literal
@@ -572,7 +633,7 @@ async def run_stage(
     previous: dict | None,
     limits: RuntimeLimits,
     budget: CallBudget,
-) -> tuple[dict, dict[str, int]]:
+) -> dict:
     budget.reserve()
     Agent, ModelSettings, Runner, Reasoning = load_sdk()
     OutputModel = build_output_model()
@@ -602,14 +663,47 @@ async def run_stage(
     if not isinstance(output, OutputModel):
         raise ValueError("agent did not return the required structured output")
     payload = output.model_dump(mode="json")
-    validate_assessment(payload, expected_snapshot_id=snapshot_id)
-    validate_exact_grounding(
-        payload,
-        expected_role=role,
-        expected_candidate_id=candidate_id,
-        source_rows=source_rows,
-    )
-    return payload, usage_dict(result)
+    usage = usage_dict(result)
+    try:
+        validate_assessment(payload, expected_snapshot_id=snapshot_id)
+    except ValueError as exc:
+        return {
+            "status": "REJECTED_CONTRACT",
+            "agent_role": role,
+            "assessment": payload,
+            "usage": usage,
+            "error": {
+                "type": type(exc).__name__,
+                "message": str(exc)[:500],
+                "details": getattr(exc, "details", {}),
+            },
+        }
+    try:
+        validate_exact_grounding(
+            payload,
+            expected_role=role,
+            expected_candidate_id=candidate_id,
+            source_rows=source_rows,
+        )
+    except ValueError as exc:
+        return {
+            "status": "REJECTED_GROUNDING",
+            "agent_role": role,
+            "assessment": payload,
+            "usage": usage,
+            "error": {
+                "type": type(exc).__name__,
+                "message": str(exc)[:500],
+                "details": getattr(exc, "details", {}),
+            },
+        }
+    return {
+        "status": "VALIDATED",
+        "agent_role": role,
+        "assessment": payload,
+        "usage": usage,
+        "error": None,
+    }
 
 async def execute(
     snapshot: dict,
@@ -647,7 +741,7 @@ async def execute(
         stages: list[dict] = []
         independent_assessments: list[dict] = []
         for role in (choice["initial_role"], "EDITOR", "SKEPTIC"):
-            assessment, usage = await run_stage(
+            outcome = await run_stage(
                 role=role,
                 model=model,
                 snapshot_id=snapshot["snapshot_id"],
@@ -658,42 +752,57 @@ async def execute(
                 limits=limits,
                 budget=budget,
             )
-            totals.add(usage)
-            stages.append(
-                {
-                    "agent_role": role,
-                    "assessment": assessment,
-                    "usage": usage,
-                }
-            )
-            independent_assessments.append(compact_assessment(assessment))
+            totals.add(outcome["usage"])
+            stages.append(outcome)
+            if outcome["status"] == "VALIDATED":
+                independent_assessments.append(
+                    compact_assessment(outcome["assessment"])
+                )
 
-        panel = {"independent_assessments": independent_assessments}
-        final, usage = await run_stage(
-            role="ORCHESTRATOR",
-            model=model,
-            snapshot_id=snapshot["snapshot_id"],
-            candidate_id=candidate_id,
-            evidence=evidence,
-            source_rows=source_rows,
-            previous=panel,
-            limits=limits,
-            budget=budget,
+        final = None
+        if len(independent_assessments) >= 2:
+            panel = {"independent_assessments": independent_assessments}
+            outcome = await run_stage(
+                role="ORCHESTRATOR",
+                model=model,
+                snapshot_id=snapshot["snapshot_id"],
+                candidate_id=candidate_id,
+                evidence=evidence,
+                source_rows=source_rows,
+                previous=panel,
+                limits=limits,
+                budget=budget,
+            )
+            totals.add(outcome["usage"])
+            stages.append(outcome)
+            if outcome["status"] == "VALIDATED":
+                final = outcome["assessment"]
+
+        candidate_status = (
+            "COMPLETED" if final is not None else "NEEDS_MORE_VALID_ASSESSMENTS"
         )
-        totals.add(usage)
-        stages.append(
+        candidate_runs.append(
             {
-                "agent_role": "ORCHESTRATOR",
-                "assessment": final,
-                "usage": usage,
+                **choice,
+                "status": candidate_status,
+                "validated_independent_assessments": len(independent_assessments),
+                "stages": stages,
+                "final": final,
             }
         )
-        candidate_runs.append({**choice, "stages": stages, "final": final})
 
     manifest = {
         "schema_version": SCHEMA_VERSION,
         "mode": "LIVE_SHADOW",
-        "status": "COMPLETED",
+        "status": (
+            "COMPLETED_WITH_REJECTIONS"
+            if any(
+                stage["status"] != "VALIDATED"
+                for run in candidate_runs
+                for stage in run["stages"]
+            )
+            else "COMPLETED"
+        ),
         "snapshot_id": snapshot["snapshot_id"],
         "run_plan_id": plan["run_plan_id"],
         "official_state_mutation_allowed": False,
@@ -725,30 +834,69 @@ def render_markdown_summary(payload: dict) -> str:
         "",
     ]
     for index, run in enumerate(payload.get("candidate_runs", []), start=1):
-        final = run["final"]
+        final = run.get("final")
+        latest = next(
+            (
+                stage.get("assessment")
+                for stage in reversed(run.get("stages", []))
+                if stage.get("assessment")
+            ),
+            {},
+        )
+        title = (final or latest).get("issue_title", run.get("candidate_id", ""))
         lines.extend(
             [
-                f"## 후보 {index}. {final['issue_title']}",
+                f"## 후보 {index}. {title}",
                 "",
                 f"- 선택 경로: {run['selection_pool']} / 수집 점수 {run.get('collector_score')}",
                 f"- 연결된 검증자료: {run.get('matched_verification_count', 0)}건",
-                f"- 최종 판정: **{final['verdict']}** · {final['recommended_lane']} · {final['grounding_level']}",
-                f"- 품질 점수: {final['score_total']}/12",
-                f"- 판단: {final['reasoning_summary']}",
-                f"- 범위 경고: {final['scope_warning']}",
+                f"- 유효한 독립 판단: {run.get('validated_independent_assessments', 0)}건",
+            ]
+        )
+        if final:
+            lines.extend(
+                [
+                    f"- 최종 판정: **{final['verdict']}** · {final['recommended_lane']} · {final['grounding_level']}",
+                    f"- 품질 점수: {final['score_total']}/12",
+                    f"- 판단: {final['reasoning_summary']}",
+                    f"- 범위 경고: {final['scope_warning']}",
+                ]
+            )
+        else:
+            lines.append("- 최종 판정: **추가 검증 필요** — 유효한 종합 판단을 만들지 못함")
+        lines.extend(
+            [
                 "",
-                "| 역할 | 점수 | 판정 | 입력 | 출력 | 합계 |",
-                "|---|---:|---|---:|---:|---:|",
+                "| 역할 | 상태 | 점수 | 판정 | 입력 | 출력 | 합계 |",
+                "|---|---|---:|---|---:|---:|---:|",
             ]
         )
         for stage in run["stages"]:
             stage_usage = stage["usage"]
-            assessment = stage["assessment"]
+            assessment = stage.get("assessment") or {}
             lines.append(
-                f"| {stage['agent_role']} | {assessment['score_total']} | "
-                f"{assessment['verdict']} | {stage_usage['input_tokens']:,} | "
-                f"{stage_usage['output_tokens']:,} | {stage_usage['total_tokens']:,} |"
+                f"| {stage['agent_role']} | {stage['status']} | "
+                f"{assessment.get('score_total', '-')} | "
+                f"{assessment.get('verdict', '-')} | "
+                f"{stage_usage['input_tokens']:,} | "
+                f"{stage_usage['output_tokens']:,} | "
+                f"{stage_usage['total_tokens']:,} |"
             )
+            if stage.get("error"):
+                error = stage["error"]
+                details = error.get("details") or {}
+                lines.extend(
+                    [
+                        "",
+                        f"### {stage['agent_role']} 근거 탈락 기록",
+                        "",
+                        f"- 이유: {details.get('reason', error.get('message', ''))}",
+                        f"- 주장: {details.get('statement', '')}",
+                        f"- 인용: {details.get('quotes', '')}",
+                        f"- 누락 숫자: {', '.join(details.get('missing_numbers', [])) or '없음'}",
+                        f"- 누락 지역: {', '.join(details.get('missing_places', [])) or '없음'}",
+                    ]
+                )
         lines.append("")
     return "\n".join(lines) + "\n"
 
