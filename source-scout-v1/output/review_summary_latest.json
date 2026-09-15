@@ -1,10 +1,10 @@
 {
   "period": {
-    "start": "2026-09-08",
-    "end": "2026-09-14",
+    "start": "2026-09-09",
+    "end": "2026-09-15",
     "days": 7
   },
-  "generated": 10,
+  "generated": 13,
   "labeled": 0,
   "coverage": 0.0,
   "promising": 0,
@@ -13,7 +13,7 @@
   "useful_rate": null,
   "by_source": {
     "council_minutes": {
-      "generated": 8,
+      "generated": 11,
       "labeled": 0,
       "promising": 0,
       "useful": 0,
