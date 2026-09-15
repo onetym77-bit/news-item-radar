@@ -78,6 +78,7 @@ jobs:
           python -m py_compile daily-briefing-v5/build_briefing.py
           python -m py_compile daily-briefing-v5/run_provenance.py
           python -m py_compile multi-agent-shadow-v1/freeze_input.py
+          python -m py_compile multi-agent-shadow-v1/contracts.py
           python -X utf8 -m unittest discover -s source-scout-v1 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s daily-briefing-v5 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s multi-agent-shadow-v1 -p 'test_*.py' -v
