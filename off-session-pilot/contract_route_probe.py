@@ -224,8 +224,16 @@ def main():
             if result["first_entries"]:
                 entry = result["first_entries"][0]
                 target = detail_url(sample_id, entry)
-                detail = inspect_detail(read_text(target), entry["title"])
-                result["detail_fetch"] = detail
+                try:
+                    result["detail_fetch"] = inspect_detail(
+                        read_text(target), entry["title"]
+                    )
+                except Exception as exc:
+                    result["detail_fetch"] = {
+                        "detail_status": "FAILED",
+                        "error": sanitize(str(exc))[:180],
+                        "article_gate": "NOT_EVALUATED",
+                    }
         except Exception as exc:
             result = {"sample_id": sample_id, "access": "FAILED",
                       "error": sanitize(str(exc))[:180],
