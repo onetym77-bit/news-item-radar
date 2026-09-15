@@ -99,6 +99,24 @@ class OrchestratorTests(unittest.TestCase):
             [ref["record_id"] for ref in plan["pools"]["recovery"]],
         )
 
+    def test_overlapping_row_is_assigned_to_highest_priority_pool_once(self):
+        source = snapshot()
+        duplicate = row("seoul_bigdata", "동일 후보 중복 노출", "duplicate")
+        source["feed"]["core_discovery"].append(duplicate)
+        source["feed"]["context_holds"].append(dict(duplicate))
+        source["feed"]["verification_map"].append(dict(duplicate))
+        unsigned = {key: value for key, value in source.items() if key != "snapshot_id"}
+        source["snapshot_id"] = freeze.snapshot_digest(unsigned)
+
+        plan = orchestrator.build_run_plan(source)
+        duplicate_id = orchestrator.stable_record_id(duplicate)
+        memberships = [
+            pool_name
+            for pool_name, refs in plan["pools"].items()
+            if duplicate_id in {ref["record_id"] for ref in refs}
+        ]
+        self.assertEqual(memberships, ["primary"])
+
     def test_same_snapshot_produces_stable_plan(self):
         first = orchestrator.build_run_plan(snapshot())
         second = orchestrator.build_run_plan(snapshot())
