@@ -19,6 +19,7 @@ class ChangeLinkTests(unittest.TestCase):
         self.assertEqual(link["function"], "cmdPopInfo")
         self.assertEqual(link["quoted_args"], ["123456789", "R26TA02228982"])
         self.assertEqual(link["project_ids_named"], [])
+        self.assertEqual(link["first_arg_project_candidate"], "123456789")
 
     def test_explicit_project_id_can_join_exactly(self):
         items = [{
@@ -26,7 +27,7 @@ class ChangeLinkTests(unittest.TestCase):
             "link": {"project_ids_named": ["6112026091499"]},
         }]
         contracts = [{"record_key": "6112026091499", "title": "사업 A"}]
-        result = exact_contract_join(items, contracts)
+        result = exact_contract_join(items, contracts, {"function_status": "NOT_FOUND"})
         self.assertEqual(len(result["exact_project_id_matches"]), 1)
         self.assertEqual(result["title_only_join"], "NOT_ACCEPTED")
 
@@ -36,7 +37,7 @@ class ChangeLinkTests(unittest.TestCase):
             "link": {"project_ids_named": []},
         }]
         contracts = [{"record_key": "6112026091499", "title": "사업 A"}]
-        self.assertEqual(exact_contract_join(items, contracts)
+        self.assertEqual(exact_contract_join(items, contracts, {"function_status": "NOT_FOUND"})
                          ["exact_project_id_matches"], [])
 
     def test_first_five_rows_have_own_dates(self):
@@ -51,6 +52,18 @@ class ChangeLinkTests(unittest.TestCase):
                          ["2026-09-15", "2026-09-14"])
         self.assertEqual(result["snapshot_cadence"], "NOT_ESTABLISHED")
         self.assertEqual(result["article_gate"], "NOT_EVALUATED")
+
+    def test_table_date_can_be_read_without_label(self):
+        html = ('<a onclick="cmdPopInfo(\'6112026091499\',\'공사명\');">공사명</a>'
+                '<td>강동구</td><td>0</td><td>2026-09-15</td>')
+        result = inspect_list(html, "DESIGN")
+        self.assertEqual(result["items"][0]["registration_date"], "2026-09-15")
+
+    def test_duplicate_popup_anchor_not_counted_twice(self):
+        html = ('<a onclick="cmdPopInfo(\'1112021020598\',\'1221\');">영동대로 공사</a>' * 2
+                + '<a onclick="cmdPopInfo(\'1112021020598\',\'1222\');">영동대로 공사</a>')
+        result = inspect_list(html, "PENALTY")
+        self.assertEqual(len(result["items"]), 2)
 
     def test_progress_snippets_do_not_infer_registration(self):
         result = inspect_progress(
