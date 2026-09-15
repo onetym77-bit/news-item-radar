@@ -105,8 +105,11 @@ class OrchestratorTests(unittest.TestCase):
         source["feed"]["core_discovery"].append(duplicate)
         source["feed"]["context_holds"].append(dict(duplicate))
         source["feed"]["verification_map"].append(dict(duplicate))
-        unsigned = {key: value for key, value in source.items() if key != "snapshot_id"}
-        source["snapshot_id"] = freeze.snapshot_digest(unsigned)
+        source = freeze.build_snapshot(
+            source["feed"],
+            run_id=source["source_run_id"],
+            code_sha=source["source_code_sha"],
+        )
 
         plan = orchestrator.build_run_plan(source)
         duplicate_id = orchestrator.stable_record_id(duplicate)
