@@ -78,7 +78,7 @@ def progress_record(card):
     title = re.search(r"^■\s*(.*?)\s+사업기간", card)
     if not title:
         raise ValueError("progress card title missing")
-    values = {re.sub(r"\\s+", "", label): float(number)
+    values = {re.sub(r"\s+", "", label): float(number)
               for label, number in PERCENT.findall(card)}
     if "계획" not in values or "실적" not in values:
         raise ValueError("progress plan/actual values missing")
