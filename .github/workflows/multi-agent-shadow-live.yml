@@ -74,6 +74,7 @@ jobs:
             --target-max 4
 
       - name: Preflight selection with zero paid calls
+        id: selection_preflight
         shell: bash
         env:
           CANDIDATE_LIMIT: ${{ inputs.candidate_limit }}
@@ -86,11 +87,56 @@ jobs:
             --candidate-limit "$CANDIDATE_LIMIT" \
             --max-model-calls "$max_calls" \
             --preflight
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          path = Path(os.environ["RUNNER_TEMP"]) / "shadow_preflight.json"
+          result = json.loads(path.read_text(encoding="utf-8"))
+          eligible = bool(result["selected_candidates"])
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+              output.write(f"eligible={'true' if eligible else 'false'}\n")
+          paths = result.get("qualification_paths", {})
+          print(
+              "qualification paths: "
+              f"qualified={paths.get('qualified', '?')} "
+              f"fresh_new={paths.get('fresh_new', '?')} "
+              f"fresh_repeat={paths.get('fresh_repeat', '?')} "
+              f"stale={paths.get('stale', '?')} "
+              f"archived={paths.get('archived', '?')} "
+              f"failed_sources={len(paths.get('failed_sources', []))}"
+          )
+          print(
+              "recovery blocks: "
+              f"repeat={result['blocked_recovery_repeat_count']} "
+              f"context={result['blocked_recovery_context_count']}"
+          )
+          PY
+
+      - name: Record a zero-candidate result without installing an SDK
+        if: steps.selection_preflight.outputs.eligible == 'false'
+        shell: bash
+        env:
+          MODEL: ${{ inputs.model }}
+          CANDIDATE_LIMIT: ${{ inputs.candidate_limit }}
+        run: |
+          max_calls=$((CANDIDATE_LIMIT * 4))
+          python -X utf8 multi-agent-shadow-v1/live_runner.py \
+            --snapshot "${RUNNER_TEMP}/shadow_input.json" \
+            --plan "${RUNNER_TEMP}/shadow_plan.json" \
+            --output "${RUNNER_TEMP}/shadow_live_result.json" \
+            --summary-output "$GITHUB_STEP_SUMMARY" \
+            --model "$MODEL" \
+            --candidate-limit "$CANDIDATE_LIMIT" \
+            --max-model-calls "$max_calls" \
+            --zero-only
 
       - name: Install the pinned OpenAI Agents SDK
+        if: steps.selection_preflight.outputs.eligible == 'true'
         run: python -m pip install --disable-pip-version-check -r multi-agent-shadow-v1/requirements.txt
 
       - name: Run the paid read-only shadow agents
+        if: steps.selection_preflight.outputs.eligible == 'true'
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
