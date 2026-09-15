@@ -107,8 +107,10 @@ def route_evidence(scripts):
     actions = list(dict.fromkeys(ACTION.findall(body)))[:8]
     hints = [name for name in ("window.open", "ajax", "submit", "form.action",
                               "location.href") if name in body]
+    popup_at = body.find("window.open")
+    popup_expression = sanitize(body[popup_at:popup_at + 450]) if popup_at >= 0 else ""
     return {"function_status": "FOUND", "action_paths": actions,
-            "transport_hints": hints}
+            "transport_hints": hints, "popup_expression": popup_expression}
 
 def official_script_urls(sources, list_url):
     urls = []
