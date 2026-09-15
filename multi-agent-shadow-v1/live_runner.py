@@ -980,6 +980,10 @@ def render_markdown_summary(payload: dict) -> str:
             ),
             f"- 중복 보충 제외: {payload.get('blocked_recovery_repeat_count', 0)}건",
             f"- 문맥 보류 제외: {payload.get('blocked_recovery_context_count', 0)}건",
+            *[
+                f"- 수집 실패: {item.get('source_id', '?')} — {item.get('reason', '')}"
+                for item in paths.get("failed_sources", [])
+            ],
             "- 0건은 현상 부재를 뜻하지 않으며 수집 실패와 새 증거 확보 상태를 따로 봐야 합니다.",
             "",
         ])
