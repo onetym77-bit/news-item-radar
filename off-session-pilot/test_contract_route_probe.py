@@ -1,7 +1,7 @@
 import unittest
 
 from contract_route_probe import (
-    Scripts, first_entries, function_body, inspect_route, official_script_urls,
+    Scripts, detail_url, inspect_detail, inspect_route, official_script_urls,
     parse_call, route_evidence,
 )
 
@@ -28,6 +28,21 @@ class ContractRouteTests(unittest.TestCase):
         self.assertTrue(result["same_contract_in_first_five"])
         self.assertEqual(result["entry_count_checked"], 3)
         self.assertEqual(result["detail_fetch"], "NOT_ATTEMPTED")
+
+    def test_detail_urls_use_only_validated_call_arguments(self):
+        contract = parse_call("cmdPopInfo('6172026091099','R26TA02223024','1차','R26TA02223024|1차');")
+        payment = parse_call("cmdPopInfo('6222025052698','R25TA00570579','R25TA00570579');")
+        self.assertIn("cmd=info2", detail_url("C_LIST", contract))
+        self.assertIn("contract_no=R26TA02223024", detail_url("C_LIST", contract))
+        self.assertIn("cmd=info6", detail_url("C_PAYMENTS", payment))
+        self.assertIn("cntrt_cd=R25TA00570579", detail_url("C_PAYMENTS", payment))
+
+    def test_detail_markers_do_not_become_article_evidence(self):
+        detail = inspect_detail("<p>공사 계약금액 계약변경 공정률</p>", "공사")
+        self.assertTrue(detail["title_match"])
+        self.assertEqual(detail["change_history"], "MARKER_ONLY")
+        self.assertEqual(detail["progress_link"], "MARKER_ONLY")
+        self.assertEqual(detail["article_gate"], "NOT_EVALUATED")
 
     def test_inline_function_yields_route_not_detail_success(self):
         html = ('<script>function cmdPopInfo(a,b,c){'
