@@ -374,6 +374,28 @@ def load_sdk():
     set_tracing_disabled(True)
     return Agent, ModelSettings, Runner
 
+def validate_sdk_configuration(model: str, max_output_tokens: int) -> dict:
+    Agent, ModelSettings, _ = load_sdk()
+    OutputModel = build_output_model()
+    agent = Agent(
+        name="news-item-radar-sdk-preflight",
+        instructions="Configuration validation only; no model request is made.",
+        model=model,
+        model_settings=ModelSettings(
+            max_tokens=max_output_tokens,
+            parallel_tool_calls=False,
+            store=False,
+        ),
+        output_type=OutputModel,
+    )
+    schema = OutputModel.model_json_schema()
+    return {
+        "agent_name": agent.name,
+        "model": model,
+        "structured_output_schema": schema.get("title", ""),
+        "paid_calls_made": 0,
+    }
+
 def usage_dict(result: Any) -> dict[str, int]:
     usage = result.context_wrapper.usage
     return {
@@ -552,6 +574,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-output-tokens", type=int, default=1600)
     parser.add_argument("--max-input-chars", type=int, default=18000)
     parser.add_argument("--preflight", action="store_true")
+    parser.add_argument("--validate-sdk", action="store_true")
     parser.add_argument("--confirm-paid-run", default="")
     return parser.parse_args()
 
@@ -567,6 +590,11 @@ def main() -> int:
     plan = load_json(args.plan)
     if args.preflight:
         output = preflight(snapshot, plan, limits)
+        if args.validate_sdk:
+            output["sdk_preflight"] = validate_sdk_configuration(
+                args.model,
+                limits.max_output_tokens_per_call,
+            )
     else:
         if args.confirm_paid_run != CONFIRMATION:
             raise SystemExit(
