@@ -98,6 +98,56 @@ class LiveRunnerTests(unittest.TestCase):
         self.assertEqual(output["paid_calls_made"], 0)
         self.assertFalse(output["official_state_mutation_allowed"])
 
+    def test_unrelated_verification_rows_are_not_attached(self):
+        source = make_snapshot()
+        selected = live.select_candidates(
+            source, make_plan(source), candidate_limit=1
+        )[0]
+        evidence, rows = live.evidence_bundle(
+            source, make_plan(source), selected["candidate_id"]
+        )
+        self.assertEqual([item["ref_id"] for item in evidence], [selected["candidate_id"]])
+        self.assertEqual(set(rows), {selected["candidate_id"]})
+
+    def test_related_verification_row_is_attached(self):
+        original = make_snapshot()
+        feed = original["feed"]
+        feed["verification_schema_leads"].append(
+            row(
+                "seoul_open_data",
+                "높은 점수 시민 후보의 피해 규모 검증 자료",
+                "related",
+                6,
+            )
+        )
+        source = freeze.build_snapshot(feed, run_id="related", code_sha="abc")
+        selected = live.select_candidates(
+            source, make_plan(source), candidate_limit=1
+        )[0]
+        evidence, _ = live.evidence_bundle(
+            source, make_plan(source), selected["candidate_id"]
+        )
+        self.assertEqual(len(evidence), 2)
+        self.assertIn("피해 규모 검증 자료", evidence[1]["text"])
+        self.assertEqual(selected["matched_verification_count"], 1)
+
+    def test_candidate_with_related_verification_outranks_raw_score(self):
+        original = make_snapshot()
+        feed = original["feed"]
+        feed["core_discovery"].append(
+            row("council_minutes", "전세사기 피해 인정", "housing", 4)
+        )
+        feed["verification_schema_leads"].append(
+            row("seoul_open_data", "전세사기 피해 인정 통계", "housing-data", 4)
+        )
+        source = freeze.build_snapshot(feed, run_id="ranking", code_sha="abc")
+        selected = live.select_candidates(
+            source, make_plan(source), candidate_limit=1
+        )[0]
+        lookup = live.row_lookup(source)
+        self.assertEqual(lookup[selected["candidate_id"]]["text"], "전세사기 피해 인정")
+        self.assertEqual(selected["matched_verification_count"], 1)
+
     def test_prompt_marks_source_material_as_untrusted_data(self):
         source = make_snapshot()
         selected = live.select_candidates(
