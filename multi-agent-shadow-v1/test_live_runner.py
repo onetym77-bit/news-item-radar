@@ -126,6 +126,83 @@ class LiveRunnerTests(unittest.TestCase):
             [],
         )
 
+    def test_placeholder_question_never_links_unrelated_datasets(self):
+        candidate = {
+            "text": (
+                "민생과 안전에 무게를 실은 방향은 마땅하지만 "
+                "법정 의무경비를 제외하면 실제로 사업에 투입할 수 있는 재원은 많지 않습니다."
+            ),
+            "context_subject": (
+                "이번 임시회에서 우리 의회는 2조 8,000억 원 규모의 "
+                "서울시 추가경정예산안을 심의합니다."
+            ),
+            "question": "근거 앵커 없음 — 질문 점수 평가 제외",
+        }
+        unrelated = [
+            {
+                "text": "서울특별시 강서구 코로나19 월별 확진자 및 사망자 현황(2022년)",
+                "question": "근거 앵커 없음 — 질문 점수 평가 제외",
+            },
+            {
+                "text": "서울시 자치구별 신호등 및 횡단보도 수량",
+                "question": "근거 앵커 없음 — 질문 점수 평가 제외",
+            },
+        ]
+        self.assertEqual(
+            live.verification_matches(
+                candidate,
+                [(f"unrelated-{index}", item) for index, item in enumerate(unrelated)],
+            ),
+            [],
+        )
+
+    def test_placeholder_question_does_not_hide_a_specific_related_source(self):
+        candidate = {
+            "text": "청년 AI 구독 지원 예산과 실제 이용",
+            "question": "근거 앵커 없음 — 질문 점수 평가 제외",
+        }
+        related = {
+            "text": "청년 AI 구독 지원 이용 현황",
+            "question": "근거 앵커 없음 — 질문 점수 평가 제외",
+        }
+        self.assertGreater(live.topic_match_score(candidate, related), 0)
+
+    def test_stale_source_detail_hold_does_not_trigger_a_paid_trial(self):
+        original = make_snapshot(primary=False)
+        feed = original["feed"]
+        feed["context_holds"] = []
+        stale = row(
+            "council_minutes",
+            "서울시 추가경정예산안 심의 발언",
+            "stale-source-detail",
+            7,
+        )
+        stale["freshness_days"] = 21
+        stale["question"] = "근거 앵커 없음 — 질문 점수 평가 제외"
+        feed["held_for_source_detail"] = [stale]
+        source = freeze.build_snapshot(feed, run_id="stale", code_sha="abc")
+        plan = make_plan(source)
+        self.assertEqual(live.select_candidates(source, plan, candidate_limit=1), [])
+        preflight = live.preflight(source, plan, live.RuntimeLimits().validate())
+        self.assertEqual(preflight["status"], "NO_ELIGIBLE_CANDIDATE")
+        self.assertEqual(preflight["paid_calls_made"], 0)
+        output = asyncio.run(
+            live.execute(
+                source,
+                plan,
+                model="test-model",
+                limits=live.RuntimeLimits().validate(),
+            )
+        )
+        self.assertEqual(output["status"], "NO_ELIGIBLE_CANDIDATE")
+        self.assertEqual(output["model_calls_used"], 0)
+        self.assertEqual(output["usage"]["total_tokens"], 0)
+
+    def test_fresh_context_hold_remains_available_for_backfill(self):
+        source = make_snapshot(primary=False)
+        selected = live.select_candidates(source, make_plan(source), candidate_limit=1)
+        self.assertEqual(selected[0]["selection_pool"], "recovery")
+
     def test_related_verification_row_is_attached(self):
         original = make_snapshot()
         feed = original["feed"]

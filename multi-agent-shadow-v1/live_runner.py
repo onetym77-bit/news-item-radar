@@ -128,6 +128,16 @@ KEYWORD_STOPWORDS = {
     "기준", "발표", "통계", "제공", "검증", "후보", "내용",
 }
 MIN_EVIDENCE_RELEVANCE = 5
+MAX_RECOVERY_AGE_DAYS = 14
+ELIGIBLE_RECOVERY_LANES = {
+    "localization_discovery",
+    "rediscovered_carryover",
+    "context_holds",
+}
+PLACEHOLDER_QUESTION_PREFIXES = (
+    "근거 앵커 없음",
+    "질문 점수 평가 제외",
+)
 
 class GroundingFailure(ValueError):
     """A cited fact failed local support checks; keep only bounded diagnostics."""
@@ -199,6 +209,7 @@ def evidence_relevance_score(candidate: dict, evidence: dict) -> int:
 TOPIC_STOPWORDS = KEYWORD_STOPWORDS | {
     "높은", "낮은", "점수", "규모", "확인", "검토", "정보", "위치정보",
     "시설", "이용", "대상", "분석", "연구", "조사", "통계",
+    "근거", "앵커", "없음", "질문", "평가", "제외",
 }
 
 
@@ -208,6 +219,8 @@ def topic_terms(row: dict) -> set[str]:
     for field in ("context_subject", "question", "text"):
         value = row.get(field)
         if isinstance(value, str):
+            if field == "question" and value.strip().startswith(PLACEHOLDER_QUESTION_PREFIXES):
+                continue
             parts.append(value[:1600])
     tokens = re.findall(r"[0-9A-Za-z가-힣]{2,}", " ".join(parts).lower())
     return {
@@ -219,7 +232,8 @@ def topic_terms(row: dict) -> set[str]:
 
 def topic_match_score(candidate: dict, evidence: dict) -> int:
     shared = topic_terms(candidate) & topic_terms(evidence)
-    if len(shared) < 2 and not any(len(token) >= 4 for token in shared):
+    # One shared broad term (for example '안전') is not a policy-subject match.
+    if len(shared) < 2:
         return 0
     return sum(min(len(token) + 1, 8) for token in shared)
 
@@ -235,6 +249,17 @@ def verification_matches(
     return sorted(
         (item for item in matches if item[0] >= MIN_EVIDENCE_RELEVANCE),
         key=lambda item: (-item[0], item[1]),
+    )
+
+
+def eligible_recovery(ref: dict, row: dict) -> bool:
+    """A held or stale source is not a fresh daily item just because the pool is empty."""
+    age = row.get("freshness_days")
+    return (
+        ref.get("lane") in ELIGIBLE_RECOVERY_LANES
+        and isinstance(age, int)
+        and not isinstance(age, bool)
+        and 0 <= age <= MAX_RECOVERY_AGE_DAYS
     )
 
 
@@ -299,7 +324,11 @@ def select_candidates(
         if len(selected) == candidate_limit:
             return selected
 
-    recovery_ids = [ref["record_id"] for ref in plan["pools"]["recovery"]]
+    recovery_ids = [
+        ref["record_id"]
+        for ref in plan["pools"]["recovery"]
+        if eligible_recovery(ref, lookup[ref["record_id"]])
+    ]
     recovery_ids.sort(
         key=lambda item: operational_rank(lookup[item], verification_rows)
     )
@@ -758,13 +787,7 @@ async def execute(
         plan,
         candidate_limit=limits.candidate_limit,
     )
-    if not selected:
-        raise RuntimeError("no candidate is available in primary or recovery pools")
-    if len(selected) < limits.candidate_limit:
-        raise RuntimeError(
-            f"only {len(selected)} candidates available for requested "
-            f"limit {limits.candidate_limit}"
-        )
+    # A truthful zero result makes no model calls; a partial pool uses fewer calls.
 
     budget = CallBudget(limits.max_model_calls)
     totals = UsageTotals()
@@ -833,6 +856,7 @@ async def execute(
         "schema_version": SCHEMA_VERSION,
         "mode": "LIVE_SHADOW",
         "status": (
+            "NO_ELIGIBLE_CANDIDATE" if not selected else
             "COMPLETED_WITH_REJECTIONS"
             if any(
                 stage["status"] != "VALIDATED"
@@ -962,6 +986,7 @@ def preflight(snapshot: dict, plan: dict, limits: RuntimeLimits) -> dict:
     return {
         "schema_version": SCHEMA_VERSION,
         "mode": "PREFLIGHT",
+        "status": "READY" if selected else "NO_ELIGIBLE_CANDIDATE",
         "snapshot_id": snapshot["snapshot_id"],
         "run_plan_id": plan["run_plan_id"],
         "official_state_mutation_allowed": False,
