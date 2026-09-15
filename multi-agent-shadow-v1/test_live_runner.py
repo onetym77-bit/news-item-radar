@@ -335,6 +335,42 @@ class LiveRunnerTests(unittest.TestCase):
         self.assertEqual(caught.exception.details["reason"], "NEW_NUMBER")
         self.assertEqual(caught.exception.details["missing_numbers"], ["30"])
 
+    def test_grounding_rejects_place_absent_from_quote(self):
+        source_row = {
+            "source_id": "official-social",
+            "url": "https://example.test/video",
+            "text": "강서구 시민설명회에서 부구청장과 주민 사이에 언쟁이 벌어졌다.",
+        }
+        payload = {
+            "agent_role": "DISCOVERY_CITIZEN",
+            "candidate_id": "candidate",
+            "issue_title": source_row["text"],
+            "issue_summary": source_row["text"],
+            "confirmed_facts": [
+                {
+                    "text": "양천구 시민설명회에서 부구청장과 주민이 언쟁했다.",
+                    "source_ref_ids": ["candidate"],
+                }
+            ],
+            "evidence_refs": [
+                {
+                    "ref_id": "candidate",
+                    "source_id": source_row["source_id"],
+                    "url": source_row["url"],
+                    "exact_text": source_row["text"],
+                }
+            ],
+        }
+        with self.assertRaises(live.GroundingFailure) as caught:
+            live.validate_exact_grounding(
+                payload,
+                expected_role="DISCOVERY_CITIZEN",
+                expected_candidate_id="candidate",
+                source_rows={"candidate": source_row},
+            )
+        self.assertEqual(caught.exception.details["reason"], "NEW_PLACE")
+        self.assertEqual(caught.exception.details["missing_places"], ["양천구"])
+
     def test_one_grounding_rejection_does_not_abort_other_agents(self):
         source = make_snapshot()
         plan = make_plan(source)
