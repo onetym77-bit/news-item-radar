@@ -264,6 +264,23 @@ class LiveRunnerTests(unittest.TestCase):
                 source_rows=rows,
             )
 
+    def test_structured_output_requires_source_reference(self):
+        schema = live.build_output_model().model_json_schema()
+        statement_schema = schema["$defs"]["SourcedStatement"]
+        source_refs = statement_schema["properties"]["source_ref_ids"]
+        self.assertEqual(source_refs["minItems"], 1)
+
+    def test_prompt_requires_source_reference_for_every_statement(self):
+        prompt = live.build_prompt(
+            role="EDITOR",
+            snapshot_id="snapshot-test",
+            candidate_id="candidate-test",
+            evidence=[],
+            previous=None,
+            maximum_chars=10000,
+        )
+        self.assertIn("source_ref_ids는 반드시 1개 이상", prompt)
+
     def test_call_budget_stops_before_extra_request(self):
         budget = live.CallBudget(1)
         self.assertEqual(budget.reserve(), 1)
