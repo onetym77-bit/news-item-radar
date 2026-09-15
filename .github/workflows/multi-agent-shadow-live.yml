@@ -1,0 +1,123 @@
+name: Run paid multi-agent shadow trial
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type RUN_PAID_SHADOW to approve API charges
+        required: true
+        type: string
+      model:
+        description: OpenAI model name
+        required: true
+        default: gpt-5.6-luna
+        type: string
+      candidate_limit:
+        description: Candidates to process, four model calls each
+        required: true
+        default: "1"
+        type: choice
+        options:
+          - "1"
+          - "2"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: paid-multi-agent-shadow
+  cancel-in-progress: false
+
+jobs:
+  run-shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Require the default branch and explicit paid-run confirmation
+        shell: bash
+        env:
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main"
+          test "$CONFIRMATION" = "RUN_PAID_SHADOW"
+
+      - name: Check out repository without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run local safety tests before any paid call
+        run: |
+          python -m py_compile multi-agent-shadow-v1/live_runner.py
+          python -X utf8 -m unittest discover -s multi-agent-shadow-v1 -p 'test_*.py' -v
+
+      - name: Collect and freeze one shared input
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          python -X utf8 source-scout-v1/collect_daily_feed.py
+          python -X utf8 multi-agent-shadow-v1/freeze_input.py \
+            --feed source-scout-v1/output/daily_feed_latest.json \
+            --output "${RUNNER_TEMP}/shadow_input.json" \
+            --run-id "${GITHUB_RUN_ID}" \
+            --code-sha "${SOURCE_SHA}"
+          python -X utf8 multi-agent-shadow-v1/orchestrator.py \
+            --snapshot "${RUNNER_TEMP}/shadow_input.json" \
+            --output "${RUNNER_TEMP}/shadow_plan.json" \
+            --target-min 2 \
+            --target-max 4
+
+      - name: Preflight selection with zero paid calls
+        shell: bash
+        env:
+          CANDIDATE_LIMIT: ${{ inputs.candidate_limit }}
+        run: |
+          max_calls=$((CANDIDATE_LIMIT * 4))
+          python -X utf8 multi-agent-shadow-v1/live_runner.py \
+            --snapshot "${RUNNER_TEMP}/shadow_input.json" \
+            --plan "${RUNNER_TEMP}/shadow_plan.json" \
+            --output "${RUNNER_TEMP}/shadow_preflight.json" \
+            --candidate-limit "$CANDIDATE_LIMIT" \
+            --max-model-calls "$max_calls" \
+            --preflight
+
+      - name: Install the pinned OpenAI Agents SDK
+        run: python -m pip install --disable-pip-version-check -r multi-agent-shadow-v1/requirements.txt
+
+      - name: Run the paid read-only shadow agents
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MODEL: ${{ inputs.model }}
+          CANDIDATE_LIMIT: ${{ inputs.candidate_limit }}
+        run: |
+          max_calls=$((CANDIDATE_LIMIT * 4))
+          python -X utf8 multi-agent-shadow-v1/live_runner.py \
+            --snapshot "${RUNNER_TEMP}/shadow_input.json" \
+            --plan "${RUNNER_TEMP}/shadow_plan.json" \
+            --output "${RUNNER_TEMP}/shadow_live_result.json" \
+            --model "$MODEL" \
+            --candidate-limit "$CANDIDATE_LIMIT" \
+            --max-model-calls "$max_calls" \
+            --max-output-tokens 1600 \
+            --max-input-chars 18000 \
+            --confirm-paid-run "RUN_PAID_SHADOW"
+
+      - name: Upload the isolated shadow result
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: multi-agent-live-shadow-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/shadow_input.json
+            ${{ runner.temp }}/shadow_plan.json
+            ${{ runner.temp }}/shadow_preflight.json
+            ${{ runner.temp }}/shadow_live_result.json
+          if-no-files-found: error
+          retention-days: 30

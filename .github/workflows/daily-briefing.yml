@@ -25,6 +25,7 @@ on:
       - "agent-system-v1/validate_discovery_system.py"
       - "daily-briefing-v5/**"
       - "source-scout-v1/**"
+      - "multi-agent-shadow-v1/**"
       - ".github/workflows/daily-briefing.yml"
   pull_request:
     paths:
@@ -39,6 +40,7 @@ on:
       - "agent-system-v1/validate_discovery_system.py"
       - "daily-briefing-v5/**"
       - "source-scout-v1/**"
+      - "multi-agent-shadow-v1/**"
       - ".github/workflows/daily-briefing.yml"
 
 permissions:
@@ -80,6 +82,7 @@ jobs:
           python -m py_compile multi-agent-shadow-v1/freeze_input.py
           python -m py_compile multi-agent-shadow-v1/contracts.py
           python -m py_compile multi-agent-shadow-v1/orchestrator.py
+          python -m py_compile multi-agent-shadow-v1/live_runner.py
           python -X utf8 -m unittest discover -s source-scout-v1 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s daily-briefing-v5 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s multi-agent-shadow-v1 -p 'test_*.py' -v
@@ -129,6 +132,19 @@ jobs:
           path: ${{ runner.temp }}/shadow_run_plan.json
           if-no-files-found: error
           retention-days: 30
+
+      - name: Validate the pinned Agents SDK without a model call
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          python -m pip install --disable-pip-version-check -r multi-agent-shadow-v1/requirements.txt
+          python -X utf8 multi-agent-shadow-v1/live_runner.py \
+            --snapshot "${RUNNER_TEMP}/shadow_input_latest.json" \
+            --plan "${RUNNER_TEMP}/shadow_run_plan.json" \
+            --output "${RUNNER_TEMP}/shadow_sdk_preflight.json" \
+            --candidate-limit 1 \
+            --max-model-calls 4 \
+            --preflight \
+            --validate-sdk
 
       - name: Validate source ledgers
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
