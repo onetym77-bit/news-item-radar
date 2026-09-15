@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import asyncio
 import importlib.util
 import inspect
 import tempfile
@@ -264,6 +265,207 @@ class LiveRunnerTests(unittest.TestCase):
                 expected_candidate_id=selected["candidate_id"],
                 source_rows=rows,
             )
+
+    def test_grounding_accepts_close_paraphrase(self):
+        source_row = {
+            "source_id": "official-social",
+            "url": "https://example.test/video",
+            "text": "강서구 시민설명회에서 부구청장과 주민 사이에 언쟁이 벌어졌다.",
+        }
+        payload = {
+            "agent_role": "DISCOVERY_CITIZEN",
+            "candidate_id": "candidate",
+            "issue_title": source_row["text"],
+            "issue_summary": source_row["text"],
+            "confirmed_facts": [
+                {
+                    "text": "강서구 시민설명회에서 부구청장과 주민이 언쟁했다.",
+                    "source_ref_ids": ["candidate"],
+                }
+            ],
+            "evidence_refs": [
+                {
+                    "ref_id": "candidate",
+                    "source_id": source_row["source_id"],
+                    "url": source_row["url"],
+                    "exact_text": source_row["text"],
+                }
+            ],
+        }
+        live.validate_exact_grounding(
+            payload,
+            expected_role="DISCOVERY_CITIZEN",
+            expected_candidate_id="candidate",
+            source_rows={"candidate": source_row},
+        )
+
+    def test_grounding_rejects_number_absent_from_quote(self):
+        source_row = {
+            "source_id": "official-social",
+            "url": "https://example.test/video",
+            "text": "시민설명회에서 부구청장과 주민 사이에 언쟁이 벌어졌다.",
+        }
+        payload = {
+            "agent_role": "DISCOVERY_CITIZEN",
+            "candidate_id": "candidate",
+            "issue_title": source_row["text"],
+            "issue_summary": source_row["text"],
+            "confirmed_facts": [
+                {
+                    "text": "시민설명회에서 주민 30명과 부구청장이 언쟁했다.",
+                    "source_ref_ids": ["candidate"],
+                }
+            ],
+            "evidence_refs": [
+                {
+                    "ref_id": "candidate",
+                    "source_id": source_row["source_id"],
+                    "url": source_row["url"],
+                    "exact_text": source_row["text"],
+                }
+            ],
+        }
+        with self.assertRaises(live.GroundingFailure) as caught:
+            live.validate_exact_grounding(
+                payload,
+                expected_role="DISCOVERY_CITIZEN",
+                expected_candidate_id="candidate",
+                source_rows={"candidate": source_row},
+            )
+        self.assertEqual(caught.exception.details["reason"], "NEW_NUMBER")
+        self.assertEqual(caught.exception.details["missing_numbers"], ["30"])
+
+    def test_grounding_rejects_place_absent_from_quote(self):
+        source_row = {
+            "source_id": "official-social",
+            "url": "https://example.test/video",
+            "text": "강서구 시민설명회에서 부구청장과 주민 사이에 언쟁이 벌어졌다.",
+        }
+        payload = {
+            "agent_role": "DISCOVERY_CITIZEN",
+            "candidate_id": "candidate",
+            "issue_title": source_row["text"],
+            "issue_summary": source_row["text"],
+            "confirmed_facts": [
+                {
+                    "text": "양천구 시민설명회에서 부구청장과 주민이 언쟁했다.",
+                    "source_ref_ids": ["candidate"],
+                }
+            ],
+            "evidence_refs": [
+                {
+                    "ref_id": "candidate",
+                    "source_id": source_row["source_id"],
+                    "url": source_row["url"],
+                    "exact_text": source_row["text"],
+                }
+            ],
+        }
+        with self.assertRaises(live.GroundingFailure) as caught:
+            live.validate_exact_grounding(
+                payload,
+                expected_role="DISCOVERY_CITIZEN",
+                expected_candidate_id="candidate",
+                source_rows={"candidate": source_row},
+            )
+        self.assertEqual(caught.exception.details["reason"], "NEW_PLACE")
+        self.assertEqual(caught.exception.details["missing_places"], ["양천구"])
+
+    def test_one_grounding_rejection_does_not_abort_other_agents(self):
+        source = make_snapshot()
+        plan = make_plan(source)
+        calls = []
+
+        def assessment(role, candidate_id):
+            return {
+                "agent_role": role,
+                "issue_title": "검증 후보",
+                "issue_summary": "검증 후보 요약",
+                "editorial_tension": "확인할 긴장",
+                "confirmed_facts": [],
+                "unverified_claims": [],
+                "competing_hypotheses": [
+                    {"name": "가설1", "discriminating_evidence": "자료1"},
+                    {"name": "가설2", "discriminating_evidence": "자료2"},
+                ],
+                "verification_plan": [],
+                "kill_criteria": [],
+                "scores": {
+                    "tension_surprise": 1,
+                    "citizen_loss_rights": 1,
+                    "distribution_exclusion": 1,
+                    "competing_hypotheses": 1,
+                    "accountability_change": 1,
+                    "falsification_decision_line": 1,
+                },
+                "score_total": 6,
+                "grounding_level": "G1_ATTRIBUTED_CLAIM",
+                "verdict": "HOLD",
+                "recommended_lane": "QUESTION_RAW",
+                "scope_warning": "",
+                "reasoning_summary": "검증이 필요하다.",
+            }
+
+        async def fake_run_stage(**kwargs):
+            role = kwargs["role"]
+            kwargs["budget"].reserve()
+            calls.append(role)
+            payload = assessment(role, kwargs["candidate_id"])
+            usage = {
+                "requests": 1,
+                "input_tokens": 10,
+                "output_tokens": 5,
+                "total_tokens": 15,
+            }
+            if len(calls) == 1:
+                return {
+                    "status": "REJECTED_GROUNDING",
+                    "agent_role": role,
+                    "assessment": payload,
+                    "usage": usage,
+                    "error": {
+                        "type": "GroundingFailure",
+                        "message": "unsupported",
+                        "details": {
+                            "reason": "LOW_LEXICAL_RELEVANCE",
+                            "statement": "탈락 주장",
+                            "quotes": "연결 인용",
+                        },
+                    },
+                }
+            return {
+                "status": "VALIDATED",
+                "agent_role": role,
+                "assessment": payload,
+                "usage": usage,
+                "error": None,
+            }
+
+        original = live.run_stage
+        live.run_stage = fake_run_stage
+        try:
+            output = asyncio.run(
+                live.execute(
+                    source,
+                    plan,
+                    model="test-model",
+                    limits=live.RuntimeLimits().validate(),
+                )
+            )
+        finally:
+            live.run_stage = original
+
+        run = output["candidate_runs"][0]
+        self.assertEqual(calls[-1], "ORCHESTRATOR")
+        self.assertEqual(len(calls), 4)
+        self.assertEqual(output["status"], "COMPLETED_WITH_REJECTIONS")
+        self.assertEqual(output["usage"]["requests"], 4)
+        self.assertEqual(run["validated_independent_assessments"], 2)
+        self.assertIsNotNone(run["final"])
+        self.assertEqual(
+            run["stages"][0]["error"]["details"]["statement"],
+            "탈락 주장",
+        )
 
     def test_structured_output_requires_source_reference(self):
         source = inspect.getsource(live.build_output_model)
