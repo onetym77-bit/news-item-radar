@@ -78,8 +78,9 @@ def progress_record(card):
     title = re.search(r"^■\s*(.*?)\s+사업기간", card)
     if not title:
         raise ValueError("progress card title missing")
-    values = {norm(label): float(number) for label, number in PERCENT.findall(card)}
-    if "계 획" not in values or "실 적" not in values:
+    values = {re.sub(r"\\s+", "", label): float(number)
+              for label, number in PERCENT.findall(card)}
+    if "계획" not in values or "실적" not in values:
         raise ValueError("progress plan/actual values missing")
     name = norm(title.group(1))
     key = hashlib.sha256(name.encode("utf-8")).hexdigest()[:16]
@@ -87,9 +88,9 @@ def progress_record(card):
         "key": key,
         "title": sanitize(name)[:180],
         "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
-        "plan_percent": values["계 획"],
-        "actual_percent": values["실 적"],
-        "gap_pp": round(values["실 적"] - values["계 획"], 2),
+        "plan_percent": values["계획"],
+        "actual_percent": values["실적"],
+        "gap_pp": round(values["실적"] - values["계획"], 2),
         "source_url": CHANGE_LISTS["PROGRESS"],
         "pjt_cd": None,
     }
@@ -238,7 +239,7 @@ def render(state):
              "이 문서는 취재 질문 원석이며 확정 기사 아이템이 아닙니다.", ""]
     if run["first_baseline"]:
         lines += ["첫 기준 관측입니다. 이전 값이 없어 변화 여부는 아직 판단하지 않습니다.", ""]
-    lines += [f"새 변화 기록: {len(run['new_record_keys'])}건",
+    lines += [f"이번 관측에서 처음 본 기록: {len(run['new_record_keys'])}건",
               f"추가 확인 질문: {len(run['signals'])}건", ""]
     for signal in run["signals"]:
         lines += [f"## {signal['title']}", signal["observation"],
