@@ -193,6 +193,19 @@ def compare(prior, observed, collected_at):
                     [x["source_url"] for x in changes] + [record["source_url"]]))
         events[key] = record
         new.append(key)
+    new_penalty_projects = {
+        observed["events"][key]["pjt_cd"] for key in new
+        if observed["events"][key]["category"] == "PENALTY"
+    }
+    for project_id in sorted(new_penalty_projects):
+        penalties = [x for x in events.values()
+                     if x["pjt_cd"] == project_id and x["category"] == "PENALTY"]
+        if len(penalties) >= 2:
+            signals.append(question_signal(
+                "MULTIPLE_PENALTIES", project_id, penalties[0]["title"],
+                f"같은 사업 코드의 서로 다른 벌점 기록이 {len(penalties)}건 관측됨. "
+                "업체·점검·부과일을 구분하고 동일 사실의 중복 게시인지 확인.",
+                [x["source_url"] for x in penalties]))
     if len(events) > MAX_RECORDS:
         # Keep the most recently observed derived records, not raw pages.
         newest = sorted(events.values(), key=lambda x: x["last_seen_kst"],
