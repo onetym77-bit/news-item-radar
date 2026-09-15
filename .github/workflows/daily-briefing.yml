@@ -79,6 +79,7 @@ jobs:
           python -m py_compile daily-briefing-v5/run_provenance.py
           python -m py_compile multi-agent-shadow-v1/freeze_input.py
           python -m py_compile multi-agent-shadow-v1/contracts.py
+          python -m py_compile multi-agent-shadow-v1/orchestrator.py
           python -X utf8 -m unittest discover -s source-scout-v1 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s daily-briefing-v5 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s multi-agent-shadow-v1 -p 'test_*.py' -v
@@ -106,6 +107,26 @@ jobs:
         with:
           name: multi-agent-shadow-input-${{ github.run_id }}
           path: ${{ runner.temp }}/shadow_input_latest.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Build the dry-run multi-agent plan
+        run: |
+          python -X utf8 multi-agent-shadow-v1/orchestrator.py \
+            --snapshot "${RUNNER_TEMP}/shadow_input_latest.json" \
+            --output "${RUNNER_TEMP}/shadow_run_plan.json" \
+            --target-min 2 \
+            --target-max 4
+          python -X utf8 multi-agent-shadow-v1/orchestrator.py \
+            --snapshot "${RUNNER_TEMP}/shadow_input_latest.json" \
+            --output "${RUNNER_TEMP}/shadow_run_plan.json" \
+            --verify
+
+      - name: Upload the dry-run multi-agent plan
+        uses: actions/upload-artifact@v7
+        with:
+          name: multi-agent-shadow-plan-${{ github.run_id }}
+          path: ${{ runner.temp }}/shadow_run_plan.json
           if-no-files-found: error
           retention-days: 30
 
