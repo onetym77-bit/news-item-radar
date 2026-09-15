@@ -11,7 +11,7 @@ from collections import Counter
 from datetime import date
 from urllib.parse import urlparse
 
-from contract_route_probe import LISTS as CONTRACT_LISTS, first_entries, read_text
+from contract_route_probe import LISTS as CONTRACT_LISTS, Scripts, first_entries, read_text, route_evidence
 from probe_sources import Page, norm, sanitize
 
 ORIGIN = "https://cis.seoul.go.kr"
@@ -43,11 +43,14 @@ def describe_link(anchor):
     call = CALL.match(onclick)
     args = [a or b for a, b in QUOTED.findall(onclick)][:6]
     explicit = PROJECT_ID.findall(onclick + " " + href)
-    # These are identifiers, not a proven cross-page join.
+    # The first numeric popup argument is a candidate pjt_cd; route semantics
+    # must still be checked before calling it a cross-page project join.
+    candidate = args[0] if args and re.fullmatch(r"[A-Za-z0-9]{8,30}", args[0]) else None
     return {
         "function": call.group(1) if call else None,
         "quoted_args": [sanitize(x)[:100] for x in args],
         "project_ids_named": explicit[:3],
+        "first_arg_project_candidate": candidate,
         "href_path": urlparse(href).path[:150] if href and href != "#none" else None,
     }
 
@@ -71,7 +74,16 @@ def list_anchors(html, sample_id):
     if not candidates:
         candidates = [a for a in page.anchors
                       if a["text"] and a["onclick"] and len(a["text"]) >= 12]
-    return candidates[:MAX_ENTRIES], page
+    unique = []
+    seen = set()
+    for anchor in candidates:
+        key = (anchor["onclick"], anchor["text"])
+        if key not in seen:
+            seen.add(key)
+            unique.append(anchor)
+        if len(unique) >= MAX_ENTRIES:
+            break
+    return unique, page
 
 def inspect_list(html, sample_id):
     anchors, page = list_anchors(html, sample_id)
@@ -81,10 +93,14 @@ def inspect_list(html, sample_id):
         title = sanitize(anchor["text"])[:180]
         next_title = anchors[index + 1]["text"] if index + 1 < len(anchors) else ""
         context = row_context(visible, anchor["text"], next_title)
+        date_value = registration_date(context)
+        if not date_value and sample_id == "DESIGN":
+            candidates = DATE.findall(context[:220])
+            date_value = candidates[-1].replace(".", "-").replace("/", "-") if candidates else None
         items.append({
             "title": title,
             "link": describe_link(anchor),
-            "registration_date": registration_date(context),
+            "registration_date": date_value,
             "row_excerpt": sanitize(context)[:360],
         })
     dates = [item["registration_date"] for item in items if item["registration_date"]]
@@ -98,15 +114,22 @@ def inspect_list(html, sample_id):
         "visible_characters": len(visible),
     }
 
+def body_cards(visible):
+    body = visible.split("홈 공정현황 주요사업진행현황", 1)[-1]
+    cards = []
+    for piece in body.split("■ ")[1:]:
+        if "사업기간" in piece and "계 획" in piece and "실 적" in piece:
+            cards.append("■ " + piece.split("지도 건너뛰기", 1)[0])
+    return cards
+
 def inspect_progress(html):
     page = Page(html)
     visible = sanitize(norm(" ".join(page.chunks)))
     # Progress cards are not contract list rows; retain bounded text
     # context around the first five "사업기간" labels, not a project-ID join.
-    body = visible.split("# 주요사업진행현황", 1)[-1]
     snippets = []
-    for match in list(re.finditer("사업기간", body))[:MAX_ENTRIES]:
-        snippets.append(body[max(0, match.start() - 100):match.start() + 250])
+    for card in body_cards(visible)[:MAX_ENTRIES]:
+        snippets.append(card[:350])
     return {
         "sample_id": "PROGRESS",
         "first_five_card_excerpts": snippets,
@@ -116,15 +139,24 @@ def inspect_progress(html):
         "visible_characters": len(visible),
     }
 
-def exact_contract_join(change_items, contract_items):
+def exact_contract_join(change_items, contract_items, popup_route):
     ids = {item["record_key"] for item in contract_items}
     matches = []
+    candidate_overlap = []
     for item in change_items:
-        for project_id in item["link"]["project_ids_named"]:
+        named = item["link"]["project_ids_named"]
+        candidate = item["link"].get("first_arg_project_candidate")
+        for project_id in named:
             if project_id in ids:
                 matches.append({"title": item["title"], "project_id": project_id})
+        if candidate in ids:
+            candidate_overlap.append({"title": item["title"], "project_id": candidate})
     return {
         "exact_project_id_matches": matches,
+        "first_argument_overlaps": candidate_overlap,
+        "popup_route": popup_route,
+        "first_argument_semantics": "ROUTE_CHECK_PENDING" if
+            popup_route["function_status"] == "NOT_FOUND" else "FUNCTION_FOUND_NOT_PROVEN",
         "title_only_join": "NOT_ACCEPTED",
         "scope": "FIRST_FIVE_PER_LIST_ONLY",
     }
@@ -144,7 +176,10 @@ def main():
             result = inspect_progress(html) if sample_id == "PROGRESS" else inspect_list(html, sample_id)
             result["access"] = "HTTP_TEXT_RECEIVED"
             if sample_id != "PROGRESS":
-                result["contract_join"] = exact_contract_join(result["items"], contract_items)
+                result["popup_route"] = route_evidence(Scripts(html).inline)
+                result["contract_join"] = exact_contract_join(
+                    result["items"], contract_items, result["popup_route"]
+                )
             results[sample_id] = result
         except Exception as exc:
             result = {"sample_id": sample_id, "access": "FAILED",
