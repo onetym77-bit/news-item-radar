@@ -320,6 +320,54 @@ class LiveRunnerTests(unittest.TestCase):
             source_rows={"candidate": source_row},
         )
 
+    def test_two_claims_use_distinct_quotes_in_one_record(self):
+        source_row = {
+            "source_id": "council_minutes",
+            "url": "https://example.test/minutes",
+            "text": (
+                "청년 50만 명 대상 225억 원 사업이 제안됐다. "
+                "8월 10일 예산안을 제출하고 8월 18일 수요조사를 착수했다."
+            ),
+        }
+        payload = {
+            "agent_role": "EDITOR",
+            "candidate_id": "minutes-1",
+            "issue_title": source_row["text"],
+            "issue_summary": source_row["text"],
+            "confirmed_facts": [
+                {
+                    "text": "청년 50만 명 대상 225억 원 사업이 제안됐다.",
+                    "source_ref_ids": ["q1"],
+                },
+                {
+                    "text": "8월 10일 예산안을 제출하고 8월 18일 수요조사를 착수했다.",
+                    "source_ref_ids": ["q2"],
+                },
+            ],
+            "evidence_refs": [
+                {
+                    "quote_id": "q1",
+                    "ref_id": "minutes-1",
+                    "source_id": source_row["source_id"],
+                    "url": source_row["url"],
+                    "exact_text": "청년 50만 명 대상 225억 원 사업이 제안됐다.",
+                },
+                {
+                    "quote_id": "q2",
+                    "ref_id": "minutes-1",
+                    "source_id": source_row["source_id"],
+                    "url": source_row["url"],
+                    "exact_text": "8월 10일 예산안을 제출하고 8월 18일 수요조사를 착수했다.",
+                },
+            ],
+        }
+        live.validate_exact_grounding(
+            payload,
+            expected_role="EDITOR",
+            expected_candidate_id="minutes-1",
+            source_rows={"minutes-1": source_row},
+        )
+
     def test_grounding_rejects_number_absent_from_quote(self):
         source_row = {
             "source_id": "official-social",
