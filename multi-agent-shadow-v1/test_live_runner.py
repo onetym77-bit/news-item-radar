@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import importlib.util
+import inspect
 import tempfile
 import unittest
 from pathlib import Path
@@ -263,6 +264,24 @@ class LiveRunnerTests(unittest.TestCase):
                 expected_candidate_id=selected["candidate_id"],
                 source_rows=rows,
             )
+
+    def test_structured_output_requires_source_reference(self):
+        source = inspect.getsource(live.build_output_model)
+        self.assertIn(
+            "source_ref_ids: list[str] = Field(min_length=1)",
+            source,
+        )
+
+    def test_prompt_requires_source_reference_for_every_statement(self):
+        prompt = live.build_prompt(
+            role="EDITOR",
+            snapshot_id="snapshot-test",
+            candidate_id="candidate-test",
+            evidence=[],
+            previous=None,
+            maximum_chars=10000,
+        )
+        self.assertIn("source_ref_ids는 반드시 1개 이상", prompt)
 
     def test_call_budget_stops_before_extra_request(self):
         budget = live.CallBudget(1)
