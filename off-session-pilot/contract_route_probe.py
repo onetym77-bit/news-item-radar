@@ -8,7 +8,7 @@ No full HTML, scripts, cookies, or personal data are saved.
 import json
 import re
 from html.parser import HTMLParser
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlencode, urljoin, urlparse
 from urllib.request import Request, build_opener
 
 from probe_sources import OfficialRedirect, Page, same_host, sanitize
@@ -69,6 +69,7 @@ def parse_call(onclick):
         return None
     return {"record_key": args[0], "contract_id": args[1],
             "installment": args[2] if len(args) == 4 else None,
+            "popup_key": args[3] if len(args) == 4 else args[2],
             "argument_count": len(args)}
 
 def first_entries(html, limit=5):
@@ -161,6 +162,49 @@ def inspect_route(sample_id, html, linked_assets=None):
     }
     return result
 
+DETAIL_MARKERS = ("계약금액", "계약기간", "계약변경", "변경계약", "공정률",
+                  "공사기간", "준공", "사업개요", "위치", "주소")
+
+def detail_url(sample_id, entry):
+    if sample_id == "C_LIST":
+        query = {
+            "cmd": "info2", "log_cnt_menu": "CnrtList",
+            "pjt_cd": entry["record_key"], "contract_no": entry["contract_id"],
+            "order_seq": entry["installment"], "key": entry["popup_key"],
+        }
+    elif sample_id == "C_PAYMENTS":
+        query = {
+            "cmd": "info6", "log_cnt_menu": "CnrtExList",
+            "pjt_cd": entry["record_key"], "cntrt_cd": entry["contract_id"],
+            "key": entry["popup_key"],
+        }
+    else:
+        raise ValueError("unsupported contract sample")
+    return ORIGIN + "/TotalAlimi_new/PopInfo.action?" + urlencode(query)
+
+def inspect_detail(html, expected_title):
+    page = Page(html)
+    visible = sanitize(" ".join(page.chunks))
+    paths = []
+    for anchor in page.anchors:
+        target = urljoin(ORIGIN, anchor["href"])
+        if anchor["href"] and anchor["href"] != "#none" and same_host(target, ORIGIN):
+            path = urlparse(target).path
+            if path not in paths:
+                paths.append(path)
+    return {
+        "title_match": expected_title in visible,
+        "visible_characters": len(visible),
+        "markers_present": [marker for marker in DETAIL_MARKERS if marker in visible],
+        "same_host_link_paths": paths[:12],
+        "detail_status": "HTML_PARSED" if visible else "EMPTY_HTML",
+        "change_history": "MARKER_ONLY" if any(
+            marker in visible for marker in ("계약변경", "변경계약")
+        ) else "NOT_FOUND",
+        "progress_link": "MARKER_ONLY" if "공정률" in visible else "NOT_FOUND",
+        "article_gate": "NOT_EVALUATED",
+    }
+
 def main():
     for sample_id, url in LISTS.items():
         try:
@@ -177,6 +221,11 @@ def main():
             result = inspect_route(sample_id, html, assets)
             result["external_asset_errors"] = asset_errors[:4]
             result["access"] = "HTTP_TEXT_RECEIVED"
+            if result["first_entries"]:
+                entry = result["first_entries"][0]
+                target = detail_url(sample_id, entry)
+                detail = inspect_detail(read_text(target), entry["title"])
+                result["detail_fetch"] = detail
         except Exception as exc:
             result = {"sample_id": sample_id, "access": "FAILED",
                       "error": sanitize(str(exc))[:180],
