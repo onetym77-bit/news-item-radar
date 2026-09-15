@@ -25,6 +25,7 @@ on:
       - "agent-system-v1/validate_discovery_system.py"
       - "daily-briefing-v5/**"
       - "source-scout-v1/**"
+      - "multi-agent-shadow-v1/**"
       - ".github/workflows/daily-briefing.yml"
   pull_request:
     paths:
@@ -39,6 +40,7 @@ on:
       - "agent-system-v1/validate_discovery_system.py"
       - "daily-briefing-v5/**"
       - "source-scout-v1/**"
+      - "multi-agent-shadow-v1/**"
       - ".github/workflows/daily-briefing.yml"
 
 permissions:
@@ -80,6 +82,7 @@ jobs:
           python -m py_compile multi-agent-shadow-v1/freeze_input.py
           python -m py_compile multi-agent-shadow-v1/contracts.py
           python -m py_compile multi-agent-shadow-v1/orchestrator.py
+          python -m py_compile multi-agent-shadow-v1/live_runner.py
           python -X utf8 -m unittest discover -s source-scout-v1 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s daily-briefing-v5 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s multi-agent-shadow-v1 -p 'test_*.py' -v
