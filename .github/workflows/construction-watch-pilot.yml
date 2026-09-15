@@ -79,7 +79,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: construction-watch-${{ github.run_id }}
-          path: .
+          path: construction-watch-pilot/output
       - name: Verify derived state and protected ledgers
         shell: bash
         run: |
