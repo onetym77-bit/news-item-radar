@@ -1,0 +1,114 @@
+name: Observe construction changes (pilot)
+
+on:
+  schedule:
+    - cron: "15 11 * * *"
+      timezone: "Asia/Seoul"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "construction-watch-pilot/**"
+      - "off-session-pilot/*.py"
+      - ".github/workflows/construction-watch-pilot.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: construction-watch-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  collect-and-compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: read
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test the watch and source pilot
+        run: |
+          python -X utf8 -m unittest discover -s construction-watch-pilot -p 'test_*.py' -v
+          python -X utf8 -m unittest discover -s off-session-pilot -p 'test_*.py' -v
+      - name: Validate the discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Observe four official lists and compare prior rolling state
+        run: python -X utf8 construction-watch-pilot/watch.py
+      - name: Show bounded question queue
+        run: sed -n '1,180p' construction-watch-pilot/output/questions_latest.md
+      - name: Upload only the derived state and question queue
+        uses: actions/upload-artifact@v7
+        with:
+          name: construction-watch-${{ github.run_id }}
+          path: |
+            construction-watch-pilot/output/state_latest.json
+            construction-watch-pilot/output/questions_latest.md
+          if-no-files-found: error
+          retention-days: 7
+      - name: Preserve access failure without changing prior state
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: construction-watch-failure-${{ github.run_id }}
+          path: construction-watch-pilot/output/access_failure_latest.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+  persist-main:
+    needs: collect-and-compare
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact tested main commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Download exact derived build package
+        uses: actions/download-artifact@v8
+        with:
+          name: construction-watch-${{ github.run_id }}
+          path: .
+      - name: Verify derived state and protected ledgers
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("construction-watch-pilot/output/state_latest.json")
+          state = json.loads(path.read_text(encoding="utf-8"))
+          assert state["schema"] == 1
+          assert state["last_run"]["article_gate"] == "NOT_EVALUATED"
+          assert state["last_run"]["coverage"] == "FIRST_PAGE_ONLY"
+          assert set(state["last_run"]["sample_counts"]) == {
+              "EXTENSION", "DESIGN", "PENALTY", "PROGRESS"
+          }
+          assert Path("construction-watch-pilot/output/questions_latest.md").is_file()
+          PY
+          git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+      - name: Persist explicit allowlist only
+        shell: bash
+        run: |
+          git config user.name "news-item-radar-bot"
+          git config user.email "news-item-radar-bot@users.noreply.github.com"
+          git add -f construction-watch-pilot/output/state_latest.json
+          git add -f construction-watch-pilot/output/questions_latest.md
+          git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "Record bounded construction observations for run $GITHUB_RUN_ID"
+            git push origin HEAD:main
+          fi
