@@ -381,6 +381,7 @@ def validate_exact_grounding(
         raise ValueError("model changed the assigned agent_role")
     if payload.get("candidate_id") != expected_candidate_id:
         raise ValueError("model changed the assigned candidate_id")
+    evidence_by_id: dict[str, dict] = {}
     for ref in payload.get("evidence_refs", []):
         ref_id = ref.get("ref_id")
         if ref_id not in source_rows:
@@ -394,6 +395,37 @@ def validate_exact_grounding(
         searchable = json.dumps(source, ensure_ascii=False, sort_keys=True)
         if not exact_text or exact_text not in searchable:
             raise ValueError(f"quoted text is not present in source {ref_id}")
+        evidence_by_id[ref_id] = ref
+
+    framing = {
+        "text": " ".join(
+            [
+                str(payload.get("issue_title", "")),
+                str(payload.get("issue_summary", "")),
+            ]
+        )
+    }
+    if (
+        evidence_relevance_score(framing, source_rows[expected_candidate_id])
+        < MIN_EVIDENCE_RELEVANCE
+    ):
+        raise ValueError("issue framing is not supported by the candidate source")
+
+    for statement in payload.get("confirmed_facts", []):
+        quoted = " ".join(
+            str(evidence_by_id[ref_id]["exact_text"])
+            for ref_id in statement.get("source_ref_ids", [])
+            if ref_id in evidence_by_id
+        )
+        if (
+            not quoted
+            or evidence_relevance_score(
+                {"text": str(statement.get("text", ""))},
+                {"text": quoted},
+            )
+            < MIN_EVIDENCE_RELEVANCE
+        ):
+            raise ValueError("confirmed fact is not supported by its exact quotes")
 
 def build_output_model():
     from typing import Literal
