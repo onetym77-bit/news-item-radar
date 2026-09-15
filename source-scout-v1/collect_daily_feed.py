@@ -769,6 +769,22 @@ def render_markdown(feed: dict) -> str:
             f"날짜 보류 {feed['qualification_paths']['date_hold']}건"
         ),
         "- 이 수치는 원자료 기준이며 후보 상한·근접중복 선별 전입니다.",
+        *[
+            (
+                f"- {source_id}: 유효 {counts['qualified']}건 · "
+                f"새 원문 {counts['fresh_new']}건 · "
+                f"기존 원문 {counts['fresh_repeat']}건 · "
+                f"신선도 초과 {counts['stale']}건 · "
+                f"보관 종료 {counts['archived']}건"
+            )
+            for source_id, counts in sorted(
+                feed["qualification_paths"]["by_source"].items()
+            )
+        ],
+        *[
+            f"- 수집 실패: {item['source_id']} — {item['reason']}"
+            for item in feed["qualification_paths"]["failed_sources"]
+        ],
         "",
         "## 오늘 판정이 필요한 카드",
         "",
