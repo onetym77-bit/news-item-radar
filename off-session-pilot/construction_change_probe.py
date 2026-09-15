@@ -155,8 +155,10 @@ def exact_contract_join(change_items, contract_items, popup_route):
         "exact_project_id_matches": matches,
         "first_argument_overlaps": candidate_overlap,
         "popup_route": popup_route,
-        "first_argument_semantics": "ROUTE_CHECK_PENDING" if
-            popup_route["function_status"] == "NOT_FOUND" else "FUNCTION_FOUND_NOT_PROVEN",
+        "first_argument_semantics": "ROUTE_CONFIRMED_AS_PJT_CD" if
+            popup_route.get("function_status") == "FOUND" and
+            "pjt_cd=\"+pjt_cd" in popup_route.get("popup_expression", "")
+            else "ROUTE_CHECK_PENDING",
         "title_only_join": "NOT_ACCEPTED",
         "scope": "FIRST_FIVE_PER_LIST_ONLY",
     }
