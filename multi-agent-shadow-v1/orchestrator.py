@@ -140,9 +140,21 @@ def build_run_plan(
         raise ValueError("target_max must be greater than or equal to target_min")
 
     feed = snapshot["feed"]
+    # A feed row can legitimately surface in more than one lane. Assign it once,
+    # in editorial priority order, so agents do not duplicate the same work.
     primary = collect_refs(feed, PRIMARY_LANES)
-    recovery = collect_refs(feed, RECOVERY_LANES)
-    verification = collect_refs(feed, VERIFICATION_LANES)
+    assigned_ids = {ref["record_id"] for ref in primary}
+    recovery = [
+        ref
+        for ref in collect_refs(feed, RECOVERY_LANES)
+        if ref["record_id"] not in assigned_ids
+    ]
+    assigned_ids.update(ref["record_id"] for ref in recovery)
+    verification = [
+        ref
+        for ref in collect_refs(feed, VERIFICATION_LANES)
+        if ref["record_id"] not in assigned_ids
+    ]
     primary_by_role = {role: [] for role in DISCOVERY_ROLES}
     for ref in primary:
         primary_by_role[role_for_source(ref["source_id"])].append(ref["record_id"])
