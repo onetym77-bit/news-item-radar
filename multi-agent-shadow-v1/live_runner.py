@@ -62,7 +62,7 @@ ROLE_INSTRUCTIONS = {
 class RuntimeLimits:
     candidate_limit: int = 1
     max_model_calls: int = 4
-    max_output_tokens_per_call: int = 1600
+    max_output_tokens_per_call: int = 2400
     max_input_chars_per_call: int = 18000
 
     def validate(self) -> "RuntimeLimits":
@@ -367,15 +367,16 @@ def build_output_model():
 def load_sdk():
     try:
         from agents import Agent, ModelSettings, Runner, set_tracing_disabled
+        from openai.types.shared import Reasoning
     except ImportError as exc:
         raise RuntimeError(
             "OpenAI Agents SDK is not installed; install multi-agent-shadow-v1/requirements.txt"
         ) from exc
     set_tracing_disabled(True)
-    return Agent, ModelSettings, Runner
+    return Agent, ModelSettings, Runner, Reasoning
 
 def validate_sdk_configuration(model: str, max_output_tokens: int) -> dict:
-    Agent, ModelSettings, _ = load_sdk()
+    Agent, ModelSettings, _, Reasoning = load_sdk()
     OutputModel = build_output_model()
     agent = Agent(
         name="news-item-radar-sdk-preflight",
@@ -384,7 +385,9 @@ def validate_sdk_configuration(model: str, max_output_tokens: int) -> dict:
         model_settings=ModelSettings(
             max_tokens=max_output_tokens,
             parallel_tool_calls=False,
+            reasoning=Reasoning(effort="none"),
             store=False,
+            verbosity="low",
         ),
         output_type=OutputModel,
     )
@@ -418,7 +421,7 @@ async def run_stage(
     budget: CallBudget,
 ) -> tuple[dict, dict[str, int]]:
     budget.reserve()
-    Agent, ModelSettings, Runner = load_sdk()
+    Agent, ModelSettings, Runner, Reasoning = load_sdk()
     OutputModel = build_output_model()
     prompt = build_prompt(
         role=role,
@@ -435,7 +438,9 @@ async def run_stage(
         model_settings=ModelSettings(
             max_tokens=limits.max_output_tokens_per_call,
             parallel_tool_calls=False,
+            reasoning=Reasoning(effort="none"),
             store=False,
+            verbosity="low",
         ),
         output_type=OutputModel,
     )
@@ -571,7 +576,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default="gpt-5.6-luna")
     parser.add_argument("--candidate-limit", type=int, default=1)
     parser.add_argument("--max-model-calls", type=int, default=4)
-    parser.add_argument("--max-output-tokens", type=int, default=1600)
+    parser.add_argument("--max-output-tokens", type=int, default=2400)
     parser.add_argument("--max-input-chars", type=int, default=18000)
     parser.add_argument("--preflight", action="store_true")
     parser.add_argument("--validate-sdk", action="store_true")
