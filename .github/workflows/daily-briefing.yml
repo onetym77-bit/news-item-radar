@@ -77,13 +77,36 @@ jobs:
           python -m py_compile source-scout-v1/evaluate_human_review.py
           python -m py_compile daily-briefing-v5/build_briefing.py
           python -m py_compile daily-briefing-v5/run_provenance.py
+          python -m py_compile multi-agent-shadow-v1/freeze_input.py
           python -X utf8 -m unittest discover -s source-scout-v1 -p 'test_*.py' -v
           python -X utf8 -m unittest discover -s daily-briefing-v5 -p 'test_*.py' -v
+          python -X utf8 -m unittest discover -s multi-agent-shadow-v1 -p 'test_*.py' -v
 
       - name: Collect source feed once
         run: |
           python -X utf8 source-scout-v1/collect_daily_feed.py
           python -X utf8 source-scout-v1/render_grounding_comparison.py
+
+      - name: Freeze the shared control and shadow input
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python -X utf8 multi-agent-shadow-v1/freeze_input.py \
+            --feed source-scout-v1/output/daily_feed_latest.json \
+            --output "${RUNNER_TEMP}/shadow_input_latest.json" \
+            --run-id "${GITHUB_RUN_ID}" \
+            --code-sha "${SOURCE_SHA}"
+          python -X utf8 multi-agent-shadow-v1/freeze_input.py \
+            --output "${RUNNER_TEMP}/shadow_input_latest.json" \
+            --verify
+
+      - name: Upload the immutable shadow input
+        uses: actions/upload-artifact@v7
+        with:
+          name: multi-agent-shadow-input-${{ github.run_id }}
+          path: ${{ runner.temp }}/shadow_input_latest.json
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Validate source ledgers
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
