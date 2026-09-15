@@ -27,6 +27,8 @@ jobs:
         run: python -X utf8 off-session-pilot/probe_sources.py
       - name: Inspect two contract popup routes and one detail per list
         run: python -X utf8 off-session-pilot/contract_route_probe.py
+      - name: Inspect four change and progress listings for exact project linkage
+        run: python -X utf8 off-session-pilot/construction_change_probe.py
       - name: Preserve bounded diagnostics
         if: always()
         uses: actions/upload-artifact@v6
