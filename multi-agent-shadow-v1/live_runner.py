@@ -148,6 +148,8 @@ class GroundingFailure(ValueError):
 
 
 def claim_numbers(value: str) -> set[str]:
+    # Speech-format labels are procedural metadata, not a measured claim.
+    value = re.sub(r"(?<!\d)\d+\s*분\s*(?:자유\s*)?발언", "", value)
     return {
         token.replace(",", "")
         for token in re.findall(r"\d[\d,]*(?:\.\d+)?%?", value)
@@ -252,6 +254,23 @@ def verification_matches(
     )
 
 
+def eligible_verification(ref: dict, row: dict) -> bool:
+    """Only an inspected value row may act as evidence, never a dataset lead."""
+    return (
+        ref.get("lane") in {"verification_map", "activity_baselines"}
+        and row.get("verification_usable") is True
+    )
+
+
+def usable_verification_rows(snapshot: dict, plan: dict) -> list[tuple[str, dict]]:
+    lookup = row_lookup(snapshot)
+    return [
+        (ref["record_id"], lookup[ref["record_id"]])
+        for ref in plan["pools"]["verification"]
+        if eligible_verification(ref, lookup[ref["record_id"]])
+    ]
+
+
 def eligible_recovery(ref: dict, row: dict) -> bool:
     """A held or stale source is not a fresh daily item just because the pool is empty."""
     age = row.get("freshness_days")
@@ -290,10 +309,7 @@ def select_candidates(
     if not 1 <= candidate_limit <= HARD_MAX_CANDIDATES:
         raise ValueError("candidate_limit must be 1 or 2")
     lookup = row_lookup(snapshot)
-    verification_rows = [
-        (ref["record_id"], lookup[ref["record_id"]])
-        for ref in plan["pools"]["verification"]
-    ]
+    verification_rows = usable_verification_rows(snapshot, plan)
     discovery_role: dict[str, str] = {}
     for task in plan["tasks"]:
         if task["agent_role"].startswith("DISCOVERY_"):
@@ -386,9 +402,9 @@ def evidence_bundle(
         raise ValueError(f"candidate is missing from snapshot: {candidate_id}")
     candidate = lookup[candidate_id]
     verification_rows = [
-        (ref["record_id"], lookup[ref["record_id"]])
-        for ref in plan["pools"]["verification"]
-        if ref["record_id"] != candidate_id
+        (record_id, row)
+        for record_id, row in usable_verification_rows(snapshot, plan)
+        if record_id != candidate_id
     ]
     matches = verification_matches(candidate, verification_rows)
     evidence_ids = [candidate_id, *[record_id for _, record_id, _ in matches[:2]]]
@@ -457,6 +473,7 @@ def build_prompt(
         "confirmed_facts와 unverified_claims의 source_ref_ids는 원자료 ref_id가 아니라 실제 해당 주장을 지지하는 quote_id를 1개 이상 가리켜야 한다. "
         "숫자·날짜·기관·인물이 포함된 확인 사실은 반드시 그 요소가 모두 들어 있는 직접 인용을 연결하라. "
         "근거가 없는 주장은 만들지 말고, 자료 부재를 말할 때도 그 부재를 확인한 원자료의 인용문을 연결하라. "
+        "5분 자유발언 같은 발언 형식은 측정값이 아니다. 본문 인용이 그 형식까지 말하지 않으면 확인 사실에 형식명을 덧붙이지 마라. "
         "confirmed_facts는 인용 원문에 가까운 표현으로 사실 하나씩 쓰고 원문에 없는 숫자·기관·인물·지역·인과를 추가하지 마라. "
         "원문을 넘어서는 해석·추정은 confirmed_facts가 아니라 unverified_claims 또는 competing_hypotheses로 옮겨라. "
         "PASS는 취재·검증 착수 승인이지 기사화 승인이나 피해 사실 확정이 아니다. 기사화 제안은 독립 교차근거 G3와 EDITORIAL_PROPOSAL만 사용하라. "
