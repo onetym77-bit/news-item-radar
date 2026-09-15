@@ -25,7 +25,7 @@ jobs:
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
       - name: Read four listings and three fixed proposal URLs
         run: python -X utf8 off-session-pilot/probe_sources.py
-      - name: Inspect two contract popup routes without opening details
+      - name: Inspect two contract popup routes and one detail per list
         run: python -X utf8 off-session-pilot/contract_route_probe.py
       - name: Preserve bounded diagnostics
         if: always()
