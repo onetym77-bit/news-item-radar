@@ -1,0 +1,28 @@
+name: Test multi-agent shadow
+
+on:
+  pull_request:
+    paths:
+      - "multi-agent-shadow-v1/**"
+      - ".github/workflows/multi-agent-shadow-live.yml"
+      - ".github/workflows/multi-agent-shadow-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Compile and run zero-cost tests
+        run: |
+          python -m py_compile multi-agent-shadow-v1/live_runner.py
+          python -X utf8 -m unittest discover -s multi-agent-shadow-v1 -p 'test_*.py' -v
