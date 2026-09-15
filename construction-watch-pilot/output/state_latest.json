@@ -1,0 +1,253 @@
+{
+  "schema": 1,
+  "last_collected_kst": "2026-09-15T18:12:01+09:00",
+  "events": {
+    "EXTENSION|1032026062399|22046|2": {
+      "key": "EXTENSION|1032026062399|22046|2",
+      "category": "EXTENSION",
+      "pjt_cd": "1032026062399",
+      "record_key": "22046|2",
+      "title": "남측순환로 (한남동조망)정비공사",
+      "registration_date": "2026-09-15",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 35,
+      "before_completion": "2026-09-26",
+      "after_completion": "2026-10-31",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "EXTENSION|1032026080698|22045|1": {
+      "key": "EXTENSION|1032026080698|22045|1",
+      "category": "EXTENSION",
+      "pjt_cd": "1032026080698",
+      "record_key": "22045|1",
+      "title": "남측순환로 (이태원동조망)정비공사",
+      "registration_date": "2026-09-15",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 20,
+      "before_completion": "2026-10-11",
+      "after_completion": "2026-10-31",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "EXTENSION|6072026062699|22054|1": {
+      "key": "EXTENSION|6072026062699|22054|1",
+      "category": "EXTENSION",
+      "pjt_cd": "6072026062699",
+      "record_key": "22054|1",
+      "title": "2026년 중랑천 생태복원 및 녹화사업",
+      "registration_date": "2026-09-15",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 18,
+      "before_completion": "2026-09-12",
+      "after_completion": "2026-09-30",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "EXTENSION|6112026031697|22049|1": {
+      "key": "EXTENSION|6112026031697|22049|1",
+      "category": "EXTENSION",
+      "pjt_cd": "6112026031697",
+      "record_key": "22049|1",
+      "title": "2026년 위험수목 정비사업 공사",
+      "registration_date": "2026-09-15",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 19,
+      "before_completion": "2026-09-11",
+      "after_completion": "2026-09-30",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "DESIGN|3202025122399|21971605|21971606": {
+      "key": "DESIGN|3202025122399|21971605|21971606",
+      "category": "DESIGN",
+      "pjt_cd": "3202025122399",
+      "record_key": "21971605|21971606",
+      "title": "2026년 포장도로 긴급복구공사(연간단가)-성동",
+      "registration_date": "2026-09-15",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "DESIGN|7552026042998|21972219|21972220": {
+      "key": "DESIGN|7552026042998|21972219|21972220",
+      "category": "DESIGN",
+      "pjt_cd": "7552026042998",
+      "record_key": "21972219|21972220",
+      "title": "거점·관제간 광케이블 이중화 구축공사",
+      "registration_date": "2026-09-15",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "DESIGN|3202026010882|21970869|21970870": {
+      "key": "DESIGN|3202026010882|21970869|21970870",
+      "category": "DESIGN",
+      "pjt_cd": "3202026010882",
+      "record_key": "21970869|21970870",
+      "title": "2026년 도로시설물 일상유지 보수공사(터널,복개등)-강서",
+      "registration_date": "2026-09-15",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "DESIGN|2012026020599|21971287|21971288": {
+      "key": "DESIGN|2012026020599|21971287|21971288",
+      "category": "DESIGN",
+      "pjt_cd": "2012026020599",
+      "record_key": "21971287|21971288",
+      "title": "2026년 반포달빛무지개분수 유지보수공사(연간단가)",
+      "registration_date": "2026-09-15",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "DESIGN|7182026072098|21972479|21972480": {
+      "key": "DESIGN|7182026072098|21972479|21972480",
+      "category": "DESIGN",
+      "pjt_cd": "7182026072098",
+      "record_key": "21972479|21972480",
+      "title": "종로 거점형 키움센터 철거 및 원상복구 전기공사",
+      "registration_date": "2026-09-14",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "PENALTY|1112021020598|1223": {
+      "key": "PENALTY|1112021020598|1223",
+      "category": "PENALTY",
+      "pjt_cd": "1112021020598",
+      "record_key": "1223",
+      "title": "영동대로 지하공간 복합개발 3공구 건설공사(토목)",
+      "registration_date": "2026-08-20",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
+      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 경동엔지니어링 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.4점 벌점부과일 : 2026-08-20 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 9 등록일 : 2026-08-20 16 ",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "PENALTY|1112021020598|1221": {
+      "key": "PENALTY|1112021020598|1221",
+      "category": "PENALTY",
+      "pjt_cd": "1112021020598",
+      "record_key": "1221",
+      "title": "영동대로 지하공간 복합개발 3공구 건설공사(토목)",
+      "registration_date": "2026-08-20",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
+      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 경동엔지니어링 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.4점 벌점부과일 : 2026-08-20 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 9 등록일 : 2026-08-20 16 ",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "PENALTY|1112021020598|1222": {
+      "key": "PENALTY|1112021020598|1222",
+      "category": "PENALTY",
+      "pjt_cd": "1112021020598",
+      "record_key": "1222",
+      "title": "영동대로 지하공간 복합개발 3공구 건설공사(토목)",
+      "registration_date": "2026-08-20",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
+      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 경동엔지니어링 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.4점 벌점부과일 : 2026-08-20 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 9 등록일 : 2026-08-20 16 영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 이화공영주식회사 업",
+      "first_seen_kst": "2026-09-15T18:12:01+09:00",
+      "last_seen_kst": "2026-09-15T18:12:01+09:00"
+    }
+  },
+  "progress": {
+    "f68e46e0a1b6b1a6": {
+      "key": "f68e46e0a1b6b1a6",
+      "title": "4호선 연장(진접선) 차량기지 건설",
+      "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
+      "plan_percent": 97.6,
+      "actual_percent": 97.8,
+      "gap_pp": 0.2,
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
+      "pjt_cd": null,
+      "observed_at_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "57eca32c8e203306": {
+      "key": "57eca32c8e203306",
+      "title": "강남순환도시고속도로 건설공사",
+      "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
+      "plan_percent": 99.9,
+      "actual_percent": 100.0,
+      "gap_pp": 0.1,
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
+      "pjt_cd": null,
+      "observed_at_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "2b009f5c7daf5f7a": {
+      "key": "2b009f5c7daf5f7a",
+      "title": "강남역 일대 대심도 빗물배수터널 건설공사",
+      "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
+      "plan_percent": 5.0,
+      "actual_percent": 7.1,
+      "gap_pp": 2.1,
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
+      "pjt_cd": null,
+      "observed_at_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "c335f452fa78b48c": {
+      "key": "c335f452fa78b48c",
+      "title": "거여 119안전센터 건립공사",
+      "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
+      "plan_percent": 17.0,
+      "actual_percent": 15.5,
+      "gap_pp": -1.5,
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
+      "pjt_cd": null,
+      "observed_at_kst": "2026-09-15T18:12:01+09:00"
+    },
+    "ca05789869ab2a65": {
+      "key": "ca05789869ab2a65",
+      "title": "광화문 일대 대심도 빗물배수터널 건설공사",
+      "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
+      "plan_percent": 11.2,
+      "actual_percent": 11.0,
+      "gap_pp": -0.2,
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
+      "pjt_cd": null,
+      "observed_at_kst": "2026-09-15T18:12:01+09:00"
+    }
+  },
+  "last_run": {
+    "first_baseline": true,
+    "new_record_keys": [
+      "EXTENSION|1032026062399|22046|2",
+      "EXTENSION|1032026080698|22045|1",
+      "EXTENSION|6072026062699|22054|1",
+      "EXTENSION|6112026031697|22049|1",
+      "DESIGN|3202025122399|21971605|21971606",
+      "DESIGN|7552026042998|21972219|21972220",
+      "DESIGN|3202026010882|21970869|21970870",
+      "DESIGN|2012026020599|21971287|21971288",
+      "DESIGN|7182026072098|21972479|21972480",
+      "PENALTY|1112021020598|1223",
+      "PENALTY|1112021020598|1221",
+      "PENALTY|1112021020598|1222"
+    ],
+    "signals": [
+      {
+        "kind": "MULTIPLE_PENALTIES",
+        "pjt_cd": "1112021020598",
+        "title": "영동대로 지하공간 복합개발 3공구 건설공사(토목)",
+        "observation": "같은 사업 코드의 서로 다른 벌점 기록이 3건 관측됨. 업체·점검·부과일을 구분하고 동일 사실의 중복 게시인지 확인.",
+        "question_status": "PRE_EDITORIAL_VERIFY",
+        "article_gate": "NOT_EVALUATED",
+        "source_urls": [
+          "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action"
+        ]
+      }
+    ],
+    "sample_counts": {
+      "EXTENSION": 4,
+      "DESIGN": 5,
+      "PENALTY": 3,
+      "PROGRESS": 5
+    },
+    "coverage": "FIRST_PAGE_ONLY",
+    "article_gate": "NOT_EVALUATED"
+  }
+}
