@@ -27,6 +27,7 @@ def valid_payload() -> dict:
         "issue_summary": "시내버스 통상임금 관련 비용 부담의 귀속을 확인한다.",
         "evidence_refs": [
             {
+                "quote_id": "q1",
                 "ref_id": "source-1",
                 "source_id": "council_minutes",
                 "url": "https://example.test/minutes/1",
@@ -45,7 +46,7 @@ def valid_payload() -> dict:
         "unverified_claims": [
             {
                 "text": "미지급액이 약 2,900억 원이라는 의원 발언",
-                "source_ref_ids": ["source-1"],
+                "source_ref_ids": ["q1"],
             }
         ],
         "competing_hypotheses": [
@@ -95,6 +96,34 @@ class ContractTests(unittest.TestCase):
             ),
             payload,
         )
+
+    def test_multiple_quotes_from_one_source_are_distinct(self):
+        payload = valid_payload()
+        payload["evidence_refs"].append(
+            {
+                "quote_id": "q2",
+                "ref_id": "source-1",
+                "source_id": "council_minutes",
+                "url": "https://example.test/minutes/1",
+                "exact_text": "예산안 제출일과 수요조사 착수일을 비교해야 합니다.",
+                "claim_status": "ATTRIBUTED_CLAIM",
+            }
+        )
+        payload["confirmed_facts"] = [
+            {
+                "text": "예산안과 수요조사 시점을 비교해야 한다는 발언",
+                "source_ref_ids": ["q2"],
+            }
+        ]
+        self.assertIs(contracts.validate_assessment(payload), payload)
+
+    def test_duplicate_quote_id_is_rejected(self):
+        payload = valid_payload()
+        duplicate = copy.deepcopy(payload["evidence_refs"][0])
+        duplicate["exact_text"] = "다른 문장"
+        payload["evidence_refs"].append(duplicate)
+        with self.assertRaisesRegex(ValueError, "duplicate quote_id"):
+            contracts.validate_assessment(payload)
 
     def test_score_total_mismatch_is_rejected(self):
         payload = valid_payload()
