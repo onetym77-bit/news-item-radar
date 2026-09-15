@@ -507,7 +507,8 @@ class LiveRunnerTests(unittest.TestCase):
             previous=None,
             maximum_chars=10000,
         )
-        self.assertIn("source_ref_ids는 반드시 1개 이상", prompt)
+        self.assertIn("source_ref_ids는 원자료 ref_id가 아니라", prompt)
+        self.assertIn("quote_id를 1개 이상 가리켜야 한다", prompt)
 
     def test_call_budget_stops_before_extra_request(self):
         budget = live.CallBudget(1)
