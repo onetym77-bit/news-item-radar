@@ -203,17 +203,79 @@ class LiveRunnerTests(unittest.TestCase):
         selected = live.select_candidates(source, make_plan(source), candidate_limit=1)
         self.assertEqual(selected[0]["selection_pool"], "recovery")
 
+    def test_matching_dataset_metadata_is_never_attached_as_evidence(self):
+        original = make_snapshot()
+        feed = original["feed"]
+        candidate = row(
+            "council_minutes",
+            "수어통역서비스를 제공하는 복지시설의 운영과 자치구 지원",
+            "sign-language",
+            10,
+        )
+        feed["core_discovery"] = [candidate]
+        metadata = row(
+            "seoul_open_data",
+            "자치구 시설 현황 정보를 제공하는 데이터셋과 운영 관리",
+            "metadata",
+            5,
+        )
+        metadata["verification_usable"] = False
+        metadata["content_class"] = "DATASET_METADATA"
+        feed["verification_metadata_leads"] = [metadata]
+        source = freeze.build_snapshot(feed, run_id="metadata", code_sha="abc")
+        plan = make_plan(source)
+        selected = live.select_candidates(source, plan, candidate_limit=1)[0]
+        evidence, rows = live.evidence_bundle(
+            source, plan, selected["candidate_id"]
+        )
+        self.assertEqual(selected["topic_matched_source_count"], 0)
+        self.assertEqual([item["ref_id"] for item in evidence], [selected["candidate_id"]])
+        self.assertEqual(set(rows), {selected["candidate_id"]})
+
+    def test_only_verified_value_rows_enter_evidence_pool(self):
+        original = make_snapshot()
+        feed = original["feed"]
+        candidate = row(
+            "council_minutes", "청년 AI 구독 지원 이용", "candidate", 9
+        )
+        feed["core_discovery"] = [candidate]
+        lead = row(
+            "seoul_open_data", "청년 AI 구독 지원 이용 현황", "lead", 8
+        )
+        lead["verification_usable"] = False
+        feed["verification_schema_leads"] = [lead]
+        value_row = row(
+            "seoul_open_data", "청년 AI 구독 지원 이용 인원", "value", 6
+        )
+        value_row["verification_usable"] = True
+        feed["verification_map"] = [value_row]
+        source = freeze.build_snapshot(feed, run_id="usable", code_sha="abc")
+        plan = make_plan(source)
+        usable = live.usable_verification_rows(source, plan)
+        self.assertEqual(len(usable), 1)
+        self.assertIn("이용 인원", usable[0][1]["text"])
+
+    def test_speech_format_label_is_not_treated_as_a_metric(self):
+        self.assertEqual(
+            live.claim_numbers("서울시의회 5분 자유발언에서 문제가 제기됐다."),
+            set(),
+        )
+        self.assertEqual(
+            live.claim_numbers("25개 센터의 사업비는 800만 원이다."),
+            {"25", "800"},
+        )
+
     def test_related_verification_row_is_attached(self):
         original = make_snapshot()
         feed = original["feed"]
-        feed["verification_schema_leads"].append(
-            row(
-                "seoul_open_data",
-                "청년 AI 구독 지원 이용 현황",
-                "related",
-                6,
-            )
+        related = row(
+            "seoul_open_data",
+            "청년 AI 구독 지원 이용 현황",
+            "related",
+            6,
         )
+        related["verification_usable"] = True
+        feed["verification_map"].append(related)
         source = freeze.build_snapshot(feed, run_id="related", code_sha="abc")
         selected = live.select_candidates(
             source, make_plan(source), candidate_limit=1
@@ -231,9 +293,11 @@ class LiveRunnerTests(unittest.TestCase):
         feed["core_discovery"].append(
             row("council_minutes", "전세사기 피해 인정", "housing", 4)
         )
-        feed["verification_schema_leads"].append(
-            row("seoul_open_data", "전세사기 피해 인정 통계", "housing-data", 4)
+        related = row(
+            "seoul_open_data", "전세사기 피해 인정 통계", "housing-data", 4
         )
+        related["verification_usable"] = True
+        feed["verification_map"].append(related)
         source = freeze.build_snapshot(feed, run_id="ranking", code_sha="abc")
         selected = live.select_candidates(
             source, make_plan(source), candidate_limit=1
