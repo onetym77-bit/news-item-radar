@@ -102,6 +102,7 @@ jobs:
             --snapshot "${RUNNER_TEMP}/shadow_input.json" \
             --plan "${RUNNER_TEMP}/shadow_plan.json" \
             --output "${RUNNER_TEMP}/shadow_live_result.json" \
+            --summary-output "$GITHUB_STEP_SUMMARY" \
             --model "$MODEL" \
             --candidate-limit "$CANDIDATE_LIMIT" \
             --max-model-calls "$max_calls" \
