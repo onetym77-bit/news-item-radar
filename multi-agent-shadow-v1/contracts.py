@@ -134,10 +134,11 @@ def validate_assessment(
     for index, ref in enumerate(evidence):
         if not isinstance(ref, dict):
             raise ValueError(f"evidence_refs[{index}] must be an object")
-        ref_id = require_text(ref, "ref_id")
-        if ref_id in evidence_ids:
-            raise ValueError(f"duplicate evidence ref_id: {ref_id}")
-        evidence_ids.add(ref_id)
+        quote_id = require_text(ref, "quote_id", maximum=80)
+        if quote_id in evidence_ids:
+            raise ValueError(f"duplicate quote_id: {quote_id}")
+        evidence_ids.add(quote_id)
+        require_text(ref, "ref_id")
         require_text(ref, "source_id")
         url = require_text(ref, "url")
         if not url.startswith(("http://", "https://")):
