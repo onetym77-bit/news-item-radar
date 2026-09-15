@@ -105,7 +105,7 @@ jobs:
             --model "$MODEL" \
             --candidate-limit "$CANDIDATE_LIMIT" \
             --max-model-calls "$max_calls" \
-            --max-output-tokens 1600 \
+            --max-output-tokens 2400 \
             --max-input-chars 18000 \
             --confirm-paid-run "RUN_PAID_SHADOW"
 
