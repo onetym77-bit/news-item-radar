@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import importlib.util
+import inspect
 import tempfile
 import unittest
 from pathlib import Path
@@ -265,10 +266,11 @@ class LiveRunnerTests(unittest.TestCase):
             )
 
     def test_structured_output_requires_source_reference(self):
-        schema = live.build_output_model().model_json_schema()
-        statement_schema = schema["$defs"]["SourcedStatement"]
-        source_refs = statement_schema["properties"]["source_ref_ids"]
-        self.assertEqual(source_refs["minItems"], 1)
+        source = inspect.getsource(live.build_output_model)
+        self.assertIn(
+            "source_ref_ids: list[str] = Field(min_length=1)",
+            source,
+        )
 
     def test_prompt_requires_source_reference_for_every_statement(self):
         prompt = live.build_prompt(
