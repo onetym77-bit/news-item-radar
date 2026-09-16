@@ -231,6 +231,8 @@ def classify_text(text: str) -> dict:
             "idea_terms": idea[:4],
         },
         "claim_status": "UNVERIFIED",
+        "problem_evidence_status": "NOT_ESTABLISHED",
+        "human_review_required": True,
         "verification_plan": plan,
         "editorial_question": "NOT_GENERATED",
         "article_gate": "NOT_EVALUATED",
@@ -272,19 +274,25 @@ def observe(fetcher=fetch, limit: int = LIMIT) -> dict:
             "statement_type": "UNRESOLVED",
             "matched_basis": {},
             "claim_status": "UNVERIFIED",
+            "problem_evidence_status": "NOT_ESTABLISHED",
+            "human_review_required": True,
             "verification_plan": "목록 제목과 상세 원문의 대응을 확인한 후 다시 분류한다.",
             "editorial_question": "NOT_GENERATED",
             "article_gate": "NOT_EVALUATED",
         }
+        anchor = evidence_anchor(detail_text, classified["statement_type"], classified["matched_basis"]) if detail_text is not None else {"status": "UNAVAILABLE", "excerpt": None}
+        context = context_candidates(proposal["title"], detail_text or "")
         rows.append({
             **proposal,
             "detail_sha256": detail_hash,
             "detail_text_characters_examined": len(detail_text or ""),
             "detail_scope": "TITLE_ANCHORED_BOUNDED_TEXT" if detail_text is not None else "UNCONFIRMED",
+            "evidence_anchor": anchor,
+            "context_candidates": context,
             **classified,
         })
     return {
-        "schema": 1,
+        "schema": 2,
         "observed_at_kst": datetime.now(ZoneInfo("Asia/Seoul")).isoformat(timespec="seconds"),
         "source_url": LIST_URL,
         "coverage": f"FIRST_{len(rows)}_UNIQUE_PROPOSALS",
@@ -295,11 +303,13 @@ def observe(fetcher=fetch, limit: int = LIMIT) -> dict:
             "contact_stored": False,
             "raw_html_stored": False,
             "full_body_stored": False,
+            "bounded_redacted_anchor_max_chars": 240,
         },
         "interpretation_limits": [
             "분류는 원문 문구의 형식이며 사실 확인 결과가 아니다.",
             "공감·비공감·조회 수는 대표성이나 사실성 근거로 사용하지 않는다.",
             "직접 경험형도 독립 확인 전에는 기사 후보가 아니다.",
+            "근거 문장은 분류를 설명할 뿐 사건 발생의 증거가 아니다.",
         ],
         "article_gate": "NOT_EVALUATED",
     }
