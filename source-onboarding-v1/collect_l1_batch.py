@@ -259,6 +259,16 @@ def public_function_route_hints(html_text: str, function_name: str) -> list[str]
                 if token and token not in hints:
                     hints.append(token[:200])
     if not hints:
+        position = html_text.find(function_name)
+        if position >= 0:
+            window = html_text[max(0, position - 1200):position + 2500]
+            for quoted in re.findall(r"['\"]([^'\"]{1,300})['\"]", window):
+                token = html.unescape(quoted).strip()
+                if ".do" in token or ".frg" in token:
+                    token = re.sub(r"[^A-Za-z0-9_./?=&{}-]", "", token)
+                    if token and token not in hints:
+                        hints.append("CONTEXT:" + token[:190])
+    if not hints:
         for src in re.findall(r"<script[^>]+src=['\"]([^'\"]+)['\"]", html_text, flags=re.I):
             if src.startswith("/") and src not in hints:
                 hints.append("SCRIPT:" + src[:180])
