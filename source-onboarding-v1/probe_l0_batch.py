@@ -253,14 +253,15 @@ def render_summary(observations: list[dict]) -> str:
         "",
         "이 결과는 접속·목록형 구조의 기술 진단일 뿐, 게시물 수집이나 편집 가치 판정이 아닙니다.",
         "",
-        "| 소스 | 접속 | HTTP | 본문 글자 | 내부 링크 | 목록형 노드 | 날짜형 토큰 | 다음 기술 검토 |",
-        "|---|---:|---:|---:|---:|---:|---:|---|",
+        "| 소스 | 접속 | HTTP | 실패·제한 코드 | 본문 글자 | 내부 링크 | 목록형 노드 | 날짜형 토큰 | 다음 기술 검토 |",
+        "|---|---:|---:|---|---:|---:|---:|---:|---|",
     ]
     for row in observations:
         d = row["diagnostics"]
         lines.append(
             f"| {row['source_id']} | {row['access_status']} | "
-            f"{d.get('http_status') or '-'} | {d.get('visible_text_chars', 0)} | "
+            f"{d.get('http_status') or '-'} | {d.get('error_code') or '-'} | "
+            f"{d.get('visible_text_chars', 0)} | "
             f"{d.get('internal_link_count', 0)} | {d.get('article_like_node_count', 0)} | "
             f"{d.get('date_like_token_count', 0)} | {row['technical_readiness']} |"
         )
