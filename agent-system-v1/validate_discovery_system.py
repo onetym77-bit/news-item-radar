@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import importlib.util
 import json
 import re
 import sys
@@ -29,6 +30,9 @@ REQUIRED_FILES = [
     ROOT / "interest-radar-v2" / "DESIGN.md",
     CONFIG,
     ROOT / "interest-radar-v2" / "collect_source_material_v2_1.py",
+    ROOT / "source-onboarding-v1" / "SOURCE_MATURITY_POLICY.md",
+    ROOT / "source-onboarding-v1" / "source_maturity_registry.json",
+    ROOT / "source-onboarding-v1" / "thin_source_contract.py",
 ]
 
 REQUIRED_COLUMNS = {
@@ -391,6 +395,19 @@ def main() -> int:
                 errors.append("유튜브 검색식 건강도 최소 관찰 횟수는 3회여야 함")
         except (json.JSONDecodeError, OSError) as exc:
             errors.append(f"관심 레이더 설정을 읽을 수 없음: {exc}")
+
+    source_contract = ROOT / "source-onboarding-v1" / "thin_source_contract.py"
+    if source_contract.is_file():
+        try:
+            spec = importlib.util.spec_from_file_location("source_onboarding_contract", source_contract)
+            if spec is None or spec.loader is None:
+                raise RuntimeError("module loader unavailable")
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            for error in module.validate_registry(module.load_registry(), ROOT):
+                errors.append("신규 소스 성숙도: " + error)
+        except (OSError, json.JSONDecodeError, RuntimeError) as exc:
+            errors.append(f"신규 소스 성숙도 등록부를 검증할 수 없음: {exc}")
 
     if args.briefing:
         briefing = args.briefing.resolve()

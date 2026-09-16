@@ -18,6 +18,9 @@
 | 실행 계측 | agent-system-v1/RUN_METRICS_TEMPLATE.md |
 | 출처군·독립성 | agent-system-v1/SOURCE_FAMILY_REGISTRY.md |
 | 운영 소스 역할 | source-scout-v1/SOURCE_ROLE_REGISTRY.md |
+| 신규 소스 성숙도 정책 | source-onboarding-v1/SOURCE_MATURITY_POLICY.md |
+| 신규 소스 성숙도 등록부 | source-onboarding-v1/source_maturity_registry.json |
+| 얇은 수집 공통 검증 | source-onboarding-v1/thin_source_contract.py |
 | 역할 분리형 신규 소스 수집 | source-scout-v1/collect_daily_feed.py |
 | 내용 사전판정·질문 근거 검사 | source-scout-v1/grounding.py |
 | 신규 소스 사람 판정 대기열 | source-scout-v1/HUMAN_REVIEW_QUEUE.csv |
@@ -86,6 +89,7 @@
 - 자동 원석은 사람의 PROMISING·VERIFY·NOISE·DUPLICATE 판정을 거친다. PROMISING도 S0 전이 제안일 뿐이며 명시 승인 전에는 장부를 변경하지 않는다.
 - 예약 실행은 QUESTION_QUALITY_AUDIT.csv와 ITEM_LEDGER.csv를 자동 수정하지 않는다.
 - 신규 소스 정밀도는 7일 동안 사람 판정 완료율 80% 이상일 때만 평가한다.
+- 신규 소스는 L0 접속, L1 목록, L2 본문 표본, L3 의미 해석, L4 7일 그림자 검증, L5 운영 승인 순서로 편입한다. L0~L2는 질문·브리핑을 만들 수 없고 L3도 검증 질문 외에는 일일 브리핑과 장부에 연결하지 않는다.
 
 ## v2.2 핵심 보완
 
