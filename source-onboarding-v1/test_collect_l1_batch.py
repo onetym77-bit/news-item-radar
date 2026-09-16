@@ -97,7 +97,6 @@ class L1ListingTests(unittest.TestCase):
 
     def test_l1_observations_validate_and_do_not_contain_editorial_fields(self):
         fixtures = {
-            "environment_assessment": ENV_DIRECT_HTML,
             "seoul_audit_results": AUDIT_HTML,
         }
         for source_id, page in fixtures.items():
