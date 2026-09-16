@@ -133,7 +133,7 @@ def parse_list(html: str, limit: int = LIMIT) -> list[dict]:
     return proposals
 
 HEARSAY = ("소문", "전해 들", "들었다고", "카더라", "라고 합니다", "라고 들", "누가 말")
-FIRST_PERSON = ("저는", "제가", "저희 가족", "우리 가족", "직접 ", "이용하면서", "신청했", "방문했", "겪었", "거주하고", "살고 있", "통근하", "통학하")
+FIRST_PERSON = ("저는", "제가", "저희 가족", "우리 가족", "본인은")
 FRICTION = ("불편", "부담", "피해", "거절", "반려", "대기", "방문", "이동", "시간", "비용", "막혔", "고장", "위험", "혼잡", "이용하지 못", "사용하지 못")
 IDEA = ("제안", "도입", "설치", "개선", "바랍니다", "해주세요", "필요합니다", "시행해")
 TIME_TERMS = ("오늘", "어제", "지난주", "지난달", "최근", "매일", "매주", "주말", "평일", "출근", "퇴근", "등교", "하교")
@@ -186,9 +186,10 @@ def context_candidates(title: str, text: str) -> dict:
     title_plain = norm(re.sub(r"[^0-9A-Za-z가-힣]+", " ", title))
     places = []
     for token in title_plain.split():
-        if any(token.endswith(suffix) or suffix in token for suffix in PLACE_SUFFIXES):
-            if token not in places:
-                places.append(token[:40])
+        candidate = re.sub(r"(?:에서의|에서는|에서|에는|으로|에게|에|의|을|를|은|는)$", "", token)
+        if any(candidate.endswith(suffix) for suffix in PLACE_SUFFIXES):
+            if candidate not in places:
+                places.append(candidate[:40])
     times = []
     for term in TIME_TERMS:
         if term in text and term not in times:
