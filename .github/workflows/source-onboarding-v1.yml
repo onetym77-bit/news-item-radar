@@ -7,7 +7,8 @@ on:
       - "source-onboarding-v1/**"
       - ".github/workflows/source-onboarding-v1.yml"
       - ".github/workflows/source-onboarding-l0-batch.yml"
-      - ".github/workflows/source-onboarding-l1-batch.yml"\n      - ".github/workflows/source-onboarding-audit-l2.yml"
+      - ".github/workflows/source-onboarding-l1-batch.yml"
+      - ".github/workflows/source-onboarding-audit-l2.yml"
       - "agent-system-v1/SYSTEM_MANIFEST.md"
 
 permissions:
