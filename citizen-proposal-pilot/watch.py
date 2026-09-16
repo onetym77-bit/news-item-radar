@@ -171,11 +171,22 @@ def classify_text(text: str) -> dict:
         "article_gate": "NOT_EVALUATED",
     }
 
+def title_position(text: str, title: str) -> int:
+    plain = norm(re.sub(r"[^0-9A-Za-z가-힣]+", " ", title))
+    tokens = [token for token in plain.split() if len(token) >= 2][:3]
+    if not tokens:
+        return -1
+    position = text.find(tokens[0])
+    if position < 0:
+        return -1
+    window = text[position:position + 320]
+    required = tokens[:2] if len(tokens) >= 2 else tokens
+    return position if all(token in window for token in required) else -1
+
 def relevant_detail_text(html: str, title: str) -> str | None:
     page = VisiblePage(html)
     text = sanitize(norm(" ".join(page.chunks)))
-    needle = title.replace("...", "")[:12]
-    position = text.find(needle) if needle else -1
+    position = title_position(text, title)
     if position < 0:
         return None
     detail = text[position:position + 12000]
