@@ -1,8 +1,8 @@
 import unittest
 
 from watch import (
-    LIST_URL, classify_text, observe, parse_list, relevant_detail_text,
-    render, sanitize, title_position,
+    LIST_URL, classify_text, context_candidates, evidence_anchor, observe,
+    parse_list, redact_anchor, relevant_detail_text, render, sanitize, title_position,
 )
 
 def listing():
@@ -55,22 +55,43 @@ class CitizenProposalWatchTests(unittest.TestCase):
         )
         self.assertNotIn("소문", text)
 
-    def test_public_output_does_not_store_name_or_full_body(self):
+    def test_public_output_stores_only_bounded_redacted_anchor(self):
         def fake_fetch(url):
             if url == LIST_URL:
                 return listing(), "list-hash"
             if "sn=101" in url:
-                return "<p>방문 발급의 불편 저는 신청했지만 방문이 불편했습니다. 01012345678</p>", "a"
+                body = "방문 발급의 불편 저는 신청했지만 방문이 불편했습니다. 01012345678 "
+                return f"<p>{body}{'전체본문비저장표식 ' * 80}</p>", "a"
             if "sn=102" in url:
                 return "<p>양성화 소문 문의 시행한다는 소문을 들었습니다</p>", "b"
             return "<p>새 장비 설치 제안 새 장비를 설치해주세요</p>", "c"
         result = observe(fake_fetch, limit=3)
         output = render(result)
+        first = result["records"][0]
         self.assertEqual(len(result["records"]), 3)
         self.assertNotIn("01012345678", str(result))
-        self.assertNotIn("신청했지만", str(result))
-        self.assertNotIn("신청했지만", output)
+        self.assertIn("[PHONE]", first["evidence_anchor"]["excerpt"])
+        self.assertLessEqual(len(first["evidence_anchor"]["excerpt"]), 240)
+        self.assertNotIn("전체본문비저장표식 전체본문비저장표식 전체본문비저장표식", output)
+        self.assertEqual(first["problem_evidence_status"], "NOT_ESTABLISHED")
         self.assertEqual(result["article_gate"], "NOT_EVALUATED")
+
+    def test_policy_idea_has_no_quote_anchor(self):
+        basis = classify_text("설치해주세요")
+        anchor = evidence_anchor("설치해주세요", basis["statement_type"], basis["matched_basis"])
+        self.assertIsNone(anchor["excerpt"])
+
+    def test_exact_address_and_identity_are_redacted(self):
+        value = redact_anchor("제 이름은 홍길동이고 세종대로 110 101동 202호입니다")
+        self.assertNotIn("홍길동", value)
+        self.assertNotIn("110", value)
+        self.assertNotIn("202", value)
+
+    def test_context_terms_are_candidates_not_verified_facts(self):
+        context = context_candidates("잠수교 주말 통행", "최근 주말마다 불편했습니다")
+        self.assertIn("잠수교", context["place_terms_from_title"])
+        self.assertIn("주말", context["time_terms_from_body"])
+        self.assertEqual(context["status"], "UNVERIFIED_CONTEXT_CANDIDATES")
 
     def test_contact_masking(self):
         self.assertEqual(sanitize("a@example.com 01012345678"),
