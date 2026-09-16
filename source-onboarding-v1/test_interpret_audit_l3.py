@@ -141,6 +141,24 @@ class AuditL3Tests(unittest.TestCase):
         self.assertEqual(len(card["competing_hypotheses"]), 2)
         self.assertNotIn("이 뒤의 전체 보고서 문장", str(card))
 
+    def test_scope_words_alone_cannot_promote_rights_question(self):
+        scope_only = """목차
+Ⅱ. 감사결과 처분요구 내역 및 조치현황
+\f
+Ⅱ. 감사결과 처분요구 내역 및 조치현황
+아동 보호·인권·안전·학대 예방을 감사 중점으로 함
+처분요구사항 일람표: 3건 [주의 3]
+1 인사 절차 운영 부적정 주의
+"""
+        card = build_card(
+            self.listing_record,
+            "https://news.seoul.go.kr/gov/files/2026/09/report.pdf",
+            diagnostics(scope_only),
+            scope_only,
+        )
+        self.assertNotEqual(card["evidence_anchor"], "PROBLEM_SIGNAL")
+        self.assertEqual(card["question_status"], "HOLD")
+
     def test_missing_findings_summary_is_held(self):
         card = build_card(
             self.listing_record,
