@@ -2,7 +2,7 @@ import unittest
 
 from watch import (
     LIST_URL, classify_text, observe, parse_list, relevant_detail_text,
-    render, sanitize,
+    render, sanitize, title_position,
 )
 
 def listing():
@@ -41,6 +41,11 @@ class CitizenProposalWatchTests(unittest.TestCase):
     def test_policy_idea_without_reported_event(self):
         self.assertEqual(classify_text("새 장비를 설치해주세요")["statement_type"],
                          "POLICY_IDEA")
+
+    def test_truncated_title_matches_only_stable_tokens(self):
+        text = "[규제철폐제안] 모아타운 가로주택정비사업 빌라 한 동 과반"
+        self.assertGreaterEqual(title_position(text, "[규제철폐제안] 모아타운 가로주택정비사업 「빌..."), 0)
+        self.assertEqual(title_position(text, "[규제철폐제안] 다른 사업"), -1)
 
     def test_detail_must_match_own_title(self):
         self.assertIsNone(relevant_detail_text("<p>다른 제안만 있습니다</p>", "방문 발급"))
