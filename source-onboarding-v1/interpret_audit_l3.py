@@ -137,6 +137,11 @@ def fetch_pdf(url: str, timeout: int = PDF_TIMEOUT_SECONDS) -> tuple[str, bytes 
         return "FAILED", None, {"error_code": "SECURITY_ERROR", "http_status": None}
 
 
+def join_report_pages(parts: list[str]) -> str:
+    """Keep an unambiguous in-memory page boundary for summary-page detection."""
+    return "\f".join(parts)
+
+
 def extract_pdf_text(pdf_bytes: bytes) -> tuple[str, str | None, dict]:
     """Extract only first pages in memory; fail closed on huge/opaque pages."""
     try:
@@ -161,7 +166,7 @@ def extract_pdf_text(pdf_bytes: bytes) -> tuple[str, str | None, dict]:
                     "pdf_pages_sampled": index + 1,
                 }
             parts.append(page_text)
-        text_value = "\\f".join(parts)
+        text_value = join_report_pages(parts)
         if len(text_value.strip()) < 100:
             return "PARTIAL", None, {
                 "error_code": "PDF_TEXT_INSUFFICIENT",
