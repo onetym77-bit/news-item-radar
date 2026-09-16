@@ -72,11 +72,12 @@ class WatchTests(unittest.TestCase):
                             for x in next_state["last_run"]["signals"]))
 
     def test_multiple_penalties_make_one_verification_question(self):
-        current = compare(empty_state(), observed([
+        prior = compare(empty_state(), observed([]), AT1)
+        current = compare(prior, observed([
             event("PENALTY", "1112021020598", "1221", "영동대로 공사"),
             event("PENALTY", "1112021020598", "1222", "영동대로 공사"),
             event("PENALTY", "1112021020598", "1223", "영동대로 공사"),
-        ]), AT1)
+        ]), AT2)
         signals = [x for x in current["last_run"]["signals"]
                    if x["kind"] == "MULTIPLE_PENALTIES"]
         self.assertEqual(len(signals), 1)
