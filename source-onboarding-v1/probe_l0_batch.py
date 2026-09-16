@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only L0 access probe for the first thin-source batch.
+"""Read-only L0 access probe for sources still held at access testing.
 
 This probe records only page-level technical diagnostics. It never emits
 source records, titles from listing rows, body text, questions, or briefing
@@ -22,11 +22,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 from thin_source_contract import load_registry, validate_thin_observation
 
 KST_OFFSET = "+09:00"
-TARGET_IDS = (
-    "environment_assessment",
-    "opengov_approvals",
-    "seoul_audit_results",
-)
+TARGET_IDS = ("environment_assessment", "opengov_approvals")
 MAX_RESPONSE_BYTES = 1_500_000
 TIMEOUT_SECONDS = 20
 MIN_VISIBLE_TEXT_CHARS = 100

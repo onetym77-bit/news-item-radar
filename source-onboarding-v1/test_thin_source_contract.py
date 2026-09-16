@@ -69,8 +69,9 @@ class SourceMaturityTests(unittest.TestCase):
 
     def test_l0_cannot_emit_records(self):
         observation = self.valid_observation()
-        observation["source_id"] = "environment_assessment"
+        observation["source_id"] = "opengov_approvals"
         observation["maturity"] = "L0"
+        observation["source_url"] = "https://opengov.seoul.go.kr/sanction"
         errors = validate_thin_observation(observation, self.registry)
         self.assertIn("L0 access probes cannot emit source records", errors)
 
