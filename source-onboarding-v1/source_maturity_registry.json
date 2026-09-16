@@ -120,18 +120,18 @@
       "source_id": "environment_assessment",
       "source_name": "서울 환경영향평가 공고·진행현황",
       "official_url": "https://eims.seoul.go.kr/eims/usr/main/index.do?tr_code=rsite",
-      "maturity": "L1",
+      "maturity": "L0",
       "candidate_role": "STRUCTURAL_SIGNAL_CANDIDATE",
-      "implementation_path": "source-onboarding-v1/collect_l1_batch.py",
+      "implementation_path": "source-onboarding-v1/probe_l0_batch.py",
       "question_output": "NONE",
       "briefing_output": "NONE",
       "schedule": "MANUAL_PR",
-      "persistence": "DERIVED_ONLY",
+      "persistence": "NONE",
       "automatic_ledger_write": false,
       "raw_personal_text_persisted": false,
       "approved_for_production": false,
       "evaluation": null,
-      "note": "L0 접속 성공 후 공고·공람 첫 화면 최대 20건의 목록 대응을 시험. 본문·질문·브리핑 미수집"
+      "note": "L0 접속은 성공했지만 공고 5건의 goNews 링크에서 안전한 상세주소를 해석하지 못해 L1 승격 보류"
     },
     {
       "source_id": "opengov_approvals",
