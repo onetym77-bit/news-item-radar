@@ -22,7 +22,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 from thin_source_contract import load_registry, validate_thin_observation
 
 KST_OFFSET = "+09:00"
-TARGET_IDS = ("opengov_approvals",)
+TARGET_IDS = ("environment_assessment", "opengov_approvals")
 MAX_RESPONSE_BYTES = 1_500_000
 TIMEOUT_SECONDS = 20
 MIN_VISIBLE_TEXT_CHARS = 100
