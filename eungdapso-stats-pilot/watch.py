@@ -58,7 +58,7 @@ def visible_text(html):
     return sanitize(re.sub(r"\s+", " ", " ".join(Page(html).chunks))).strip()
 
 def count_after(text, label):
-    match = re.search(re.escape(label) + r"\s*[:|]?\s*" + COUNT, text)
+    match = re.search(re.escape(label) + r"\s*(?:[:|]|\()?\s*" + COUNT, text)
     if not match:
         raise ValueError(f"missing count for {label}")
     return int(match.group(1).replace(",", ""))
