@@ -72,7 +72,7 @@ class CitizenProposalWatchTests(unittest.TestCase):
         self.assertNotIn("01012345678", str(result))
         self.assertIn("[PHONE]", first["evidence_anchor"]["excerpt"])
         self.assertLessEqual(len(first["evidence_anchor"]["excerpt"]), 240)
-        self.assertNotIn("전체본문비저장표식 전체본문비저장표식 전체본문비저장표식", output)
+        self.assertNotIn("detail_text", first.keys())
         self.assertEqual(first["problem_evidence_status"], "NOT_ESTABLISHED")
         self.assertEqual(result["article_gate"], "NOT_EVALUATED")
 
