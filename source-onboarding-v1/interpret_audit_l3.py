@@ -14,10 +14,11 @@ import hashlib
 import json
 import re
 import socket
-import subprocess
-import tempfile
+from io import BytesIO
 from datetime import date, datetime
 from pathlib import Path
+
+from pypdf import PdfReader
 from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, build_opener
@@ -137,47 +138,42 @@ def fetch_pdf(url: str, timeout: int = PDF_TIMEOUT_SECONDS) -> tuple[str, bytes 
         return "FAILED", None, {"error_code": "SECURITY_ERROR", "http_status": None}
 
 
-def extract_pdf_text(pdf_bytes: bytes, runner=subprocess.run) -> tuple[str, str | None, dict]:
-    with tempfile.TemporaryDirectory(prefix="audit-l3-") as directory:
-        root = Path(directory)
-        pdf_path = root / "report.pdf"
-        text_path = root / "report.txt"
-        pdf_path.write_bytes(pdf_bytes)
-        try:
-            completed = runner(
-                [
-                    "pdftotext",
-                    "-f",
-                    "1",
-                    "-l",
-                    str(MAX_PDF_PAGES),
-                    "-layout",
-                    str(pdf_path),
-                    str(text_path),
-                ],
-                check=False,
-                capture_output=True,
-                text=True,
-                timeout=35,
-            )
-        except FileNotFoundError:
-            return "FAILED", None, {"error_code": "PDFTOTEXT_NOT_AVAILABLE"}
-        except subprocess.TimeoutExpired:
-            return "FAILED", None, {"error_code": "PDF_TEXT_TIMEOUT"}
-        if completed.returncode != 0 or not text_path.is_file():
-            return "FAILED", None, {
-                "error_code": "PDF_TEXT_EXTRACTION_FAILED",
-                "return_code": completed.returncode,
+def extract_pdf_text(pdf_bytes: bytes) -> tuple[str, str | None, dict]:
+    """Extract only first pages in memory; fail closed on huge/opaque pages."""
+    try:
+        reader = PdfReader(BytesIO(pdf_bytes), strict=True)
+        if reader.is_encrypted:
+            return "FAILED", None, {"error_code": "PDF_ENCRYPTED"}
+        parts = []
+        total_chars = 0
+        pages_sampled = min(len(reader.pages), MAX_PDF_PAGES)
+        for index in range(pages_sampled):
+            page = reader.pages[index]
+            contents = page.get_contents()
+            if contents is not None and len(contents.get_data()) > 5_000_000:
+                return "FAILED", None, {"error_code": "PDF_PAGE_CONTENT_TOO_LARGE"}
+            page_text = page.extract_text(extraction_mode="layout") or ""
+            total_chars += len(page_text)
+            if total_chars > MAX_EXTRACTED_CHARS:
+                return "PARTIAL", None, {
+                    "error_code": "EXTRACTED_TEXT_TOO_LARGE",
+                    "pdf_pages_sampled": index + 1,
+                }
+            parts.append(page_text)
+        text_value = "\\f".join(parts)
+        if len(text_value.strip()) < 100:
+            return "PARTIAL", None, {
+                "error_code": "PDF_TEXT_INSUFFICIENT",
+                "pdf_pages_sampled": pages_sampled,
             }
-        text_value = text_path.read_text(encoding="utf-8", errors="replace")
-        truncated = len(text_value) > MAX_EXTRACTED_CHARS
-        bounded = text_value[:MAX_EXTRACTED_CHARS]
-        return ("PARTIAL" if truncated else "SUCCESS"), bounded, {
-            "error_code": "EXTRACTED_TEXT_TRUNCATED" if truncated else None,
-            "pdf_pages_requested": MAX_PDF_PAGES,
-            "extracted_text_chars": len(bounded),
-            "extracted_text_sha256": hashlib.sha256(bounded.encode("utf-8")).hexdigest(),
+        return "SUCCESS", text_value, {
+            "error_code": None,
+            "pdf_pages_sampled": pages_sampled,
+            "extracted_text_chars": len(text_value),
+            "extracted_text_sha256": hashlib.sha256(text_value.encode("utf-8")).hexdigest(),
         }
+    except Exception:
+        return "FAILED", None, {"error_code": "PDF_TEXT_EXTRACTION_FAILED"}
 
 
 def normalize_report_text(value: str) -> str:
@@ -353,7 +349,7 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
         "attachment_url": attachment_url,
         "attachment_sha256": pdf_diagnostics.get("content_sha256"),
         "report_text_sha256": pdf_diagnostics.get("extracted_text_sha256"),
-        "pdf_pages_sampled": MAX_PDF_PAGES,
+        "pdf_pages_sampled": pdf_diagnostics.get("pdf_pages_sampled"),
         "raw_report_text_persisted": False,
         "summary_table_confirmed": summary_confirmed,
         "documented_issue_in_table": documented_issue,
