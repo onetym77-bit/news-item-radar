@@ -84,6 +84,19 @@ class ChangeLinkTests(unittest.TestCase):
         result = inspect_list(html, "PENALTY")
         self.assertEqual(len(result["items"]), 2)
 
+    def test_repeated_title_uses_distinct_row_context(self):
+        html = (
+            "<a onclick=\"cmdPopInfo('1112021020598','1221');\">영동대로 공사</a>"
+            "<p>감리 A 등록일 : 2026-08-20</p>"
+            "<a onclick=\"cmdPopInfo('1112021020598','1222');\">영동대로 공사</a>"
+            "<p>시공 B 등록일 : 2026-08-18</p>"
+        )
+        rows = inspect_list(html, "PENALTY")["items"]
+        self.assertEqual([row["registration_date"] for row in rows],
+                         ["2026-08-20", "2026-08-18"])
+        self.assertIn("시공 B", rows[1]["row_excerpt"])
+        self.assertNotIn("감리 A", rows[1]["row_excerpt"])
+
     def test_progress_snippets_do_not_infer_registration(self):
         result = inspect_progress(
             "<h1>주요사업진행현황</h1><p>사업기간 : 2024-01-01 ~ "

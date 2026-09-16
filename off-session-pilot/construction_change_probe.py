@@ -54,8 +54,9 @@ def describe_link(anchor):
         "href_path": urlparse(href).path[:150] if href and href != "#none" else None,
     }
 
-def row_context(visible, title, next_title=""):
-    at = visible.find(title)
+def row_context(visible, title, next_title="", start=0):
+    # Repeated project titles must bind to their own row, not the first row.
+    at = visible.find(title, start)
     if at < 0:
         return ""
     stop = visible.find(next_title, at + len(title)) if next_title else -1
@@ -89,10 +90,14 @@ def inspect_list(html, sample_id):
     anchors, page = list_anchors(html, sample_id)
     visible = sanitize(norm(" ".join(page.chunks)))
     items = []
+    cursor = 0
     for index, anchor in enumerate(anchors):
         title = sanitize(anchor["text"])[:180]
         next_title = anchors[index + 1]["text"] if index + 1 < len(anchors) else ""
-        context = row_context(visible, anchor["text"], next_title)
+        context = row_context(visible, anchor["text"], next_title, cursor)
+        at = visible.find(anchor["text"], cursor)
+        if at >= 0:
+            cursor = at + len(anchor["text"])
         date_value = registration_date(context)
         if not date_value and sample_id == "DESIGN":
             candidates = DATE.findall(context[:220])

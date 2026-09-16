@@ -151,11 +151,41 @@ def question_signal(kind, project_id, title, detail, source_urls):
         "observation": detail,
         "question_status": "PRE_EDITORIAL_VERIFY",
         "article_gate": "NOT_EVALUATED",
+        "signal_basis": "NEW_RECORD_COMPARED_WITH_SAVED_STATE",
         "source_urls": list(dict.fromkeys(source_urls)),
     }
 
+def verification_question(signal):
+    questions = {
+        "REPEAT_EXTENSION": (
+            "서로 다른 공기연장인가 동일 변경의 재게시인가? 각 공식 사유와 "
+            "최종 준공일을 확인하고, 주민 이용 중단 기간이나 사업비에 실제 변화가 있었나?"
+        ),
+        "REPEAT_DESIGN": (
+            "각 설계변경의 사유·증감액·일정 영향은 무엇인가? 최초 계획에서 빠진 조건인지, "
+            "이용자에게 확인 가능한 불편이나 추가 부담이 생겼는지 확인할 수 있나?"
+        ),
+        "PENALTY_WITH_CHANGE": (
+            "벌점 대상 행위와 설계·공기 변경의 날짜가 실제로 이어지는가? 시정조치가 끝났는지, "
+            "품질·안전·준공 시점·사업비에 확인 가능한 영향이 있었는가?"
+        ),
+        "MULTIPLE_PENALTIES": (
+            "각 벌점은 어느 업체의 어떤 별개 위반인가? 시정조치가 끝났는지, "
+            "품질·안전·공기·사업비에 확인 가능한 영향이 발생했는가?"
+        ),
+        "PROGRESS_GAP_WIDENED": (
+            "계획 기준이 바뀐 것인가 실제 공정이 늦어진 것인가? 원인과 회복 계획을 확인하고, "
+            "완공·개통 또는 시민 이용 시점에 영향이 생겼는가?"
+        ),
+    }
+    return questions.get(
+        signal["kind"],
+        "원자료의 값이 실제 변화인지 먼저 확인하고 시민에게 관찰 가능한 영향이 있는지 검증한다.",
+    )
+
 def compare(prior, observed, collected_at):
     prior = validate_state(prior)
+    first_baseline = prior["last_collected_kst"] is None
     old_events = prior["events"]
     events = dict(old_events)
     new = []
@@ -226,13 +256,17 @@ def compare(prior, observed, collected_at):
                     "계획 변경·집계 수정 여부를 먼저 확인.",
                     [record["source_url"]]))
         progress[key] = record
+    # A first snapshot establishes inventory only. It cannot support a claim
+    # that a record is new or that a condition changed since the prior run.
+    if first_baseline:
+        signals = []
     state = {
         "schema": SCHEMA,
         "last_collected_kst": collected_at,
         "events": events,
         "progress": progress,
         "last_run": {
-            "first_baseline": prior["last_collected_kst"] is None,
+            "first_baseline": first_baseline,
             "new_record_keys": new,
             "signals": signals,
             "sample_counts": observed["sample_counts"],
@@ -253,11 +287,10 @@ def render(state):
     if run["first_baseline"]:
         lines += ["첫 기준 관측입니다. 이전 값이 없어 변화 여부는 아직 판단하지 않습니다.", ""]
     lines += [f"이번 관측에서 처음 본 기록: {len(run['new_record_keys'])}건",
-              f"추가 확인 질문: {len(run['signals'])}건", ""]
+              f"저장된 기준과 비교해 생긴 질문: {len(run['signals'])}건", ""]
     for signal in run["signals"]:
         lines += [f"## {signal['title']}", signal["observation"],
-                  "확인할 질문: 변화의 실제 사유, 주민 이용·안전 영향, "
-                  "계획 수정과 집계 변화 중 무엇으로 설명되는가?",
+                  f"확인할 질문: {verification_question(signal)}",
                   "판정: 검증 전 / 기사 게이트 미평가", ""]
     if not run["signals"]:
         lines += ["이번 제한된 관측 범위에서 반복·결합·격차 확대 질문은 0건입니다. "
