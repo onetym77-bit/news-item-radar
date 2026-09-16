@@ -18,7 +18,6 @@ from io import BytesIO
 from datetime import date, datetime
 from pathlib import Path
 
-from pypdf import PdfReader
 from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, build_opener
@@ -141,6 +140,8 @@ def fetch_pdf(url: str, timeout: int = PDF_TIMEOUT_SECONDS) -> tuple[str, bytes 
 def extract_pdf_text(pdf_bytes: bytes) -> tuple[str, str | None, dict]:
     """Extract only first pages in memory; fail closed on huge/opaque pages."""
     try:
+        from pypdf import PdfReader
+
         reader = PdfReader(BytesIO(pdf_bytes), strict=True)
         if reader.is_encrypted:
             return "FAILED", None, {"error_code": "PDF_ENCRYPTED"}
