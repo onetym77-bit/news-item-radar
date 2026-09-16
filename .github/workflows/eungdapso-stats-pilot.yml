@@ -1,0 +1,51 @@
+name: Probe Eungdapso statistics watch
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "eungdapso-stats-pilot/**"
+      - "off-session-pilot/probe_sources.py"
+      - ".github/workflows/eungdapso-stats-pilot.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test pilot
+        run: python -X utf8 -m unittest discover -s eungdapso-stats-pilot -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Read official aggregate statistics
+        run: python -X utf8 eungdapso-stats-pilot/watch.py
+      - name: Show bounded result
+        run: sed -n '1,120p' eungdapso-stats-pilot/output/questions_latest.md
+      - name: Upload only derived result
+        uses: actions/upload-artifact@v7
+        with:
+          name: eungdapso-stats-pilot-${{ github.run_id }}
+          path: |
+            eungdapso-stats-pilot/output/state_latest.json
+            eungdapso-stats-pilot/output/questions_latest.md
+          if-no-files-found: error
+          retention-days: 7
+      - name: Preserve source or parse failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: eungdapso-stats-failure-${{ github.run_id }}
+          path: eungdapso-stats-pilot/output/access_failure_latest.json
+          if-no-files-found: ignore
+          retention-days: 7
