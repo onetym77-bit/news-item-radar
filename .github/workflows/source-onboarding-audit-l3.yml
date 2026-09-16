@@ -30,8 +30,8 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Confirm bounded PDF text tool
-        run: command -v pdftotext
+      - name: Install pinned PDF text parser
+        run: python -m pip install --disable-pip-version-check pypdf==6.18.1
       - name: Validate source maturity registry
         run: python -X utf8 source-onboarding-v1/thin_source_contract.py
       - name: Test L3 evidence and question guards
