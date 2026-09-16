@@ -7,14 +7,21 @@ on:
       - "eungdapso-stats-pilot/**"
       - "off-session-pilot/probe_sources.py"
       - ".github/workflows/eungdapso-stats-pilot.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
 
 permissions:
   contents: read
+
+concurrency:
+  group: eungdapso-stats-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   probe:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
     steps:
       - name: Check out without write credentials
         uses: actions/checkout@v6
@@ -49,3 +56,56 @@ jobs:
           path: eungdapso-stats-pilot/output/access_failure_latest.json
           if-no-files-found: ignore
           retention-days: 7
+
+  persist-main:
+    needs: probe
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact tested main commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Download exact derived result
+        uses: actions/download-artifact@v8
+        with:
+          name: eungdapso-stats-pilot-${{ github.run_id }}
+          path: eungdapso-stats-pilot/output
+      - name: Verify aggregate state and protected ledgers
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          state = json.loads(Path("eungdapso-stats-pilot/output/state_latest.json").read_text(encoding="utf-8"))
+          assert state["schema"] == 1
+          assert state["last_run"]["coverage"] == "OFFICIAL_ROLLING_AGGREGATES_ONLY"
+          assert state["last_run"]["article_gate"] == "NOT_EVALUATED"
+          assert 1 <= len(state["snapshots"]) <= 40
+          latest = state["snapshots"][-1]
+          assert latest["source_url"] == "https://eungdapso.seoul.go.kr/gud/chart/chart_progress.do"
+          assert all(latest["integrity"].values())
+          assert latest["units"]["count"] == "complaint_submissions_not_people"
+          assert latest["units"]["districts"] == "handling_districts_not_complainant_residence"
+          assert len(latest["districts"]) == 25
+          assert Path("eungdapso-stats-pilot/output/questions_latest.md").is_file()
+          PY
+          git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+      - name: Persist two derived files only
+        shell: bash
+        run: |
+          git config user.name "news-item-radar-bot"
+          git config user.email "news-item-radar-bot@users.noreply.github.com"
+          git add -f eungdapso-stats-pilot/output/state_latest.json
+          git add -f eungdapso-stats-pilot/output/questions_latest.md
+          test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n'             eungdapso-stats-pilot/output/questions_latest.md             eungdapso-stats-pilot/output/state_latest.json | sort)"
+          git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+          git commit -m "Record bounded Eungdapso statistics for run $GITHUB_RUN_ID"
+          git push origin HEAD:main
