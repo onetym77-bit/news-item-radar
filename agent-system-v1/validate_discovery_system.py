@@ -29,6 +29,9 @@ REQUIRED_FILES = [
     ROOT / "interest-radar-v2" / "DESIGN.md",
     CONFIG,
     ROOT / "interest-radar-v2" / "collect_source_material_v2_1.py",
+    ROOT / "source-onboarding-v1" / "SOURCE_MATURITY_POLICY.md",
+    ROOT / "source-onboarding-v1" / "source_maturity_registry.json",
+    ROOT / "source-onboarding-v1" / "thin_source_contract.py",
 ]
 
 REQUIRED_COLUMNS = {
