@@ -508,8 +508,18 @@ def collect_l3(
     html_fetcher=fetch_html,
     pdf_fetcher=fetch_pdf,
     pdf_extractor=extract_pdf_text,
+    selected_records: list[dict] | None = None,
 ) -> dict:
-    listing_status, listing_html, listing_diag = html_fetcher(source["official_url"])
+    listing_status, listing_html, listing_diag = (
+        ("SUCCESS", None, {"error_code": None})
+        if selected_records is not None
+        else html_fetcher(source["official_url"])
+    )
+    coverage = (
+        "BOUNDED_SELECTED_RECORDS_FIRST_12_PDF_PAGES"
+        if selected_records is not None
+        else "FIRST_LIST_PAGE_FIRST_3_PUBLIC_PDFS_FIRST_12_PAGES"
+    )
     cards = []
     counters = {
         "detail_requested": 0,
@@ -519,23 +529,27 @@ def collect_l3(
         "held_questions": 0,
         "raw_reports_persisted": 0,
     }
-    if listing_html is None:
+    if selected_records is None and listing_html is None:
         return {
             "schema": 1,
             "source_id": source["source_id"],
             "maturity": source["maturity"],
             "collected_at_kst": observed_at,
             "access_status": "FAILED",
-            "coverage": "FIRST_LIST_PAGE_FIRST_3_PUBLIC_PDFS_FIRST_12_PAGES",
+            "coverage": coverage,
             "question_output": "VERIFICATION_ONLY",
             "briefing_output": "NONE",
             "automatic_ledger_write": False,
             "cards": [],
             "diagnostics": {**counters, "error_code": listing_diag.get("error_code")},
         }
-    listing_records, listing_parse_diag = parse_audit(
-        listing_html, source["official_url"], observed_at
-    )
+    if selected_records is not None:
+        listing_records = selected_records[:MAX_DETAIL_RECORDS]
+        listing_parse_diag = {"candidate_count": len(selected_records)}
+    else:
+        listing_records, listing_parse_diag = parse_audit(
+            listing_html, source["official_url"], observed_at
+        )
     for listing_record in listing_records[:MAX_DETAIL_RECORDS]:
         counters["detail_requested"] += 1
         detail_status, detail_html, detail_diag = html_fetcher(listing_record["detail_url"])
@@ -579,7 +593,7 @@ def collect_l3(
         "maturity": source["maturity"],
         "collected_at_kst": observed_at,
         "access_status": access_status,
-        "coverage": "FIRST_LIST_PAGE_FIRST_3_PUBLIC_PDFS_FIRST_12_PAGES",
+        "coverage": coverage,
         "question_output": "VERIFICATION_ONLY",
         "briefing_output": "NONE",
         "automatic_ledger_write": False,
