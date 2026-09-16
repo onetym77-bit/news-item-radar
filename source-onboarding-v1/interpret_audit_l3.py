@@ -273,16 +273,40 @@ def days_since(published_at: str | None, today: date | None = None) -> int | Non
     return ((today or date.today()) - published).days
 
 
-def dominant_domain(domain_counts: dict[str, int]) -> str | None:
+def dominant_domain(domain_counts: dict[str, int], issue_text: str = "") -> str | None:
     if not domain_counts:
         return None
+    # An explicit rights finding takes precedence over frequent administrative
+    # terms in a mixed audit; audit scope has already been excluded.
+    if domain_counts.get("RIGHTS_SAFETY", 0) and any(
+        phrase in issue_text
+        for phrase in ("인권침해 진정함", "고위험군 아동", "입소아동 외출", "아동학대", "방임")
+    ):
+        return "RIGHTS_SAFETY"
+    # Contracts are a concrete public-spending question; generic management
+    # words should not outvote multiple contract findings.
+    if domain_counts.get("PROCUREMENT_CONTRACT", 0) >= 2:
+        return "PROCUREMENT_CONTRACT"
     return max(
         DOMAIN_PRIORITY,
         key=lambda domain: (domain_counts.get(domain, 0), -DOMAIN_PRIORITY.index(domain)),
     ) if any(domain_counts.get(domain, 0) for domain in DOMAIN_PRIORITY) else None
 
 
-def question_components(subject: str, domain: str) -> dict:
+def question_components(subject: str, domain: str, issue_text: str = "") -> dict:
+    if domain == "RIGHTS_SAFETY" and "진정함" in issue_text:
+        return {
+            "verification_question": (
+                f"{subject} 감사가 지적한 인권침해 진정함 관리 미흡은 입소 아동이 "
+                "안전하게 진정을 제기할 기회를 실제로 제한했나? 감사 전후 고지·비품·"
+                "진정 접수와 송부 기록, 아동이 독립적으로 이용할 수 있는 경로를 확인하면 "
+                "서류상 시정과 실질적 권리 보장을 구분할 수 있는가?"
+            ),
+            "public_interest_to_verify": "시설 아동의 실질적인 진정권",
+            "structural_hypothesis": "진정 경로 운영과 감독의 공백이 아동의 문제 제기를 어렵게 했다.",
+            "alternative_hypothesis": "진정함 관리 결함은 있었지만 다른 안전한 진정 경로가 실제 작동했다.",
+            "minimum_test": "고지·비품 시정과 진정 접수·송부·대체 경로의 운영 기록을 감사 전후 확인한다.",
+        }
     if domain == "RIGHTS_SAFETY":
         return {
             "verification_question": (
@@ -349,7 +373,7 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
     dispositions, disposition_counts = extract_dispositions(window)
     issue_text = issue_evidence_text(window)
     domain_counts = classify_domains(issue_text)
-    domain = dominant_domain(domain_counts)
+    domain = dominant_domain(domain_counts, issue_text)
     documented_issue = bool(issue_text)
     domain_strength = domain_counts.get(domain, 0) if domain else 0
     critical_issue = any(term in issue_text for term in CRITICAL_ISSUE_TERMS)
@@ -402,7 +426,7 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
             }
         )
         return base
-    components = question_components(subject, domain)
+    components = question_components(subject, domain, issue_text)
     count_phrase = f"{finding_count}건의 처분요구" if finding_count else "복수의 처분요구"
     base.update(
         {
