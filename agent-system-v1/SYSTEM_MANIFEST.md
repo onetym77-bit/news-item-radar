@@ -21,8 +21,10 @@
 | 신규 소스 성숙도 정책 | source-onboarding-v1/SOURCE_MATURITY_POLICY.md |
 | 신규 소스 성숙도 등록부 | source-onboarding-v1/source_maturity_registry.json |
 | 얇은 수집 공통 검증 | source-onboarding-v1/thin_source_contract.py |
-| 신규 소스 L0 3종 일괄 접속 시험 | source-onboarding-v1/probe_l0_batch.py |
+| 신규 소스 L0 미통과 접속 재시험 | source-onboarding-v1/probe_l0_batch.py |
 | 신규 소스 L0 수동·PR 읽기 전용 실행 | .github/workflows/source-onboarding-l0-batch.yml |
+| 신규 소스 L1 목록 표본 수집 | source-onboarding-v1/collect_l1_batch.py |
+| 신규 소스 L1 수동·PR 읽기 전용 실행 | .github/workflows/source-onboarding-l1-batch.yml |
 | 역할 분리형 신규 소스 수집 | source-scout-v1/collect_daily_feed.py |
 | 내용 사전판정·질문 근거 검사 | source-scout-v1/grounding.py |
 | 신규 소스 사람 판정 대기열 | source-scout-v1/HUMAN_REVIEW_QUEUE.csv |
@@ -57,7 +59,8 @@
 4. 건설알림이 변화 관측 시험: 매일 11:15 KST. 네 공식 목록의 첫 페이지를 비교하며, 출처 실패 시 기존 상태를 덮어쓰지 않는다. 일일 브리핑과 장부는 건드리지 않는다.
 5. 응답소 집계 변화 관측 시험: 현재 수동 실행만 허용한다. main 수동 실행에서 기준 상태와 질문 파일 두 개만 저장하며 일일 브리핑과 장부는 건드리지 않는다.
 6. 시민제안 문장 형식 분류 시험: 수동·PR 읽기 전용 실행만 허용한다. 첫 다섯 고유 제안의 목록·상세 제목 대응을 시험하고 원문 전체·작성자명·연락처를 저장하지 않는다. 다만 문구 분류는 사실 확인이 아니므로 질문·기사 게이트에 자동 연결하지 않는다.
-7. 신규 소스 L0 일괄 접속 시험: 환경영향평가·정보소통광장 결재문서·서울시 감사 결과의 공식 목록에 대해 수동·PR 읽기 전용으로 접속과 목록형 구조만 진단한다. 게시물·원문·질문·브리핑·장부를 만들거나 저장하지 않으며, 실패·부분 성공을 자료 0건으로 해석하지 않는다.
+7. 신규 소스 L0 접속 재시험: L0에서 네트워크 오류가 난 정보소통광장 결재문서만 수동·PR 읽기 전용으로 재진단한다. 실패·부분 성공을 자료 0건으로 해석하지 않는다.
+8. 신규 소스 L1 목록 표본 시험: L0 접속을 통과한 환경영향평가와 서울시 감사 결과에서 소스별 최대 20건의 고유번호·제목·개별 날짜·상세주소만 수집한다. 본문·질문·브리핑·장부는 만들거나 저장하지 않는다.
 
 현재 일일 신규 소스 입력과 브리핑의 실행기는 GitHub Actions다. 읽기 전용 작업에서 소스를 한 번만 수집·검증해 artifact로 넘기고, main 전용 쓰기 작업만 그 동일 산출물을 저장한다. PR, 다른 브랜치, 과거 날짜 재실행에는 쓰기 권한과 Git 자격증명을 주지 않으며 main 최신본을 덮어쓰지 않는다. 비회기에도 원석이 끊기지 않도록 응답소뿐 아니라 서울연구원·고용노동부 임금체불 통계·한국소비자원 자료를 매일 보완 발굴 입력에 포함한다.
 
