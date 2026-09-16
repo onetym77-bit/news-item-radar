@@ -34,6 +34,8 @@ jobs:
         run: python -X utf8 source-onboarding-v1/thin_source_contract.py
       - name: Test fail-closed L2 collector
         run: python -X utf8 -m unittest discover -s source-onboarding-v1 -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
       - name: Sample at most five official detail pages
         run: python -X utf8 source-onboarding-v1/collect_audit_l2.py --output-dir source-onboarding-v1/output/audit-l2
       - name: Publish derived-only summary
