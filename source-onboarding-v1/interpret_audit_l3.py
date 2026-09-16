@@ -22,7 +22,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, build_opener
 
-from collect_audit_l2 import DetailParser, _article_bounds
+from collect_audit_l2 import DetailParser, _article_bounds, _title_match
 from collect_l1_batch import fetch_html, parse_audit
 from probe_l0_batch import SafeRedirectHandler
 from thin_source_contract import FORBIDDEN_KEYS, load_registry, walk_keys
@@ -188,27 +188,21 @@ def normalize_report_text(value: str) -> str:
 
 
 def summary_window(report_text: str) -> tuple[str, bool]:
-    text_value = normalize_report_text(report_text)
-    starts = [
-        text_value.find(label)
-        for label in (
-            "감사결과 처분요구 내역",
-            "감사 지적사항 목록",
-            "감사결과 총괄",
-            "감사성과 총괄",
-        )
-        if text_value.find(label) >= 0
-    ]
-    if not starts:
+    """Find a real findings table after the contents pages, never the TOC."""
+    pages = report_text.split("\\f")
+    if len(pages) < 3:
         return "", False
-    start = min(starts)
-    ends = [
-        text_value.find(label, start + 20)
-        for label in ("감사결과 처분요구서", "처분요구서")
-        if text_value.find(label, start + 20) >= 0
-    ]
-    end = min(ends) if ends else min(len(text_value), start + 30_000)
-    return text_value[start:end][:30_000], True
+    for index in range(2, min(len(pages), MAX_PDF_PAGES)):
+        page = normalize_report_text(pages[index])
+        has_table = "일람표" in page or "감사결과 총괄" in page
+        has_finding_columns = any(
+            token in page for token in ("처분유형", "조치(안)", "조치(안)", "조치현황")
+        )
+        if not (has_table and has_finding_columns):
+            continue
+        next_page = normalize_report_text(pages[index + 1]) if index + 1 < len(pages) else ""
+        return (page + "\\n" + next_page)[:30_000], True
+    return "", False
 
 
 def extract_finding_count(window: str) -> int | None:
@@ -344,11 +338,10 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
     dispositions, disposition_counts = extract_dispositions(window)
     domain_counts = classify_domains(window)
     domain = dominant_domain(domain_counts)
-    anchor_ready = bool(
-        summary_confirmed
-        and domain
-        and (finding_count or (len(dispositions) >= 1 and sum(domain_counts.values()) >= 2))
+    documented_issue = bool(
+        re.search(r"부적정|미흡|소홀|위반|지연|불이행|부족|개선\\s*필요", window)
     )
+    anchor_ready = bool(summary_confirmed and documented_issue and domain and dispositions)
     anchor = "PROBLEM_SIGNAL" if anchor_ready else "UNRESOLVED"
     subject = subject_from_title(listing_record["title"])
     freshness = days_since(listing_record.get("published_at"))
@@ -363,6 +356,7 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
         "pdf_pages_sampled": MAX_PDF_PAGES,
         "raw_report_text_persisted": False,
         "summary_table_confirmed": summary_confirmed,
+        "documented_issue_in_table": documented_issue,
         "official_finding_count": finding_count,
         "disposition_terms": dispositions,
         "disposition_counts": disposition_counts,
@@ -503,6 +497,11 @@ def collect_l3(
         detail_status, detail_html, detail_diag = html_fetcher(listing_record["detail_url"])
         if detail_html is None or detail_status == "FAILED":
             cards.append(failed_card(listing_record, "DETAIL_HTML", detail_diag.get("error_code")))
+            continue
+        detail_parser = DetailParser()
+        detail_parser.feed(detail_html)
+        if _title_match(detail_parser, listing_record["title"]) == "MISMATCH":
+            cards.append(failed_card(listing_record, "DETAIL_MATCH", "TITLE_MISMATCH"))
             continue
         attachment = find_pdf_attachment(detail_html, listing_record["detail_url"])
         if not attachment:
