@@ -242,9 +242,35 @@ def id_from_url(url: str) -> str:
     return hashlib.sha256(url.encode("utf-8")).hexdigest()[:20]
 
 
+def public_function_route_hints(html_text: str, function_name: str) -> list[str]:
+    """Return only route-shaped literals from a public function definition."""
+    match = re.search(
+        rf"function\\s+{re.escape(function_name)}\\s*\\([^)]*\\)\\s*\\{{(.{{0,2500}}?)\\}}",
+        html_text,
+        flags=re.DOTALL,
+    )
+    hints: list[str] = []
+    if match:
+        body = match.group(1)
+        for quoted in re.findall(r"['\"]([^'\"]{1,300})['\"]", body):
+            token = html.unescape(quoted).strip()
+            if ".do" in token or ".frg" in token:
+                token = re.sub(r"[^A-Za-z0-9_./?=&{}-]", "", token)
+                if token and token not in hints:
+                    hints.append(token[:200])
+    if not hints:
+        for src in re.findall(r"<script[^>]+src=['\"]([^'\"]+)['\"]", html_text, flags=re.I):
+            if src.startswith("/") and src not in hints:
+                hints.append("SCRIPT:" + src[:180])
+            if len(hints) >= 5:
+                break
+    return hints[:5]
+
+
 def parse_environment(html_text: str, source_url: str, observed_at: str) -> tuple[list[dict], dict]:
     parser = ListingParser()
     parser.feed(html_text)
+    function_hints = public_function_route_hints(html_text, "goNews")
     bounds = section_bounds(parser.tokens, "공고/공람", "자료실")
     if not bounds:
         return [], {
@@ -252,6 +278,7 @@ def parse_environment(html_text: str, source_url: str, observed_at: str) -> tupl
             "date_missing_count": 0,
             "unresolved_detail_url_count": 0,
             "unresolved_link_shapes": ["SECTION_NOT_FOUND"],
+            "public_function_route_hints": function_hints,
         }
     start, end = bounds
     records = []
@@ -292,6 +319,7 @@ def parse_environment(html_text: str, source_url: str, observed_at: str) -> tupl
         "date_missing_count": date_missing,
         "unresolved_detail_url_count": unresolved,
         "unresolved_link_shapes": shapes,
+        "public_function_route_hints": function_hints,
     }
 
 
@@ -304,6 +332,7 @@ def collect_one(source: dict, observed_at: str, fetcher=fetch_html) -> dict:
         "date_missing_count": 0,
         "unresolved_detail_url_count": 0,
         "unresolved_link_shapes": [],
+        "public_function_route_hints": [],
     }
     access_status = fetch_status
     if html_text is not None:
@@ -348,6 +377,9 @@ def render_summary(observations: list[dict]) -> str:
         shapes = d.get("unresolved_link_shapes") or []
         if shapes:
             lines.append(f"| ↳ 미해결 링크 형태 |  |  |  |  |  | {', '.join(shapes)} |")
+        hints = d.get("public_function_route_hints") or []
+        if hints:
+            lines.append(f"| ↳ 공개 함수 경로 단서 |  |  |  |  |  | {', '.join(hints)} |")
     lines.extend(["", "## 수집된 목록 표본", ""])
     for row in observations:
         lines.append(f"### {row['source_id']}")
