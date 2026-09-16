@@ -27,7 +27,7 @@ DEFAULT_REVIEWS = BASE / "audit_l4_reviews.csv"
 SOURCE_ID = "seoul_audit_results"
 MAX_LIST_PAGES = 2
 MAX_RECORDS = 40
-MAX_RUNS = 30
+MAX_RUNS = 60
 BACKFILL_DAYS = 180
 FRESH_DAYS = 30
 MIN_UNIQUE_DOCUMENTS = 12
@@ -44,6 +44,7 @@ CRITICAL_ERRORS = {
 }
 REVIEW_COLUMNS = ("source_record_id", "verdict", *SCORE_FIELDS, "critical_error")
 SAFE_HOST = "news.seoul.go.kr"
+RAW_KEYS = {"report_text", "pdf_bytes", "raw_pdf", "raw_report", "raw_html", "full_body"}
 
 
 def kst_now() -> datetime:
@@ -93,8 +94,6 @@ def is_audit_result(row: dict, today: date) -> bool:
     if not published_at or "감사" not in title:
         return False
     if any(term in title for term in ("계획", "예정", "안내", "채용")):
-        return False
-    if not any(term in title for term in ("결과", "공개문", "감사")):
         return False
     try:
         age = (today - date.fromisoformat(published_at)).days
@@ -267,7 +266,8 @@ def evaluate(state: dict, reviews: dict[str, dict]) -> dict:
         (metrics["pdf_extraction_success_pct"] or 0) >= 80
         and (metrics["grounding_and_scope_exact_pct"] or 0) >= 90
         and (metrics["reporting_start_value_pct"] or 0) >= 60
-        and (metrics["generic_question_pct"] or 100) <= 20
+        and metrics["generic_question_pct"] is not None
+        and metrics["generic_question_pct"] <= 20
         and metrics["critical_errors"] == 0
         and metrics["complete_question_structure_pct"] == 100
     ):
@@ -297,7 +297,7 @@ def validate_state(state: dict) -> list[str]:
         errors.append("duplicate audit records in shadow state")
     if any(not isinstance(record_id, str) or not record_id.isdigit() for record_id in ids):
         errors.append("invalid source record ID")
-    if FORBIDDEN_KEYS & set(walk_keys(state)):
+    if (FORBIDDEN_KEYS | RAW_KEYS) & set(walk_keys(state)):
         errors.append("forbidden editorial or raw-data field in shadow state")
     for item in records:
         card = item.get("card") or {}
@@ -369,7 +369,7 @@ def run(output_dir: Path, state_path: Path, reviews_path: Path, now: datetime | 
         observed_at = now.isoformat(timespec="seconds")
         listing_records, listing_diag = discover_records(source, observed_at, today, fetcher)
         seen = {item["source_record_id"] for item in state["records"]}
-        selected = select_unseen(listing_records, seen, today)
+        selected = select_unseen(listing_records, seen, today)[: max(0, MAX_RECORDS - len(state["records"]))]
         payload = collector(source, observed_at, selected_records=selected)
         errors = validate_l3_output(payload, registry)
         if errors:
