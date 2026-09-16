@@ -1,0 +1,117 @@
+name: Evaluate Seoul audit questions (L4 shadow)
+
+on:
+  schedule:
+    - cron: "45 10 * * *"
+      timezone: "Asia/Seoul"
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "source-onboarding-v1/**"
+      - ".github/workflows/source-onboarding-audit-l4-shadow.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seoul-audit-l4-shadow-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  shadow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install pinned public PDF parser
+        run: python -m pip install --disable-pip-version-check pypdf==6.18.1
+      - name: Validate source registry
+        run: python -X utf8 source-onboarding-v1/thin_source_contract.py
+      - name: Test bounded collector and independent shadow gates
+        run: python -X utf8 -m unittest discover -s source-onboarding-v1 -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Evaluate up to three unseen official audits
+        run: python -X utf8 source-onboarding-v1/audit_l4_shadow.py
+      - name: Show review-only summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f source-onboarding-v1/output/audit-l4/SUMMARY.md ]; then
+            cat source-onboarding-v1/output/audit-l4/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload only bounded derived state
+        uses: actions/upload-artifact@v7
+        with:
+          name: seoul-audit-l4-shadow-${{ github.run_id }}
+          path: |
+            source-onboarding-v1/output/audit-l4/state_latest.json
+            source-onboarding-v1/output/audit-l4/SUMMARY.md
+          if-no-files-found: error
+          retention-days: 7
+
+  persist-main:
+    needs: shadow
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact tested main commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Download exact derived result
+        uses: actions/download-artifact@v8
+        with:
+          name: seoul-audit-l4-shadow-${{ github.run_id }}
+          path: source-onboarding-v1/output/audit-l4
+      - name: Verify shadow bounds and protected editorial state
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "source-onboarding-v1")
+          from audit_l4_shadow import validate_state
+          path = Path("source-onboarding-v1/output/audit-l4/state_latest.json")
+          state = json.loads(path.read_text(encoding="utf-8"))
+          errors = validate_state(state)
+          if errors:
+              raise SystemExit("; ".join(errors))
+          assert Path("source-onboarding-v1/output/audit-l4/SUMMARY.md").is_file()
+          PY
+          git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+          git diff --exit-code -- source-onboarding-v1/audit_l4_reviews.csv
+      - name: Persist exactly two derived files
+        shell: bash
+        run: |
+          git config user.name "news-item-radar-bot"
+          git config user.email "news-item-radar-bot@users.noreply.github.com"
+          git add -f source-onboarding-v1/output/audit-l4/state_latest.json
+          git add -f source-onboarding-v1/output/audit-l4/SUMMARY.md
+          test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n' \
+            source-onboarding-v1/output/audit-l4/SUMMARY.md \
+            source-onboarding-v1/output/audit-l4/state_latest.json | sort)"
+          git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+          git diff --cached --exit-code -- source-onboarding-v1/audit_l4_reviews.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "Record bounded Seoul audit shadow result for run $GITHUB_RUN_ID"
+            git push origin HEAD:main
+          fi
