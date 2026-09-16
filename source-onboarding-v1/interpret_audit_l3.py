@@ -189,7 +189,7 @@ def normalize_report_text(value: str) -> str:
 
 def summary_window(report_text: str) -> tuple[str, bool]:
     """Find a real findings table after the contents pages, never the TOC."""
-    pages = report_text.split("\\f")
+    pages = report_text.split("\f")
     if len(pages) < 3:
         return "", False
     for index in range(2, min(len(pages), MAX_PDF_PAGES)):
@@ -201,7 +201,7 @@ def summary_window(report_text: str) -> tuple[str, bool]:
         if not (has_table and has_finding_columns):
             continue
         next_page = normalize_report_text(pages[index + 1]) if index + 1 < len(pages) else ""
-        return (page + "\\n" + next_page)[:30_000], True
+        return (page + "\n" + next_page)[:30_000], True
     return "", False
 
 
