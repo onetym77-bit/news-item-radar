@@ -8,6 +8,7 @@ from interpret_audit_l3 import (
     extract_dispositions,
     extract_finding_count,
     find_pdf_attachment,
+    join_report_pages,
     summary_window,
     validate_l3_output,
 )
@@ -81,6 +82,11 @@ class AuditL3Tests(unittest.TestCase):
             "VERIFIED",
             self.observed_at,
         )
+
+    def test_pdf_page_join_uses_real_form_feed_boundary(self):
+        joined = join_report_pages(["first page", "second page"])
+        self.assertEqual(joined.split("\f"), ["first page", "second page"])
+        self.assertNotIn("\\f", joined)
 
     def test_report_summary_extracts_count_and_dispositions(self):
         window, confirmed = summary_window(REPORT_TEXT)
