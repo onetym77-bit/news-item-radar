@@ -171,14 +171,19 @@ def classify_text(text: str) -> dict:
         "article_gate": "NOT_EVALUATED",
     }
 
-def relevant_detail_text(html: str, title: str) -> str:
+def relevant_detail_text(html: str, title: str) -> str | None:
     page = VisiblePage(html)
     text = sanitize(norm(" ".join(page.chunks)))
     needle = title.replace("...", "")[:12]
     position = text.find(needle) if needle else -1
-    if position >= 0:
-        return text[position:position + 12000]
-    return text
+    if position < 0:
+        return None
+    detail = text[position:position + 12000]
+    for boundary in ("관련 제안", "다른 제안", "댓글 목록", "의견 목록"):
+        end = detail.find(boundary)
+        if end > 0:
+            detail = detail[:end]
+    return detail
 
 def observe(fetcher=fetch, limit: int = LIMIT) -> dict:
     list_html, list_hash = fetcher(LIST_URL)
@@ -187,11 +192,19 @@ def observe(fetcher=fetch, limit: int = LIMIT) -> dict:
     for proposal in proposals:
         detail_html, detail_hash = fetcher(proposal["source_url"])
         detail_text = relevant_detail_text(detail_html, proposal["title"])
-        classified = classify_text(detail_text)
+        classified = classify_text(detail_text) if detail_text is not None else {
+            "statement_type": "UNRESOLVED",
+            "matched_basis": {},
+            "claim_status": "UNVERIFIED",
+            "verification_plan": "목록 제목과 상세 원문의 대응을 확인한 후 다시 분류한다.",
+            "editorial_question": "NOT_GENERATED",
+            "article_gate": "NOT_EVALUATED",
+        }
         rows.append({
             **proposal,
             "detail_sha256": detail_hash,
-            "detail_text_characters_examined": len(detail_text),
+            "detail_text_characters_examined": len(detail_text or ""),
+            "detail_scope": "TITLE_ANCHORED_BOUNDED_TEXT" if detail_text is not None else "UNCONFIRMED",
             **classified,
         })
     return {
