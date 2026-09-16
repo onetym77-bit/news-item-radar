@@ -37,7 +37,7 @@ PDF_TIMEOUT_SECONDS = 25
 DISPOSITION_TERMS = ("시정", "주의", "개선", "권고", "통보", "징계", "고발", "기관경고")
 DOMAIN_TERMS = {
     "RIGHTS_SAFETY": (
-        "인권", "아동", "안전", "개인정보", "진정", "보호", "치료", "사고", "위험",
+        "인권", "학대", "방임", "안전", "개인정보", "진정", "보호조치", "투약", "자해", "사고",
     ),
     "PROCUREMENT_CONTRACT": (
         "계약", "입찰", "수의계약", "발주", "공사", "용역", "물품", "하도급", "업체",
@@ -52,6 +52,9 @@ DOMAIN_TERMS = {
         "채용", "복무", "위원회", "내부통제", "절차", "관리", "감독", "지침",
     ),
 }
+CRITICAL_ISSUE_TERMS = ("학대", "방임", "자해", "성폭력", "사망", "개인정보 유출")
+ISSUE_MARKERS = re.compile(r"부적정|미흡|소홀|위반|지연|불이행|부족|개선\s*필요")
+
 DOMAIN_PRIORITY = (
     "RIGHTS_SAFETY",
     "PROCUREMENT_CONTRACT",
@@ -237,11 +240,17 @@ def extract_dispositions(window: str) -> tuple[list[str], dict[str, int]]:
     return present, counts
 
 
-def classify_domains(window: str) -> dict[str, int]:
+def issue_evidence_text(window: str) -> str:
+    """Limit semantic classification to finding rows, not titles or audit scope."""
+    lines = [line.strip() for line in window.splitlines() if ISSUE_MARKERS.search(line)]
+    return "\n".join(lines)
+
+
+def classify_domains(issue_text: str) -> dict[str, int]:
     return {
-        domain: sum(window.count(term) for term in terms)
+        domain: sum(issue_text.count(term) for term in terms)
         for domain, terms in DOMAIN_TERMS.items()
-        if any(term in window for term in terms)
+        if any(term in issue_text for term in terms)
     }
 
 
@@ -338,12 +347,19 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
     window, summary_confirmed = summary_window(report_text)
     finding_count = extract_finding_count(window)
     dispositions, disposition_counts = extract_dispositions(window)
-    domain_counts = classify_domains(window)
+    issue_text = issue_evidence_text(window)
+    domain_counts = classify_domains(issue_text)
     domain = dominant_domain(domain_counts)
-    documented_issue = bool(
-        re.search(r"부적정|미흡|소홀|위반|지연|불이행|부족|개선\\s*필요", window)
+    documented_issue = bool(issue_text)
+    domain_strength = domain_counts.get(domain, 0) if domain else 0
+    critical_issue = any(term in issue_text for term in CRITICAL_ISSUE_TERMS)
+    anchor_ready = bool(
+        summary_confirmed
+        and documented_issue
+        and domain
+        and dispositions
+        and (domain_strength >= 2 or critical_issue)
     )
-    anchor_ready = bool(summary_confirmed and documented_issue and domain and dispositions)
     anchor = "PROBLEM_SIGNAL" if anchor_ready else "UNRESOLVED"
     subject = subject_from_title(listing_record["title"])
     freshness = days_since(listing_record.get("published_at"))
@@ -359,6 +375,8 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
         "raw_report_text_persisted": False,
         "summary_table_confirmed": summary_confirmed,
         "documented_issue_in_table": documented_issue,
+        "dominant_domain_evidence_count": domain_strength,
+        "critical_issue_term_confirmed": critical_issue,
         "official_finding_count": finding_count,
         "disposition_terms": dispositions,
         "disposition_counts": disposition_counts,
