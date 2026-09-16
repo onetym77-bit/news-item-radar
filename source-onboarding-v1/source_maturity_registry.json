@@ -154,9 +154,9 @@
       "source_id": "seoul_audit_results",
       "source_name": "서울시 감사 결과",
       "official_url": "https://news.seoul.go.kr/gov/archives/category/inspection-news_c1/inspection-maintask_c1/admin_story_inspection-n1",
-      "maturity": "L1",
+      "maturity": "L2",
       "candidate_role": "CORE_DISCOVERY_CANDIDATE",
-      "implementation_path": "source-onboarding-v1/collect_l1_batch.py",
+      "implementation_path": "source-onboarding-v1/collect_audit_l2.py",
       "question_output": "NONE",
       "briefing_output": "NONE",
       "schedule": "MANUAL_PR",
@@ -165,7 +165,7 @@
       "raw_personal_text_persisted": false,
       "approved_for_production": false,
       "evaluation": null,
-      "note": "L0 접속 성공 후 감사계획 및 결과 첫 페이지 최대 20건의 고유번호·제목·등록일·상세주소를 시험"
+      "note": "목록 최근 5건의 공식 상세 페이지에서 제목 대응·등록일/수정일 구분·감사 구조 표지만 파생. 원문 문장·담당자·연락처·첨부파일은 저장하지 않음"
     },
     {
       "source_id": "official_sns_network",
