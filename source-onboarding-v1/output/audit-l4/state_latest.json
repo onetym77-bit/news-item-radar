@@ -1,0 +1,208 @@
+{
+  "schema": 1,
+  "source_id": "seoul_audit_results",
+  "maturity": "L3",
+  "pilot": "L4_SHADOW_EVALUATION_NOT_PROMOTION",
+  "started_at_kst": "2026-09-16T17:41:19+09:00",
+  "briefing_output": "NONE",
+  "automatic_ledger_write": false,
+  "approved_for_production": false,
+  "raw_reports_persisted": 0,
+  "runs": [
+    {
+      "run_date_kst": "2026-09-16",
+      "run_id": "35075135123",
+      "listing_status": "SUCCESS",
+      "listing_diagnostics": {
+        "listing_pages_attempted": 2,
+        "listing_pages_successful": 2,
+        "listing_errors": [],
+        "eligible_listing_records": 18
+      },
+      "selected_ids": [
+        "580883",
+        "580648",
+        "580103"
+      ],
+      "diagnostics": {
+        "detail_requested": 3,
+        "pdf_found": 3,
+        "pdf_extracted": 3,
+        "ready_questions": 2,
+        "held_questions": 1,
+        "raw_reports_persisted": 0,
+        "listing_candidate_count": 3,
+        "listing_error_code": null
+      }
+    }
+  ],
+  "records": [
+    {
+      "source_record_id": "580883",
+      "first_seen_kst": "2026-09-16",
+      "cohort": "NEW_30D",
+      "card": {
+        "source_record_id": "580883",
+        "title": "서울물재생시설공단 기관운영 감사 결과 공개문",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/580883?listPage=1",
+        "published_at": "2026-09-15",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/09/6aa8d539483f06.36566037.pdf",
+        "attachment_sha256": "2dc7340bf5faa62de72b11a3dd7e6760070587d664a25485ce8829a8ca302642",
+        "report_text_sha256": "90c7d21e0e4bcb7aa39c5c145f473e3b8f264544bcc5006a42eb019fb72bed66",
+        "pdf_pages_sampled": 12,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": true,
+        "documented_issue_in_table": true,
+        "dominant_domain_evidence_count": 3,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": 14,
+        "disposition_terms": [
+          "시정",
+          "주의",
+          "개선",
+          "통보",
+          "기관경고"
+        ],
+        "disposition_counts": {
+          "시정": 3,
+          "주의": 8,
+          "통보": 3
+        },
+        "risk_domains": [
+          "GOVERNANCE_CONTROL",
+          "PROCUREMENT_CONTRACT"
+        ],
+        "risk_domain_counts": {
+          "PROCUREMENT_CONTRACT": 3,
+          "GOVERNANCE_CONTROL": 5
+        },
+        "evidence_anchor": "PROBLEM_SIGNAL",
+        "freshness_days": 1,
+        "why_now": "NEW_OFFICIAL_REPORT",
+        "question_status": "READY_FOR_HUMAN_REVIEW",
+        "hold_reason": null,
+        "source_frame": "공개 감사보고서가 서울물재생시설공단에서 14건의 처분요구와 시정, 주의, 개선, 통보 조치를 제시함",
+        "editorial_addition": "지적의 존재를 반복하지 않고 감사 이후 실제 운영 변화와 반복 구조를 검증",
+        "verification_question": "서울물재생시설공단 감사에서 확인된 계약·조달 지적은 개별 실수인가, 반복되는 내부 통제 부재인가? 감사 전후 계약자료에서 경쟁 방식·변경계약·수의계약·업체 집중과 조치 이행을 대조하면 어느 설명이 남는가?",
+        "public_interest_to_verify": "공공예산의 경쟁성·가격 적정성과 사업 품질",
+        "competing_hypotheses": [
+          "심사·계약 통제 규칙이 약해 특정 유형의 계약 문제가 반복된다.",
+          "특수한 사업 조건 때문에 생긴 소수의 불가피한 예외였다."
+        ],
+        "discriminating_test": "감사 전후 계약 공개자료에서 계약 방식과 변경·수의계약 비중을 비교한다.",
+        "minimum_test_timebox": "24시간 이내",
+        "discard_condition": "후속 자료에서 지적이 단일 절차 오류로 종결됐고 실제 결과·반복성이 확인되지 않으면 질문을 폐기"
+      },
+      "challenge_flags": [
+        "HUMAN_CHECK_ACTUAL_CITIZEN_EFFECT",
+        "HUMAN_CHECK_AUDIT_SCOPE_VS_FINDING"
+      ]
+    },
+    {
+      "source_record_id": "580648",
+      "first_seen_kst": "2026-09-16",
+      "cohort": "NEW_30D",
+      "card": {
+        "source_record_id": "580648",
+        "title": "아동양육시설 등 관리운영 실태 특정감사 결과 공개문",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/580648?listPage=1",
+        "published_at": "2026-09-04",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/09/6a994c4e906a27.01464539.pdf",
+        "attachment_sha256": "18d9509744099e4d05e3683faf7191b11172c7ebeeb09b36db00096bd4196638",
+        "report_text_sha256": "0cf38e86937f4c35937f8e7122dcd7f411ab5e95b4d6f731a3bde62080fb67f2",
+        "pdf_pages_sampled": 12,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": true,
+        "documented_issue_in_table": true,
+        "dominant_domain_evidence_count": 3,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [
+          "시정",
+          "주의",
+          "개선",
+          "권고",
+          "통보",
+          "징계"
+        ],
+        "disposition_counts": {
+          "통보": 2
+        },
+        "risk_domains": [
+          "FINANCE_BENEFIT",
+          "GOVERNANCE_CONTROL",
+          "PROCUREMENT_CONTRACT",
+          "RIGHTS_SAFETY"
+        ],
+        "risk_domain_counts": {
+          "RIGHTS_SAFETY": 3,
+          "PROCUREMENT_CONTRACT": 9,
+          "FINANCE_BENEFIT": 1,
+          "GOVERNANCE_CONTROL": 8
+        },
+        "evidence_anchor": "PROBLEM_SIGNAL",
+        "freshness_days": 12,
+        "why_now": "NEW_OFFICIAL_REPORT",
+        "question_status": "READY_FOR_HUMAN_REVIEW",
+        "hold_reason": null,
+        "source_frame": "공개 감사보고서가 아동양육시설 등 관리운영 실태에서 복수의 처분요구와 시정, 주의, 개선, 권고 조치를 제시함",
+        "editorial_addition": "지적의 존재를 반복하지 않고 감사 이후 실제 운영 변화와 반복 구조를 검증",
+        "verification_question": "아동양육시설 등 관리운영 실태 감사가 지적한 인권침해 진정함 관리 미흡은 입소 아동이 안전하게 진정을 제기할 기회를 실제로 제한했나? 감사 전후 고지·비품·진정 접수와 송부 기록, 아동이 독립적으로 이용할 수 있는 경로를 확인하면 서류상 시정과 실질적 권리 보장을 구분할 수 있는가?",
+        "public_interest_to_verify": "시설 아동의 실질적인 진정권",
+        "competing_hypotheses": [
+          "진정 경로 운영과 감독의 공백이 아동의 문제 제기를 어렵게 했다.",
+          "진정함 관리 결함은 있었지만 다른 안전한 진정 경로가 실제 작동했다."
+        ],
+        "discriminating_test": "고지·비품 시정과 진정 접수·송부·대체 경로의 운영 기록을 감사 전후 확인한다.",
+        "minimum_test_timebox": "24시간 이내",
+        "discard_condition": "후속 자료에서 지적이 단일 절차 오류로 종결됐고 실제 결과·반복성이 확인되지 않으면 질문을 폐기"
+      },
+      "challenge_flags": [
+        "FINDING_COUNT_UNCONFIRMED",
+        "HUMAN_CHECK_ACTUAL_CITIZEN_EFFECT",
+        "HUMAN_CHECK_AUDIT_SCOPE_VS_FINDING"
+      ]
+    },
+    {
+      "source_record_id": "580103",
+      "first_seen_kst": "2026-09-16",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "580103",
+        "title": "서울패션허브 관리·운영 실태 특정감사 결과 공개문",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/580103?listPage=1",
+        "published_at": "2026-08-07",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/08/6a790fdc6a0693.17543057.pdf",
+        "attachment_sha256": "a60a7b232df34fb8b17821fc59173427d127f5e8b125c59a816761f54147aa0c",
+        "report_text_sha256": "a12624c8180228872958eea858f2b3c7d265500e1e61642c2fb1e82042ccf66b",
+        "pdf_pages_sampled": 12,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": false,
+        "documented_issue_in_table": false,
+        "dominant_domain_evidence_count": 0,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [],
+        "disposition_counts": {},
+        "risk_domains": [],
+        "risk_domain_counts": {},
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 40,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "공개문 앞부분에서 지적 요약·처분 유형·문제 영역의 결합을 확인하지 못함",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    }
+  ]
+}
