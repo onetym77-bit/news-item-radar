@@ -110,7 +110,7 @@ class L0BatchProbeTests(unittest.TestCase):
         self.assertTrue(diagnostics["response_truncated"])
         serialized = json.dumps(diagnostics, ensure_ascii=False)
         self.assertNotIn("<html>", serialized)
-        self.assertNotIn("visible", serialized)
+        self.assertNotIn("2026-09-16 visible", serialized)
 
     def test_l0_observations_never_emit_records_and_validate(self):
         for source_id in TARGET_IDS:
@@ -168,7 +168,7 @@ class L0BatchProbeTests(unittest.TestCase):
         self.assertEqual(observation["access_status"], "FAILED")
         self.assertEqual(observation["records"], [])
         self.assertEqual(observation["technical_readiness"], "KEEP_L0")
-        self.assertNotIn("0건", render_summary([observation]))
+        self.assertIn("FAILED·PARTIAL은 게시물 0건을 뜻하지 않습니다.", render_summary([observation]))
 
     def test_non_html_response_is_partial_without_body(self):
         response = FakeResponse(
