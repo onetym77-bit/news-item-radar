@@ -311,6 +311,10 @@ def validate_state(state: dict) -> list[str]:
     return errors
 
 
+def metric_text(value: float | None) -> str:
+    return "판정 대기" if value is None else f"{value}%"
+
+
 def render_summary(state: dict, evaluation: dict, reviews: dict[str, dict]) -> str:
     m = evaluation["metrics"]
     lines = [
@@ -319,10 +323,10 @@ def render_summary(state: dict, evaluation: dict, reviews: dict[str, dict]) -> s
         f"- 평가 상태: {evaluation['outcome']} (자동 승격 없음)",
         f"- 관측일/고유 문서: {m['observed_dates']}일/{m['unique_documents']}건 (최소 7일/12건)",
         f"- 질문/보류: {m['ready_questions']}/{m['held_documents']}",
-        f"- 사람 판정: {m['human_reviews']}건; 전체 완료율 {m['human_review_completion_pct']}%; 질문 완료율 {m['ready_review_completion_pct']}%",
-        f"- PDF 추출 성공률: {m['pdf_extraction_success_pct']}%",
-        f"- 근거·맥락 정확률: {m['grounding_and_scope_exact_pct']}%; 취재 착수 가치: {m['reporting_start_value_pct']}%",
-        f"- 상투적 질문 비율: {m['generic_question_pct']}%; 중대 오류: {m['critical_errors']}건",
+        f"- 사람 판정: {m['human_reviews']}건; 전체 완료율 {metric_text(m['human_review_completion_pct'])}; 질문 완료율 {metric_text(m['ready_review_completion_pct'])}",
+        f"- PDF 추출 성공률: {metric_text(m['pdf_extraction_success_pct'])}",
+        f"- 근거·맥락 정확률: {metric_text(m['grounding_and_scope_exact_pct'])}; 취재 착수 가치: {metric_text(m['reporting_start_value_pct'])}",
+        f"- 상투적 질문 비율: {metric_text(m['generic_question_pct'])}; 중대 오류: {m['critical_errors']}건",
         "",
         "이 수치는 사람 판정이 없으면 품질 결론을 내리지 않습니다. 감사 목적은 피해 사실이 아닙니다.",
         "",
