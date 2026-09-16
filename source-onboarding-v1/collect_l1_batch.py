@@ -18,7 +18,7 @@ from urllib.request import Request, build_opener
 from probe_l0_batch import MAX_RESPONSE_BYTES, SafeRedirectHandler
 from thin_source_contract import load_registry, validate_thin_observation
 
-TARGET_IDS = ("environment_assessment", "seoul_audit_results")
+TARGET_IDS = ("seoul_audit_results",)
 MAX_RECORDS = 20
 DATE_RE = re.compile(r"(?<!\d)(20\d{2})[-./]\s*(\d{1,2})[-./]\s*(\d{1,2})(?!\d)")
 AUDIT_ID_RE = re.compile(r"^/gov/archives/(\d+)(?:$|[/?#])")
