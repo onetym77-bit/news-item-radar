@@ -154,10 +154,10 @@
       "source_id": "seoul_audit_results",
       "source_name": "서울시 감사 결과",
       "official_url": "https://news.seoul.go.kr/gov/archives/category/inspection-news_c1/inspection-maintask_c1/admin_story_inspection-n1",
-      "maturity": "L2",
+      "maturity": "L3",
       "candidate_role": "CORE_DISCOVERY_CANDIDATE",
-      "implementation_path": "source-onboarding-v1/collect_audit_l2.py",
-      "question_output": "NONE",
+      "implementation_path": "source-onboarding-v1/interpret_audit_l3.py",
+      "question_output": "VERIFICATION_ONLY",
       "briefing_output": "NONE",
       "schedule": "MANUAL_PR",
       "persistence": "DERIVED_ONLY",
@@ -165,7 +165,7 @@
       "raw_personal_text_persisted": false,
       "approved_for_production": false,
       "evaluation": null,
-      "note": "목록 최근 5건의 공식 상세 페이지에서 제목 대응·등록일/수정일 구분·감사 구조 표지만 파생. 원문 문장·담당자·연락처·첨부파일은 저장하지 않음"
+      "note": "최근 3건의 공개 감사 PDF 앞 12쪽에서 지적 건수·처분 유형·문제 영역만 파생해 검증 질문을 시험. 원문·개인정보·첨부파일은 저장하지 않고 브리핑·장부 연결도 금지"
     },
     {
       "source_id": "official_sns_network",
