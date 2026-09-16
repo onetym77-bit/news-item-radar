@@ -14,8 +14,14 @@ from interpret_audit_l3 import (
 from thin_source_contract import FORBIDDEN_KEYS, load_registry, walk_keys
 
 
-REPORT_TEXT = """
+REPORT_TEXT = """목차
 Ⅰ. 감사실시 개요
+Ⅱ. 감사결과 처분요구 내역 및 조치현황
+Ⅲ. 감사결과 처분요구서
+\f
+Ⅰ. 감사실시 개요
+감사 배경과 목적
+\f
 Ⅱ. 감사결과 처분요구 내역 및 조치현황
 처분요구사항 일람표: 14건 [시정 3, 주의 8, 통보 3]
 연번 처분요구 제목 대상기관 처분유형
@@ -25,6 +31,7 @@ REPORT_TEXT = """
 4 변경계약을 통한 사실상의 수의계약 체결 주의
 9 민원 처리 기한 미준수 주의
 10 자금·여유금의 운용 개선 통보
+\f
 Ⅲ. 감사결과 처분요구서
 이 뒤의 전체 보고서 문장은 저장하면 안 됩니다.
 """
@@ -85,6 +92,25 @@ class AuditL3Tests(unittest.TestCase):
         self.assertEqual(counts["시정"], 3)
         self.assertEqual(counts["주의"], 8)
         self.assertEqual(counts["통보"], 3)
+
+
+    def test_contents_only_does_not_create_a_question(self):
+        toc_only = """목차
+Ⅱ. 감사결과 처분요구 내역 및 조치현황
+Ⅲ. 감사결과 처분요구서
+\f
+감사 배경과 목적만 있음
+\f
+감사 일정만 있음
+"""
+        card = build_card(
+            self.listing_record,
+            "https://news.seoul.go.kr/gov/files/2026/09/report.pdf",
+            diagnostics(toc_only),
+            toc_only,
+        )
+        self.assertEqual(card["question_status"], "HOLD")
+        self.assertFalse(card["summary_table_confirmed"])
 
     def test_external_or_non_pdf_attachment_is_not_accepted(self):
         unsafe = DETAIL_HTML.replace(
