@@ -2,7 +2,7 @@ import unittest
 
 from watch import (
     change_record, collect, compare, empty_state, id_key, parse_extension,
-    progress_record, render,
+    progress_record, render, verification_question,
 )
 
 AT1 = "2026-09-15T10:00:00+09:00"
@@ -48,6 +48,19 @@ class WatchTests(unittest.TestCase):
         self.assertTrue(first["last_run"]["first_baseline"])
         self.assertIn("이전 값이 없어", render(first))
         self.assertEqual(first["last_run"]["article_gate"], "NOT_EVALUATED")
+
+    def test_first_baseline_suppresses_change_questions(self):
+        first = compare(empty_state(), observed([
+            event("PENALTY", "1112021020598", "1221", day="2026-08-20"),
+            event("PENALTY", "1112021020598", "1222", day="2026-08-18"),
+        ]), AT1)
+        self.assertEqual(first["last_run"]["signals"], [])
+        self.assertIn("기준과 비교해 생긴 질문: 0건", render(first))
+
+    def test_penalty_question_requires_observable_impact(self):
+        question = verification_question({"kind": "MULTIPLE_PENALTIES"})
+        self.assertIn("어느 업체", question)
+        self.assertIn("확인 가능한 영향", question)
 
     def test_same_record_second_day_is_not_new(self):
         record = event("EXTENSION", "6232026073185", "22048|1")
