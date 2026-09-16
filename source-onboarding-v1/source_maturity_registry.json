@@ -159,13 +159,13 @@
       "implementation_path": "source-onboarding-v1/interpret_audit_l3.py",
       "question_output": "VERIFICATION_ONLY",
       "briefing_output": "NONE",
-      "schedule": "MANUAL_PR",
+      "schedule": "SHADOW",
       "persistence": "DERIVED_ONLY",
       "automatic_ledger_write": false,
       "raw_personal_text_persisted": false,
       "approved_for_production": false,
       "evaluation": null,
-      "note": "최근 3건의 공개 감사 PDF 앞 12쪽에서 지적 건수·처분 유형·문제 영역만 파생해 검증 질문을 시험. 원문·개인정보·첨부파일은 저장하지 않고 브리핑·장부 연결도 금지"
+      "note": "L3 의미 해석을 유지하면서 매일 최대 3개 미평가 감사 문서를 7일 그림자 평가. 최소 12개 고유 문서와 사람 판정 80%를 충족해도 자동 L4 승격·브리핑·장부 연결 금지"
     },
     {
       "source_id": "official_sns_network",
