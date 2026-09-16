@@ -42,6 +42,10 @@ class CitizenProposalWatchTests(unittest.TestCase):
         self.assertEqual(classify_text("새 장비를 설치해주세요")["statement_type"],
                          "POLICY_IDEA")
 
+    def test_direct_route_word_is_not_first_person_experience(self):
+        card = classify_text("반포대로에서 김포공항으로 직접 진입하도록 신호 설치를 제안합니다")
+        self.assertEqual(card["statement_type"], "POLICY_IDEA")
+
     def test_truncated_title_matches_only_stable_tokens(self):
         text = "[규제철폐제안] 모아타운 가로주택정비사업 빌라 한 동 과반"
         self.assertGreaterEqual(title_position(text, "[규제철폐제안] 모아타운 가로주택정비사업 「빌..."), 0)
@@ -92,6 +96,8 @@ class CitizenProposalWatchTests(unittest.TestCase):
         self.assertIn("잠수교", context["place_terms_from_title"])
         self.assertIn("주말", context["time_terms_from_body"])
         self.assertEqual(context["status"], "UNVERIFIED_CONTEXT_CANDIDATES")
+        self.assertEqual(context_candidates("역번호 증감", "")["place_terms_from_title"], [])
+        self.assertEqual(context_candidates("자전거 대여소에 쓰레기통", "")["place_terms_from_title"], ["대여소"])
 
     def test_contact_masking(self):
         self.assertEqual(sanitize("a@example.com 01012345678"),
