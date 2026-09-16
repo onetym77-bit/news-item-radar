@@ -159,6 +159,28 @@ class AuditL3Tests(unittest.TestCase):
         self.assertNotEqual(card["evidence_anchor"], "PROBLEM_SIGNAL")
         self.assertEqual(card["question_status"], "HOLD")
 
+    def test_explicit_rights_finding_outranks_contract_frequency(self):
+        mixed = """목차
+Ⅱ. 감사 지적사항 목록
+\f
+Ⅱ. 감사 지적사항 목록
+감사결과 총괄 조치(안)
+감사결과 일람표
+1 아동 인권침해 진정함 관리 미흡 통보
+2 공사 계약 부적정 주의
+3 물품 계약 부적정 주의
+4 용역 계약 부적정 주의
+"""
+        card = build_card(
+            self.listing_record,
+            "https://news.seoul.go.kr/gov/files/2026/09/report.pdf",
+            diagnostics(mixed),
+            mixed,
+        )
+        self.assertEqual(card["question_status"], "READY_FOR_HUMAN_REVIEW")
+        self.assertIn("진정함 관리 미흡", card["verification_question"])
+        self.assertIn("진정 접수", card["discriminating_test"])
+
     def test_missing_findings_summary_is_held(self):
         card = build_card(
             self.listing_record,
