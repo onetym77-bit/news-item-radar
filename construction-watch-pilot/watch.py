@@ -192,7 +192,12 @@ def compare(prior, observed, collected_at):
     signals = []
     for key, record in observed["events"].items():
         if key in events:
-            events[key]["last_seen_kst"] = collected_at
+            # Refresh current derived fields so parser corrections and official
+            # row edits do not leave stale context in the rolling state. A row
+            # with the same stable key is not promoted as a new event.
+            first_seen = events[key].get("first_seen_kst", collected_at)
+            events[key] = dict(record, first_seen_kst=first_seen,
+                               last_seen_kst=collected_at)
             continue
         record = dict(record, first_seen_kst=collected_at,
                       last_seen_kst=collected_at)
