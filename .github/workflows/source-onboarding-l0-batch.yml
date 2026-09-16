@@ -1,0 +1,52 @@
+name: Probe thin sources L0 batch
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "source-onboarding-v1/**"
+      - ".github/workflows/source-onboarding-l0-batch.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: l0-source-probe-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Validate maturity registry
+        run: python -X utf8 source-onboarding-v1/thin_source_contract.py
+      - name: Test L0 probe safety
+        run: python -X utf8 -m unittest discover -s source-onboarding-v1 -p 'test_*.py' -v
+      - name: Probe three official sources without collecting records
+        run: python -X utf8 source-onboarding-v1/probe_l0_batch.py --output-dir source-onboarding-v1/output/l0-batch
+      - name: Publish technical summary
+        if: always()
+        run: |
+          if [ -f source-onboarding-v1/output/l0-batch/SUMMARY.md ]; then
+            cat source-onboarding-v1/output/l0-batch/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload bounded diagnostics
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: thin-source-l0-batch-${{ github.run_id }}
+          path: source-onboarding-v1/output/l0-batch/
+          if-no-files-found: error
+          retention-days: 7
