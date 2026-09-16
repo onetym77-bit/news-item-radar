@@ -50,7 +50,7 @@
     {
       "source_id": "district_councils_25",
       "source_name": "서울 25개 자치구의회",
-      "official_url": "https://www.seoul.go.kr/",
+      "official_url": null,
       "maturity": "L1",
       "candidate_role": "CORE_DISCOVERY_CANDIDATE",
       "implementation_path": "district-council-pilot/collect_pilot.py",
@@ -62,7 +62,8 @@
       "raw_personal_text_persisted": false,
       "approved_for_production": false,
       "evaluation": null,
-      "note": "25곳 연결 상태 점검. 회의록 생산 공백과 사이트별 구조 차이 미평가"
+      "note": "25곳 연결 상태 점검. 회의록 생산 공백과 사이트별 구조 차이 미평가",
+      "source_set_path": "district-council-pilot/sources_25.json"
     },
     {
       "source_id": "eungdapso_stats",
@@ -152,7 +153,7 @@
     {
       "source_id": "seoul_audit_results",
       "source_name": "서울시 감사 결과",
-      "official_url": "https://www.seoul.go.kr/",
+      "official_url": null,
       "maturity": "L0",
       "candidate_role": "CORE_DISCOVERY_CANDIDATE",
       "implementation_path": null,
@@ -169,7 +170,7 @@
     {
       "source_id": "official_sns_network",
       "source_name": "서울시장·25개 구청장 공식 SNS와 외부 출연 콘텐츠",
-      "official_url": "https://www.seoul.go.kr/",
+      "official_url": null,
       "maturity": "L0",
       "candidate_role": "SOCIAL_FIELD_CANDIDATE",
       "implementation_path": null,
