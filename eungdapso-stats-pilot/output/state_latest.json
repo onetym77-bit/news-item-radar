@@ -1,0 +1,210 @@
+{
+  "schema": 1,
+  "last_checked_kst": "2026-09-16T10:21:53+09:00",
+  "snapshots": [
+    {
+      "reference_date": "2026-09-16",
+      "period_start": "2026-08-16",
+      "period_end": "2026-09-15",
+      "rolling_total": 263414,
+      "headline_today": 2104,
+      "headline_previous_day": 9917,
+      "daily": [
+        {
+          "date": "2026-08-16",
+          "count": 5887
+        },
+        {
+          "date": "2026-08-17",
+          "count": 6028
+        },
+        {
+          "date": "2026-08-18",
+          "count": 8523
+        },
+        {
+          "date": "2026-08-19",
+          "count": 8334
+        },
+        {
+          "date": "2026-08-20",
+          "count": 8163
+        },
+        {
+          "date": "2026-08-21",
+          "count": 8422
+        },
+        {
+          "date": "2026-08-22",
+          "count": 6905
+        },
+        {
+          "date": "2026-08-23",
+          "count": 6700
+        },
+        {
+          "date": "2026-08-24",
+          "count": 7994
+        },
+        {
+          "date": "2026-08-25",
+          "count": 8303
+        },
+        {
+          "date": "2026-08-26",
+          "count": 8917
+        },
+        {
+          "date": "2026-08-27",
+          "count": 9088
+        },
+        {
+          "date": "2026-08-28",
+          "count": 9308
+        },
+        {
+          "date": "2026-08-29",
+          "count": 7328
+        },
+        {
+          "date": "2026-08-30",
+          "count": 7251
+        },
+        {
+          "date": "2026-08-31",
+          "count": 7487
+        },
+        {
+          "date": "2026-09-01",
+          "count": 7835
+        },
+        {
+          "date": "2026-09-02",
+          "count": 9393
+        },
+        {
+          "date": "2026-09-03",
+          "count": 9690
+        },
+        {
+          "date": "2026-09-04",
+          "count": 10151
+        },
+        {
+          "date": "2026-09-05",
+          "count": 8309
+        },
+        {
+          "date": "2026-09-06",
+          "count": 7282
+        },
+        {
+          "date": "2026-09-07",
+          "count": 10005
+        },
+        {
+          "date": "2026-09-08",
+          "count": 9992
+        },
+        {
+          "date": "2026-09-09",
+          "count": 9760
+        },
+        {
+          "date": "2026-09-10",
+          "count": 9747
+        },
+        {
+          "date": "2026-09-11",
+          "count": 11201
+        },
+        {
+          "date": "2026-09-12",
+          "count": 8341
+        },
+        {
+          "date": "2026-09-13",
+          "count": 7209
+        },
+        {
+          "date": "2026-09-14",
+          "count": 9944
+        },
+        {
+          "date": "2026-09-15",
+          "count": 9917
+        }
+      ],
+      "districts": {
+        "강남구": 19540,
+        "강동구": 10383,
+        "강북구": 3825,
+        "강서구": 14532,
+        "관악구": 14843,
+        "광진구": 18820,
+        "구로구": 4926,
+        "금천구": 3808,
+        "노원구": 4945,
+        "도봉구": 4270,
+        "동대문구": 8041,
+        "동작구": 4514,
+        "마포구": 14869,
+        "서대문구": 6397,
+        "서초구": 10178,
+        "성동구": 5048,
+        "성북구": 5301,
+        "송파구": 8703,
+        "양천구": 8615,
+        "영등포구": 11484,
+        "용산구": 12924,
+        "은평구": 8357,
+        "종로구": 6664,
+        "중구": 9526,
+        "중랑구": 7877
+      },
+      "channels": {
+        "홈페이지": 4926,
+        "전화": 48747,
+        "문자": 68082,
+        "모바일앱": 81776,
+        "국민신문고": 22815,
+        "기타": 37068
+      },
+      "topics": {
+        "교통": 174065,
+        "환경/안전": 54410,
+        "복지/문화/경제": 8889,
+        "주택/건설": 11640,
+        "기타": 14410
+      },
+      "agencies": {
+        "서울시": 28212,
+        "자치구": 228390,
+        "투자출연기관": 6054,
+        "기타": 758
+      },
+      "integrity": {
+        "daily_equals_total": true,
+        "channels_equal_total": true,
+        "topics_equal_total": true,
+        "agencies_equal_total": true,
+        "districts_equal_district_agency": true,
+        "last_daily_precedes_reference": true
+      },
+      "source_url": "https://eungdapso.seoul.go.kr/gud/chart/chart_progress.do",
+      "units": {
+        "count": "complaint_submissions_not_people",
+        "districts": "handling_districts_not_complainant_residence",
+        "tables": "independent_one_dimensional_aggregates"
+      }
+    }
+  ],
+  "last_run": {
+    "first_baseline": true,
+    "reference_date_status": "FIRST_BASELINE",
+    "reference_date": "2026-09-16",
+    "signals": [],
+    "coverage": "OFFICIAL_ROLLING_AGGREGATES_ONLY",
+    "article_gate": "NOT_EVALUATED"
+  }
+}
