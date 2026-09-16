@@ -133,9 +133,75 @@ def parse_list(html: str, limit: int = LIMIT) -> list[dict]:
     return proposals
 
 HEARSAY = ("소문", "전해 들", "들었다고", "카더라", "라고 합니다", "라고 들", "누가 말")
-FIRST_PERSON = ("저는", "제가", "저희 가족", "우리 가족", "직접 ", "이용하면서", "신청했", "방문했", "겪었", "거주하고", "살고 있", "통근하", "통학하")
+FIRST_PERSON = ("저는", "제가", "저희 가족", "우리 가족", "본인은")
 FRICTION = ("불편", "부담", "피해", "거절", "반려", "대기", "방문", "이동", "시간", "비용", "막혔", "고장", "위험", "혼잡", "이용하지 못", "사용하지 못")
 IDEA = ("제안", "도입", "설치", "개선", "바랍니다", "해주세요", "필요합니다", "시행해")
+TIME_TERMS = ("오늘", "어제", "지난주", "지난달", "최근", "매일", "매주", "주말", "평일", "출근", "퇴근", "등교", "하교")
+PLACE_SUFFIXES = ("역", "공원", "대여소", "도서관", "주민센터", "구청", "시청", "잠수교", "고가도로")
+
+def redact_anchor(value: str) -> str:
+    value = sanitize(value)
+    value = re.sub(r"(?<!\d)\d{6}[- ]?[1-4]\d{6}(?!\d)", "[ID]", value)
+    value = re.sub(r"\d+\s*동\s*\d+\s*호", "[ADDRESS]", value)
+    value = re.sub(r"[가-힣A-Za-z0-9]{1,24}(?:로|길)\s*\d+(?:-\d+)?", "[ADDRESS]", value)
+    value = re.sub(r"(?:제 이름은|이름[:：]?)\s*[가-힣]{2,4}", "[NAME]", value)
+    return norm(value)
+
+def nearest_span(text: str, left_terms: list[str], right_terms: list[str]) -> tuple[int, int] | None:
+    pairs = []
+    for left in left_terms:
+        for left_match in re.finditer(re.escape(left), text):
+            for right in right_terms:
+                for right_match in re.finditer(re.escape(right), text):
+                    start = min(left_match.start(), right_match.start())
+                    end = max(left_match.end(), right_match.end())
+                    pairs.append((end - start, start, end))
+    if not pairs:
+        return None
+    _, start, end = min(pairs)
+    return start, end
+
+def evidence_anchor(text: str, category: str, basis: dict) -> dict:
+    if category == "SELF_REPORTED_EXPERIENCE":
+        span = nearest_span(text, basis["first_person_terms"], basis["friction_terms"])
+    elif category == "HEARSAY":
+        terms = basis["hearsay_terms"]
+        positions = [(text.find(term), text.find(term) + len(term)) for term in terms if text.find(term) >= 0]
+        span = positions[0] if positions else None
+    else:
+        span = None
+    if span is None:
+        return {"status": "NOT_STORED_FOR_THIS_TYPE", "excerpt": None}
+    start, end = span
+    excerpt = redact_anchor(text[max(0, start - 70):min(len(text), end + 110)])
+    if len(excerpt) > 240:
+        excerpt = excerpt[:237].rstrip() + "..."
+    return {
+        "status": "CLASSIFICATION_SUPPORT_ONLY",
+        "excerpt": excerpt,
+        "not_proof_of_event": True,
+    }
+
+def context_candidates(title: str, text: str) -> dict:
+    title_plain = norm(re.sub(r"[^0-9A-Za-z가-힣]+", " ", title))
+    places = []
+    for token in title_plain.split():
+        candidate = re.sub(r"(?:에서의|에서는|에서|에는|으로|에게|에|의|을|를|은|는)$", "", token)
+        if any(candidate.endswith(suffix) for suffix in PLACE_SUFFIXES):
+            if candidate not in places:
+                places.append(candidate[:40])
+    times = []
+    for term in TIME_TERMS:
+        if term in text and term not in times:
+            times.append(term)
+    for match in re.findall(r"20\d{2}년\s*\d{1,2}월(?:\s*\d{1,2}일)?", text):
+        if match not in times:
+            times.append(match)
+    return {
+        "place_terms_from_title": places[:4],
+        "time_terms_from_body": times[:4],
+        "status": "UNVERIFIED_CONTEXT_CANDIDATES",
+    }
 
 def matched_terms(text: str, terms: tuple[str, ...]) -> list[str]:
     return [term.strip() for term in terms if term in text]
@@ -166,6 +232,8 @@ def classify_text(text: str) -> dict:
             "idea_terms": idea[:4],
         },
         "claim_status": "UNVERIFIED",
+        "problem_evidence_status": "NOT_ESTABLISHED",
+        "human_review_required": True,
         "verification_plan": plan,
         "editorial_question": "NOT_GENERATED",
         "article_gate": "NOT_EVALUATED",
@@ -207,19 +275,25 @@ def observe(fetcher=fetch, limit: int = LIMIT) -> dict:
             "statement_type": "UNRESOLVED",
             "matched_basis": {},
             "claim_status": "UNVERIFIED",
+            "problem_evidence_status": "NOT_ESTABLISHED",
+            "human_review_required": True,
             "verification_plan": "목록 제목과 상세 원문의 대응을 확인한 후 다시 분류한다.",
             "editorial_question": "NOT_GENERATED",
             "article_gate": "NOT_EVALUATED",
         }
+        anchor = evidence_anchor(detail_text, classified["statement_type"], classified["matched_basis"]) if detail_text is not None else {"status": "UNAVAILABLE", "excerpt": None}
+        context = context_candidates(proposal["title"], detail_text or "")
         rows.append({
             **proposal,
             "detail_sha256": detail_hash,
             "detail_text_characters_examined": len(detail_text or ""),
             "detail_scope": "TITLE_ANCHORED_BOUNDED_TEXT" if detail_text is not None else "UNCONFIRMED",
+            "evidence_anchor": anchor,
+            "context_candidates": context,
             **classified,
         })
     return {
-        "schema": 1,
+        "schema": 2,
         "observed_at_kst": datetime.now(ZoneInfo("Asia/Seoul")).isoformat(timespec="seconds"),
         "source_url": LIST_URL,
         "coverage": f"FIRST_{len(rows)}_UNIQUE_PROPOSALS",
@@ -230,11 +304,13 @@ def observe(fetcher=fetch, limit: int = LIMIT) -> dict:
             "contact_stored": False,
             "raw_html_stored": False,
             "full_body_stored": False,
+            "bounded_redacted_anchor_max_chars": 240,
         },
         "interpretation_limits": [
             "분류는 원문 문구의 형식이며 사실 확인 결과가 아니다.",
             "공감·비공감·조회 수는 대표성이나 사실성 근거로 사용하지 않는다.",
             "직접 경험형도 독립 확인 전에는 기사 후보가 아니다.",
+            "근거 문장은 분류를 설명할 뿐 사건 발생의 증거가 아니다.",
         ],
         "article_gate": "NOT_EVALUATED",
     }
@@ -259,6 +335,10 @@ def render(result: dict) -> str:
             f"- 게시일 후보: {row['posted_date'] or '확인 대기'}",
             f"- 문장 형식: **{labels[row['statement_type']]}**",
             "- 사실 상태: **미확인 주장**",
+            f"- 분류 근거 문장: {row['evidence_anchor']['excerpt'] or '저장하지 않음'}",
+            "- 근거 문장의 의미: 분류 설명용이며 사건 발생 증거가 아님",
+            f"- 장소 후보(제목): {', '.join(row['context_candidates']['place_terms_from_title']) or '없음'}",
+            f"- 시간 후보(본문): {', '.join(row['context_candidates']['time_terms_from_body']) or '없음'}",
             f"- 첫 확인: {row['verification_plan']}",
             "- 편집 질문: 생성하지 않음",
             f"- [공식 원문]({row['source_url']})", "",
