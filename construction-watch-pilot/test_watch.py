@@ -69,6 +69,22 @@ class WatchTests(unittest.TestCase):
         self.assertEqual(second["last_run"]["new_record_keys"], [])
         self.assertEqual(second["events"][record["key"]]["last_seen_kst"], AT2)
 
+    def test_existing_record_refreshes_fields_without_new_signal(self):
+        original = event("PENALTY", "1112021020598", "1221",
+                         title="영동대로 공사", day="2026-08-20")
+        original["penalty_context"] = "잘못 섞인 첫 행"
+        first = compare(empty_state(), observed([original]), AT1)
+        corrected = dict(original, registration_date="2026-08-18",
+                         penalty_context="시공 B의 올바른 행")
+        second = compare(first, observed([corrected]), AT2)
+        saved = second["events"][corrected["key"]]
+        self.assertEqual(saved["penalty_context"], "시공 B의 올바른 행")
+        self.assertEqual(saved["registration_date"], "2026-08-18")
+        self.assertEqual(saved["first_seen_kst"], AT1)
+        self.assertEqual(saved["last_seen_kst"], AT2)
+        self.assertEqual(second["last_run"]["new_record_keys"], [])
+        self.assertEqual(second["last_run"]["signals"], [])
+
     def test_repeat_extension_and_design_are_questions_only(self):
         old = compare(empty_state(), observed([
             event("EXTENSION", "6232026073185", "22048|1"),
