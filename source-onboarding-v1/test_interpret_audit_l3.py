@@ -163,6 +163,8 @@ class AuditL3Tests(unittest.TestCase):
         mixed = """목차
 Ⅱ. 감사 지적사항 목록
 \f
+감사 개요 및 범위
+\f
 Ⅱ. 감사 지적사항 목록
 감사결과 총괄 조치(안)
 감사결과 일람표
