@@ -1,0 +1,56 @@
+name: Interpret Seoul audit reports L3
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "source-onboarding-v1/**"
+      - ".github/workflows/source-onboarding-audit-l3.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audit-l3-meaning-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  interpret:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Confirm bounded PDF text tool
+        run: command -v pdftotext
+      - name: Validate source maturity registry
+        run: python -X utf8 source-onboarding-v1/thin_source_contract.py
+      - name: Test L3 evidence and question guards
+        run: python -X utf8 -m unittest discover -s source-onboarding-v1 -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Interpret at most three public audit reports
+        run: python -X utf8 source-onboarding-v1/interpret_audit_l3.py --output-dir source-onboarding-v1/output/audit-l3
+      - name: Publish verification-only summary
+        if: always()
+        run: |
+          if [ -f source-onboarding-v1/output/audit-l3/SUMMARY.md ]; then
+            cat source-onboarding-v1/output/audit-l3/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload derived L3 trial
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: seoul-audit-l3-${{ github.run_id }}
+          path: source-onboarding-v1/output/audit-l3/
+          if-no-files-found: error
+          retention-days: 7
