@@ -262,9 +262,9 @@ def public_function_route_hints(html_text: str, function_name: str) -> list[str]
         for src in re.findall(r"<script[^>]+src=['\"]([^'\"]+)['\"]", html_text, flags=re.I):
             if src.startswith("/") and src not in hints:
                 hints.append("SCRIPT:" + src[:180])
-            if len(hints) >= 5:
+            if len(hints) >= 20:
                 break
-    return hints[:5]
+    return hints[:20]
 
 
 def parse_environment(html_text: str, source_url: str, observed_at: str) -> tuple[list[dict], dict]:
