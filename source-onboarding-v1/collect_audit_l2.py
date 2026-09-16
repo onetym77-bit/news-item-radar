@@ -125,8 +125,13 @@ def _article_bounds(tokens: list[str], listing_title: str) -> tuple[int, int]:
     start = 0
     for label in ("수정일", "등록일"):
         for index, token in enumerate(tokens):
-            if label in token and first_date(" ".join(tokens[index:index + 4])):
-                start = min(len(tokens), index + 4)
+            if label not in token:
+                continue
+            for date_index in range(index, min(len(tokens), index + 4)):
+                if first_date(tokens[date_index]):
+                    start = date_index + 1
+                    break
+            if start:
                 break
         if start:
             break
@@ -293,7 +298,7 @@ def collect_one(
 
     if listing_status == "FAILED":
         access_status = "FAILED"
-    elif not selected or any(status != "SUCCESS" for status in detail_statuses):
+    elif listing_status != "SUCCESS" or not selected or any(status != "SUCCESS" for status in detail_statuses):
         access_status = "PARTIAL"
     else:
         access_status = "SUCCESS"
