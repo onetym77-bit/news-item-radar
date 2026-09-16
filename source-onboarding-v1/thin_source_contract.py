@@ -86,6 +86,9 @@ def validate_registry(registry: dict, root: Path | None = None) -> list[str]:
         path = source.get("implementation_path")
         if path and root is not None and not (root / path).is_file():
             errors.append(f"{source_id}: implementation_path does not exist: {path}")
+        source_set = source.get("source_set_path")
+        if source_set and root is not None and not (root / source_set).is_file():
+            errors.append(f"{source_id}: source_set_path does not exist: {source_set}")
         for field, order, cap_field in (
             ("question_output", QUESTION_ORDER, "max_question_output"),
             ("briefing_output", BRIEFING_ORDER, "max_briefing_output"),
