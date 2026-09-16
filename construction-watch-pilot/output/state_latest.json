@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "last_collected_kst": "2026-09-16T09:27:05+09:00",
+  "last_collected_kst": "2026-09-16T16:38:50+09:00",
   "events": {
     "EXTENSION|1032026062399|22046|2": {
       "key": "EXTENSION|1032026062399|22046|2",
@@ -92,7 +92,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-16T09:27:05+09:00"
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
     },
     "DESIGN|2012026020599|21971287|21971288": {
       "key": "DESIGN|2012026020599|21971287|21971288",
@@ -104,7 +104,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-16T09:27:05+09:00"
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
     },
     "DESIGN|7182026072098|21972479|21972480": {
       "key": "DESIGN|7182026072098|21972479|21972480",
@@ -128,7 +128,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
       "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 경동엔지니어링 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.4점 벌점부과일 : 2026-08-20 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 9 등록일 : 2026-08-20 16 ",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-16T09:27:05+09:00"
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
     },
     "PENALTY|1112021020598|1221": {
       "key": "PENALTY|1112021020598|1221",
@@ -136,11 +136,11 @@
       "pjt_cd": "1112021020598",
       "record_key": "1221",
       "title": "영동대로 지하공간 복합개발 3공구 건설공사(토목)",
-      "registration_date": "2026-08-20",
+      "registration_date": "2026-08-18",
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
-      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 경동엔지니어링 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.4점 벌점부과일 : 2026-08-20 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 9 등록일 : 2026-08-20 16 ",
+      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 태영건설 업 체 구 분 : 시공 점 검 종 류 : 자체조사 벌 점 번 호 : 8, 18 벌 점 : 0.716점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서와 다른 시공, 시공상세도면 작성의 소홀 조회수 : 21 등록일 : 2026-08-18 15 ",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-16T09:27:05+09:00"
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
     },
     "PENALTY|1112021020598|1222": {
       "key": "PENALTY|1112021020598|1222",
@@ -148,11 +148,103 @@
       "pjt_cd": "1112021020598",
       "record_key": "1222",
       "title": "영동대로 지하공간 복합개발 3공구 건설공사(토목)",
-      "registration_date": "2026-08-20",
+      "registration_date": "2026-08-18",
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
-      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 경동엔지니어링 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.4점 벌점부과일 : 2026-08-20 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 9 등록일 : 2026-08-20 16 영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 이화공영주식회사 업",
+      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 호반산업 업 체 구 분 : 시공 점 검 종 류 : 자체조사 벌 점 번 호 : 8, 18 벌 점 : 0.548점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서와 다른 시공, 시공상세도면 작성의 소홀 조회수 : 21 등록일 : 2026-08-18 14 영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 삼안 업 체 구 분 : 감리 점 검 종 류 : 자체조",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-16T09:27:05+09:00"
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
+    },
+    "EXTENSION|6192026051598|22058|2": {
+      "key": "EXTENSION|6192026051598|22058|2",
+      "category": "EXTENSION",
+      "pjt_cd": "6192026051598",
+      "record_key": "22058|2",
+      "title": "양평누리체육공원 야구장 환경개선 공사",
+      "registration_date": "2026-09-16",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 16,
+      "before_completion": "2026-06-30",
+      "after_completion": "2026-07-16",
+      "first_seen_kst": "2026-09-16T16:38:50+09:00",
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
+    },
+    "EXTENSION|6232024032899|22056|3": {
+      "key": "EXTENSION|6232024032899|22056|3",
+      "category": "EXTENSION",
+      "pjt_cd": "6232024032899",
+      "record_key": "22056|3",
+      "title": "일원1동 복합문화센터 신축공사(전기)",
+      "registration_date": "2026-09-16",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 15,
+      "before_completion": "2026-09-15",
+      "after_completion": "2026-09-30",
+      "first_seen_kst": "2026-09-16T16:38:50+09:00",
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
+    },
+    "EXTENSION|6192026041099|22057|2": {
+      "key": "EXTENSION|6192026041099|22057|2",
+      "category": "EXTENSION",
+      "pjt_cd": "6192026041099",
+      "record_key": "22057|2",
+      "title": "(안양천 잔디광장)파크골프장 추가 조성 공사",
+      "registration_date": "2026-09-16",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 6,
+      "before_completion": "2026-06-17",
+      "after_completion": "2026-06-23",
+      "first_seen_kst": "2026-09-16T16:38:50+09:00",
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
+    },
+    "EXTENSION|6232026070739|22055|1": {
+      "key": "EXTENSION|6232026070739|22055|1",
+      "category": "EXTENSION",
+      "pjt_cd": "6232026070739",
+      "record_key": "22055|1",
+      "title": "2026년 상반기 어린이공원 등 소규모 정비공사",
+      "registration_date": "2026-09-16",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 29,
+      "before_completion": "2026-09-10",
+      "after_completion": "2026-10-09",
+      "first_seen_kst": "2026-09-16T16:38:50+09:00",
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
+    },
+    "DESIGN|7182026031398|21974505|21974506": {
+      "key": "DESIGN|7182026031398|21974505|21974506",
+      "category": "DESIGN",
+      "pjt_cd": "7182026031398",
+      "record_key": "21974505|21974506",
+      "title": "반포교 보수·보강공사",
+      "registration_date": "2026-09-16",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-16T16:38:50+09:00",
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
+    },
+    "DESIGN|3502026052098|21973785|21973786": {
+      "key": "DESIGN|3502026052098|21973785|21973786",
+      "category": "DESIGN",
+      "pjt_cd": "3502026052098",
+      "record_key": "21973785|21973786",
+      "title": "1취수장외 2개소 옥상 방수공사",
+      "registration_date": "2026-09-16",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-16T16:38:50+09:00",
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
+    },
+    "DESIGN|7552026062497|21972319|21972320": {
+      "key": "DESIGN|7552026062497|21972319|21972320",
+      "category": "DESIGN",
+      "pjt_cd": "7552026062497",
+      "record_key": "21972319|21972320",
+      "title": "석계역 5번 외부출입구 지붕 개량공사",
+      "registration_date": "2026-09-15",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-16T16:38:50+09:00",
+      "last_seen_kst": "2026-09-16T16:38:50+09:00"
     }
   },
   "progress": {
@@ -165,7 +257,7 @@
       "gap_pp": 0.2,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-16T09:27:05+09:00"
+      "observed_at_kst": "2026-09-16T16:38:50+09:00"
     },
     "57eca32c8e203306": {
       "key": "57eca32c8e203306",
@@ -176,7 +268,7 @@
       "gap_pp": 0.1,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-16T09:27:05+09:00"
+      "observed_at_kst": "2026-09-16T16:38:50+09:00"
     },
     "2b009f5c7daf5f7a": {
       "key": "2b009f5c7daf5f7a",
@@ -187,7 +279,7 @@
       "gap_pp": 2.0,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-16T09:27:05+09:00"
+      "observed_at_kst": "2026-09-16T16:38:50+09:00"
     },
     "c335f452fa78b48c": {
       "key": "c335f452fa78b48c",
@@ -198,7 +290,7 @@
       "gap_pp": -1.5,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-16T09:27:05+09:00"
+      "observed_at_kst": "2026-09-16T16:38:50+09:00"
     },
     "ca05789869ab2a65": {
       "key": "ca05789869ab2a65",
@@ -209,12 +301,20 @@
       "gap_pp": -0.2,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-16T09:27:05+09:00"
+      "observed_at_kst": "2026-09-16T16:38:50+09:00"
     }
   },
   "last_run": {
     "first_baseline": false,
-    "new_record_keys": [],
+    "new_record_keys": [
+      "EXTENSION|6192026051598|22058|2",
+      "EXTENSION|6232024032899|22056|3",
+      "EXTENSION|6192026041099|22057|2",
+      "EXTENSION|6232026070739|22055|1",
+      "DESIGN|7182026031398|21974505|21974506",
+      "DESIGN|3502026052098|21973785|21973786",
+      "DESIGN|7552026062497|21972319|21972320"
+    ],
     "signals": [],
     "sample_counts": {
       "EXTENSION": 4,
