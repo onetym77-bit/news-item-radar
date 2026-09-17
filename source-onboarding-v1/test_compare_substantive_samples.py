@@ -62,6 +62,10 @@ class SubstantiveComparisonTests(unittest.TestCase):
                     "detail_url": "https://news.seoul.go.kr/gov/archives/580883",
                     "published_at": "2026-09-15",
                     "selected_finding_title": "복지시설 급여 지급 부적정",
+                    "review_finding_titles": [
+                        "복지시설 급여 지급 부적정",
+                        "위기 아동 보호 공백 개선 필요",
+                    ],
                     "documented_issue_in_table": True,
                 }],
                 "diagnostics": {"pdf_extracted": 1},
@@ -72,6 +76,10 @@ class SubstantiveComparisonTests(unittest.TestCase):
         )
         self.assertEqual(cards[0]["body_status"], "READABLE_FINDING")
         self.assertEqual(cards[0]["review_excerpt"], "복지시설 급여 지급 부적정")
+        self.assertEqual(
+            cards[0]["review_finding_options"],
+            ["복지시설 급여 지급 부적정", "위기 아동 보호 공백 개선 필요"],
+        )
         self.assertEqual(cards[0]["evidence_status"], "OFFICIAL_DOCUMENTED_FINDING")
         self.assertEqual(diagnostics["pdf_extracted"], 1)
 
