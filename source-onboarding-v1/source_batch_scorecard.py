@@ -78,9 +78,9 @@ def technical_gate(observation: dict, sample_count: int, body_rate: float | None
         return "L0_PROBE_ONLY"
     if sample_count == 0:
         return "FIX_LISTING"
-    if maturity == "L1":
+    if body_rate is None:
         return "READY_FOR_L2_SAMPLE"
-    if body_rate is None or body_rate < 0.6:
+    if body_rate < 0.6:
         return "FIX_BODY_EXTRACTION"
     return "READY_FOR_EDITORIAL_SAMPLE"
 
@@ -153,7 +153,7 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
     ]
     counts = Counter(row["label"] for row in matching_reviews)
     editorial, review_metrics = editorial_gate(sample_count, counts)
-    if observation["maturity"] in {"L0", "L1"} or body_rate is None or body_rate < 0.6:
+    if observation["maturity"] == "L0" or body_rate is None or body_rate < 0.6:
         editorial = "NOT_READY_FOR_EDITORIAL_REVIEW"
     diagnostics = observation.get("diagnostics") or {}
     candidate_count = diagnostics.get("candidate_count")
