@@ -91,6 +91,19 @@ class ReviewWindowTests(unittest.TestCase):
             {**base, "first_seen": "invalid"}, "2026-09-17"
         ))
 
+    def test_qualified_rediscovery_stays_open_for_human_review(self):
+        row = {
+            "first_seen": "2026-09-15",
+            "lane": "REDISCOVERED_CARRYOVER",
+            "source_id": "council_minutes",
+            "context_status": "PASS",
+            "grounding_status": "PASS",
+            "freshness_status": "FRESH",
+            "source_date": "2026-09-11",
+            "freshness_window_days": "14",
+        }
+        self.assertTrue(pending_review_window_open(row, "2026-09-17"))
+
     def test_incomplete_or_expired_sources_do_not_remain_in_review(self):
         base = {
             "first_seen": "2026-09-15",
