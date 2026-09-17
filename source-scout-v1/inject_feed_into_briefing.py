@@ -90,6 +90,22 @@ def render_editorial_review(feed: dict, leads: list[dict]) -> list[str]:
         lines.extend([
             f"- 취재 질문: {md(lead.get('editorial_question', ''), 220)}",
             f"- 첫 확인: {md(lead.get('first_check', ''), 220)}",
+            *(
+                [f"- 반대 설명 확인: {md(lead.get('countercheck', ''), 260)}"]
+                if lead.get("countercheck") else []
+            ),
+            *(
+                [f"- 지속 조건: {md(lead.get('continue_rule', ''), 260)}"]
+                if lead.get("continue_rule") else []
+            ),
+            *(
+                [f"- 축소 조건: {md(lead.get('narrow_rule', ''), 260)}"]
+                if lead.get("narrow_rule") else []
+            ),
+            *(
+                [f"- 보류 조건: {md(lead.get('stop_rule', ''), 260)}"]
+                if lead.get("stop_rule") else []
+            ),
             f"- [원문]({lead.get('source_url', '')})",
             "",
         ])
