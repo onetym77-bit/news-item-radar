@@ -10,7 +10,11 @@
       "source_url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
       "anchor_text": "국회대로 공사 구간 인근 주민들은",
       "editorial_question": "사업 일정·예산은 공식 문서에서 어떻게 바뀌었고, 지연 원인과 주민·상인 피해가 확인되는가?",
-      "first_check": "서울시의 공구별 사업 일정·예산 변경 문서와 현장 주민·상인 사례"
+      "first_check": "서울시의 공구별 사업 일정·예산 변경 문서와 현장 주민·상인 사례",
+      "countercheck": "공사·공원화·공구별 준공일이 서로 다른 일정인지 구분하고, 지장물 이설·설계 변경 등 지연 사유와 공식 민원·현장 피해를 함께 대조",
+      "continue_rule": "같은 공구·단계의 공식 일정에서 지연이 재현되고, 현재 불편의 구체 사례가 독립 확인되면 취재 지속",
+      "narrow_rule": "일정 차이가 주로 단계·공구의 정의 차이이면 '전체 사업 지연' 대신 실제 지연 공정으로 범위를 축소",
+      "stop_rule": "일정 지연과 시민 영향이 모두 독립 확인되지 않으면 지연·피해 기획 각도는 보류"
     },
     {
       "id": "20260917-sign-language",
@@ -20,7 +24,11 @@
       "source_url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
       "anchor_text": "수어통역센터는 자체수입이 발생해도",
       "editorial_question": "자체수입 재투자 제약이 통역 대기·미배정 등 이용자의 서비스 공백으로 이어지는가?",
-      "first_check": "자치구별 회계·승인 규정과 센터 통역 요청·대기·미배정 기록"
+      "first_check": "자치구별 회계·승인 규정과 센터 통역 요청·대기·미배정 기록",
+      "countercheck": "자체수입 사용이 실제로 금지인지 승인 절차인지 구분하고, 인력·수요·예산 등 다른 대기 원인을 비교",
+      "continue_rule": "재투자 제약의 실제 적용 사례와 통역 미배정·대기 등 이용자 영향이 함께 확인되면 취재 지속",
+      "narrow_rule": "회계 제약은 확인되나 서비스 차질이 확인되지 않으면 이용자 공백이 아닌 제도·운영 문제로 범위 축소",
+      "stop_rule": "재투자 제한 주장과 서비스 차질이 모두 재현되지 않으면 이 각도는 보류"
     },
     {
       "id": "20260917-youth-protection",
@@ -30,7 +38,11 @@
       "source_url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
       "anchor_text": "위기 10대 여성 지원 시설 4개 중 3개소가",
       "editorial_question": "기존 보호시설 폐쇄 이후 안심ON센터가 필요한 시간·대상·기능의 보호 공백을 실제로 메우는가?",
-      "first_check": "폐쇄 시설 명단·시점·정원과 안심ON센터 운영·입소·거절·대기 기록"
+      "first_check": "폐쇄 시설 명단·시점·정원과 안심ON센터 운영·입소·거절·대기 기록",
+      "countercheck": "폐쇄 시설의 종류·시점·정원을 특정하고, 안심ON센터의 24시간 AI 탐지와 대면 일시보호·숙박 기능을 구분",
+      "continue_rule": "시설 폐쇄와 대체 서비스의 시간·대상·기능 공백이 확인되고 실제 이용·입소 실패 사례가 확보되면 취재 지속",
+      "narrow_rule": "폐쇄는 확인되나 대체 시설·연계로 수용량이 유지됐다면 '시설 부족' 대신 전환기 접근성 문제로 범위 축소",
+      "stop_rule": "시설 폐쇄 수치가 틀리거나 동등한 대체 보호가 확인되면 보호 공백 주장은 보류"
     }
   ]
 }
