@@ -1,0 +1,54 @@
+name: Compare wide source batch
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "source-onboarding-v1/**"
+      - "citizen-proposal-pilot/watch.py"
+      - "district-council-pilot/sources_25.json"
+      - ".github/workflows/source-onboarding-wide-batch.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-onboarding-wide-batch-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test bounded adapters and comparison
+        run: python -X utf8 -m unittest discover -s source-onboarding-v1 -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Collect access and listing samples without editorial output
+        run: python -X utf8 source-onboarding-v1/collect_wide_batch.py
+      - name: Publish comparison summary
+        if: always()
+        run: |
+          if [ -f source-onboarding-v1/output/wide-batch/SUMMARY.md ]; then
+            cat source-onboarding-v1/output/wide-batch/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload bounded comparison artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: source-onboarding-wide-batch-${{ github.run_id }}
+          path: source-onboarding-v1/output/wide-batch/
+          if-no-files-found: error
+          retention-days: 7
