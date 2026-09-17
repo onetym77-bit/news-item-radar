@@ -327,16 +327,21 @@ def finding_impact_score(finding: str) -> int:
     return score
 
 
+def ranked_finding_titles(issue_text: str, limit: int = 5) -> list[str]:
+    candidates = finding_candidates(issue_text)
+    ranked = sorted(
+        enumerate(candidates),
+        key=lambda row: (-finding_impact_score(row[1]), row[0]),
+    )
+    return [finding for _, finding in ranked[:limit]]
+
+
 def select_primary_finding(issue_text: str) -> tuple[str | None, int, int]:
     candidates = finding_candidates(issue_text)
     if not candidates:
         return None, 0, 0
-    ranked = [
-        (finding_impact_score(finding), -index, finding)
-        for index, finding in enumerate(candidates)
-    ]
-    score, _, selected = max(ranked)
-    return selected, score, len(candidates)
+    selected = ranked_finding_titles(issue_text, limit=1)[0]
+    return selected, finding_impact_score(selected), len(candidates)
 
 
 def finding_context_window(report_text: str, finding: str | None) -> str:
@@ -586,6 +591,7 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
         "risk_domains": sorted(all_domain_counts),
         "risk_domain_counts": all_domain_counts,
         "selected_finding_title": selected_finding,
+        "review_finding_titles": ranked_finding_titles(issue_text),
         "finding_candidate_count": candidate_count,
         "finding_selection_score": selection_score,
         "finding_selection_version": FINDING_SELECTION_VERSION,

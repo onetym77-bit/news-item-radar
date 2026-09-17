@@ -1,0 +1,55 @@
+name: Compare substantive source samples
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "source-onboarding-v1/**"
+      - "citizen-proposal-pilot/watch.py"
+      - ".github/workflows/source-onboarding-substantive-comparison.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: substantive-source-comparison-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install pinned PDF text parser
+        run: python -m pip install --disable-pip-version-check pypdf==6.18.1
+      - name: Test bounded collectors and comparison
+        run: python -X utf8 -m unittest discover -s source-onboarding-v1 -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Compare three substantive items per source
+        run: python -X utf8 source-onboarding-v1/compare_substantive_samples.py
+      - name: Publish comparison summary
+        if: always()
+        run: |
+          if [ -f source-onboarding-v1/output/substantive-comparison/SUMMARY.md ]; then
+            cat source-onboarding-v1/output/substantive-comparison/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload derived comparison artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: substantive-source-comparison-${{ github.run_id }}
+          path: source-onboarding-v1/output/substantive-comparison/
+          if-no-files-found: error
+          retention-days: 7
