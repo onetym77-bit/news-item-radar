@@ -15,7 +15,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -41,6 +41,7 @@ SUPPLEMENTARY_DISCOVERY_IDS = {
     "consumer_agency",
 }
 NATIONAL_LOCALIZATION_IDS = {"labor_arrears", "consumer_agency"}
+REVIEW_WINDOW_DAYS = 7
 REVIEW_FIELDS = [
     "first_seen",
     "last_seen",
@@ -609,6 +610,29 @@ def read_review_queue() -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
+def pending_review_window_open(
+    row: dict[str, str],
+    today: str,
+    *,
+    window_days: int = REVIEW_WINDOW_DAYS,
+) -> bool:
+    """Keep an unreviewed discovery card visible for a bounded review window."""
+    if row.get("editor_judgment", "").strip():
+        return False
+    if row.get("lane", "").strip().upper() not in {
+        "CORE_DISCOVERY",
+        "AUX_DISCOVERY",
+    } and row.get("review_eligible", "").strip().lower() != "true":
+        return False
+    try:
+        first_seen = date.fromisoformat(row.get("first_seen", "").strip())
+        as_of = date.fromisoformat(today)
+    except ValueError:
+        return False
+    age_days = (as_of - first_seen).days
+    return 0 <= age_days < max(window_days, 1)
+
+
 def update_review_queue(feed: dict) -> None:
     today = feed["generated_at_kst"][:10]
     prior = read_review_queue()
@@ -620,7 +644,9 @@ def update_review_queue(feed: dict) -> None:
             normalized["auto_evidence_anchor"] or old.get("evidence_anchor", "")
         )
         normalized["auto_active_today"] = "false"
-        normalized["review_eligible"] = "false"
+        normalized["review_eligible"] = (
+            "true" if pending_review_window_open(normalized, today) else "false"
+        )
         if normalized["candidate_id"]:
             by_id[normalized["candidate_id"]] = normalized
 
@@ -640,7 +666,11 @@ def update_review_queue(feed: dict) -> None:
         reviewed_current_revision = bool(current.get("editor_judgment", "").strip()) and (
             current.get("review_revision", "").strip() == source_revision
         )
-        review_eligible = active_today or (
+        pending_review = (
+            current.get("review_eligible", "").strip().lower() == "true"
+            and pending_review_window_open(current, today)
+        )
+        review_eligible = active_today or pending_review or (
             row.get("lane") == "REDISCOVERED_CARRYOVER"
             and reviewed_current_revision
         )
