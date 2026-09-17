@@ -36,7 +36,7 @@
 | 고정 실질 본문 표본 사람 판정 재계산 | source-onboarding-v1/review_substantive_snapshot.py |
 | 고정 표본 사람 판정 운영안 | source-onboarding-v1/SUBSTANTIVE_REVIEW_RUNBOOK.md |
 | 2026-09-17 고정 표본 사람 판정(자동 작성 금지) | source-onboarding-v1/substantive_reviews_2026-09-17.csv |
-| 고정 표본 사람 판정 수동 읽기 전용 실행 | .github/workflows/source-onboarding-substantive-review.yml |
+| 고정 표본 사람 판정 main 변경·수동 읽기 전용 실행 | .github/workflows/source-onboarding-substantive-review.yml |
 | 신규 소스 L1 수동·PR 읽기 전용 실행 | .github/workflows/source-onboarding-l1-batch.yml |
 | 서울시 감사 결과 L2 본문 구조 표본 | source-onboarding-v1/collect_audit_l2.py |
 | 서울시 감사 결과 L2 수동·PR 읽기 전용 실행 | .github/workflows/source-onboarding-audit-l2.yml |
