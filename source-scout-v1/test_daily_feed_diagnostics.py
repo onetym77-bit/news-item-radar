@@ -2,7 +2,11 @@
 """Tests for truthful qualified-to-new source diagnostics."""
 import unittest
 
-from collect_daily_feed import qualification_paths, source_revision_for_row
+from collect_daily_feed import (
+    pending_review_window_open,
+    qualification_paths,
+    source_revision_for_row,
+)
 
 
 def row(suffix, freshness_status):
@@ -55,6 +59,31 @@ class QualificationPathTests(unittest.TestCase):
         self.assertEqual(result["qualified"], 1)
         self.assertEqual(result["failed_sources"][0]["source_id"], "consumer_agency")
         self.assertEqual(result["zero_new_reason"], "")
+
+
+class ReviewWindowTests(unittest.TestCase):
+    def test_unreviewed_core_card_remains_open_for_seven_days(self):
+        row = {
+            "first_seen": "2026-09-15",
+            "lane": "CORE_DISCOVERY",
+            "editor_judgment": "",
+            "review_eligible": "false",
+        }
+        self.assertTrue(pending_review_window_open(row, "2026-09-17"))
+        self.assertTrue(pending_review_window_open(row, "2026-09-21"))
+        self.assertFalse(pending_review_window_open(row, "2026-09-22"))
+
+    def test_reviewed_and_non_discovery_cards_do_not_reopen(self):
+        base = {"first_seen": "2026-09-15", "lane": "CORE_DISCOVERY"}
+        self.assertFalse(pending_review_window_open(
+            {**base, "editor_judgment": "VERIFY"}, "2026-09-17"
+        ))
+        self.assertFalse(pending_review_window_open(
+            {**base, "lane": "LOCALIZE_TO_SEOUL"}, "2026-09-17"
+        ))
+        self.assertFalse(pending_review_window_open(
+            {**base, "first_seen": "invalid"}, "2026-09-17"
+        ))
 
 
 if __name__ == "__main__":
