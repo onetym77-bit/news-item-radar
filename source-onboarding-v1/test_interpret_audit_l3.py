@@ -305,6 +305,8 @@ class AuditL3Tests(unittest.TestCase):
         self.assertTrue(card["documented_issue_in_table"])
         self.assertEqual(card["official_finding_count"], 24)
         self.assertGreater(card["finding_candidate_count"], 1)
+        self.assertLessEqual(len(card["review_finding_titles"]), 5)
+        self.assertEqual(card["review_finding_titles"][0], card["selected_finding_title"])
         self.assertNotEqual(
             card.get("hold_reason"),
             "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
