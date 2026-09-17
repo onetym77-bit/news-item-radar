@@ -81,6 +81,14 @@ def audit_cards(source: dict, observed_at: str, *, collector=collect_l3, citizen
     for row in payload.get("cards", [])[:SAMPLE_SIZE]:
         selected = row.get("selected_finding_title")
         excerpt = bounded_redacted(module, selected)
+        finding_options = [
+            bounded_redacted(module, title)
+            for title in row.get("review_finding_titles", [])[:5]
+        ]
+        finding_options = [title for title in finding_options if title]
+        if excerpt and excerpt not in finding_options:
+            finding_options.insert(0, excerpt)
+        finding_options = finding_options[:5]
         body_status = (
             "READABLE_FINDING"
             if excerpt and row.get("documented_issue_in_table")
@@ -100,6 +108,7 @@ def audit_cards(source: dict, observed_at: str, *, collector=collect_l3, citizen
             ),
             "body_status": body_status,
             "review_excerpt": excerpt,
+            "review_finding_options": finding_options,
             "raw_body_persisted": False,
             "human_label": None,
         })
@@ -249,6 +258,12 @@ def validate_payload(payload: dict) -> list[str]:
         excerpt = card.get("review_excerpt")
         if excerpt is not None and (not isinstance(excerpt, str) or len(excerpt) > 240):
             errors.append(f"cards[{index}] review excerpt exceeds 240 chars")
+        options = card.get("review_finding_options", [])
+        if (
+            not isinstance(options, list) or len(options) > 5
+            or any(not isinstance(option, str) or len(option) > 240 for option in options)
+        ):
+            errors.append(f"cards[{index}] invalid bounded finding options")
         if card.get("raw_body_persisted") is not False:
             errors.append(f"cards[{index}] raw body marker must be false")
         if card.get("human_label") not in LABELS | {None}:
@@ -259,7 +274,7 @@ def validate_payload(payload: dict) -> list[str]:
 def write_review_queue(cards: list[dict], path: Path) -> None:
     fieldnames = [
         "source_id", "source_record_id", "title", "detail_url", "published_at",
-        "evidence_kind", "evidence_status", "review_excerpt",
+        "evidence_kind", "evidence_status", "review_excerpt", "other_findings",
         "label", "reviewed_on", "note",
     ]
     with path.open("w", encoding="utf-8-sig", newline="") as handle:
@@ -268,6 +283,10 @@ def write_review_queue(cards: list[dict], path: Path) -> None:
         for row in cards:
             writer.writerow({
                 **{key: row.get(key) or "" for key in fieldnames},
+                "other_findings": " | ".join(
+                    option for option in row.get("review_finding_options", [])
+                    if option != row.get("review_excerpt")
+                ),
                 "label": row.get("human_label") or "",
             })
 
@@ -325,6 +344,14 @@ def render_summary(payload: dict) -> str:
                 "",
                 f"- 근거 성격: {fact}",
                 f"- 검토 문장: {row.get('review_excerpt') or '본문 확인 실패'}",
+            ])
+            alternatives = [
+                option for option in row.get("review_finding_options", [])
+                if option != row.get("review_excerpt")
+            ]
+            if alternatives:
+                lines.append("- 같은 감사의 다른 지적 후보(최대 4개): " + " / ".join(alternatives))
+            lines.extend([
                 f"- 사람 판정: {row.get('human_label') or '대기'}",
                 f"- [공식 원문]({row['detail_url']})",
                 "",
@@ -332,7 +359,7 @@ def render_summary(payload: dict) -> str:
     lines.extend([
         "## 해석 한계",
         "",
-        "- 최신 3건 기준이라 두 소스의 게시 빈도와 같은 기간 생산량은 비교하지 않습니다.",
+        "- 최신 3건 기준이라 두 소스의 게시 빈도와 같은 기간 생산량은 비교하지 않습니다. 감사 문서는 여러 지적이 묶인 단위이며 후보 표시는 최대 5건으로 제한됩니다.",
         "- 시민제안 문장은 사실 확인 전 주장이고, 감사 지적도 현재까지 문제가 계속된다는 뜻은 아닙니다.",
         "- 사람 판정이 끝나기 전에는 어느 소스가 더 유망하다고 결론 내리지 않습니다.",
         "- 이 결과는 질문·브리핑·아이템 장부로 자동 이동하지 않습니다.",
