@@ -76,6 +76,10 @@ def technical_gate(observation: dict, sample_count: int, body_rate: float | None
     if access == "FAILED":
         return "RETRY_ACCESS"
     if str(observation.get("coverage", "")).startswith("ACCESS_ONLY"):
+        if observation.get("technical_readiness") == "READY_FOR_L1_PROMOTION":
+            return "READY_FOR_L1_PROMOTION"
+        if observation.get("technical_readiness") == "L1_ADAPTER_REVIEW":
+            return "L1_ADAPTER_REVIEW"
         if observation.get("technical_readiness") == "READY_FOR_L1_REVIEW":
             return "READY_FOR_L1_REVIEW"
         if observation.get("technical_readiness") == "GROUP_ACCESS_REVIEW":
@@ -183,7 +187,7 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
         "coverage": observation["coverage"],
         "diagnostics": {
             key: diagnostics[key]
-            for key in ("error_code", "council_total", "council_access_success", "council_access_partial", "council_access_failed")
+            for key in ("error_code", "candidate_count", "resolved_detail_url_count", "unresolved_detail_url_count", "council_total", "council_access_success", "council_access_partial", "council_access_failed", "council_failure_summary")
             if key in diagnostics
         },
         "verified_date_rate": None if failed_access else ratio(verified_dates, sample_count),
@@ -253,11 +257,20 @@ def render_summary(scorecard: dict) -> str:
         error_code = diagnostics.get("error_code")
         if error_code:
             lines.append(f"| ↳ 접속·파싱 상태 |  |  |  |  |  |  | {error_code} |  |")
+        if row["source_id"] == "environment_assessment" and diagnostics.get("unresolved_detail_url_count") is not None:
+            lines.append(
+                f"| ↳ 환경평가 상세주소 |  | 후보 {diagnostics.get('candidate_count', '-')} |  |  |  |  | "
+                f"확인 {diagnostics.get('resolved_detail_url_count', 0)} · 미해결 {diagnostics.get('unresolved_detail_url_count', 0)} |  |"
+            )
         if diagnostics.get("council_total"):
             lines.append(
                 f"| ↳ 자치구의회 접속 |  | {diagnostics.get('council_total')}곳 |  |  |  |  | "
                 f"성공 {diagnostics.get('council_access_success', 0)} · 부분 {diagnostics.get('council_access_partial', 0)} · "
                 f"실패 {diagnostics.get('council_access_failed', 0)} |  |"
+            )
+        if diagnostics.get("council_failure_summary"):
+            lines.append(
+                f"| ↳ 접속 미완료 구의회 |  |  |  |  |  |  | {diagnostics['council_failure_summary']} |  |"
             )
         for error in row.get("errors") or []:
             lines.append(f"| ↳ 검증 오류 |  |  |  |  |  |  | {error} |  |")
