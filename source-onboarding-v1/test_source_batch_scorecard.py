@@ -97,6 +97,25 @@ class SourceBatchScorecardTests(unittest.TestCase):
         self.assertEqual(row["technical_gate"], "INVALID_OBSERVATION")
         self.assertIn("exceeds 20", " ".join(row["errors"]))
 
+    def test_access_only_probe_uses_readiness_not_empty_listing(self):
+        source = next(row for row in self.registry["sources"] if row["source_id"] == "district_councils_25")
+        observation = {
+            "schema": 1,
+            "source_id": source["source_id"],
+            "maturity": source["maturity"],
+            "collected_at_kst": "2026-09-17T10:00:00+09:00",
+            "source_url": "https://example.go.kr/list",
+            "access_status": "PARTIAL",
+            "coverage": "ACCESS_ONLY_25_COUNCIL_LISTS",
+            "records": [],
+            "interpretation_status": "NOT_EVALUATED",
+            "technical_readiness": "GROUP_ACCESS_REVIEW",
+            "diagnostics": {"council_total": 25, "council_access_success": 20},
+        }
+        row = score_observation(observation, self.registry, [])
+        self.assertEqual(row["technical_gate"], "REVIEW_GROUP_ACCESS")
+        self.assertEqual(row["editorial_gate"], "NOT_READY_FOR_EDITORIAL_REVIEW")
+
     def test_no_human_labels_means_no_editorial_value_judgment(self):
         row = score_observation(self.observation(), self.registry, [])
         self.assertEqual(row["editorial_gate"], "NOT_EVALUATED")
