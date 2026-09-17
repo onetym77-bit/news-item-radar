@@ -154,6 +154,50 @@ METRIC_PERIOD_LABELS = {
     "NOT_APPLICABLE": "정량 수치 없음",
 }
 
+EDITORIAL_TRIAGE_HARM_TERMS = (
+    "피해", "불편", "어려움", "위축", "제약", "한계", "자부담",
+    "문을 닫", "폐쇄", "내몰", "중단", "미배정", "대기", "체불",
+    "쫓겨", "부담", "위협",
+)
+EDITORIAL_TRIAGE_ALLOWED_MISSING = {"수치 기준기간"}
+
+
+def context_hold_editorial_triage_reason(row: dict) -> str:
+    """Return a review reason for a strong HOLD without relaxing the context gate."""
+    missing = {
+        str(value).strip()
+        for value in row.get("context_missing_fields", [])
+        if str(value).strip()
+    }
+    required_text = " ".join(
+        str(row.get(field, ""))
+        for field in ("context_subject", "context_trigger", "context_text", "text")
+    )
+    signals = row.get("signals", {})
+    if row.get("source_id") != "council_minutes":
+        return ""
+    if row.get("context_status") != "HOLD":
+        return ""
+    if row.get("precheck_status") != "PASS" or row.get("freshness_status") != "FRESH":
+        return ""
+    if not missing or not missing.issubset(EDITORIAL_TRIAGE_ALLOWED_MISSING):
+        return ""
+    if not row.get("seoul_scope") or not row.get("source_date"):
+        return ""
+    if not all(row.get(field) for field in ("speaker", "context_subject", "affected_group", "url")):
+        return ""
+    if int(row.get("score", 0) or 0) < 8:
+        return ""
+    if not signals.get("problem") or not signals.get("loss"):
+        return ""
+    matched = [term for term in EDITORIAL_TRIAGE_HARM_TERMS if term in required_text]
+    if not matched:
+        return ""
+    return (
+        "사안·서울 범위·영향 대상과 구체 문제·손실 표현은 확인됐고 "
+        f"수치 기준기간만 미확인 · 직접 영향 표현: {', '.join(matched[:3])}"
+    )
+
 
 def status_label(mapping: dict[str, str], value: str) -> str:
     return mapping.get(value, value or "미확인")
@@ -459,6 +503,21 @@ def build_feed(
         8,
         near_duplicate=getattr(module, "near_duplicate_context", None),
     )
+    editorial_triage = unique_top(
+        [
+            {
+                **row,
+                "lane": "EDITORIAL_TRIAGE_HOLD",
+                "triage_status": "EDITOR_REVIEW",
+                "triage_reason": context_hold_editorial_triage_reason(row),
+                "question": "질문 생성 전 — 사안의 취재 착수 가치만 편집자가 판정",
+            }
+            for row in context_holds
+            if context_hold_editorial_triage_reason(row)
+        ],
+        5,
+        near_duplicate=getattr(module, "near_duplicate_context", None),
+    )
     freshness_holds = unique_top(
         [
             {**row, "lane": "FRESHNESS_HOLD", "question": discovery_question(row)}
@@ -579,6 +638,7 @@ def build_feed(
             ),
             "freshness_holds": len(freshness_holds),
             "context_holds": len(context_holds),
+            "editorial_triage": len(editorial_triage),
             "selected_verification": len(verification),
             "verification_metadata_leads": len(verification_leads),
             "verification_schema_leads": len(verification_schema_leads),
@@ -594,6 +654,7 @@ def build_feed(
         "archived_stale": archived_stale,
         "freshness_holds": freshness_holds,
         "context_holds": context_holds,
+        "editorial_triage": editorial_triage,
         "activity_baselines": activity_baselines,
         "verification_metadata_leads": verification_leads,
         "verification_schema_leads": verification_schema_leads,
@@ -917,6 +978,26 @@ def render_markdown(feed: dict) -> str:
                     f"- 원문: {row['url']}",
                     "- 선택: PROMISING / VERIFY / NOISE / DUPLICATE",
                     "- 현재 전이: 미승인 — 장부 변경 없음",
+                    "",
+                ]
+            )
+
+    editorial_triage = feed.get("editorial_triage", [])
+    lines.extend(["## 문맥 HOLD 중 편집 검토 가능 단서", ""])
+    lines.append(
+        "- 수치 기준기간은 미확인 상태로 유지하며 질문·S0·기사 게이트를 통과시키지 않음"
+    )
+    if not editorial_triage:
+        lines.extend(["- 오늘 자동 선별된 편집 검토 단서 없음", ""])
+    else:
+        for row in editorial_triage:
+            lines.extend(
+                [
+                    f"- 사안: {concise(row.get('context_subject', ''), 160)}",
+                    f"- 선별 이유: {row.get('triage_reason', '')}",
+                    f"- 발언 요지(미검증): {concise(row.get('text', ''), 180)}",
+                    f"- 빠진 항목: {', '.join(row.get('context_missing_fields', []))}",
+                    f"- 원문: {row.get('url', '')}",
                     "",
                 ]
             )
