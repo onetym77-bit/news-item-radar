@@ -9,6 +9,7 @@ from interpret_audit_l3 import (
     extract_finding_count,
     find_pdf_attachment,
     join_report_pages,
+    select_primary_finding,
     summary_window,
     validate_l3_output,
 )
@@ -159,7 +160,7 @@ class AuditL3Tests(unittest.TestCase):
         self.assertNotEqual(card["evidence_anchor"], "PROBLEM_SIGNAL")
         self.assertEqual(card["question_status"], "HOLD")
 
-    def test_explicit_rights_finding_outranks_contract_frequency(self):
+    def test_stronger_finding_outranks_first_rights_finding(self):
         mixed = """목차
 Ⅱ. 감사 지적사항 목록
 \f
@@ -169,9 +170,14 @@ class AuditL3Tests(unittest.TestCase):
 감사결과 총괄 조치(안)
 감사결과 일람표
 1 아동 인권침해 진정함 관리 미흡 통보
-2 공사 계약 부적정 주의
-3 물품 계약 부적정 주의
-4 용역 계약 부적정 주의
+2 입소아동 외출·외박에 대한 보호 및 공적 관리체계 강화 필요 주의 통보
+3 고위험군 아동 의료·심리치료 체계 개선 필요 통보
+4 공사 계약 부적정 주의
+\f
+처분요구서
+\f
+고위험군 아동 의료·심리치료 체계 개선 필요
+지정 의료기관의 이용과 입원이 지연되고 지속 사례관리가 필요함
 """
         card = build_card(
             self.listing_record,
@@ -180,8 +186,18 @@ class AuditL3Tests(unittest.TestCase):
             mixed,
         )
         self.assertEqual(card["question_status"], "READY_FOR_HUMAN_REVIEW")
-        self.assertIn("진정함 관리 미흡", card["verification_question"])
-        self.assertIn("진정 접수", card["discriminating_test"])
+        self.assertIn("고위험군 아동 의료·심리치료", card["selected_finding_title"])
+        self.assertIn("즉시 입원", card["verification_question"])
+        self.assertIn("지정병원", card["discriminating_test"])
+
+    def test_finding_selection_is_not_first_row_bias(self):
+        issue_text = """아동 인권침해 진정함 관리 미흡
+입소아동 외출·외박에 대한 보호 및 공적 관리체계 강화 필요
+고위험군 아동 의료·심리치료 체계 개선 필요"""
+        selected, score, count = select_primary_finding(issue_text)
+        self.assertEqual(count, 3)
+        self.assertGreater(score, 0)
+        self.assertIn("고위험군", selected)
 
     def test_missing_findings_summary_is_held(self):
         card = build_card(

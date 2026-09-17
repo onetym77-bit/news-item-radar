@@ -38,11 +38,16 @@ SCORE_FIELDS = (
 )
 READY_VERDICTS = {"START_REPORTING", "VERIFY", "REJECT"}
 HOLD_VERDICTS = {"CONFIRM_HOLD", "MISSED_VALUE"}
+DOCUMENT_VALUES = {"VALUABLE", "WEAK", "NO_VALUE"}
+ANGLE_SELECTIONS = {"RIGHT_ANGLE", "MISSED_STRONGER_FINDING", "NOT_APPLICABLE"}
 CRITICAL_ERRORS = {
     "NONE", "SCOPE_AS_FACT", "VICTIM_INFERRED", "SCOPE_OVERREACH",
     "KEYWORD_DISTORTION", "UNTESTABLE", "PARAPHRASE_ONLY", "OTHER",
 }
-REVIEW_COLUMNS = ("source_record_id", "verdict", *SCORE_FIELDS, "critical_error")
+REVIEW_COLUMNS = (
+    "source_record_id", "verdict", "document_value", "angle_selection",
+    *SCORE_FIELDS, "critical_error",
+)
 SAFE_HOST = "news.seoul.go.kr"
 RAW_KEYS = {"report_text", "pdf_bytes", "raw_pdf", "raw_report", "raw_html", "full_body"}
 
@@ -182,6 +187,20 @@ def read_reviews(path: Path, records: list[dict]) -> dict[str, dict]:
             allowed = READY_VERDICTS if card["question_status"] == "READY_FOR_HUMAN_REVIEW" else HOLD_VERDICTS
             if verdict not in allowed:
                 raise ValueError(f"invalid verdict for {record_id}")
+            document_value = (raw.get("document_value") or "").strip().upper()
+            angle_selection = (raw.get("angle_selection") or "").strip().upper()
+            if document_value not in DOCUMENT_VALUES:
+                raise ValueError(f"invalid document value for {record_id}")
+            if angle_selection not in ANGLE_SELECTIONS:
+                raise ValueError(f"invalid angle selection for {record_id}")
+            if card["question_status"] == "READY_FOR_HUMAN_REVIEW" and angle_selection == "NOT_APPLICABLE":
+                raise ValueError(f"ready record needs an angle judgment: {record_id}")
+            if angle_selection == "MISSED_STRONGER_FINDING" and document_value != "VALUABLE":
+                raise ValueError(f"missed stronger finding requires a valuable document: {record_id}")
+            if verdict == "MISSED_VALUE" and (
+                document_value != "VALUABLE" or angle_selection != "MISSED_STRONGER_FINDING"
+            ):
+                raise ValueError(f"missed value must identify a valuable document and missed angle: {record_id}")
             critical = (raw.get("critical_error") or "NONE").strip().upper()
             if critical not in CRITICAL_ERRORS:
                 raise ValueError(f"invalid critical error for {record_id}")
@@ -196,6 +215,8 @@ def read_reviews(path: Path, records: list[dict]) -> dict[str, dict]:
                     raise ValueError(f"held record must not have {field} score: {record_id}")
             reviews[record_id] = {
                 "verdict": verdict,
+                "document_value": document_value,
+                "angle_selection": angle_selection,
                 "scores": scores,
                 "critical_error": critical,
             }
@@ -223,6 +244,18 @@ def evaluate(state: dict, reviews: dict[str, dict]) -> dict:
     )
     startable = sum(review["verdict"] == "START_REPORTING" for _, review in ready_reviews)
     generic = sum(review["scores"]["specificity"] <= 1 for _, review in ready_reviews)
+    angle_eligible = [
+        review for _, review in ready_reviews
+        if review["document_value"] in {"VALUABLE", "WEAK"}
+    ]
+    right_angle = sum(review["angle_selection"] == "RIGHT_ANGLE" for review in angle_eligible)
+    missed_stronger = sum(
+        review["angle_selection"] == "MISSED_STRONGER_FINDING"
+        for review in reviews.values()
+    )
+    valuable_documents = sum(
+        review["document_value"] == "VALUABLE" for review in reviews.values()
+    )
     critical = sum(review["critical_error"] != "NONE" for review in reviews.values())
     complete = sum(
         bool(item["card"].get("verification_question"))
@@ -243,6 +276,9 @@ def evaluate(state: dict, reviews: dict[str, dict]) -> dict:
         "pdf_extraction_success_pct": percent(extracted, attempted),
         "grounding_and_scope_exact_pct": percent(grounded, len(ready_reviews)),
         "reporting_start_value_pct": percent(startable, len(ready_reviews)),
+        "angle_selection_accuracy_pct": percent(right_angle, len(angle_eligible)),
+        "missed_stronger_findings": missed_stronger,
+        "valuable_documents": valuable_documents,
         "generic_question_pct": percent(generic, len(ready_reviews)),
         "critical_errors": critical,
         "complete_question_structure_pct": percent(complete, len(ready)),
@@ -266,6 +302,7 @@ def evaluate(state: dict, reviews: dict[str, dict]) -> dict:
         (metrics["pdf_extraction_success_pct"] or 0) >= 80
         and (metrics["grounding_and_scope_exact_pct"] or 0) >= 90
         and (metrics["reporting_start_value_pct"] or 0) >= 60
+        and (metrics["angle_selection_accuracy_pct"] or 0) >= 90
         and metrics["generic_question_pct"] is not None
         and metrics["generic_question_pct"] <= 20
         and metrics["critical_errors"] == 0
@@ -326,7 +363,8 @@ def render_summary(state: dict, evaluation: dict, reviews: dict[str, dict]) -> s
         f"- 사람 판정: {m['human_reviews']}건; 전체 완료율 {metric_text(m['human_review_completion_pct'])}; 질문 완료율 {metric_text(m['ready_review_completion_pct'])}",
         f"- PDF 추출 성공률: {metric_text(m['pdf_extraction_success_pct'])}",
         f"- 근거·맥락 정확률: {metric_text(m['grounding_and_scope_exact_pct'])}; 취재 착수 가치: {metric_text(m['reporting_start_value_pct'])}",
-        f"- 상투적 질문 비율: {metric_text(m['generic_question_pct'])}; 중대 오류: {m['critical_errors']}건",
+        f"- 대표 각도 적중률: {metric_text(m['angle_selection_accuracy_pct'])}; 더 강한 지적 누락: {m['missed_stronger_findings']}건",
+        f"- 가치 있는 문서: {m['valuable_documents']}건; 상투적 질문 비율: {metric_text(m['generic_question_pct'])}; 중대 오류: {m['critical_errors']}건",
         "",
         "이 수치는 사람 판정이 없으면 품질 결론을 내리지 않습니다. 감사 목적은 피해 사실이 아닙니다.",
         "",
@@ -341,6 +379,11 @@ def render_summary(state: dict, evaluation: dict, reviews: dict[str, dict]) -> s
             "",
             f"- 문서 ID: {record_id}; 게시일: {card.get('published_at') or '미확인'}; 표본: {item['cohort']}",
             f"- 상태: {card['question_status']}; 사람 판정: {reviews.get(record_id, {}).get('verdict', '대기')}",
+            (
+                f"- 문서 가치/대표 각도: "
+                f"{reviews.get(record_id, {}).get('document_value', '대기')}/"
+                f"{reviews.get(record_id, {}).get('angle_selection', '대기')}"
+            ),
             f"- 독립 점검 표시: {', '.join(item['challenge_flags']) or '없음'}",
         ])
         if card.get("verification_question"):

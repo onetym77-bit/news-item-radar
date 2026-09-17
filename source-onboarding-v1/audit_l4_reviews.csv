@@ -1,1 +1,3 @@
-source_record_id,verdict,grounding,scope,citizen_impact,specificity,competing_hypotheses,testability,critical_error
+source_record_id,verdict,document_value,angle_selection,grounding,scope,citizen_impact,specificity,competing_hypotheses,testability,critical_error
+580883,START_REPORTING,VALUABLE,RIGHT_ANGLE,2,2,1,2,2,2,NONE
+580648,REJECT,VALUABLE,MISSED_STRONGER_FINDING,2,2,1,1,2,2,NONE
