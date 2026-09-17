@@ -136,7 +136,8 @@ class AuditL4ShadowTests(unittest.TestCase):
         state = state_with_records(3, 2)
         state["runs"][-1]["selected_ids"] = ["580003"]
         state["records"][2]["card"]["verification_question"] = (
-            "이 지적은 현장 운영을 바꿨나? 근거 자료를 길게 나열한다."
+            "농업기술센터 감사 감사에서 이 지적은 현장 운영을 바꿨나? "
+            "근거 자료를 길게 나열한다."
         )
         state["records"][2]["card"]["discriminating_test"] = "상세 검증 절차 비공개"
         state["records"][2]["challenge_flags"] = ["HUMAN_CHECK_ACTUAL_CITIZEN_EFFECT"]
@@ -146,7 +147,11 @@ class AuditL4ShadowTests(unittest.TestCase):
         summary = render_summary(state, result, reviews)
 
         self.assertIn("이번 실행: 새 문서 1건 · 질문 초안 1건", summary)
-        self.assertIn("핵심 질문: 이 지적은 현장 운영을 바꿨나?", summary)
+        self.assertIn(
+            "핵심 질문: 농업기술센터 감사에서 이 지적은 현장 운영을 바꿨나?",
+            summary,
+        )
+        self.assertNotIn("감사 감사에서", summary)
         self.assertIn("이전 문서의 사람 판정", summary)
         self.assertIn("서울시 감사 결과 580001", summary)
         self.assertNotIn("서울시 감사 결과 580002", summary)
