@@ -2,8 +2,8 @@
 """L3 semantic trial for Seoul audit reports.
 
 At most three recent official detail pages and their public PDF attachments are
-read. Only the first twelve PDF pages are converted to text in a temporary
-folder. Persisted output contains derived counts, categories, hashes, and
+read. Up to the first twenty-four PDF pages are converted to text in memory so
+finding titles can be compared before one representative angle is selected. Persisted output contains derived counts, categories, hashes, and
 verification-only questions; never the extracted report text, names, contacts,
 briefing entries, or ledger updates.
 """
@@ -30,7 +30,7 @@ from thin_source_contract import FORBIDDEN_KEYS, load_registry, walk_keys
 SOURCE_ID = "seoul_audit_results"
 MAX_DETAIL_RECORDS = 3
 MAX_PDF_BYTES = 20_000_000
-MAX_PDF_PAGES = 12
+MAX_PDF_PAGES = 24
 MAX_EXTRACTED_CHARS = 250_000
 PDF_TIMEOUT_SECONDS = 25
 
@@ -62,6 +62,17 @@ DOMAIN_PRIORITY = (
     "FINANCE_BENEFIT",
     "GOVERNANCE_CONTROL",
 )
+
+# Compare finding rows before generating one representative question. Concrete
+# observed harm, a clearly affected group, and a testable institutional failure
+# outrank the first row or a merely serious-sounding keyword.
+FINDING_IMPACT_TERMS = (
+    ("자살", 12), ("사망", 12), ("성폭력", 12), ("자해", 10), ("학대", 9),
+    ("고위험", 8), ("무단", 8), ("입소아동", 6), ("외출", 6), ("외박", 6),
+    ("의료", 5), ("심리치료", 5), ("안전", 5), ("수의계약", 5),
+    ("민원 처리 기한", 4), ("후원금", 4), ("계약", 3), ("진정함", 2),
+)
+FINDING_SELECTION_VERSION = "IMPACT_RANK_V2"
 
 
 def now_kst() -> str:
@@ -254,6 +265,55 @@ def classify_domains(issue_text: str) -> dict[str, int]:
     }
 
 
+def finding_candidates(issue_text: str) -> list[str]:
+    candidates = []
+    seen = set()
+    for raw in issue_text.splitlines():
+        value = re.sub(r"^\s*\d+\s*", "", raw).strip(" -·")
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        candidates.append(value)
+    return candidates
+
+
+def finding_impact_score(finding: str) -> int:
+    score = sum(weight for term, weight in FINDING_IMPACT_TERMS if term in finding)
+    if any(term in finding for term in ("필요", "부적정", "미흡", "소홀", "위반")):
+        score += 1
+    return score
+
+
+def select_primary_finding(issue_text: str) -> tuple[str | None, int, int]:
+    candidates = finding_candidates(issue_text)
+    if not candidates:
+        return None, 0, 0
+    ranked = [
+        (finding_impact_score(finding), -index, finding)
+        for index, finding in enumerate(candidates)
+    ]
+    score, _, selected = max(ranked)
+    return selected, score, len(candidates)
+
+
+def finding_context_window(report_text: str, finding: str | None) -> str:
+    """Use a second title occurrence and following pages as bounded context."""
+    if not finding:
+        return ""
+    signature = re.sub(r"[^0-9A-Za-z가-힣]", "", finding)[:18]
+    if len(signature) < 6:
+        return ""
+    pages = report_text.split("\f")
+    matches = [
+        index for index, page in enumerate(pages)
+        if signature in re.sub(r"[^0-9A-Za-z가-힣]", "", normalize_report_text(page))
+    ]
+    start = matches[1] if len(matches) > 1 else matches[0] if matches else -1
+    if start < 0:
+        return ""
+    return "\n".join(normalize_report_text(page) for page in pages[start:start + 4])[:40_000]
+
+
 def subject_from_title(title: str) -> str:
     value = re.sub(
         r"\s*(기관운영|관리[·ㆍ ]운영 실태|관리운영 실태|종합|특정)?\s*감사\s*결과\s*(공개문)?\s*$",
@@ -293,8 +353,38 @@ def dominant_domain(domain_counts: dict[str, int], issue_text: str = "") -> str 
     ) if any(domain_counts.get(domain, 0) for domain in DOMAIN_PRIORITY) else None
 
 
-def question_components(subject: str, domain: str, issue_text: str = "") -> dict:
-    if domain == "RIGHTS_SAFETY" and "진정함" in issue_text:
+def question_components(
+    subject: str, domain: str, selected_finding: str = "", finding_context: str = ""
+) -> dict:
+    evidence = selected_finding + "\n" + finding_context
+    if domain == "RIGHTS_SAFETY" and (
+        "고위험군 아동" in selected_finding or "의료·심리치료" in selected_finding
+    ):
+        return {
+            "verification_question": (
+                f"{subject} 감사에서 지적된 고위험군 아동 의료·심리치료 체계는 위기 때 "
+                "즉시 입원·전문치료·지속 사례관리를 실제로 제공했나? 지정 의료기관의 "
+                "이용·입원·대기 기록과 시설별 전문인력·사례관리 기간을 대조하면 "
+                "개별 병원 문제가 아니라 공적 치료체계의 공백인지 가를 수 있는가?"
+            ),
+            "public_interest_to_verify": "보호아동의 긴급치료 접근성과 치료 연속성",
+            "structural_hypothesis": "지정기관·전문인력·사례관리의 연결 공백이 위기 대응을 지연시킨다.",
+            "alternative_hypothesis": "일부 고난도 사례의 일시적 병상 부족이었고 평상시 치료체계는 작동했다.",
+            "minimum_test": "시설별 치료 대상·전문인력, 지정병원 이용·입원·대기, 사례관리 종료 기록을 같은 기간으로 대조한다.",
+        }
+    if domain == "RIGHTS_SAFETY" and ("외출" in selected_finding or "외박" in selected_finding):
+        return {
+            "verification_question": (
+                f"{subject} 감사에서 확인된 입소아동 외출·외박 관리 공백은 한 시설의 "
+                "규정 위반인가, 서울시 위탁시설 공통의 감독 기준 부재인가? 시설별 승인·거부·"
+                "무단 외출·제재 기록과 아동 의사 확인 절차를 비교하면 어느 설명이 남는가?"
+            ),
+            "public_interest_to_verify": "보호아동의 안전과 자기결정권",
+            "structural_hypothesis": "통일된 승인·제재·아동 의사 확인 절차의 부재가 보호 공백을 만들었다.",
+            "alternative_hypothesis": "이미 규정은 충분했고 특정 시설·외부인의 단발성 위반이었다.",
+            "minimum_test": "감사 대상 시설별 외출·외박 승인, 거부, 위반, 제재와 아동 의사 확인 기록을 비교한다.",
+        }
+    if domain == "RIGHTS_SAFETY" and "진정함" in evidence:
         return {
             "verification_question": (
                 f"{subject} 감사가 지적한 인권침해 진정함 관리 미흡은 입소 아동이 "
@@ -372,11 +462,15 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
     finding_count = extract_finding_count(window)
     dispositions, disposition_counts = extract_dispositions(window)
     issue_text = issue_evidence_text(window)
-    domain_counts = classify_domains(issue_text)
-    domain = dominant_domain(domain_counts, issue_text)
-    documented_issue = bool(issue_text)
-    domain_strength = domain_counts.get(domain, 0) if domain else 0
-    critical_issue = any(term in issue_text for term in CRITICAL_ISSUE_TERMS)
+    all_domain_counts = classify_domains(issue_text)
+    selected_finding, selection_score, candidate_count = select_primary_finding(issue_text)
+    selected_text = selected_finding or ""
+    selected_domain_counts = classify_domains(selected_text)
+    domain = dominant_domain(selected_domain_counts, selected_text)
+    documented_issue = bool(selected_finding)
+    domain_strength = selected_domain_counts.get(domain, 0) if domain else 0
+    critical_issue = any(term in selected_text for term in CRITICAL_ISSUE_TERMS)
+    context = finding_context_window(report_text, selected_finding)
     anchor_ready = bool(
         summary_confirmed
         and documented_issue
@@ -404,8 +498,12 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
         "official_finding_count": finding_count,
         "disposition_terms": dispositions,
         "disposition_counts": disposition_counts,
-        "risk_domains": sorted(domain_counts),
-        "risk_domain_counts": domain_counts,
+        "risk_domains": sorted(all_domain_counts),
+        "risk_domain_counts": all_domain_counts,
+        "selected_finding_title": selected_finding,
+        "finding_candidate_count": candidate_count,
+        "finding_selection_score": selection_score,
+        "finding_selection_version": FINDING_SELECTION_VERSION,
         "evidence_anchor": anchor,
         "freshness_days": freshness,
         "why_now": "NEW_OFFICIAL_REPORT" if freshness is not None and 0 <= freshness <= 30 else "RECENT_REPORT_SAMPLE",
@@ -426,13 +524,17 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
             }
         )
         return base
-    components = question_components(subject, domain, issue_text)
+    components = question_components(subject, domain, selected_text, context)
     count_phrase = f"{finding_count}건의 처분요구" if finding_count else "복수의 처분요구"
     base.update(
         {
             "question_status": "READY_FOR_HUMAN_REVIEW",
             "hold_reason": None,
-            "source_frame": f"공개 감사보고서가 {subject}에서 {count_phrase}와 {', '.join(dispositions[:4])} 조치를 제시함",
+            "source_frame": (
+                f"공개 감사보고서가 {subject}에서 {count_phrase}와 "
+                f"{', '.join(dispositions[:4])} 조치를 제시했고, 대표 검증 지적으로 "
+                f"'{selected_finding}'을 선택함"
+            ),
             "editorial_addition": "지적의 존재를 반복하지 않고 감사 이후 실제 운영 변화와 반복 구조를 검증",
             "verification_question": components["verification_question"],
             "public_interest_to_verify": components["public_interest_to_verify"],
@@ -516,9 +618,9 @@ def collect_l3(
         else html_fetcher(source["official_url"])
     )
     coverage = (
-        "BOUNDED_SELECTED_RECORDS_FIRST_12_PDF_PAGES"
+        "BOUNDED_SELECTED_RECORDS_FIRST_24_PDF_PAGES"
         if selected_records is not None
-        else "FIRST_LIST_PAGE_FIRST_3_PUBLIC_PDFS_FIRST_12_PAGES"
+        else "FIRST_LIST_PAGE_FIRST_3_PUBLIC_PDFS_FIRST_24_PAGES"
     )
     cards = []
     counters = {
@@ -611,7 +713,7 @@ def render_summary(payload: dict) -> str:
     lines = [
         "# 서울시 감사 결과 L3 의미 해석 시험",
         "",
-        "감사 공개문 원문은 저장하지 않고, 앞 12쪽에서 파생한 요약 신호로 검증 질문만 만들었습니다.",
+        "감사 공개문 원문은 저장하지 않고, 최대 24쪽에서 지적 후보를 비교해 대표 검증 질문만 만들었습니다.",
         "",
         f"- 접근: {payload['access_status']}",
         f"- 상세/PDF/텍스트 성공: {d.get('detail_requested', 0)}/{d.get('pdf_found', 0)}/{d.get('pdf_extracted', 0)}",
@@ -629,6 +731,7 @@ def render_summary(payload: dict) -> str:
                 f"- 공식 지적 건수: {card.get('official_finding_count') if card.get('official_finding_count') is not None else '미확인'}",
                 f"- 처분 유형: {', '.join(card.get('disposition_terms', [])) or '미확인'}",
                 f"- 문제 영역: {', '.join(card.get('risk_domains', [])) or '미확인'}",
+                f"- 선택한 대표 지적: {card.get('selected_finding_title') or '미확인'}",
             ]
         )
         if card.get("verification_question"):
