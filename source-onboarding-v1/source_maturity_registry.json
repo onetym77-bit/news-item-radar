@@ -165,7 +165,7 @@
       "raw_personal_text_persisted": false,
       "approved_for_production": false,
       "evaluation": null,
-      "note": "L3 의미 해석을 유지하면서 매일 최대 3개 미평가 감사 문서를 7일 그림자 평가. 최소 12개 고유 문서와 사람 판정 80%를 충족해도 자동 L4 승격·브리핑·장부 연결 금지"
+      "note": "L3 의미 해석을 유지하면서 매일 최대 3개 미평가 감사 문서를 7일 그림자 평가. 문서 가치와 대표 각도를 분리 판정하며 최소 12개 고유 문서, 사람 판정 80%, 대표 각도 적중률 기준을 충족해도 자동 L4 승격·브리핑·장부 연결 금지"
     },
     {
       "source_id": "official_sns_network",
