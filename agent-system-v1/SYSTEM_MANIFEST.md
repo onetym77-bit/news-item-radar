@@ -1,4 +1,4 @@
-# 서울 기획 아이템 발굴 시스템 v2.5 — 활성 구성
+# 서울 기획 아이템 발굴 시스템 v2.6 — 활성 구성
 
 기준일: 2026-09-17
 
@@ -24,6 +24,8 @@
 | 신규 소스 L0 미통과 접속 재시험 | source-onboarding-v1/probe_l0_batch.py |
 | 신규 소스 L0 수동·PR 읽기 전용 실행 | .github/workflows/source-onboarding-l0-batch.yml |
 | 신규 소스 L1 목록 표본 수집 | source-onboarding-v1/collect_l1_batch.py |
+| 넓은 신규 소스 시험·비교 규격 | source-onboarding-v1/WIDE_SOURCE_SCREENING.md |
+| 신규 소스 공통 비교 점수표 | source-onboarding-v1/source_batch_scorecard.py |
 | 신규 소스 L1 수동·PR 읽기 전용 실행 | .github/workflows/source-onboarding-l1-batch.yml |
 | 서울시 감사 결과 L2 본문 구조 표본 | source-onboarding-v1/collect_audit_l2.py |
 | 서울시 감사 결과 L2 수동·PR 읽기 전용 실행 | .github/workflows/source-onboarding-audit-l2.yml |

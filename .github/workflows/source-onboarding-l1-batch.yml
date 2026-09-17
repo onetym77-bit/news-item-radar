@@ -36,17 +36,28 @@ jobs:
         run: python -X utf8 -m unittest discover -s source-onboarding-v1 -p 'test_*.py' -v
       - name: Collect at most twenty listing records per source
         run: python -X utf8 source-onboarding-v1/collect_l1_batch.py --output-dir source-onboarding-v1/output/l1-batch
+      - name: Build cross-source technical scorecard
+        run: >-
+          python -X utf8 source-onboarding-v1/source_batch_scorecard.py
+          --observation source-onboarding-v1/output/l1-batch/l1_batch.json
+          --output-dir source-onboarding-v1/output/source-scorecard
       - name: Publish inventory summary
         if: always()
         run: |
           if [ -f source-onboarding-v1/output/l1-batch/SUMMARY.md ]; then
             cat source-onboarding-v1/output/l1-batch/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f source-onboarding-v1/output/source-scorecard/SUMMARY.md ]; then
+            printf '\n---\n\n' >> "$GITHUB_STEP_SUMMARY"
+            cat source-onboarding-v1/output/source-scorecard/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Upload bounded listing inventory
         if: always()
         uses: actions/upload-artifact@v6
         with:
           name: thin-source-l1-batch-${{ github.run_id }}
-          path: source-onboarding-v1/output/l1-batch/
+          path: |
+            source-onboarding-v1/output/l1-batch/
+            source-onboarding-v1/output/source-scorecard/
           if-no-files-found: error
           retention-days: 7

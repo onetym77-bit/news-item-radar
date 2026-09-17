@@ -107,6 +107,18 @@ class SourceMaturityTests(unittest.TestCase):
         errors = validate_thin_observation(observation, self.registry)
         self.assertTrue(any("verified date is empty" in error for error in errors))
 
+    def test_thin_observation_caps_samples_at_twenty(self):
+        observation = self.valid_observation()
+        template = observation["records"][0]
+        observation["records"] = []
+        for index in range(21):
+            record = copy.deepcopy(template)
+            record["source_record_id"] = str(index)
+            record["detail_url"] = f"https://idea.seoul.go.kr/item/{index}"
+            observation["records"].append(record)
+        errors = validate_thin_observation(observation, self.registry)
+        self.assertTrue(any("at most 20 records" in error for error in errors))
+
     def test_excerpt_is_bounded(self):
         observation = self.valid_observation()
         observation["records"][0]["bounded_excerpt"] = "가" * 261
