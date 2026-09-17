@@ -365,7 +365,7 @@ def review_label(review: dict | None, card: dict) -> str:
         return "편집 판정 대기" if card.get("verification_question") else "보류"
     labels = {
         "START_REPORTING": "취재 착수",
-        "VERIFY": "추가 확인",
+        "VERIFY": "사례·규모 확인",
         "REJECT": "이번 질문 제외",
         "CONFIRM_HOLD": "보류 유지",
         "MISSED_VALUE": "가치 있는 지적 재탐색",

@@ -11,6 +11,7 @@ from audit_l4_shadow import (
     initial_state,
     read_reviews,
     render_summary,
+    review_label,
     select_unseen,
     validate_state,
 )
@@ -76,6 +77,16 @@ def top_scores() -> dict:
 
 
 class AuditL4ShadowTests(unittest.TestCase):
+    def test_verify_label_names_the_missing_editorial_evidence(self):
+        review = {
+            "verdict": "VERIFY",
+            "document_value": "VALUABLE",
+            "angle_selection": "RIGHT_ANGLE",
+            "scores": {},
+            "critical_error": "NONE",
+        }
+        self.assertEqual(review_label(review, card("578391")), "사례·규모 확인")
+
     def test_unseen_selection_prefers_recent_then_backfill(self):
         rows = [
             record("1", "감사 결과 1", "https://news.seoul.go.kr/gov/archives/1", "2026-04-10", "VERIFIED", NOW.isoformat()),

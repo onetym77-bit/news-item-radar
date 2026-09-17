@@ -32,6 +32,9 @@
 `source-onboarding-v1/audit_l4_reviews.csv`의 한 행은 고유 문서 ID 하나다. 자동 실행은 이 파일을 쓰지 않는다.
 
 - 질문이 생성된 문서의 verdict: `START_REPORTING`, `VERIFY`, `REJECT`. 여섯 점수는 각각 0~2점으로 모두 입력한다.
+- `START_REPORTING`은 확인된 피해자·영향 사례, 실제 금전 손실·부당 지급, 서비스 차질, 실제 집행된 규정 위반, 또는 반복성과 범위 자체가 독립적으로 기사 가치가 있는 경우에만 사용한다.
+- 중대한 안전·권리 위험이라도 실제 취업제한 대상자, 피해 사례 또는 반복 범위가 아직 확인되지 않았다면 우선 `VERIFY`로 두고 사례·규모를 확인한다. 이는 위험의 중요도를 낮춘다는 뜻이 아니라 기사 단계의 차이다.
+- `citizen_impact=2`는 실제 영향이나 피해 사례가 확인된 상태, `1`은 노출 가능성 또는 절차상 위험만 확인된 상태, `0`은 시민 영향 연결이 확인되지 않은 상태다.
 - `document_value`: `VALUABLE`, `WEAK`, `NO_VALUE`. 문서에 취재 가치가 있는지 질문 선택과 분리한다.
 - `angle_selection`: `RIGHT_ANGLE`, `MISSED_STRONGER_FINDING`, `NOT_APPLICABLE`. 가치 있는 문서에서 약한 지적을 대표로 골랐다면 `MISSED_STRONGER_FINDING`으로 남긴다.
 - 보류 문서의 verdict: `CONFIRM_HOLD`, `MISSED_VALUE`. 점수는 비운다. `MISSED_VALUE`는 가치 있는 문서와 더 강한 지적 누락을 함께 표시한다.
