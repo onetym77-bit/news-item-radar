@@ -17,7 +17,7 @@ BASE = Path(__file__).resolve().parent
 ROOT = BASE.parent
 sys.path.insert(0, str(BASE))
 
-from collect_l1_batch import collect_one as collect_audit_listing
+from collect_l1_batch import collect_one as collect_audit_listing, fetch_html as fetch_listing_html, parse_environment
 from probe_l0_batch import build_observation as probe_access, fetch_url
 from source_batch_scorecard import build_scorecard, render_summary
 from thin_source_contract import load_registry, validate_thin_observation
@@ -114,6 +114,42 @@ def collect_citizen(source: dict, observed_at: str, fetcher=None, parser=None) -
     }
 
 
+def probe_environment_l1_readiness(source: dict, observed_at: str, fetcher=fetch_listing_html) -> dict:
+    status, html_text, fetch_diagnostics = fetcher(source["official_url"])
+    diagnostics = dict(fetch_diagnostics)
+    if html_text is None:
+        resolved = []
+        parse_diagnostics = {
+            "candidate_count": None,
+            "unresolved_detail_url_count": None,
+            "date_missing_count": None,
+        }
+    else:
+        resolved, parse_diagnostics = parse_environment(
+            html_text, source["official_url"], observed_at
+        )
+    diagnostics.update(parse_diagnostics)
+    diagnostics["resolved_detail_url_count"] = len(resolved)
+    readiness = (
+        "READY_FOR_L1_PROMOTION"
+        if resolved and not parse_diagnostics.get("unresolved_detail_url_count")
+        else "L1_ADAPTER_REVIEW"
+    )
+    return {
+        "schema": 1,
+        "source_id": source["source_id"],
+        "maturity": source["maturity"],
+        "collected_at_kst": observed_at,
+        "source_url": source["official_url"],
+        "access_status": status if html_text is not None else "FAILED",
+        "coverage": "ACCESS_ONLY_L1_LINK_READINESS",
+        "records": [],
+        "interpretation_status": "NOT_EVALUATED",
+        "technical_readiness": readiness,
+        "diagnostics": diagnostics,
+    }
+
+
 def probe_district(source: dict, observed_at: str, fetcher=fetch_url, source_set: list[dict] | None = None) -> dict:
     if source_set is None:
         source_set = json.loads((ROOT / source["source_set_path"]).read_text(encoding="utf-8"))
@@ -133,6 +169,10 @@ def probe_district(source: dict, observed_at: str, fetcher=fetch_url, source_set
     partial = sum(status == "PARTIAL" for _, status, _ in outcomes)
     failed = sum(status == "FAILED" for _, status, _ in outcomes)
     access = "SUCCESS" if success == len(outcomes) else "PARTIAL" if success or partial else "FAILED"
+    failed_rows = [
+        {"id": council_id, "access_status": status, "error_code": error}
+        for council_id, status, error in outcomes if status != "SUCCESS"
+    ]
     return {
         "schema": 1, "source_id": source["source_id"], "maturity": source["maturity"],
         "collected_at_kst": observed_at, "source_url": source_set[0]["list_url"],
@@ -144,6 +184,10 @@ def probe_district(source: dict, observed_at: str, fetcher=fetch_url, source_set
             "council_access_success": success,
             "council_access_partial": partial,
             "council_access_failed": failed,
+            "council_failure_summary": ", ".join(
+                f"{row['id']}:{row['error_code'] or row['access_status']}"
+                for row in failed_rows
+            )[:500],
             "councils": [
                 {"id": council_id, "access_status": status, "error_code": error}
                 for council_id, status, error in outcomes
@@ -165,6 +209,7 @@ def failed_observation(source: dict, observed_at: str, stage: str, exc: Exceptio
 
 def collect(registry: dict, observed_at: str, *,
             access_probe=probe_access,
+            environment_probe=probe_environment_l1_readiness,
             audit_collector=collect_audit_listing,
             citizen_collector=collect_citizen,
             district_probe=probe_district) -> list[dict]:
@@ -176,7 +221,9 @@ def collect(registry: dict, observed_at: str, *,
             "environment_assessment", "opengov_approvals", "district_councils_25"
         } else "FIRST_OFFICIAL_LIST_PAGE_MAX_20"
         try:
-            if source_id in {"environment_assessment", "opengov_approvals"}:
+            if source_id == "environment_assessment":
+                row = environment_probe(source, observed_at)
+            elif source_id == "opengov_approvals":
                 row = access_probe(source, collected_at=observed_at)
             elif source_id == "seoul_audit_results":
                 row = audit_collector(source, observed_at)
