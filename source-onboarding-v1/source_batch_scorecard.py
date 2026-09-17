@@ -249,6 +249,16 @@ def render_summary(scorecard: dict) -> str:
             f"{percent(metrics.get('review_completion_rate'))} | {percent(metrics.get('useful_signal_rate'))} | "
             f"{row['technical_gate']} | {row['editorial_gate']} |"
         )
+        diagnostics = row.get("diagnostics") or {}
+        error_code = diagnostics.get("error_code")
+        if error_code:
+            lines.append(f"| ↳ 접속·파싱 상태 |  |  |  |  |  |  | {error_code} |  |")
+        if diagnostics.get("council_total"):
+            lines.append(
+                f"| ↳ 자치구의회 접속 |  | {diagnostics.get('council_total')}곳 |  |  |  |  | "
+                f"성공 {diagnostics.get('council_access_success', 0)} · 부분 {diagnostics.get('council_access_partial', 0)} · "
+                f"실패 {diagnostics.get('council_access_failed', 0)} |  |"
+            )
         for error in row.get("errors") or []:
             lines.append(f"| ↳ 검증 오류 |  |  |  |  |  |  | {error} |  |")
     lines.extend([
