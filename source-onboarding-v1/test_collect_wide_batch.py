@@ -1,6 +1,6 @@
 import unittest
 
-from collect_wide_batch import collect, collect_citizen, probe_district
+from collect_wide_batch import collect, collect_citizen, probe_district, probe_environment_l1_readiness
 from thin_source_contract import load_registry, validate_thin_observation
 
 
@@ -28,6 +28,24 @@ class WideBatchTests(unittest.TestCase):
         self.assertNotIn("central_question", str(row))
         self.assertNotIn("bounded_excerpt", str(row))
 
+    def test_environment_unresolved_links_are_not_fabricated_as_records(self):
+        html = """
+        <h2>공고/공람</h2>
+        <a href="#" onclick="goNews('1234567890123')">환경평가 공람</a> 2026-09-17
+        <h2>자료실</h2>
+        """
+        row = probe_environment_l1_readiness(
+            self.sources["environment_assessment"],
+            self.observed_at,
+            fetcher=lambda _url: (
+                "SUCCESS", html, {"error_code": None, "http_status": 200}
+            ),
+        )
+        self.assertEqual(row["records"], [])
+        self.assertEqual(row["technical_readiness"], "L1_ADAPTER_REVIEW")
+        self.assertEqual(row["diagnostics"]["unresolved_detail_url_count"], 1)
+        self.assertEqual(validate_thin_observation(row, self.registry), [])
+
     def test_district_probe_is_access_only_for_all_twenty_five(self):
         source_set = [
             {"id": f"d{i}", "list_url": f"https://council{i}.go.kr/list"}
@@ -49,6 +67,7 @@ class WideBatchTests(unittest.TestCase):
         self.assertEqual(row["diagnostics"]["council_total"], 25)
         self.assertEqual(row["diagnostics"]["council_access_success"], 24)
         self.assertEqual(row["diagnostics"]["council_access_failed"], 1)
+        self.assertIn("d24:TIMEOUT", row["diagnostics"]["council_failure_summary"])
         self.assertEqual(validate_thin_observation(row, self.registry), [])
 
     def test_one_source_failure_does_not_abort_the_batch(self):
@@ -80,7 +99,7 @@ class WideBatchTests(unittest.TestCase):
             }
         rows = collect(
             self.registry, self.observed_at,
-            access_probe=access, audit_collector=audit,
+            access_probe=access, environment_probe=lambda source, observed_at: access(source, observed_at), audit_collector=audit,
             citizen_collector=citizen, district_probe=district,
         )
         self.assertEqual(len(rows), 5)
