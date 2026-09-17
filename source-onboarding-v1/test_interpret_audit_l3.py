@@ -246,6 +246,7 @@ class AuditL3Tests(unittest.TestCase):
 주의(기관경고) 이행 완료
 2 DDP 노출콘크리트 보수공사 부적정 서울디자인재단
 주의 이행 완료
+13 지각․조퇴․외출 및 유연근무 운영 개선 필요 서울디자인재단 통보 이행 중
 \f
 Ⅲ. 감사결과 처분요구서
 """
@@ -260,6 +261,8 @@ class AuditL3Tests(unittest.TestCase):
         self.assertTrue(card["summary_table_confirmed"])
         self.assertTrue(card["documented_issue_in_table"])
         self.assertEqual(card["official_finding_count"], 29)
+        self.assertIn("DDP 루프탑", card["selected_finding_title"])
+        self.assertNotIn("유연근무", card["selected_finding_title"])
         self.assertNotEqual(
             card.get("hold_reason"),
             "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
