@@ -39,11 +39,12 @@ class FrozenReviewTests(unittest.TestCase):
     def write_reviews(self, path, labels):
         with path.open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(
-                handle, fieldnames=["source_id", "source_record_id", "label", "reviewed_on", "note"]
+                handle, fieldnames=["source_run_id", "source_id", "source_record_id", "label", "reviewed_on", "note"]
             )
             writer.writeheader()
             for card, label in zip(self.cards, labels):
                 writer.writerow({
+                    "source_run_id": "35202083001",
                     "source_id": card["source_id"],
                     "source_record_id": card["source_record_id"],
                     "label": label,
@@ -59,7 +60,7 @@ class FrozenReviewTests(unittest.TestCase):
             reviews_path = root / "reviews.csv"
             self.write_reviews(reviews_path, ["PROMISING", "", "", "", "", ""])
             snapshot, digest = load_snapshot(snapshot_path)
-            result = evaluate(snapshot, digest, reviews_path)
+            result = evaluate(snapshot, digest, reviews_path, "35202083001")
             self.assertEqual(result["human_review_count"], 1)
             self.assertEqual(result["interpretation_status"], "HUMAN_REVIEW_INCOMPLETE")
             self.assertIsNone(result["source_winner"])
@@ -70,10 +71,17 @@ class FrozenReviewTests(unittest.TestCase):
             root = Path(temp_dir)
             reviews_path = root / "reviews.csv"
             self.write_reviews(reviews_path, ["PROMISING", "VERIFY", "NOISE"] * 2)
-            result = evaluate(self.snapshot, "a" * 64, reviews_path)
+            result = evaluate(self.snapshot, "a" * 64, reviews_path, "35202083001")
             self.assertEqual(result["interpretation_status"], "PILOT_DESCRIPTIVE_ONLY")
             self.assertIsNone(result["source_winner"])
             self.assertEqual(result["metrics"][0]["reviewed_count"], 3)
+
+    def test_review_sheet_for_different_run_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "reviews.csv"
+            self.write_reviews(path, [""] * 6)
+            with self.assertRaises(ValueError):
+                evaluate(self.snapshot, "a" * 64, path, "35202083002")
 
     def test_raw_body_in_snapshot_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -87,12 +95,12 @@ class FrozenReviewTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             path = Path(temp_dir) / "reviews.csv"
             path.write_text(
-                "source_id,source_record_id,label,reviewed_on,note\n"
-                "citizen_proposals,not-in-snapshot,PROMISING,2026-09-18,\n",
+                "source_run_id,source_id,source_record_id,label,reviewed_on,note\n"
+                "35202083001,citizen_proposals,not-in-snapshot,PROMISING,2026-09-18,\n",
                 encoding="utf-8",
             )
             with self.assertRaises(ValueError):
-                evaluate(self.snapshot, "a" * 64, path)
+                evaluate(self.snapshot, "a" * 64, path, "35202083001")
 
 
 if __name__ == "__main__":
