@@ -355,6 +355,7 @@ def metric_text(value: float | None) -> str:
 def concise_question(value: str, limit: int = 180) -> str:
     """Show the editorial question, not the attached evidence or test plan."""
     first = (value or "").split("?", 1)[0].strip()
+    first = first.replace("감사 감사에서", "감사에서")
     question = first + "?" if first else "질문 미작성"
     return question if len(question) <= limit else question[: limit - 1].rstrip() + "…"
 
