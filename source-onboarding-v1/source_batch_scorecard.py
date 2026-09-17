@@ -71,11 +71,19 @@ def load_reviews(path: Path | None) -> tuple[list[dict], list[str]]:
 
 def technical_gate(observation: dict, sample_count: int, body_rate: float | None) -> str:
     access = observation.get("access_status")
-    if access in {"FAILED", "NOT_ATTEMPTED"}:
+    if access == "NOT_ATTEMPTED":
+        return "REGISTER_OFFICIAL_SOURCE"
+    if access == "FAILED":
         return "RETRY_ACCESS"
+    if str(observation.get("coverage", "")).startswith("ACCESS_ONLY"):
+        if observation.get("technical_readiness") == "READY_FOR_L1_REVIEW":
+            return "READY_FOR_L1_REVIEW"
+        if observation.get("technical_readiness") == "GROUP_ACCESS_REVIEW":
+            return "REVIEW_GROUP_ACCESS"
+        return "KEEP_L0"
     maturity = observation.get("maturity", "L0")
     if maturity == "L0":
-        return "L0_PROBE_ONLY"
+        return "KEEP_L0"
     if sample_count == 0:
         return "FIX_LISTING"
     if body_rate is None:
@@ -136,6 +144,7 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
     records = observation["records"]
     sample_count = len(records)
     failed_access = observation["access_status"] in {"FAILED", "NOT_ATTEMPTED"}
+    access_only = str(observation["coverage"]).startswith("ACCESS_ONLY")
     verified_dates = sum(row["published_at_status"] == "VERIFIED" for row in records)
     detail_attempts = sum(row["body_status"] != "NOT_FETCHED" for row in records)
     accessible = sum(
@@ -153,7 +162,7 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
     ]
     counts = Counter(row["label"] for row in matching_reviews)
     editorial, review_metrics = editorial_gate(sample_count, counts)
-    if observation["maturity"] == "L0" or body_rate is None or body_rate < 0.6:
+    if access_only or observation["maturity"] == "L0" or body_rate is None or body_rate < 0.6:
         editorial = "NOT_READY_FOR_EDITORIAL_REVIEW"
     diagnostics = observation.get("diagnostics") or {}
     candidate_count = diagnostics.get("candidate_count")
@@ -171,6 +180,12 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
         "candidate_count": None if failed_access else candidate_count,
         "record_access_rate": None if failed_access else ratio(accessible, detail_attempts),
         "detail_attempt_count": detail_attempts,
+        "coverage": observation["coverage"],
+        "diagnostics": {
+            key: diagnostics[key]
+            for key in ("error_code", "council_total", "council_access_success", "council_access_partial", "council_access_failed")
+            if key in diagnostics
+        },
         "verified_date_rate": None if failed_access else ratio(verified_dates, sample_count),
         "body_available_rate": None if failed_access else body_rate,
         "unique_content_rate": None if failed_access else ratio(unique_fingerprints, sample_count),
@@ -234,6 +249,16 @@ def render_summary(scorecard: dict) -> str:
             f"{percent(metrics.get('review_completion_rate'))} | {percent(metrics.get('useful_signal_rate'))} | "
             f"{row['technical_gate']} | {row['editorial_gate']} |"
         )
+        diagnostics = row.get("diagnostics") or {}
+        error_code = diagnostics.get("error_code")
+        if error_code:
+            lines.append(f"| ↳ 접속·파싱 상태 |  |  |  |  |  |  | {error_code} |  |")
+        if diagnostics.get("council_total"):
+            lines.append(
+                f"| ↳ 자치구의회 접속 |  | {diagnostics.get('council_total')}곳 |  |  |  |  | "
+                f"성공 {diagnostics.get('council_access_success', 0)} · 부분 {diagnostics.get('council_access_partial', 0)} · "
+                f"실패 {diagnostics.get('council_access_failed', 0)} |  |"
+            )
         for error in row.get("errors") or []:
             lines.append(f"| ↳ 검증 오류 |  |  |  |  |  |  | {error} |  |")
     lines.extend([
@@ -241,6 +266,7 @@ def render_summary(scorecard: dict) -> str:
         "## 판정 해석",
         "",
         "- RETRY_ACCESS는 자료 0건이 아니라 접근 실패로 인한 미판정입니다.",
+        "- READY_FOR_L1_REVIEW는 접속 시험을 통과했지만 목록 표본은 아직 미확인인 상태입니다.",
         "- READY_FOR_L2_SAMPLE은 본문 표본 단계로 이동할 기술 조건만 뜻합니다.",
         "- DEEPEN_CANDIDATE·AUXILIARY_CANDIDATE·STOP_OR_VERIFY_ONLY_CANDIDATE는 사람 검토 표본에 근거한 제안이며 자동 승격이 아닙니다.",
         "- 편집 판정에는 표본의 80% 이상과 최소 10건(전체 표본이 10건 미만이면 전수) 검토가 필요합니다.",
