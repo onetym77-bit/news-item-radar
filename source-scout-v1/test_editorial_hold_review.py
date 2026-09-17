@@ -45,6 +45,10 @@ class EditorialHoldReviewTests(unittest.TestCase):
             "anchor_text": "위기 10대 여성 지원 시설",
             "editorial_question": "대체 지원이 보호 공백을 메우는가?",
             "first_check": "폐쇄 시설과 보호 정원을 확인",
+            "countercheck": "대체 시설의 숙박 기능을 확인",
+            "continue_rule": "공백과 이용 사례가 함께 확인",
+            "narrow_rule": "수용량이 유지되면 접근성으로 축소",
+            "stop_rule": "동등한 대체 보호가 확인되면 보류",
         }]
         result = injector.render(feed, {}, leads)
         editorial = result.split("## C-실험.", 1)[0]
@@ -53,6 +57,10 @@ class EditorialHoldReviewTests(unittest.TestCase):
         self.assertIn("미확인: 수치 기준기간", editorial)
         self.assertIn("발언 요지(미검증)", editorial)
         self.assertIn("이 영역은 A·B 기사·검증 게이트와 별개", editorial)
+        self.assertIn("반대 설명 확인: 대체 시설의 숙박 기능을 확인", editorial)
+        self.assertIn("지속 조건: 공백과 이용 사례가 함께 확인", editorial)
+        self.assertIn("축소 조건: 수용량이 유지되면 접근성으로 축소", editorial)
+        self.assertIn("보류 조건: 동등한 대체 보호가 확인되면 보류", editorial)
         self.assertNotIn("S0 전이 승인 대기", editorial)
 
     def test_missing_current_source_is_flagged(self):
