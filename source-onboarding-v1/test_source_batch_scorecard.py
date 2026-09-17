@@ -68,6 +68,23 @@ class SourceBatchScorecardTests(unittest.TestCase):
         self.assertEqual(result["sources"][0]["technical_gate"], "RETRY_ACCESS")
         self.assertNotEqual(result["sources"][1]["technical_gate"], "INVALID_OBSERVATION")
 
+    def test_l1_listing_cannot_receive_editorial_value_judgment(self):
+        observation = self.observation(source_id="district_councils_25", count=10)
+        observation["source_url"] = "https://example.go.kr/list"
+        labels = ["PROMISING"] * 10
+        row = score_observation(
+            observation,
+            self.registry,
+            self.reviews("district_councils_25", labels),
+        )
+        self.assertEqual(row["technical_gate"], "READY_FOR_L2_SAMPLE")
+        self.assertEqual(row["editorial_gate"], "NOT_READY_FOR_EDITORIAL_REVIEW")
+
+    def test_wide_screening_rejects_more_than_twenty_records(self):
+        row = score_observation(self.observation(count=21), self.registry, [])
+        self.assertEqual(row["technical_gate"], "INVALID_OBSERVATION")
+        self.assertIn("exceeds 20", " ".join(row["errors"]))
+
     def test_no_human_labels_means_no_editorial_value_judgment(self):
         row = score_observation(self.observation(), self.registry, [])
         self.assertEqual(row["editorial_gate"], "NOT_EVALUATED")
