@@ -211,7 +211,7 @@ def render_equal_summary(observations: list[dict], scorecard: dict) -> str:
             f"{row['detail_success_count']} | {row['title_aligned_count']} | "
             f"{row['detail_text_available_count']} | {row['verified_date_count']} | "
             f"{row['unique_content_count']} | "
-            f"{row['median_detail_text_chars_observed'] if row['median_body_chars_observed'] is not None else '-'} |"
+            f"{row['median_detail_text_chars_observed'] if row['median_detail_text_chars_observed'] is not None else '-'} |"
         )
     lines.extend([
         "",
