@@ -84,7 +84,7 @@ class EqualL2SampleTests(unittest.TestCase):
         metrics = common_metrics(observation)
         self.assertEqual(metrics["sample_target"], SAMPLE_SIZE)
         self.assertEqual(metrics["sample_count"], SAMPLE_SIZE)
-        self.assertEqual(metrics["body_available_count"], SAMPLE_SIZE)
+        self.assertEqual(metrics["detail_text_available_count"], SAMPLE_SIZE)
         self.assertEqual(metrics["title_aligned_count"], SAMPLE_SIZE)
         self.assertEqual(metrics["editorial_value_status"], "HUMAN_REVIEW_REQUIRED")
 
