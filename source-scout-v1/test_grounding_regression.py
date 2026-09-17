@@ -507,11 +507,12 @@ class GroundingRegressionTests(unittest.TestCase):
             "verification_map": [],
         }
         rendered = inject.render(feed_payload, {})
-        self.assertIn("활동량 기준선 — 후보 아님", rendered)
-        self.assertIn("전일·전월 누적 비교 전", rendered)
-        self.assertIn("데이터셋 후보 — 스키마·값 미확인", rendered)
-        self.assertIn("데이터 구조 확인 — 실제 값 미수집", rendered)
-        self.assertIn("검증 자산 사용 금지", rendered)
+        self.assertIn("### 보류 요약", rendered)
+        self.assertIn("활동량 기준선 1건", rendered)
+        self.assertIn("실제 값 미확인 데이터 2건", rendered)
+        self.assertNotIn("민원 현황판 오늘 4,714건", rendered)
+        self.assertNotIn("서울시 장애인 버스요금 환급지급 인원수", rendered)
+        self.assertNotIn("서울 대기오염 측정정보", rendered)
 
     def test_protest_end_is_not_service_interruption(self):
         result = self.signals(
@@ -876,9 +877,10 @@ class GroundingRegressionTests(unittest.TestCase):
             "verification_map": [],
         }
         rendered = inject.render(payload, {})
-        self.assertIn("### 보완 발굴원", rendered)
-        self.assertIn("출처: 서울연구원 정책·연구 자료", rendered)
-        self.assertNotIn("보조 발굴원 — 서울시 응답소", rendered)
+        self.assertIn("### 오늘 검토할 후보", rendered)
+        self.assertIn("서울연구원 정책·연구 자료", rendered)
+        self.assertIn("기획 질문: 어디에 집중됐는가?", rendered)
+        self.assertNotIn("서울 돌봄 공백 120건", rendered)
 
 
     def test_generic_axis_and_total_table_is_not_a_data_row(self):
@@ -1125,10 +1127,11 @@ class GroundingRegressionTests(unittest.TestCase):
             "verification_map": [],
         }
         rendered = inject.render(payload, {})
-        self.assertIn("소스 연결·본문 상태", rendered)
-        self.assertIn("certificate verify failed", rendered)
-        self.assertIn("STALE_CARRYOVER — 오늘 후보 제외", rendered)
-        self.assertIn("오늘 카드·재활성화·S0 제안 제외", rendered)
+        self.assertIn("### 수집 이상", rendered)
+        self.assertIn("한국소비자원 피해·분쟁 자료: FETCH_FAILED", rendered)
+        self.assertNotIn("certificate verify failed", rendered)
+        self.assertIn("신선도 초과 1건", rendered)
+        self.assertNotIn("오래된 서울 피해 37건", rendered)
 
 
     def test_current_month_period_is_clamped_to_today(self):
