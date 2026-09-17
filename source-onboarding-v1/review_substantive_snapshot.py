@@ -78,7 +78,7 @@ def render(result: dict) -> str:
         "# 고정 표본 사람 판정 결과",
         "",
         f"- 원본 수집: {result['source_collected_at_kst']}",
-        f"- 고정 표본 SHA-256: \`{result['source_snapshot_sha256']}\`",
+        f"- 고정 표본 SHA-256: {result['source_snapshot_sha256']}",
         "- 후속 재수집 없이 원본 3건씩에만 사람 판정을 결합했습니다.",
         "- 이 표본은 흐름 검증용입니다. 3건씩의 비율로 우수 소스나 운영 편입을 결정하지 않습니다.",
         "",
@@ -109,6 +109,8 @@ def render(result: dict) -> str:
 
 
 def run(snapshot_path: Path, reviews_path: Path, output_dir: Path) -> dict:
+    if not reviews_path.is_file():
+        raise FileNotFoundError("human review CSV not found")
     snapshot, digest = load_snapshot(snapshot_path)
     result = evaluate(snapshot, digest, reviews_path)
     output_dir.mkdir(parents=True, exist_ok=True)
