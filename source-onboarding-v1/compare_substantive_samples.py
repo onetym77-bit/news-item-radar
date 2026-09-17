@@ -41,25 +41,37 @@ def bounded_redacted(module, value: str | None) -> str | None:
     return redacted or None
 
 
+def citizen_body_text(text: str) -> str | None:
+    """Remove proposal-page controls and byline before selecting a review excerpt."""
+    policy_at = text.find("정책분류")
+    if 0 <= policy_at <= 3000 and "시민의견" in text[:policy_at]:
+        remainder = text[policy_at + len("정책분류"):].strip()
+        category_and_body = remainder.split(None, 1)
+        if len(category_and_body) != 2:
+            return None
+        text = category_and_body[1]
+    elif "스크랩 공유" in text[:1500] or "시민의견" in text[:1500]:
+        # A changed page layout must not turn controls or an author byline into evidence.
+        return None
+    for boundary in ("관련 제안", "다른 제안", "댓글 목록", "의견 목록"):
+        position = text.find(boundary)
+        if position > 0:
+            text = text[:position]
+    text = re.sub(r"\s+", " ", text).strip()
+    return text if len(text) >= 30 else None
+
+
 def citizen_review_excerpt(module, title: str, text: str, classified: dict) -> str | None:
     anchor = module.evidence_anchor(text, classified["statement_type"], classified["matched_basis"])
     if anchor.get("excerpt"):
         return bounded_redacted(module, anchor["excerpt"])
     basis = classified.get("matched_basis") or {}
-    terms = (
-        basis.get("friction_terms", [])
-        + basis.get("idea_terms", [])
-        + basis.get("hearsay_terms", [])
-        + basis.get("first_person_terms", [])
-    )
-    positions = [text.find(term) for term in terms if term and text.find(term) >= 0]
-    if positions:
-        start = max(0, min(positions) - 70)
-        return bounded_redacted(module, text[start:start + 420])
-    normalized_title = re.sub(r"\s+", " ", title).strip()
-    start = text.find(normalized_title)
-    start = start + len(normalized_title) if start >= 0 else 0
-    return bounded_redacted(module, text[start:start + 420])
+    for group in ("friction_terms", "first_person_terms", "hearsay_terms", "idea_terms"):
+        positions = [text.find(term) for term in basis.get(group, []) if term and text.find(term) >= 0]
+        if positions:
+            start = max(0, min(positions) - 40)
+            return bounded_redacted(module, text[start:start + 340])
+    return None
 
 
 def audit_cards(source: dict, observed_at: str, *, collector=collect_l3, citizen_module=None) -> tuple[list[dict], dict]:
@@ -116,6 +128,7 @@ def citizen_cards(source: dict, observed_at: str, *, module=None, fetcher=None) 
         try:
             detail_html, _ = fetcher(proposal["source_url"])
             detail_text = module.relevant_detail_text(detail_html, proposal["title"])
+            detail_text = citizen_body_text(detail_text) if detail_text is not None else None
         except Exception:
             detail_text = None
         if detail_text is None:
@@ -156,13 +169,13 @@ def read_reviews(path: Path | None, cards: list[dict]) -> dict[tuple[str, str], 
     reviews = {}
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
-        if tuple(reader.fieldnames or ()) != REVIEW_COLUMNS:
-            raise ValueError("review CSV columns do not match the fixed schema")
+        if not set(REVIEW_COLUMNS).issubset(reader.fieldnames or []):
+            raise ValueError("review CSV is missing required columns")
         for line, raw in enumerate(reader, start=2):
             source_id = (raw.get("source_id") or "").strip()
             record_id = (raw.get("source_record_id") or "").strip()
             label = (raw.get("label") or "").strip().upper()
-            if not source_id and not record_id and not label:
+            if not label:
                 continue
             key = (source_id, record_id)
             if key not in allowed:
@@ -204,9 +217,10 @@ def source_metrics(cards: list[dict], source_id: str) -> dict:
         "unreadable_count": labels["UNREADABLE"],
         "useful_signal_rate": round(useful / reviewed, 4) if reviewed else None,
         "editorial_result": (
-            "HUMAN_REVIEW_REQUIRED"
-            if reviewed < len(rows)
-            else "COMPARABLE_SAMPLE_COMPLETE"
+            "SOURCE_UNAVAILABLE" if not rows else
+            "SAMPLE_INCOMPLETE" if len(rows) < SAMPLE_SIZE else
+            "HUMAN_REVIEW_REQUIRED" if reviewed < len(rows) else
+            "COMPARABLE_SAMPLE_COMPLETE"
         ),
     }
 
