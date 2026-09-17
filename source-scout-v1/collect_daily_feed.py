@@ -637,13 +637,14 @@ def pending_review_window_open(
         first_seen = date.fromisoformat(row.get("first_seen", "").strip())
         source_date = date.fromisoformat(row.get("source_date", "").strip())
         as_of = date.fromisoformat(today)
+        freshness_window = int(row.get("freshness_window_days", ""))
     except ValueError:
         return False
     age_days = (as_of - first_seen).days
+    source_age_days = (as_of - source_date).days
     return (
         0 <= age_days < max(window_days, 1)
-        and source_date <= as_of
-        and 0 <= (as_of - source_date).days <= 14
+        and 0 <= source_age_days <= freshness_window
     )
 
 
