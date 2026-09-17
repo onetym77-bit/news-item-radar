@@ -49,6 +49,46 @@ class EditorialReviewTests(unittest.TestCase):
         payload = review.build_review([row], [])
         self.assertEqual(payload["review_cards"], [])
 
+    def test_duplicate_pending_question_family_shows_once(self):
+        first = {
+            **self.base_row(),
+            "candidate_id": "old",
+            "url": "https://example.invalid/old",
+            "context_subject": "서울 시내버스 통상임금",
+            "question": "최종 비용 부담자는 누구인가?",
+            "auto_active_today": "false",
+            "review_eligible": "true",
+            "last_seen": "2026-09-16",
+        }
+        second = {
+            **first,
+            "candidate_id": "new",
+            "url": "https://example.invalid/new",
+            "auto_active_today": "true",
+            "last_seen": "2026-09-17",
+        }
+        payload = review.build_review([first, second], [])
+        self.assertEqual(len(payload["review_cards"]), 1)
+        self.assertEqual(payload["review_cards"][0]["candidate_id"], "new")
+
+    def test_reviewed_family_hides_its_unreviewed_duplicate(self):
+        reviewed = {
+            **self.base_row(),
+            "candidate_id": "reviewed",
+            "context_subject": "서울 전세사기 피해",
+            "question": "피해는 어디에 집중되는가?",
+            "editor_judgment": "VERIFY",
+        }
+        pending = {
+            **reviewed,
+            "candidate_id": "pending",
+            "editor_judgment": "",
+            "url": "https://example.invalid/duplicate",
+        }
+        payload = review.build_review([reviewed, pending], [])
+        self.assertEqual(len(payload["review_cards"]), 1)
+        self.assertEqual(payload["review_cards"][0]["candidate_id"], "reviewed")
+
     def test_incomplete_promising_is_blocked(self):
         row = {**self.base_row(), "editor_judgment": "PROMISING"}
         payload = review.build_review([row], [])
