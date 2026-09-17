@@ -622,15 +622,29 @@ def pending_review_window_open(
     if row.get("lane", "").strip().upper() not in {
         "CORE_DISCOVERY",
         "AUX_DISCOVERY",
-    } and row.get("review_eligible", "").strip().lower() != "true":
+    }:
+        return False
+    if row.get("grounding_status", "").strip().upper() != "PASS":
+        return False
+    if row.get("freshness_status", "").strip().upper() != "FRESH":
+        return False
+    if (
+        row.get("source_id", "").strip() == "council_minutes"
+        and row.get("context_status", "").strip().upper() != "PASS"
+    ):
         return False
     try:
         first_seen = date.fromisoformat(row.get("first_seen", "").strip())
+        source_date = date.fromisoformat(row.get("source_date", "").strip())
         as_of = date.fromisoformat(today)
     except ValueError:
         return False
     age_days = (as_of - first_seen).days
-    return 0 <= age_days < max(window_days, 1)
+    return (
+        0 <= age_days < max(window_days, 1)
+        and source_date <= as_of
+        and 0 <= (as_of - source_date).days <= 14
+    )
 
 
 def update_review_queue(feed: dict) -> None:
