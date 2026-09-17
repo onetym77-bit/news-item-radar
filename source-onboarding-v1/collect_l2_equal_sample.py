@@ -173,6 +173,16 @@ def common_metrics(observation: dict) -> dict:
         for row in records
         if row.get("content_fingerprint")
     }
+    attachment_links = sum(
+        int(row.get("attachment_link_count_not_fetched") or 0) for row in records
+    )
+    substantive_scope = (
+        "ATTACHMENT_REQUIRED_FOR_FINDINGS"
+        if observation["source_id"] == "seoul_audit_results" and attachment_links
+        else "DETAIL_PAGE_BODY"
+        if observation["source_id"] == "citizen_proposals"
+        else "DETAIL_PAGE_TEXT_ONLY"
+    )
     return {
         "source_id": observation["source_id"],
         "sample_target": SAMPLE_SIZE,
@@ -183,9 +193,8 @@ def common_metrics(observation: dict) -> dict:
         "verified_date_count": sum(row.get("published_at_status") == "VERIFIED" for row in records),
         "unique_content_count": len(unique),
         "median_detail_text_chars_observed": int(statistics.median(lengths)) if lengths else None,
-        "attachment_links_not_fetched": sum(
-            int(row.get("attachment_link_count_not_fetched") or 0) for row in records
-        ),
+        "attachment_links_not_fetched": attachment_links,
+        "substantive_body_scope": substantive_scope,
         "editorial_value_status": "HUMAN_REVIEW_REQUIRED",
     }
 
@@ -201,8 +210,8 @@ def render_equal_summary(observations: list[dict], scorecard: dict) -> str:
         "",
         "두 소스 모두 공식 목록 상단의 고유 항목 5건과 각 공식 상세 화면만 읽었습니다. 첨부파일, 원문 전체, 작성자명·연락처, 질문·기사 판정은 저장하지 않았습니다.",
         "",
-        "| 소스 | 목표/확보 | 상세 성공 | 제목 대응 | 상세 텍스트 확인 | 날짜 검증 | 고유 응답 | 상세 텍스트 길이 중앙값 |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|",
+        "| 소스 | 목표/확보 | 상세 성공 | 제목 대응 | 상세 텍스트 확인 | 날짜 검증 | 실질 본문 위치 | 상세 텍스트 길이 중앙값 |",
+        "|---|---:|---:|---:|---:|---:|---|---:|",
     ]
     for row in metrics:
         lines.append(
@@ -210,7 +219,7 @@ def render_equal_summary(observations: list[dict], scorecard: dict) -> str:
             f"{row['sample_target']}/{row['sample_count']} | "
             f"{row['detail_success_count']} | {row['title_aligned_count']} | "
             f"{row['detail_text_available_count']} | {row['verified_date_count']} | "
-            f"{row['unique_content_count']} | "
+            f"{row['substantive_body_scope']} | "
             f"{row['median_detail_text_chars_observed'] if row['median_detail_text_chars_observed'] is not None else '-'} |"
         )
     lines.extend([
@@ -241,9 +250,11 @@ def render_equal_summary(observations: list[dict], scorecard: dict) -> str:
             )
         lines.append("")
     lines.extend([
-        "## 기술 점수표",
+        "## 공통 판정",
         "",
-        render_scorecard(scorecard),
+        "- 두 소스 모두 5건의 상세 화면까지 안정적으로 도달했습니다.",
+        "- 감사 결과는 실질 지적 내용이 첨부 공개문에 있어 첨부 확인 전 편집 표본으로 간주할 수 없습니다.",
+        "- 시민제안은 상세 화면에서 제안문을 읽을 수 있지만, 게시일 확정과 사실 검증은 별도입니다.",
     ])
     return "\n".join(lines)
 
