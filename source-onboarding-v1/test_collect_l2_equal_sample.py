@@ -6,6 +6,7 @@ from collect_l2_equal_sample import (
     collect,
     collect_citizen,
     common_metrics,
+    render_equal_summary,
 )
 from thin_source_contract import FORBIDDEN_KEYS, load_registry, validate_thin_observation, walk_keys
 
@@ -87,6 +88,18 @@ class EqualL2SampleTests(unittest.TestCase):
         self.assertEqual(metrics["detail_text_available_count"], SAMPLE_SIZE)
         self.assertEqual(metrics["title_aligned_count"], SAMPLE_SIZE)
         self.assertEqual(metrics["editorial_value_status"], "HUMAN_REVIEW_REQUIRED")
+
+    def test_summary_does_not_call_detail_text_a_verified_finding(self):
+        module = self.citizen_module()
+        observation = collect_citizen(
+            self.sources["citizen_proposals"], self.observed_at,
+            module=module,
+            fetcher=lambda _url: ("<html>공식 화면</html>", "c" * 64),
+        )
+        summary = render_equal_summary([observation], {"sources": []})
+        self.assertIn("상세 텍스트 확인", summary)
+        self.assertIn("기술적 접근과 실질 문제 단서 확보는 별개의 단계", summary)
+        self.assertNotIn("유효 단서 5건", summary)
 
     def test_combined_collection_keeps_editorial_value_unjudged(self):
         def factory(source_id):
