@@ -253,8 +253,16 @@ def extract_dispositions(window: str) -> tuple[list[str], dict[str, int]]:
 
 
 def issue_evidence_text(window: str) -> str:
-    """Limit semantic classification to finding rows, not titles or audit scope."""
-    lines = [line.strip() for line in window.splitlines() if ISSUE_MARKERS.search(line)]
+    """Limit classification to official finding rows, not titles or audit scope."""
+    lines = []
+    for raw in window.splitlines():
+        line = raw.strip()
+        numbered_disposition = (
+            re.match(r"^\d{1,3}\s+", line)
+            and any(term in line for term in DISPOSITION_TERMS)
+        )
+        if ISSUE_MARKERS.search(line) or numbered_disposition:
+            lines.append(line)
     return "\n".join(lines)
 
 
