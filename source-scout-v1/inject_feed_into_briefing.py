@@ -46,6 +46,45 @@ METRIC_PERIOD_LABELS = {
 DEFAULT_EDITORIAL_LEADS = ROOT / "source-scout-v1" / "editorial-decisions" / "selected_reporting_leads.json"
 
 
+def matches_selected_lead(row: dict, leads: list[dict]) -> bool:
+    joined = row.get("text", "") + " " + row.get("context_text", "")
+    return any(
+        lead.get("anchor_text")
+        and row.get("source_id") == lead.get("source_id")
+        and row.get("url") == lead.get("source_url")
+        and lead["anchor_text"] in joined
+        for lead in leads
+    )
+
+
+def render_automatic_editorial_triage(feed: dict, leads: list[dict]) -> list[str]:
+    """Expose strong HOLDs for human review without creating questions or transitions."""
+    rows = feed.get("editorial_triage", [])
+    lines = [
+        "## 자동 선별 · 문맥 HOLD 편집 검토",
+        "",
+        "**사안·범위·영향 대상은 확인됐지만 일부 수치의 기준기간이 비어 있는 단서다. 취재 가치만 사람이 판단하며 질문 PASS·S0·기사 후보로 자동 승격하지 않는다.**",
+        "",
+    ]
+    if not rows:
+        return lines + ["- 오늘 자동 선별된 단서 없음", ""]
+    for index, row in enumerate(rows, 1):
+        selected = " · 기존 사람 선택과 일치" if matches_selected_lead(row, leads) else ""
+        missing = ", ".join(row.get("context_missing_fields", [])) or "세부 문맥"
+        lines.extend([
+            f"### {index}. {md(row.get('context_subject') or row.get('text', ''), 100)}",
+            "",
+            f"- 자동 판정: 편집 검토 가능{selected}",
+            f"- 선별 이유: {md(row.get('triage_reason', ''), 260)}",
+            f"- 발언 요지(미검증): {md(row.get('text', ''), 200)}",
+            f"- 아직 확인할 것: {md(missing, 140)}",
+            f"- 발언자·문서일: {md(row.get('speaker', ''), 80)} · {row.get('speech_date') or '미확인'}",
+            f"- [원문]({row.get('url', '')})",
+            "",
+        ])
+    return lines
+
+
 def render_editorial_review(feed: dict, leads: list[dict]) -> list[str]:
     """Show human-selected reporting leads without changing any question or article gate."""
     if not leads:
@@ -126,14 +165,19 @@ def render(feed: dict, review: dict | None = None, editorial_leads: list[dict] |
     metadata_leads = feed.get("verification_metadata_leads", [])
     schema_leads = feed.get("verification_schema_leads", [])
     verification = feed.get("verification_map", [])
-    lines = render_editorial_review(feed, editorial_leads or []) + [
+    selected_leads = editorial_leads or []
+    lines = (
+        render_automatic_editorial_triage(feed, selected_leads)
+        + render_editorial_review(feed, selected_leads)
+        + [
         "## C-실험. 신규 소스 질문 씨앗",
         "",
         "**아래 항목은 S0 이전 자동 탐색 결과다. 기사 후보나 검증된 사실로 간주하지 않는다.**",
         "",
         "자동 분류·수집 정렬점수와 사람의 편집 판정은 서로 다른 값이다.",
         "",
-    ]
+        ]
+    )
     unhealthy = [
         metric
         for metric in feed.get("metrics", [])
