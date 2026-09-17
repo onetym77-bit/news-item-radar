@@ -55,7 +55,7 @@ DOMAIN_TERMS = {
     ),
 }
 CRITICAL_ISSUE_TERMS = ("학대", "방임", "자해", "성폭력", "사망", "개인정보 유출", "성범죄 경력 확인")
-ISSUE_MARKERS = re.compile(r"부적정|미흡|소홀|위반|지연|불이행|부족|개선\s*필요")
+ISSUE_MARKERS = re.compile(r"부적정|미흡|소홀|위반|지연|불이행|부족|개선\s*필요|미준수|사실상의\s*수의계약")
 
 DOMAIN_PRIORITY = (
     "RIGHTS_SAFETY",
