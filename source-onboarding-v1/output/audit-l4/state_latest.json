@@ -34,6 +34,32 @@
         "listing_candidate_count": 3,
         "listing_error_code": null
       }
+    },
+    {
+      "run_date_kst": "2026-09-17",
+      "run_id": "35190735180",
+      "listing_status": "SUCCESS",
+      "listing_diagnostics": {
+        "listing_pages_attempted": 2,
+        "listing_pages_successful": 2,
+        "listing_errors": [],
+        "eligible_listing_records": 18
+      },
+      "selected_ids": [
+        "579279",
+        "579067",
+        "578391"
+      ],
+      "diagnostics": {
+        "detail_requested": 3,
+        "pdf_found": 3,
+        "pdf_extracted": 3,
+        "ready_questions": 1,
+        "held_questions": 2,
+        "raw_reports_persisted": 0,
+        "listing_candidate_count": 3,
+        "listing_error_code": null
+      }
     }
   ],
   "records": [
@@ -202,6 +228,193 @@
       },
       "challenge_flags": [
         "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "579279",
+      "first_seen_kst": "2026-09-17",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "579279",
+        "title": "서울주택도시개발공사 특정감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/579279?listPage=1",
+        "published_at": "2026-07-10",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/07/6a504dfe287129.19809546.pdf",
+        "attachment_sha256": "728648b6c39d10f0aede6ebe2be93d65dc9497cfe82fdf82e89a21128afa7685",
+        "report_text_sha256": "26b1c8fd84b334c329becc1438c92e304930e3c015465cb5227634320c1156b2",
+        "pdf_pages_sampled": 10,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": true,
+        "documented_issue_in_table": true,
+        "dominant_domain_evidence_count": 1,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": 1,
+        "disposition_terms": [
+          "시정"
+        ],
+        "disposition_counts": {
+          "시정": 1
+        },
+        "risk_domains": [
+          "FINANCE_BENEFIT",
+          "PROCUREMENT_CONTRACT",
+          "RIGHTS_SAFETY"
+        ],
+        "risk_domain_counts": {
+          "RIGHTS_SAFETY": 1,
+          "PROCUREMENT_CONTRACT": 1,
+          "FINANCE_BENEFIT": 1
+        },
+        "selected_finding_title": "공무국외출장 여비 산정 및 심사 등 부적정 서울주택도시개발공사 시정 이행 중",
+        "finding_candidate_count": 1,
+        "finding_selection_score": 1,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 69,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "구체 지적은 확인했지만 기획 질문 생성 기준에 미달",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "579067",
+      "first_seen_kst": "2026-09-17",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "579067",
+        "title": "서울디자인재단 종합감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/579067?listPage=1",
+        "published_at": "2026-06-26",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/06/6a3e0110be78b0.23289934.pdf",
+        "attachment_sha256": "4e993513f4e00dc542e896ef7a1c518fa9cc3d841ca30036f647fcb57131b70d",
+        "report_text_sha256": "da4898b34c9b333679b7aaa24b6a05a82faea3efe68c00213f9844c6161d2fb5",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": true,
+        "documented_issue_in_table": true,
+        "dominant_domain_evidence_count": 1,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": 29,
+        "disposition_terms": [
+          "시정",
+          "주의",
+          "개선",
+          "통보",
+          "기관경고"
+        ],
+        "disposition_counts": {
+          "시정": 1,
+          "주의": 12,
+          "통보": 16
+        },
+        "risk_domains": [
+          "GOVERNANCE_CONTROL",
+          "PROCUREMENT_CONTRACT",
+          "RIGHTS_SAFETY"
+        ],
+        "risk_domain_counts": {
+          "RIGHTS_SAFETY": 2,
+          "PROCUREMENT_CONTRACT": 3,
+          "GOVERNANCE_CONTROL": 1
+        },
+        "selected_finding_title": "DDP 루프탑 투어 동선 확장공사 등 부적정 서울디자인재단 주의(기관경고) 이행 완료 통보 이행 완료",
+        "finding_candidate_count": 12,
+        "finding_selection_score": 9,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 83,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "구체 지적은 확인했지만 기획 질문 생성 기준에 미달",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "578391",
+      "first_seen_kst": "2026-09-17",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "578391",
+        "title": "서울특별시 농업기술센터 기관운영 감사",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/578391?listPage=1",
+        "published_at": "2026-06-12",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/06/6a2121400b1291.65090813.pdf",
+        "attachment_sha256": "51bf3a05a3675bed8a1de05dbe79ed09f649ef556047aff2e1299d2e2f77519b",
+        "report_text_sha256": "96f193101b9dcea53e545eeadbe4326e1830905478bf430bbb5cdd41cf787208",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": true,
+        "documented_issue_in_table": true,
+        "dominant_domain_evidence_count": 1,
+        "critical_issue_term_confirmed": true,
+        "official_finding_count": null,
+        "disposition_terms": [
+          "시정",
+          "주의",
+          "개선",
+          "권고",
+          "통보",
+          "징계"
+        ],
+        "disposition_counts": {
+          "통보": 2,
+          "주의": 2
+        },
+        "risk_domains": [
+          "GOVERNANCE_CONTROL",
+          "RIGHTS_SAFETY"
+        ],
+        "risk_domain_counts": {
+          "RIGHTS_SAFETY": 2,
+          "GOVERNANCE_CONTROL": 9
+        },
+        "selected_finding_title": "관리 유치원·학교 파견강사 성범죄 경력 확인 절차 개선 필요 - 통보(2)",
+        "finding_candidate_count": 5,
+        "finding_selection_score": 27,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "PROBLEM_SIGNAL",
+        "freshness_days": 97,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "READY_FOR_HUMAN_REVIEW",
+        "hold_reason": null,
+        "source_frame": "공개 감사보고서가 서울특별시 농업기술센터에서 복수의 처분요구와 시정, 주의, 개선, 권고 조치를 제시했고, 대표 검증 지적으로 '관리 유치원·학교 파견강사 성범죄 경력 확인 절차 개선 필요 - 통보(2)'을 선택함",
+        "editorial_addition": "지적의 존재를 반복하지 않고 감사 이후 실제 운영 변화와 반복 구조를 검증",
+        "verification_question": "서울특별시 농업기술센터가 유치원·학교에 파견한 강사의 성범죄 경력은 누가 채용 전에 확인했나? 기관이 서약서에 의존하고 일부 학교도 공공기관 파견을 이유로 조회하지 않았다면, 확인 책임의 공백이 다른 학교 파견 사업에도 반복되는가?",
+        "public_interest_to_verify": "아동 대상 대면 교육 강사의 취업제한 확인 절차",
+        "competing_hypotheses": [
+          "파견 기관과 학교 사이에 법정 조회 책임이 빠졌다.",
+          "해당 프로그램의 일부 학교만 조회를 누락했고 다른 파견 사업은 확인했다."
+        ],
+        "discriminating_test": "파견 학교별 채용 전 경력조회 회신과 강사 배치·계약 기록을 같은 기간으로 대조한다.",
+        "minimum_test_timebox": "24시간 이내",
+        "discard_condition": "후속 자료에서 지적이 단일 절차 오류로 종결됐고 실제 결과·반복성이 확인되지 않으면 질문을 폐기"
+      },
+      "challenge_flags": [
+        "FINDING_COUNT_UNCONFIRMED",
+        "HISTORICAL_BACKFILL_NOT_TODAY",
+        "HUMAN_CHECK_ACTUAL_CITIZEN_EFFECT",
+        "HUMAN_CHECK_AUDIT_SCOPE_VS_FINDING"
       ]
     }
   ]
