@@ -7,7 +7,7 @@
 1. 위 실행의 요약에서 각 카드의 짧은 검토 문장과 공식 원문 링크를 확인한다. 감사 문서는 대표 지적뿐 아니라 다른 지적 후보도 살핀다.
 2. 판정을 이 대화에서 알려주거나 `source-onboarding-v1/substantive_reviews_2026-09-17.csv`의 `label` 열에 기록한다. `source_run_id`는 35202083001로 고정한다. 다른 실행의 판정표를 섞으면 재계산이 실패한다. 자동 실행은 이 파일을 수정하지 않는다.
 3. 판정한 행의 `reviewed_on`에 실제 판정일을 넣는다. `note`는 근거·더 강한 지적·빠진 사례를 300자 이내로 적되 개인 식별정보를 쓰지 않는다.
-4. main의 `Review frozen substantive source sample` 수동 실행을 시작한다. 기본 run ID는 35202083001이다. 실행은 같은 artifact를 내려받아 판정만 결합하고 요약을 생성한다.
+4. 판정표 변경이 main에 병합되면 `Review frozen substantive source sample`이 읽기 전용으로 자동 실행된다. 수동 재실행도 가능하며 기본 run ID는 35202083001이다. 실행은 같은 artifact를 내려받아 판정만 결합하고 요약을 생성한다.
 
 ## 같은 판정 기준
 
