@@ -8,8 +8,10 @@ from __future__ import annotations
 
 import argparse
 import copy
+import csv
 import hashlib
 import json
+import re
 from pathlib import Path
 
 from compare_substantive_samples import (
@@ -42,7 +44,20 @@ def load_snapshot(path: Path) -> tuple[dict, str]:
     return payload, digest
 
 
-def evaluate(snapshot: dict, digest: str, reviews_path: Path) -> dict:
+def validate_review_source_run(reviews_path: Path, source_run_id: str) -> None:
+    if not re.fullmatch(r"[1-9][0-9]*", source_run_id):
+        raise ValueError("source run ID must be a positive integer")
+    with reviews_path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        if "source_run_id" not in (reader.fieldnames or []):
+            raise ValueError("review CSV must bind every row to its source run ID")
+        for line, row in enumerate(reader, start=2):
+            if (row.get("source_run_id") or "").strip() != source_run_id:
+                raise ValueError(f"review line {line}: source run ID mismatch")
+
+
+def evaluate(snapshot: dict, digest: str, reviews_path: Path, source_run_id: str) -> dict:
+    validate_review_source_run(reviews_path, source_run_id)
     cards = copy.deepcopy(snapshot["cards"])
     reviews = read_reviews(reviews_path, cards)
     attach_reviews(cards, reviews)
@@ -51,6 +66,7 @@ def evaluate(snapshot: dict, digest: str, reviews_path: Path) -> dict:
         "schema": 1,
         "trial": "FROZEN_SUBSTANTIVE_HUMAN_REVIEW",
         "source_snapshot_sha256": digest,
+        "source_run_id": source_run_id,
         "source_collected_at_kst": snapshot["collected_at_kst"],
         "sample_size_per_source": SAMPLE_SIZE,
         "question_output": "NONE",
@@ -77,7 +93,7 @@ def render(result: dict) -> str:
     lines = [
         "# 고정 표본 사람 판정 결과",
         "",
-        f"- 원본 수집: {result['source_collected_at_kst']}",
+        f"- 원본 수집: {result['source_collected_at_kst']} (실행 {result['source_run_id']})",
         f"- 고정 표본 SHA-256: {result['source_snapshot_sha256']}",
         "- 후속 재수집 없이 원본 3건씩에만 사람 판정을 결합했습니다.",
         "- 이 표본은 흐름 검증용입니다. 3건씩의 비율로 우수 소스나 운영 편입을 결정하지 않습니다.",
@@ -108,11 +124,11 @@ def render(result: dict) -> str:
     return "\n".join(lines)
 
 
-def run(snapshot_path: Path, reviews_path: Path, output_dir: Path) -> dict:
+def run(snapshot_path: Path, reviews_path: Path, output_dir: Path, source_run_id: str) -> dict:
     if not reviews_path.is_file():
         raise FileNotFoundError("human review CSV not found")
     snapshot, digest = load_snapshot(snapshot_path)
-    result = evaluate(snapshot, digest, reviews_path)
+    result = evaluate(snapshot, digest, reviews_path, source_run_id)
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "review_result.json").write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
@@ -126,10 +142,11 @@ def run(snapshot_path: Path, reviews_path: Path, output_dir: Path) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--snapshot-json", type=Path, required=True)
+    parser.add_argument("--source-run-id", required=True)
     parser.add_argument("--reviews-csv", type=Path, default=BASE / "substantive_reviews_2026-09-17.csv")
     parser.add_argument("--output-dir", type=Path, default=BASE / "output" / "substantive-human-review")
     args = parser.parse_args()
-    run(args.snapshot_json, args.reviews_csv, args.output_dir)
+    run(args.snapshot_json, args.reviews_csv, args.output_dir, args.source_run_id)
     return 0
 
 
