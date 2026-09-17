@@ -68,6 +68,12 @@ class ReviewWindowTests(unittest.TestCase):
             "lane": "CORE_DISCOVERY",
             "editor_judgment": "",
             "review_eligible": "false",
+            "source_id": "council_minutes",
+            "context_status": "PASS",
+            "grounding_status": "PASS",
+            "freshness_status": "FRESH",
+            "source_date": "2026-09-11",
+            "freshness_window_days": "14",
         }
         self.assertTrue(pending_review_window_open(row, "2026-09-17"))
         self.assertTrue(pending_review_window_open(row, "2026-09-21"))
@@ -83,6 +89,30 @@ class ReviewWindowTests(unittest.TestCase):
         ))
         self.assertFalse(pending_review_window_open(
             {**base, "first_seen": "invalid"}, "2026-09-17"
+        ))
+
+    def test_incomplete_or_expired_sources_do_not_remain_in_review(self):
+        base = {
+            "first_seen": "2026-09-15",
+            "lane": "CORE_DISCOVERY",
+            "source_id": "council_minutes",
+            "context_status": "PASS",
+            "grounding_status": "PASS",
+            "freshness_status": "FRESH",
+            "source_date": "2026-09-11",
+            "freshness_window_days": "14",
+        }
+        self.assertFalse(pending_review_window_open(
+            {**base, "context_status": "HOLD"}, "2026-09-17"
+        ))
+        self.assertFalse(pending_review_window_open(
+            {**base, "source_date": ""}, "2026-09-17"
+        ))
+        self.assertFalse(pending_review_window_open(
+            {**base, "grounding_status": "HOLD"}, "2026-09-17"
+        ))
+        self.assertFalse(pending_review_window_open(
+            {**base, "source_date": "2026-08-01"}, "2026-09-17"
         ))
 
 
