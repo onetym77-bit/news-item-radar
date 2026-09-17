@@ -434,10 +434,12 @@ def render_summary(state: dict, evaluation: dict, reviews: dict[str, dict]) -> s
     else:
         for item in held:
             card = item["card"]
-            lines.append(
-                f"- [{card['title']}]({card['detail_url']}): "
-                "지적을 특정하지 못해 질문 생성 보류"
+            reason = (
+                "지적은 확인했지만 기획 질문 기준 미달"
+                if card.get("documented_issue_in_table")
+                else "감사 지적 목록 확인 실패"
             )
+            lines.append(f"- [{card['title']}]({card['detail_url']}): {reason}")
         lines.append("")
     if prior_reviewed:
         lines.extend(["## 이전 문서의 사람 판정", ""])
