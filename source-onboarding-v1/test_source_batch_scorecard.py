@@ -78,6 +78,8 @@ class SourceBatchScorecardTests(unittest.TestCase):
             self.reviews("district_councils_25", labels),
         )
         self.assertEqual(row["technical_gate"], "READY_FOR_L2_SAMPLE")
+        self.assertIsNone(row["body_available_rate"])
+        self.assertIsNone(row["record_access_rate"])
         self.assertEqual(row["editorial_gate"], "NOT_READY_FOR_EDITORIAL_REVIEW")
 
     def test_wide_screening_rejects_more_than_twenty_records(self):
