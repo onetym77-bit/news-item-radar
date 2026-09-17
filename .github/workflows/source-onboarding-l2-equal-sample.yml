@@ -1,0 +1,53 @@
+name: Compare equal L2 body samples
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "source-onboarding-v1/**"
+      - "citizen-proposal-pilot/watch.py"
+      - ".github/workflows/source-onboarding-l2-equal-sample.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: l2-equal-body-sample-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test bounded collectors and comparison
+        run: python -X utf8 -m unittest discover -s source-onboarding-v1 -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Collect equal five-record detail samples
+        run: python -X utf8 source-onboarding-v1/collect_l2_equal_sample.py
+      - name: Publish comparison summary
+        if: always()
+        run: |
+          if [ -f source-onboarding-v1/output/l2-equal-sample/SUMMARY.md ]; then
+            cat source-onboarding-v1/output/l2-equal-sample/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload bounded comparison artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: l2-equal-body-sample-${{ github.run_id }}
+          path: source-onboarding-v1/output/l2-equal-sample/
+          if-no-files-found: error
+          retention-days: 7
