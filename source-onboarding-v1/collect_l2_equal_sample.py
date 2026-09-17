@@ -179,10 +179,10 @@ def common_metrics(observation: dict) -> dict:
         "sample_count": len(records),
         "detail_success_count": sum(row.get("access_status") == "SUCCESS" for row in records),
         "title_aligned_count": len(aligned),
-        "body_available_count": len(available),
+        "detail_text_available_count": len(available),
         "verified_date_count": sum(row.get("published_at_status") == "VERIFIED" for row in records),
         "unique_content_count": len(unique),
-        "median_body_chars_observed": int(statistics.median(lengths)) if lengths else None,
+        "median_detail_text_chars_observed": int(statistics.median(lengths)) if lengths else None,
         "attachment_links_not_fetched": sum(
             int(row.get("attachment_link_count_not_fetched") or 0) for row in records
         ),
@@ -201,7 +201,7 @@ def render_equal_summary(observations: list[dict], scorecard: dict) -> str:
         "",
         "두 소스 모두 공식 목록 상단의 고유 항목 5건과 각 공식 상세 화면만 읽었습니다. 첨부파일, 원문 전체, 작성자명·연락처, 질문·기사 판정은 저장하지 않았습니다.",
         "",
-        "| 소스 | 목표/확보 | 상세 성공 | 제목 대응 | 본문 확인 | 날짜 검증 | 고유 본문 | 본문 길이 중앙값 |",
+        "| 소스 | 목표/확보 | 상세 성공 | 제목 대응 | 상세 텍스트 확인 | 날짜 검증 | 고유 응답 | 상세 텍스트 길이 중앙값 |",
         "|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for row in metrics:
@@ -209,17 +209,17 @@ def render_equal_summary(observations: list[dict], scorecard: dict) -> str:
             f"| {labels.get(row['source_id'], row['source_id'])} | "
             f"{row['sample_target']}/{row['sample_count']} | "
             f"{row['detail_success_count']} | {row['title_aligned_count']} | "
-            f"{row['body_available_count']} | {row['verified_date_count']} | "
+            f"{row['detail_text_available_count']} | {row['verified_date_count']} | "
             f"{row['unique_content_count']} | "
-            f"{row['median_body_chars_observed'] if row['median_body_chars_observed'] is not None else '-'} |"
+            f"{row['median_detail_text_chars_observed'] if row['median_body_chars_observed'] is not None else '-'} |"
         )
     lines.extend([
         "",
         "## 이 표가 말하는 것",
         "",
-        "- 같은 분모와 같은 상세 접근 기준에서 기술적으로 본문을 읽을 수 있는지를 비교합니다.",
+        "- 같은 분모와 상세 접근 기준에서 텍스트 추출 가능성을 비교합니다. 상세 텍스트는 핵심 사실이 담긴 실질 본문과 다를 수 있습니다.",
         "- 날짜 검증은 상세 본문 가치가 아니라 게시일 확정 품질입니다. 시민제안의 목록 날짜는 이번 단계에서 후보값입니다.",
-        "- 감사 결과의 핵심 내용이 첨부 PDF에만 있으면 이번 비교에서는 첨부 의존으로 남습니다. 시민제안의 본문과 감사 PDF를 동일하다고 간주하지 않습니다.",
+        "- 감사 결과의 핵심 내용이 첨부 PDF에만 있으면 이번 비교에서는 첨부 의존으로 남습니다. 시민제안의 제목 고정 텍스트도 메뉴·부가정보를 포함할 수 있습니다.",
         "",
         "## 아직 말할 수 없는 것",
         "",
@@ -227,6 +227,20 @@ def render_equal_summary(observations: list[dict], scorecard: dict) -> str:
         "- 유효 단서율은 두 소스 각 5건을 같은 라벨(PROMISING, VERIFY, NOISE, DUPLICATE, UNREADABLE)로 사람이 검토한 뒤 계산해야 합니다.",
         "- 게시 주기가 다른 두 소스이므로 목록 상단 5건은 같은 날짜 범위의 표본이 아닙니다.",
         "",
+        "## 표본 목록: 원문 확인용",
+        "",
+    ])
+    for observation in observations:
+        lines.append(f"### {labels.get(observation['source_id'], observation['source_id'])}")
+        lines.append("")
+        for row in observation["records"]:
+            lines.append(
+                f"- {row.get('published_at') or '날짜 미확인'} · "
+                f"[{row['title']}]({row['detail_url']}) · "
+                f"상세 {row.get('access_status')} · 텍스트 {row.get('body_status')}"
+            )
+        lines.append("")
+    lines.extend([
         "## 기술 점수표",
         "",
         render_scorecard(scorecard),
