@@ -144,6 +144,7 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
     records = observation["records"]
     sample_count = len(records)
     failed_access = observation["access_status"] in {"FAILED", "NOT_ATTEMPTED"}
+    access_only = str(observation["coverage"]).startswith("ACCESS_ONLY")
     verified_dates = sum(row["published_at_status"] == "VERIFIED" for row in records)
     detail_attempts = sum(row["body_status"] != "NOT_FETCHED" for row in records)
     accessible = sum(
@@ -161,7 +162,7 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
     ]
     counts = Counter(row["label"] for row in matching_reviews)
     editorial, review_metrics = editorial_gate(sample_count, counts)
-    if observation["maturity"] == "L0" or body_rate is None or body_rate < 0.6:
+    if access_only or observation["maturity"] == "L0" or body_rate is None or body_rate < 0.6:
         editorial = "NOT_READY_FOR_EDITORIAL_REVIEW"
     diagnostics = observation.get("diagnostics") or {}
     candidate_count = diagnostics.get("candidate_count")
