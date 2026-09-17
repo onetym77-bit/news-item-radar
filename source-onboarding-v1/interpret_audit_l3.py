@@ -233,6 +233,7 @@ def extract_finding_count(window: str) -> int | None:
         r"(?:처분요구사항|지적사항|처분요구)\s*(?:일람표|목록)?\s*[:：]?\s*(\d{1,3})\s*건",
         r"(?:일람표|목록)\s*[:：]\s*(\d{1,3})\s*건",
         r"총\s*건수\s*[:：]?\s*(\d{1,3})\s*건",
+        r"(?:^|\n)\s*ㅇ?\s*총\s*(\d{1,3})\s*건",
     )
     for pattern in patterns:
         match = re.search(pattern, window)

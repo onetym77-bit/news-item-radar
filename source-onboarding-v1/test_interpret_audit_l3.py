@@ -268,6 +268,48 @@ class AuditL3Tests(unittest.TestCase):
             "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
         )
 
+    def test_fashion_hub_actual_table_header_is_not_falsely_held(self):
+        # Mirrors the first four pages of the 108-page published audit.
+        report = """(공개용)
+서울패션허브 관리·운영 실태 특정감사 결과
+\f
+목차
+Ⅰ. 감사개요
+Ⅱ. 감사결과 처분요구 내역
+\f
+Ⅰ. 감사개요
+4. 감사성과 총괄
+\f
+Ⅱ. 감사결과 처분요구 내역
+□ 처분요구사항 일람표
+ㅇ 총 24건(시정 1, 주의 16, 통보 7)
+연번 감사분야 지적내용 처분종류
+1 민간위탁금 정산 관련 부가가치세 상당액 미반납 시정
+2 민간위탁금 예산편성 검토 의무 소홀 주의
+3 예산 이월 승인절차 및 정산보고 관리 소홀 주의
+6 수의계약 체결 부적정 주의
+11 인플루언서 활용 사업 추진 관련 부적정 주의
+12 의류제조기업 협력 플랫폼 구축 사업 부적정 주의
+\f
+Ⅲ. 감사결과 처분요구서
+"""
+        listing = dict(self.listing_record)
+        listing["title"] = "서울패션허브 관리·운영 실태 특정감사 결과 공개문"
+        card = build_card(
+            listing,
+            "https://news.seoul.go.kr/gov/files/2026/08/report.pdf",
+            diagnostics(report),
+            report,
+        )
+        self.assertTrue(card["summary_table_confirmed"])
+        self.assertTrue(card["documented_issue_in_table"])
+        self.assertEqual(card["official_finding_count"], 24)
+        self.assertGreater(card["finding_candidate_count"], 1)
+        self.assertNotEqual(
+            card.get("hold_reason"),
+            "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        )
+
     def test_sh_travel_audit_records_finding_even_when_question_held(self):
         report = """목차
 Ⅰ. 감사실시 개요
