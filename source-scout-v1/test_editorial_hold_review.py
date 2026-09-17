@@ -53,7 +53,7 @@ class EditorialHoldReviewTests(unittest.TestCase):
         self.assertIn("미확인: 수치 기준기간", editorial)
         self.assertIn("발언 요지(미검증)", editorial)
         self.assertIn("이 영역은 A·B 기사·검증 게이트와 별개", editorial)
-        self.assertNotIn("기사 후보", editorial)
+        self.assertNotIn("S0 전이 승인 대기", editorial)
 
     def test_missing_current_source_is_flagged(self):
         leads = [{
