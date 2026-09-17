@@ -1,13 +1,19 @@
+import csv
+import tempfile
 import types
 import unittest
+from pathlib import Path
 
 from compare_substantive_samples import (
     SAMPLE_SIZE,
     attach_reviews,
     audit_cards,
+    citizen_body_text,
     citizen_cards,
+    read_reviews,
     source_metrics,
     validate_payload,
+    write_review_queue,
 )
 
 
@@ -85,6 +91,41 @@ class SubstantiveComparisonTests(unittest.TestCase):
         self.assertEqual(diagnostics["detail_readable"], SAMPLE_SIZE)
         self.assertNotIn("010-1234-5678", str(cards))
         self.assertTrue(all(card["evidence_status"] == "UNVERIFIED_CLAIM" for card in cards))
+
+    def test_citizen_body_excludes_page_controls_and_byline(self):
+        page = (
+            "이동 약자 제안 스크랩 공유 X에 공유 첨부파일 1.jpg "
+            "네이버 박 * * 2026.09.16. 시민의견 : 0 지역분류 - "
+            "정책분류 기타 지하철 좌석 이용 과정에서 이동 곤란성이 "
+            "반영되지 않아 불편하다는 제안입니다."
+        )
+        body = citizen_body_text(page)
+        self.assertIn("지하철 좌석 이용 과정", body)
+        self.assertNotIn("스크랩 공유", body)
+        self.assertNotIn("박 * *", body)
+        self.assertIsNone(citizen_body_text("제안 스크랩 공유 작성자 정보만 있음"))
+
+    def test_review_queue_roundtrip_with_extra_columns_and_blank_rows(self):
+        cards, _ = citizen_cards(
+            self.citizen_source, "2026-09-17T18:00:00+09:00",
+            module=self.module, fetcher=lambda _url: ("<html></html>", "hash"),
+        )
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "queue.csv"
+            write_review_queue(cards, path)
+            self.assertEqual(read_reviews(path, cards), {})
+            with path.open("r", encoding="utf-8-sig", newline="") as handle:
+                reader = csv.DictReader(handle)
+                fieldnames = list(reader.fieldnames)
+                rows = list(reader)
+            rows[0]["label"] = "VERIFY"
+            rows[0]["reviewed_on"] = "2026-09-17"
+            with path.open("w", encoding="utf-8-sig", newline="") as handle:
+                writer = csv.DictWriter(handle, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(rows)
+            reviews = read_reviews(path, cards)
+            self.assertEqual(reviews[("citizen_proposals", "100")]["label"], "VERIFY")
 
     def test_no_automatic_label_and_no_article_output(self):
         cards, _ = citizen_cards(
