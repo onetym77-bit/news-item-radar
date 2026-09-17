@@ -60,6 +60,58 @@ def candidate_revision(row: dict[str, str]) -> str:
     return hashlib.sha1(basis.encode("utf-8")).hexdigest()[:12]
 
 
+def review_family_key(row: dict[str, str]) -> str:
+    """Group the same unreviewed question family without erasing source history."""
+    source_id = text(row, "source_id").lower()
+    subject = " ".join(text(row, "context_subject").lower().split())
+    question = " ".join((text(row, "central_question") or text(row, "question")).lower().split())
+    if not source_id or not question:
+        return ""
+    if source_id == "council_minutes" and not subject:
+        return ""
+    return "|".join(value for value in (source_id, subject, question) if value)
+
+
+def collapse_unreviewed_families(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Show one pending card per question family while preserving reviewed rows."""
+    reviewed_keys = {
+        review_family_key(row)
+        for row in rows
+        if text(row, "editor_judgment") and review_family_key(row)
+    }
+    chosen_pending: dict[str, dict[str, str]] = {}
+    result: list[dict[str, str]] = []
+    for row in rows:
+        if text(row, "editor_judgment"):
+            result.append(row)
+            continue
+        key = review_family_key(row)
+        if not key:
+            result.append(row)
+            continue
+        if key in reviewed_keys:
+            continue
+        current = chosen_pending.get(key)
+        rank = (
+            text(row, "auto_active_today").lower() == "true",
+            text(row, "context_status").upper() == "PASS",
+            text(row, "source_date"),
+            text(row, "last_seen"),
+            text(row, "candidate_id"),
+        )
+        current_rank = (
+            text(current, "auto_active_today").lower() == "true",
+            text(current, "context_status").upper() == "PASS",
+            text(current, "source_date"),
+            text(current, "last_seen"),
+            text(current, "candidate_id"),
+        ) if current else None
+        if current is None or rank > current_rank:
+            chosen_pending[key] = row
+    result.extend(chosen_pending.values())
+    return result
+
+
 def proposal_blockers(row: dict[str, str]) -> list[str]:
     blockers: list[str] = []
     eligible_raw = text(row, "review_eligible")
@@ -118,7 +170,7 @@ def build_review(queue_rows: list[dict[str, str]], ledger_rows: list[dict[str, s
     killer_candidates: list[dict] = []
     invalid_labels: list[str] = []
 
-    for row in queue_rows:
+    for row in collapse_unreviewed_families(queue_rows):
         judgment = text(row, "editor_judgment").upper()
         active_raw = text(row, "auto_active_today")
         active_today = active_raw.lower() == "true"
