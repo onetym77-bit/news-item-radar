@@ -1,6 +1,12 @@
 name: Review frozen substantive source sample
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "source-onboarding-v1/substantive_reviews_2026-09-17.csv"
+      - "source-onboarding-v1/review_substantive_snapshot.py"
+      - ".github/workflows/source-onboarding-substantive-review.yml"
   workflow_dispatch:
     inputs:
       source_run_id:
@@ -33,13 +39,13 @@ jobs:
       - name: Download the immutable comparison artifact
         uses: actions/download-artifact@v7
         with:
-          name: substantive-source-comparison-${{ inputs.source_run_id }}
+          name: substantive-source-comparison-${{ inputs.source_run_id || '35202083001' }}
           github-token: ${{ github.token }}
-          run-id: ${{ inputs.source_run_id }}
+          run-id: ${{ inputs.source_run_id || '35202083001' }}
           path: frozen-sample
       - name: Recalculate only the human-review result
         env:
-          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id || '35202083001' }}
         run: |
           python -X utf8 source-onboarding-v1/review_substantive_snapshot.py \
             --snapshot-json frozen-sample/comparison.json \
