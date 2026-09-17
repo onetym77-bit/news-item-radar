@@ -310,7 +310,17 @@ def finding_candidates(issue_text: str) -> list[str]:
 
 
 def finding_impact_score(finding: str) -> int:
-    score = sum(weight for term, weight in FINDING_IMPACT_TERMS if term in finding)
+    score = sum(
+        weight
+        for term, weight in FINDING_IMPACT_TERMS
+        if term in finding
+        and not (
+            term in {"외출", "외박"}
+            and not any(child in finding for child in ("아동", "청소년", "시설"))
+        )
+    )
+    if "기관경고" in finding:
+        score += 8
     if any(term in finding for term in ("필요", "부적정", "미흡", "소홀", "위반")):
         score += 1
     return score
@@ -373,7 +383,10 @@ def dominant_domain(domain_counts: dict[str, int], issue_text: str = "") -> str 
     # terms in a mixed audit; audit scope has already been excluded.
     if domain_counts.get("RIGHTS_SAFETY", 0) and any(
         phrase in issue_text
-        for phrase in ("인권침해 진정함", "고위험군 아동", "입소아동 외출", "아동학대", "방임")
+        for phrase in (
+            "인권침해 진정함", "고위험군 아동", "입소아동 외출",
+            "아동학대", "방임", "성범죄 경력 확인",
+        )
     ):
         return "RIGHTS_SAFETY"
     # Contracts are a concrete public-spending question; generic management
