@@ -199,6 +199,102 @@ class AuditL3Tests(unittest.TestCase):
         self.assertGreater(score, 0)
         self.assertIn("고위험군", selected)
 
+    def test_wrapped_agriculture_audit_selects_actual_school_check_gap(self):
+        report = """목차
+Ⅰ. 감사실시 개요
+Ⅱ. 감사 지적사항 목록
+\f
+Ⅰ. 감사실시 개요
+\f
+Ⅱ. 감사 지적사항 목록
+감사결과 일람표
+연번 감사 분야 감   사   성   과 (대상기관) 부 과 금 액 조치(안)
+1 시 설 물
+안전 관리
+농지·개발제한구역 내 시설물 관리 부적정 - 시정·통보
+2 화재예방 강화를 위한 소방관리체계 확립 및 화기관리 철저 - 주의·통보
+3 청년농업인 영농정착지원사업 대상자 선정 업무 소홀 - 주의·통보
+4 유치원·학교 파견강사 성범죄 경력 확인 절차 개선 필요 - 통보
+\f
+Ⅲ. 감사결과 요약
+"""
+        listing = dict(self.listing_record)
+        listing["title"] = "서울특별시 농업기술센터 기관운영 감사"
+        card = build_card(
+            listing,
+            "https://news.seoul.go.kr/gov/files/2026/06/report.pdf",
+            diagnostics(report),
+            report,
+        )
+        self.assertEqual(card["question_status"], "READY_FOR_HUMAN_REVIEW")
+        self.assertIn("성범죄 경력", card["selected_finding_title"])
+        self.assertIn("누가 채용 전에 확인했나", card["verification_question"])
+        self.assertNotIn("권리·안전 지적", card["verification_question"])
+        self.assertNotIn("피해 아동", card["verification_question"])
+
+    def test_design_audit_table_is_not_falsely_held(self):
+        report = """목차
+Ⅰ. 감사실시 개요
+Ⅱ. 감사결과 처분요구 내역
+\f
+Ⅰ. 감사실시 개요
+\f
+Ⅱ. 감사결과 처분요구 내역
+처분요구사항 일람표: 29건 [시정 1, 주의 12, 통보 16]
+연번 지적내용 대상기관 처분종류 이행여부
+1 DDP 루프탑 투어 동선 확장공사 등 부적정 서울디자인재단
+주의(기관경고) 이행 완료
+2 DDP 노출콘크리트 보수공사 부적정 서울디자인재단
+주의 이행 완료
+\f
+Ⅲ. 감사결과 처분요구서
+"""
+        listing = dict(self.listing_record)
+        listing["title"] = "서울디자인재단 종합감사 결과"
+        card = build_card(
+            listing,
+            "https://news.seoul.go.kr/gov/files/2026/06/report.pdf",
+            diagnostics(report),
+            report,
+        )
+        self.assertTrue(card["summary_table_confirmed"])
+        self.assertTrue(card["documented_issue_in_table"])
+        self.assertEqual(card["official_finding_count"], 29)
+        self.assertNotEqual(
+            card.get("hold_reason"),
+            "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        )
+
+    def test_sh_travel_audit_records_finding_even_when_question_held(self):
+        report = """목차
+Ⅰ. 감사실시 개요
+Ⅱ. 감사결과 처분요구 내역
+\f
+Ⅰ. 감사실시 개요
+\f
+Ⅱ. 감사결과 처분요구 내역
+처분요구사항 일람표: 1건 [시정 1]
+연번 지적내용 대상기관 처분종류 이행여부
+1 공무국외출장 여비 산정 및 심사 등 부적정 서울주택도시개발공사 시정 이행 중
+\f
+Ⅲ. 감사결과 처분요구서
+"""
+        listing = dict(self.listing_record)
+        listing["title"] = "서울주택도시개발공사 특정감사 결과"
+        card = build_card(
+            listing,
+            "https://news.seoul.go.kr/gov/files/2026/07/report.pdf",
+            diagnostics(report),
+            report,
+        )
+        self.assertTrue(card["summary_table_confirmed"])
+        self.assertTrue(card["documented_issue_in_table"])
+        self.assertIn("여비 산정", card["selected_finding_title"])
+        self.assertNotEqual(
+            card.get("hold_reason"),
+            "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        )
+
     def test_missing_findings_summary_is_held(self):
         card = build_card(
             self.listing_record,
