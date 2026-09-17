@@ -71,6 +71,8 @@ class SourceBatchScorecardTests(unittest.TestCase):
     def test_l1_listing_cannot_receive_editorial_value_judgment(self):
         observation = self.observation(source_id="district_councils_25", count=10)
         observation["source_url"] = "https://example.go.kr/list"
+        for record in observation["records"]:
+            record["body_status"] = "NOT_FETCHED"
         labels = ["PROMISING"] * 10
         row = score_observation(
             observation,
