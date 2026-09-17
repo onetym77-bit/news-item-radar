@@ -64,6 +64,8 @@ def state_with_records(count: int = 12, days: int = 7) -> dict:
 def top_scores() -> dict:
     return {
         "verdict": "START_REPORTING",
+        "document_value": "VALUABLE",
+        "angle_selection": "RIGHT_ANGLE",
         "scores": {
             "grounding": 2, "scope": 2, "citizen_impact": 2,
             "specificity": 2, "competing_hypotheses": 2, "testability": 2,
@@ -119,6 +121,16 @@ class AuditL4ShadowTests(unittest.TestCase):
         reviews["580001"]["critical_error"] = "SCOPE_AS_FACT"
         self.assertEqual(evaluate(state, reviews)["outcome"], "QUALITY_GATES_NOT_MET")
 
+    def test_repeated_missed_stronger_findings_block_quality_gate(self):
+        state = state_with_records()
+        reviews = {item["source_record_id"]: top_scores() for item in state["records"]}
+        reviews["580001"]["angle_selection"] = "MISSED_STRONGER_FINDING"
+        reviews["580002"]["angle_selection"] = "MISSED_STRONGER_FINDING"
+        result = evaluate(state, reviews)
+        self.assertEqual(result["metrics"]["missed_stronger_findings"], 2)
+        self.assertLess(result["metrics"]["angle_selection_accuracy_pct"], 90)
+        self.assertEqual(result["outcome"], "QUALITY_GATES_NOT_MET")
+
     def test_state_rejects_raw_report_and_external_url(self):
         state = state_with_records(1, 1)
         state["records"][0]["card"]["report_text"] = "raw audit text"
@@ -132,15 +144,15 @@ class AuditL4ShadowTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "reviews.csv"
             path.write_text(
-                "source_record_id,verdict,grounding,scope,citizen_impact,specificity,competing_hypotheses,testability,critical_error\n"
-                "580001,START_REPORTING,2,2,2,2,2,2,NONE\n",
+                "source_record_id,verdict,document_value,angle_selection,grounding,scope,citizen_impact,specificity,competing_hypotheses,testability,critical_error\n"
+                "580001,START_REPORTING,VALUABLE,RIGHT_ANGLE,2,2,2,2,2,2,NONE\n",
                 encoding="utf-8",
             )
             reviews = read_reviews(path, state["records"])
             self.assertEqual(reviews["580001"]["scores"]["grounding"], 2)
             path.write_text(
-                "source_record_id,verdict,grounding,scope,citizen_impact,specificity,competing_hypotheses,testability,critical_error\n"
-                "580001,START_REPORTING,2,,,,,,NONE\n",
+                "source_record_id,verdict,document_value,angle_selection,grounding,scope,citizen_impact,specificity,competing_hypotheses,testability,critical_error\n"
+                "580001,START_REPORTING,VALUABLE,RIGHT_ANGLE,2,,,,,,NONE\n",
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(ValueError, "missing or invalid"):
