@@ -68,6 +68,30 @@ class EditorialTriageTests(unittest.TestCase):
             }), ""
         )
 
+    def test_all_three_human_selected_cases_are_recovered_from_fixture(self):
+        feed_path = HERE / "output" / "daily_feed_latest.json"
+        selected_path = HERE / "editorial-decisions" / "selected_reporting_leads.json"
+        if not feed_path.is_file():
+            self.skipTest("daily feed fixture not present")
+        feed = json.loads(feed_path.read_text(encoding="utf-8"))
+        leads = json.loads(selected_path.read_text(encoding="utf-8"))["leads"]
+        selected_rows = [
+            row for row in feed.get("context_holds", [])
+            if collector.context_hold_editorial_triage_reason(row)
+        ]
+        for lead in leads:
+            self.assertTrue(
+                any(
+                    row.get("source_id") == lead["source_id"]
+                    and row.get("url") == lead["source_url"]
+                    and lead["anchor_text"] in (
+                        row.get("text", "") + " " + row.get("context_text", "")
+                    )
+                    for row in selected_rows
+                ),
+                lead["id"],
+            )
+
     def test_hold_remains_outside_question_and_article_gates(self):
         row = {
             **self.row(),
