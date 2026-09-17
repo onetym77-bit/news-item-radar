@@ -1,6 +1,6 @@
-# 서울 기획 아이템 발굴 시스템 v2.3 — 활성 구성
+# 서울 기획 아이템 발굴 시스템 v2.4 — 활성 구성
 
-기준일: 2026-09-16
+기준일: 2026-09-17
 
 이 문서는 예약 실행과 수동 실행이 참조할 단일 활성 구성을 지정한다. 아래에 없는 초안·구버전 수집기는 참고 자료이며 자동 실행에 사용하지 않는다.
 
@@ -36,6 +36,8 @@
 | 역할 분리형 신규 소스 수집 | source-scout-v1/collect_daily_feed.py |
 | 내용 사전판정·질문 근거 검사 | source-scout-v1/grounding.py |
 | 신규 소스 사람 판정 대기열 | source-scout-v1/HUMAN_REVIEW_QUEUE.csv |
+| 편집자 지정 취재 착수 검토 목록 | source-scout-v1/editorial-decisions/selected_reporting_leads.json |
+| 편집자 지정 검토 브리핑 주입 | source-scout-v1/inject_feed_into_briefing.py |
 | 편집 판정 카드·전이 제안 | source-scout-v1/compile_editorial_review.py |
 | 7일 정밀도 평가 | source-scout-v1/evaluate_human_review.py |
 | 관심 신호 설정 | interest-radar-v2/config/editorial_lenses.json |
@@ -95,6 +97,7 @@
 - 품질 PASS 뒤 출처 프레임과 편집적 추가를 분리한다. 독창성 PASS와 24시간 이내 최소 판정 실험이 있어야 우선 검증한다.
 - 우선 검증에서는 시민 손실 근거와 구조 가설을 약화할 반대 근거를 모두 찾는다.
 - 질문 게이트와 기사 게이트를 분리하며 검증 전 가설은 최종 기사 후보로 표시하지 않는다.
+- 편집자가 직접 고른 문맥 HOLD 단서는 별도 `취재 착수 검토` 영역에 노출할 수 있다. 원문 발언은 주장으로 표시하고 미확인 수치·피해를 확정하지 않으며, 이 노출은 S0 전이·질문 PASS·기사 PASS를 뜻하지 않는다.
 - 브리핑은 A 확정 제안(S2·S3), B 당일 검증(S0·S1 질문 PASS), C 질문 원석·후속 관찰로 분리한다.
 - 행사·공연·팝업·티켓·단일 예약 신호는 자동 제외하지 않되 일정·가격·이용 팁 이상의 분해·비교·책임 질문이 없으면 질문 게이트에서 제외한다.
 - 탐색 작업량 미달과 수집 실패·본문 부족·오탐 제외·질문 불일치를 각각 표시한다. 질문 원석 0건과 기사 게이트 0건은 각각 정상일 수 있다.

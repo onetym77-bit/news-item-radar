@@ -43,7 +43,60 @@ METRIC_PERIOD_LABELS = {
 }
 
 
-def render(feed: dict, review: dict | None = None) -> str:
+DEFAULT_EDITORIAL_LEADS = ROOT / "source-scout-v1" / "editorial-decisions" / "selected_reporting_leads.json"
+
+
+def render_editorial_review(feed: dict, leads: list[dict]) -> list[str]:
+    """Show human-selected reporting leads without changing any question or article gate."""
+    if not leads:
+        return []
+    source_rows = (
+        feed.get("context_holds", [])
+        + feed.get("core_discovery", [])
+        + feed.get("rediscovered_carryover", [])
+    )
+    lines = [
+        "## 편집자 지정 · 취재 착수 검토",
+        "",
+        "**사람이 고른 취재 단서다. 원문 발언은 주장이고 미확인 수치·피해는 사실로 확정하지 않는다. 이 영역은 A·B 기사·검증 게이트와 별개다.**",
+        "",
+    ]
+    for lead in leads:
+        anchor = lead.get("anchor_text", "")
+        row = next(
+            (
+                item for item in source_rows
+                if anchor
+                and item.get("source_id") == lead.get("source_id")
+                and item.get("url") == lead.get("source_url")
+                and anchor in (item.get("text", "") + " " + item.get("context_text", ""))
+            ),
+            None,
+        )
+        lines.extend([f"### {md(lead.get('title', '제목 미상'), 100)}", ""])
+        lines.append(f"- 편집 판단: 취재 착수 검토 · {lead.get('selected_on', '날짜 미상')} 선택")
+        if row:
+            missing = ", ".join(row.get("context_missing_fields", []))
+            lines.append(
+                f"- 원문 상태: {row.get('context_status') or '미확인'}"
+                + (f" · 미확인: {md(missing, 120)}" if missing else "")
+                + f" · 회의록 문서일 {row.get('speech_date') or '미확인'}"
+            )
+            lines.append(
+                f"- 발언 요지(미검증): {md(row.get('text', ''), 180)}"
+            )
+        else:
+            lines.append("- 원문 상태: 오늘 수집본에서 해당 발언 조각 미발견 — 원문 재확인 필요")
+        lines.extend([
+            f"- 취재 질문: {md(lead.get('editorial_question', ''), 220)}",
+            f"- 첫 확인: {md(lead.get('first_check', ''), 220)}",
+            f"- [원문]({lead.get('source_url', '')})",
+            "",
+        ])
+    return lines
+
+
+def render(feed: dict, review: dict | None = None, editorial_leads: list[dict] | None = None) -> str:
     review = review or {}
     core = feed.get("core_discovery", [])
     auxiliary = feed.get("auxiliary_discovery", [])
@@ -57,7 +110,7 @@ def render(feed: dict, review: dict | None = None) -> str:
     metadata_leads = feed.get("verification_metadata_leads", [])
     schema_leads = feed.get("verification_schema_leads", [])
     verification = feed.get("verification_map", [])
-    lines = [
+    lines = render_editorial_review(feed, editorial_leads or []) + [
         "## C-실험. 신규 소스 질문 씨앗",
         "",
         "**아래 항목은 S0 이전 자동 탐색 결과다. 기사 후보나 검증된 사실로 간주하지 않는다.**",
@@ -329,6 +382,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--briefing", type=Path, default=DEFAULT_BRIEFING)
     parser.add_argument("--feed", type=Path, default=DEFAULT_FEED)
     parser.add_argument("--review", type=Path, default=DEFAULT_REVIEW)
+    parser.add_argument("--editorial-leads", type=Path, default=DEFAULT_EDITORIAL_LEADS)
     return parser.parse_args()
 
 
@@ -342,7 +396,11 @@ def main() -> int:
         raise RuntimeError(f"briefing insertion point missing: {INSERT_BEFORE}")
     feed = json.loads(args.feed.read_text(encoding="utf-8"))
     review = json.loads(args.review.read_text(encoding="utf-8")) if args.review.is_file() else {}
-    section = render(feed, review)
+    editorial_leads = (
+        json.loads(args.editorial_leads.read_text(encoding="utf-8")).get("leads", [])
+        if args.editorial_leads.is_file() else []
+    )
+    section = render(feed, review, editorial_leads)
     text = text.replace(INSERT_BEFORE, section + "\n" + INSERT_BEFORE, 1)
     args.briefing.write_text(text, encoding="utf-8")
 

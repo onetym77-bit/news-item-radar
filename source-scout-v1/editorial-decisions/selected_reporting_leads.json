@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "description": "편집자가 선택한 취재 착수 검토 사안. 사실 검증, 질문·기사 게이트, 장부 전이와 분리한다.",
+  "leads": [
+    {
+      "id": "20260917-gukhoe-daero",
+      "selected_on": "2026-09-17",
+      "title": "국회대로 지하차도·상부공원화 사업 지연",
+      "source_id": "council_minutes",
+      "source_url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
+      "anchor_text": "국회대로 공사 구간 인근 주민들은",
+      "editorial_question": "사업 일정·예산은 공식 문서에서 어떻게 바뀌었고, 지연 원인과 주민·상인 피해가 확인되는가?",
+      "first_check": "서울시의 공구별 사업 일정·예산 변경 문서와 현장 주민·상인 사례"
+    },
+    {
+      "id": "20260917-sign-language",
+      "selected_on": "2026-09-17",
+      "title": "수어통역센터 재정 운영과 실제 서비스 공백",
+      "source_id": "council_minutes",
+      "source_url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
+      "anchor_text": "수어통역센터는 자체수입이 발생해도",
+      "editorial_question": "자체수입 재투자 제약이 통역 대기·미배정 등 이용자의 서비스 공백으로 이어지는가?",
+      "first_check": "자치구별 회계·승인 규정과 센터 통역 요청·대기·미배정 기록"
+    },
+    {
+      "id": "20260917-youth-protection",
+      "selected_on": "2026-09-17",
+      "title": "위기 여성 청소년 보호시설 폐쇄 뒤 대체 지원",
+      "source_id": "council_minutes",
+      "source_url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
+      "anchor_text": "위기 10대 여성 지원 시설 4개 중 3개소가",
+      "editorial_question": "기존 보호시설 폐쇄 이후 안심ON센터가 필요한 시간·대상·기능의 보호 공백을 실제로 메우는가?",
+      "first_check": "폐쇄 시설 명단·시점·정원과 안심ON센터 운영·입소·거절·대기 기록"
+    }
+  ]
+}
