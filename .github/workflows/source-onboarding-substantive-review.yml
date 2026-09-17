@@ -38,9 +38,12 @@ jobs:
           run-id: ${{ inputs.source_run_id }}
           path: frozen-sample
       - name: Recalculate only the human-review result
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
         run: |
           python -X utf8 source-onboarding-v1/review_substantive_snapshot.py \
             --snapshot-json frozen-sample/comparison.json \
+            --source-run-id "$SOURCE_RUN_ID" \
             --reviews-csv source-onboarding-v1/substantive_reviews_2026-09-17.csv \
             --output-dir source-onboarding-v1/output/substantive-human-review
       - name: Publish editorial summary
