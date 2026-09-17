@@ -352,49 +352,112 @@ def metric_text(value: float | None) -> str:
     return "판정 대기" if value is None else f"{value}%"
 
 
+def concise_question(value: str, limit: int = 180) -> str:
+    """Show the editorial question, not the attached evidence or test plan."""
+    first = (value or "").split("?", 1)[0].strip()
+    first = first.replace("감사 감사에서", "감사에서")
+    question = first + "?" if first else "질문 미작성"
+    return question if len(question) <= limit else question[: limit - 1].rstrip() + "…"
+
+
+def review_label(review: dict | None, card: dict) -> str:
+    if not review:
+        return "편집 판정 대기" if card.get("verification_question") else "보류"
+    labels = {
+        "START_REPORTING": "취재 착수",
+        "VERIFY": "추가 확인",
+        "REJECT": "이번 질문 제외",
+        "CONFIRM_HOLD": "보류 유지",
+        "MISSED_VALUE": "가치 있는 지적 재탐색",
+    }
+    verdict = labels.get(review["verdict"], review["verdict"])
+    if review.get("angle_selection") == "MISSED_STRONGER_FINDING":
+        verdict += " · 더 강한 지적 재선택 필요"
+    return verdict
+
+
 def render_summary(state: dict, evaluation: dict, reviews: dict[str, dict]) -> str:
+    """Keep the human-facing summary brief; detailed evidence stays in bounded state."""
     m = evaluation["metrics"]
+    latest_run = state["runs"][-1] if state["runs"] else {}
+    latest_ids = set(latest_run.get("selected_ids", []))
+    recent = [
+        item for item in state["records"]
+        if item["source_record_id"] in latest_ids
+    ]
+    ready = [
+        item for item in recent
+        if item["card"]["question_status"] == "READY_FOR_HUMAN_REVIEW"
+    ]
+    held = [item for item in recent if item not in ready]
+    prior_reviewed = [
+        item for item in state["records"]
+        if item["source_record_id"] not in latest_ids
+        and item["source_record_id"] in reviews
+    ]
     lines = [
-        "# 서울시 감사 결과 7일 그림자 평가",
+        "# 서울시 감사 결과 · 편집 검토",
         "",
-        f"- 평가 상태: {evaluation['outcome']} (자동 승격 없음)",
-        f"- 관측일/고유 문서: {m['observed_dates']}일/{m['unique_documents']}건 (최소 7일/12건)",
-        f"- 질문/보류: {m['ready_questions']}/{m['held_documents']}",
-        f"- 사람 판정: {m['human_reviews']}건; 전체 완료율 {metric_text(m['human_review_completion_pct'])}; 질문 완료율 {metric_text(m['ready_review_completion_pct'])}",
-        f"- PDF 추출 성공률: {metric_text(m['pdf_extraction_success_pct'])}",
-        f"- 근거·맥락 정확률: {metric_text(m['grounding_and_scope_exact_pct'])}; 취재 착수 가치: {metric_text(m['reporting_start_value_pct'])}",
-        f"- 대표 각도 적중률: {metric_text(m['angle_selection_accuracy_pct'])}; 더 강한 지적 누락: {m['missed_stronger_findings']}건",
-        f"- 가치 있는 문서: {m['valuable_documents']}건; 상투적 질문 비율: {metric_text(m['generic_question_pct'])}; 중대 오류: {m['critical_errors']}건",
+        (
+            f"**현재 판단:** 평가 진행 중입니다. 서로 다른 {m['observed_dates']}일에 "
+            f"{m['unique_documents']}개 문서를 살폈습니다. "
+            "아직 L4 승격이나 기사 채택을 뜻하지 않습니다."
+            if evaluation["outcome"] == "COLLECTING"
+            else f"**현재 판단:** {evaluation['outcome']} — 사람의 최종 판단 전입니다."
+        ),
         "",
-        "이 수치는 사람 판정이 없으면 품질 결론을 내리지 않습니다. 감사 목적은 피해 사실이 아닙니다.",
+        (
+            f"이번 실행: 새 문서 {len(recent)}건 · 질문 초안 {len(ready)}건 · "
+            f"보류 {len(held)}건"
+        ),
         "",
-        "## 검토할 문서",
+        "## 이번에 볼 질문",
         "",
     ]
-    for item in state["records"]:
-        card = item["card"]
-        record_id = item["source_record_id"]
-        lines.extend([
-            f"### {card['title']}",
-            "",
-            f"- 문서 ID: {record_id}; 게시일: {card.get('published_at') or '미확인'}; 표본: {item['cohort']}",
-            f"- 상태: {card['question_status']}; 사람 판정: {reviews.get(record_id, {}).get('verdict', '대기')}",
-            (
-                f"- 문서 가치/대표 각도: "
-                f"{reviews.get(record_id, {}).get('document_value', '대기')}/"
-                f"{reviews.get(record_id, {}).get('angle_selection', '대기')}"
-            ),
-            f"- 독립 점검 표시: {', '.join(item['challenge_flags']) or '없음'}",
-        ])
-        if card.get("verification_question"):
-            lines.append(f"- 검증 질문: {card['verification_question']}")
-            lines.append(f"- 반증에 필요한 확인: {card['discriminating_test']}")
-        else:
-            lines.append(f"- 보류 이유: {card.get('hold_reason') or '미확인'}")
-        lines.extend([f"- [서울시 공식 문서]({card['detail_url']})", ""])
+    if not ready:
+        lines.extend(["- 없음", ""])
+    else:
+        for item in ready:
+            card = item["card"]
+            record_id = item["source_record_id"]
+            lines.extend([
+                f"### {card['title']}",
+                "",
+                f"- 핵심 질문: {concise_question(card.get('verification_question') or '')}",
+                f"- 편집 판단: {review_label(reviews.get(record_id), card)}",
+                f"- [서울시 공식 문서]({card['detail_url']})",
+                "",
+            ])
+    lines.extend(["## 이번에 보류한 문서", ""])
+    if not held:
+        lines.extend(["- 없음", ""])
+    else:
+        for item in held:
+            card = item["card"]
+            lines.append(
+                f"- [{card['title']}]({card['detail_url']}): "
+                "지적을 특정하지 못해 질문 생성 보류"
+            )
+        lines.append("")
+    if prior_reviewed:
+        lines.extend(["## 이전 문서의 사람 판정", ""])
+        for item in prior_reviewed:
+            card = item["card"]
+            record_id = item["source_record_id"]
+            lines.append(
+                f"- [{card['title']}]({card['detail_url']}): "
+                f"{review_label(reviews[record_id], card)}"
+            )
+        lines.append("")
     lines.extend([
-        "사람은 source-onboarding-v1/audit_l4_reviews.csv에 ID별 판정을 별도 PR로 기록합니다.",
-        "브리핑·ITEM_LEDGER·QUESTION_QUALITY_AUDIT 자동 연결은 없습니다.",
+        "## 평가 진행 상태",
+        "",
+        (
+            f"- 사람 판정 {m['human_reviews']}/{m['unique_documents']}건. "
+            "최소 7일·12개 문서와 충분한 사람 판정 전에는 품질 결론을 내리지 않습니다."
+        ),
+        "- 상세 근거·점검 표시·검증 절차는 이 요약에서 제외하고 내부 파생 상태에만 보존합니다.",
+        "- 원문은 저장하지 않으며, 브리핑·아이템 장부로 자동 연결하지 않습니다.",
         "",
     ])
     return "\n".join(lines)
