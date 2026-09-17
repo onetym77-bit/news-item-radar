@@ -73,11 +73,11 @@ def technical_gate(observation: dict, sample_count: int, body_rate: float | None
     access = observation.get("access_status")
     if access in {"FAILED", "NOT_ATTEMPTED"}:
         return "RETRY_ACCESS"
-    if sample_count == 0:
-        return "FIX_LISTING"
     maturity = observation.get("maturity", "L0")
     if maturity == "L0":
         return "L0_PROBE_ONLY"
+    if sample_count == 0:
+        return "FIX_LISTING"
     if maturity == "L1":
         return "READY_FOR_L2_SAMPLE"
     if body_rate is None or body_rate < 0.6:
@@ -121,6 +121,8 @@ def editorial_gate(sample_count: int, counts: Counter) -> tuple[str, dict]:
 def score_observation(observation: dict, registry: dict, reviews: list[dict]) -> dict:
     source_id = str(observation.get("source_id") or "UNKNOWN")
     errors = validate_thin_observation(observation, registry)
+    if len(observation.get("records", [])) > 20:
+        errors.append("wide screening sample exceeds 20 records")
     if errors:
         return {
             "source_id": source_id,
@@ -147,6 +149,8 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
     ]
     counts = Counter(row["label"] for row in matching_reviews)
     editorial, review_metrics = editorial_gate(sample_count, counts)
+    if observation["maturity"] in {"L0", "L1"} or body_rate is None or body_rate < 0.6:
+        editorial = "NOT_READY_FOR_EDITORIAL_REVIEW"
     diagnostics = observation.get("diagnostics") or {}
     candidate_count = diagnostics.get("candidate_count")
     unresolved = diagnostics.get("unresolved_detail_url_count")
@@ -246,6 +250,16 @@ def run(observation_paths: list[Path], reviews_path: Path | None, output_dir: Pa
     reviews, review_errors = load_reviews(reviews_path)
     if review_errors:
         raise ValueError("; ".join(review_errors))
+    observed_keys = {
+        (observation["source_id"], str(record["source_record_id"]))
+        for observation in observations for record in observation.get("records", [])
+    }
+    unknown_reviews = [
+        (row["source_id"], row["source_record_id"]) for row in reviews
+        if (row["source_id"], row["source_record_id"]) not in observed_keys
+    ]
+    if unknown_reviews:
+        raise ValueError(f"reviews do not match current sample: {unknown_reviews[:5]}")
     scorecard = build_scorecard(observations, registry, reviews)
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "source_scorecard.json").write_text(
