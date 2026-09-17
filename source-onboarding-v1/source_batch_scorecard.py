@@ -121,7 +121,7 @@ def editorial_gate(sample_count: int, counts: Counter) -> tuple[str, dict]:
 def score_observation(observation: dict, registry: dict, reviews: list[dict]) -> dict:
     source_id = str(observation.get("source_id") or "UNKNOWN")
     errors = validate_thin_observation(observation, registry)
-    if len(observation.get("records", [])) > 20:
+    if isinstance(observation.get("records"), list) and len(observation["records"]) > 20:
         errors.append("wide screening sample exceeds 20 records")
     if errors:
         return {
@@ -137,10 +137,14 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
     sample_count = len(records)
     failed_access = observation["access_status"] in {"FAILED", "NOT_ATTEMPTED"}
     verified_dates = sum(row["published_at_status"] == "VERIFIED" for row in records)
-    accessible = sum(row["access_status"] in ACCESS_AVAILABLE for row in records)
+    detail_attempts = sum(row["body_status"] != "NOT_FETCHED" for row in records)
+    accessible = sum(
+        row["access_status"] in ACCESS_AVAILABLE
+        for row in records if row["body_status"] != "NOT_FETCHED"
+    )
     body_available = sum(row["body_status"] in BODY_AVAILABLE for row in records)
     unique_fingerprints = len({row["content_fingerprint"] for row in records if row["content_fingerprint"]})
-    body_rate = ratio(body_available, sample_count)
+    body_rate = ratio(body_available, detail_attempts)
 
     record_ids = {str(row["source_record_id"]) for row in records}
     matching_reviews = [
@@ -165,7 +169,8 @@ def score_observation(observation: dict, registry: dict, reviews: list[dict]) ->
         ),
         "sample_count": sample_count,
         "candidate_count": None if failed_access else candidate_count,
-        "record_access_rate": None if failed_access else ratio(accessible, sample_count),
+        "record_access_rate": None if failed_access else ratio(accessible, detail_attempts),
+        "detail_attempt_count": detail_attempts,
         "verified_date_rate": None if failed_access else ratio(verified_dates, sample_count),
         "body_available_rate": None if failed_access else body_rate,
         "unique_content_rate": None if failed_access else ratio(unique_fingerprints, sample_count),
