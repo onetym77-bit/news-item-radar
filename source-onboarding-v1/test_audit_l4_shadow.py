@@ -170,8 +170,24 @@ class AuditL4ShadowTests(unittest.TestCase):
 
         self.assertIn("질문 초안 0건 · 보류 1건", summary)
         self.assertIn("이번에 보류한 문서", summary)
-        self.assertIn("질문 생성 보류", summary)
+        self.assertIn("감사 지적 목록 확인 실패", summary)
         self.assertNotIn("핵심 질문:", summary)
+        state["records"][0]["card"]["documented_issue_in_table"] = True
+        summary = render_summary(state, result, {})
+        self.assertIn("지적은 확인했지만 기획 질문 기준 미달", summary)
+
+        reviews = {
+            "580001": {
+                "verdict": "MISSED_VALUE",
+                "document_value": "VALUABLE",
+                "angle_selection": "MISSED_STRONGER_FINDING",
+                "scores": {},
+                "critical_error": "NONE",
+            }
+        }
+        summary = render_summary(state, result, reviews)
+        self.assertIn("가치 있는 지적 재탐색 · 더 강한 지적 재선택 필요", summary)
+        self.assertNotIn("지적은 확인했지만 기획 질문 기준 미달", summary)
 
     def test_state_rejects_raw_report_and_external_url(self):
         state = state_with_records(1, 1)

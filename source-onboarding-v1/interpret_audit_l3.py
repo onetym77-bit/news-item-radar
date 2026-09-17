@@ -38,7 +38,7 @@ DISPOSITION_TERMS = ("시정", "주의", "개선", "권고", "통보", "징계",
 DOMAIN_TERMS = {
     "RIGHTS_SAFETY": (
         "인권", "학대", "방임", "안전", "개인정보", "진정", "보호조치", "투약", "자해", "사고",
-        "고위험", "의료", "치료", "외출", "외박",
+        "고위험", "의료", "치료", "외출", "외박", "성범죄", "화재", "소방",
     ),
     "PROCUREMENT_CONTRACT": (
         "계약", "입찰", "수의계약", "발주", "공사", "용역", "물품", "하도급", "업체",
@@ -48,13 +48,14 @@ DOMAIN_TERMS = {
     ),
     "FINANCE_BENEFIT": (
         "회계", "후원금", "수당", "급여", "자금", "예산", "재정", "환수", "추징", "감액",
+        "여비", "과다지급", "회수",
     ),
     "GOVERNANCE_CONTROL": (
         "채용", "복무", "위원회", "내부통제", "절차", "관리", "감독", "지침",
     ),
 }
-CRITICAL_ISSUE_TERMS = ("학대", "방임", "자해", "성폭력", "사망", "개인정보 유출")
-ISSUE_MARKERS = re.compile(r"부적정|미흡|소홀|위반|지연|불이행|부족|개선\s*필요")
+CRITICAL_ISSUE_TERMS = ("학대", "방임", "자해", "성폭력", "사망", "개인정보 유출", "성범죄 경력 확인")
+ISSUE_MARKERS = re.compile(r"부적정|미흡|소홀|위반|지연|불이행|부족|개선\s*필요|미준수|사실상의\s*수의계약")
 
 DOMAIN_PRIORITY = (
     "RIGHTS_SAFETY",
@@ -71,9 +72,11 @@ FINDING_IMPACT_TERMS = (
     ("자살", 12), ("사망", 12), ("성폭력", 12), ("자해", 10), ("학대", 9),
     ("고위험", 10), ("무단", 8), ("입소아동", 6), ("외출", 6), ("외박", 6),
     ("의료", 5), ("심리치료", 5), ("안전", 5), ("수의계약", 5),
+    ("성범죄 경력", 12), ("유치원", 5), ("학교", 5), ("파견강사", 4),
+    ("화재", 8), ("소방", 6), ("회수", 5), ("과다지급", 5),
     ("민원 처리 기한", 4), ("후원금", 4), ("계약", 3), ("진정함", 2),
 )
-FINDING_SELECTION_VERSION = "IMPACT_RANK_V2"
+FINDING_SELECTION_VERSION = "CONCRETE_FINDING_V3"
 
 
 def now_kst() -> str:
@@ -213,7 +216,10 @@ def summary_window(report_text: str) -> tuple[str, bool]:
         page = normalize_report_text(pages[index])
         has_table = "일람표" in page or "감사결과 총괄" in page
         has_finding_columns = any(
-            token in page for token in ("처분유형", "조치(안)", "조치(안)", "조치현황")
+            token in page for token in (
+                "처분유형", "처분종류", "조치(안)", "조치현황",
+                "감   사   성   과",
+            )
         )
         if not (has_table and has_finding_columns):
             continue
@@ -253,17 +259,34 @@ def extract_dispositions(window: str) -> tuple[list[str], dict[str, int]]:
 
 
 def issue_evidence_text(window: str) -> str:
-    """Limit classification to official finding rows, not titles or audit scope."""
-    lines = []
+    """Reassemble wrapped numbered finding rows, excluding headers and report body."""
+    findings = []
+    current = []
+    in_table = False
+
+    def flush() -> None:
+        if not current:
+            return
+        value = " ".join(current)
+        if ISSUE_MARKERS.search(value):
+            findings.append(value)
+
     for raw in window.splitlines():
         line = raw.strip()
-        numbered_disposition = (
-            re.match(r"^\d{1,3}\s+", line)
-            and any(term in line for term in DISPOSITION_TERMS)
-        )
-        if ISSUE_MARKERS.search(line) or numbered_disposition:
-            lines.append(line)
-    return "\n".join(lines)
+        if "일람표" in line:
+            in_table = True
+            continue
+        if not in_table:
+            continue
+        if re.match(r"^[ⅢIVX]+[.．]", line) or "감사결과 처분요구서" in line:
+            break
+        if re.match(r"^\d{1,3}\s+", line):
+            flush()
+            current = [re.sub(r"^\d{1,3}\s+", "", line)]
+        elif current and len(current) < 7 and line:
+            current.append(line)
+    flush()
+    return "\n".join(findings)
 
 
 def classify_domains(issue_text: str) -> dict[str, int]:
@@ -287,7 +310,17 @@ def finding_candidates(issue_text: str) -> list[str]:
 
 
 def finding_impact_score(finding: str) -> int:
-    score = sum(weight for term, weight in FINDING_IMPACT_TERMS if term in finding)
+    score = sum(
+        weight
+        for term, weight in FINDING_IMPACT_TERMS
+        if term in finding
+        and not (
+            term in {"외출", "외박"}
+            and not any(child in finding for child in ("아동", "청소년", "시설"))
+        )
+    )
+    if "기관경고" in finding:
+        score += 8
     if any(term in finding for term in ("필요", "부적정", "미흡", "소홀", "위반")):
         score += 1
     return score
@@ -325,7 +358,8 @@ def finding_context_window(report_text: str, finding: str | None) -> str:
 
 def subject_from_title(title: str) -> str:
     value = re.sub(
-        r"\s*(기관운영|관리[·ㆍ ]운영 실태|관리운영 실태|종합|특정)?\s*감사\s*결과\s*(공개문)?\s*$",
+        r"\s*(기관운영|관리[·ㆍ ]운영 실태|관리운영 실태|종합|특정)?\s*감사"
+        r"(?:\s*결과\s*(?:공개문)?)?\s*$",
         "",
         title,
     ).strip()
@@ -349,7 +383,10 @@ def dominant_domain(domain_counts: dict[str, int], issue_text: str = "") -> str 
     # terms in a mixed audit; audit scope has already been excluded.
     if domain_counts.get("RIGHTS_SAFETY", 0) and any(
         phrase in issue_text
-        for phrase in ("인권침해 진정함", "고위험군 아동", "입소아동 외출", "아동학대", "방임")
+        for phrase in (
+            "인권침해 진정함", "고위험군 아동", "입소아동 외출",
+            "아동학대", "방임", "성범죄 경력 확인",
+        )
     ):
         return "RIGHTS_SAFETY"
     # Contracts are a concrete public-spending question; generic management
@@ -366,6 +403,33 @@ def question_components(
     subject: str, domain: str, selected_finding: str = "", finding_context: str = ""
 ) -> dict:
     evidence = selected_finding + "\n" + finding_context
+    if domain == "RIGHTS_SAFETY" and (
+        "성범죄 경력" in selected_finding and "강사" in selected_finding
+    ):
+        return {
+            "verification_question": (
+                f"{subject}가 유치원·학교에 파견한 강사의 성범죄 경력은 "
+                "누가 채용 전에 확인했나? 기관이 서약서에 의존하고 일부 학교도 "
+                "공공기관 파견을 이유로 조회하지 않았다면, 확인 책임의 공백이 "
+                "다른 학교 파견 사업에도 반복되는가?"
+            ),
+            "public_interest_to_verify": "아동 대상 대면 교육 강사의 취업제한 확인 절차",
+            "structural_hypothesis": "파견 기관과 학교 사이에 법정 조회 책임이 빠졌다.",
+            "alternative_hypothesis": "해당 프로그램의 일부 학교만 조회를 누락했고 다른 파견 사업은 확인했다.",
+            "minimum_test": "파견 학교별 채용 전 경력조회 회신과 강사 배치·계약 기록을 같은 기간으로 대조한다.",
+        }
+    if domain == "RIGHTS_SAFETY" and ("화재" in selected_finding or "소방" in selected_finding):
+        return {
+            "verification_question": (
+                f"{subject} 감사가 확인한 비닐하우스 화기·소방관리 공백은 "
+                "교육생이 이용하는 시설에도 남아 있나? 시정 전후 시설 배치, "
+                "대피 동선, 훈련·점검 기록을 대조하면 실제 위험이 줄었는가?"
+            ),
+            "public_interest_to_verify": "교육생과 근무자의 화재 안전",
+            "structural_hypothesis": "화기 관리와 피난·초기 대응 절차가 시설 운영에서 빠졌다.",
+            "alternative_hypothesis": "감사 뒤 위험 시설이 폐쇄 또는 보완돼 현재 노출은 없다.",
+            "minimum_test": "교육시설의 현재 화기 배치와 피난·훈련 기록을 감사 전후 비교한다.",
+        }
     if domain == "RIGHTS_SAFETY" and (
         "고위험군 아동" in selected_finding or "의료·심리치료" in selected_finding
     ):
@@ -480,12 +544,23 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
     domain_strength = selected_domain_counts.get(domain, 0) if domain else 0
     critical_issue = any(term in selected_text for term in CRITICAL_ISSUE_TERMS)
     context = finding_context_window(report_text, selected_finding)
+    specific_rights_finding = not (
+        domain == "RIGHTS_SAFETY"
+        and not any(
+            term in selected_text
+            for term in (
+                "성범죄 경력", "화재", "소방", "고위험군 아동",
+                "의료·심리치료", "외출", "외박", "진정함",
+            )
+        )
+    )
     anchor_ready = bool(
         summary_confirmed
         and documented_issue
         and domain
         and dispositions
         and (domain_strength >= 2 or critical_issue)
+        and specific_rights_finding
     )
     anchor = "PROBLEM_SIGNAL" if anchor_ready else "UNRESOLVED"
     subject = subject_from_title(listing_record["title"])
@@ -521,7 +596,11 @@ def build_card(listing_record: dict, attachment_url: str, pdf_diagnostics: dict,
         base.update(
             {
                 "question_status": "HOLD",
-                "hold_reason": "공개문 앞부분에서 지적 요약·처분 유형·문제 영역의 결합을 확인하지 못함",
+                "hold_reason": (
+                    "구체 지적은 확인했지만 기획 질문 생성 기준에 미달"
+                    if summary_confirmed and documented_issue
+                    else "감사 지적 일람표 또는 개별 지적을 확인하지 못함"
+                ),
                 "verification_question": None,
                 "source_frame": None,
                 "editorial_addition": None,
