@@ -622,6 +622,7 @@ def pending_review_window_open(
     if row.get("lane", "").strip().upper() not in {
         "CORE_DISCOVERY",
         "AUX_DISCOVERY",
+        "REDISCOVERED_CARRYOVER",
     }:
         return False
     if row.get("grounding_status", "").strip().upper() != "PASS":
