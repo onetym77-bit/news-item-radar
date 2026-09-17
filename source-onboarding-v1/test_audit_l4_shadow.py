@@ -10,6 +10,7 @@ from audit_l4_shadow import (
     evaluate,
     initial_state,
     read_reviews,
+    render_summary,
     select_unseen,
     validate_state,
 )
@@ -130,6 +131,42 @@ class AuditL4ShadowTests(unittest.TestCase):
         self.assertEqual(result["metrics"]["missed_stronger_findings"], 2)
         self.assertLess(result["metrics"]["angle_selection_accuracy_pct"], 90)
         self.assertEqual(result["outcome"], "QUALITY_GATES_NOT_MET")
+
+    def test_summary_shows_recent_questions_without_detailed_evidence(self):
+        state = state_with_records(3, 2)
+        state["runs"][-1]["selected_ids"] = ["580003"]
+        state["records"][2]["card"]["verification_question"] = (
+            "이 지적은 현장 운영을 바꿨나? 근거 자료를 길게 나열한다."
+        )
+        state["records"][2]["card"]["discriminating_test"] = "상세 검증 절차 비공개"
+        state["records"][2]["challenge_flags"] = ["HUMAN_CHECK_ACTUAL_CITIZEN_EFFECT"]
+        reviews = {"580001": top_scores()}
+        result = evaluate(state, reviews)
+
+        summary = render_summary(state, result, reviews)
+
+        self.assertIn("이번 실행: 새 문서 1건 · 질문 초안 1건", summary)
+        self.assertIn("핵심 질문: 이 지적은 현장 운영을 바꿨나?", summary)
+        self.assertIn("이전 문서의 사람 판정", summary)
+        self.assertIn("서울시 감사 결과 580001", summary)
+        self.assertNotIn("서울시 감사 결과 580002", summary)
+        self.assertNotIn("근거 자료를 길게 나열한다", summary)
+        self.assertNotIn("상세 검증 절차 비공개", summary)
+        self.assertNotIn("HUMAN_CHECK_ACTUAL_CITIZEN_EFFECT", summary)
+        self.assertNotIn("PDF 추출 성공률", summary)
+
+    def test_summary_does_not_confuse_held_document_with_candidate(self):
+        state = state_with_records(1, 1)
+        state["records"][0]["card"] = card("580001", ready=False)
+        state["runs"][0]["selected_ids"] = ["580001"]
+        result = evaluate(state, {})
+
+        summary = render_summary(state, result, {})
+
+        self.assertIn("질문 초안 0건 · 보류 1건", summary)
+        self.assertIn("이번에 보류한 문서", summary)
+        self.assertIn("질문 생성 보류", summary)
+        self.assertNotIn("핵심 질문:", summary)
 
     def test_state_rejects_raw_report_and_external_url(self):
         state = state_with_records(1, 1)
