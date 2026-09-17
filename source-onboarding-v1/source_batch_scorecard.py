@@ -257,7 +257,7 @@ def render_summary(scorecard: dict) -> str:
         error_code = diagnostics.get("error_code")
         if error_code:
             lines.append(f"| ↳ 접속·파싱 상태 |  |  |  |  |  |  | {error_code} |  |")
-        if diagnostics.get("unresolved_detail_url_count") is not None:
+        if row["source_id"] == "environment_assessment" and diagnostics.get("unresolved_detail_url_count") is not None:
             lines.append(
                 f"| ↳ 환경평가 상세주소 |  | 후보 {diagnostics.get('candidate_count', '-')} |  |  |  |  | "
                 f"확인 {diagnostics.get('resolved_detail_url_count', 0)} · 미해결 {diagnostics.get('unresolved_detail_url_count', 0)} |  |"
