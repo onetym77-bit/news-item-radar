@@ -44,6 +44,7 @@ METRIC_PERIOD_LABELS = {
 
 
 def render(feed: dict, review: dict | None = None) -> str:
+    """Render only editorial decisions; keep evidence excerpts in diagnostic files."""
     review = review or {}
     core = feed.get("core_discovery", [])
     auxiliary = feed.get("auxiliary_discovery", [])
@@ -56,273 +57,145 @@ def render(feed: dict, review: dict | None = None) -> str:
     baselines = feed.get("activity_baselines", [])
     metadata_leads = feed.get("verification_metadata_leads", [])
     schema_leads = feed.get("verification_schema_leads", [])
-    verification = feed.get("verification_map", [])
-    lines = [
-        "## C-실험. 신규 소스 질문 씨앗",
-        "",
-        "**아래 항목은 S0 이전 자동 탐색 결과다. 기사 후보나 검증된 사실로 간주하지 않는다.**",
-        "",
-        "자동 분류·수집 정렬점수와 사람의 편집 판정은 서로 다른 값이다.",
-        "",
-    ]
+    candidates = core + auxiliary
+    proposals = review.get("transition_proposals", [])
+    killer = review.get("killer_test")
+    legacy = review.get("legacy_rereview", [])
+
     unhealthy = [
         metric
         for metric in feed.get("metrics", [])
         if not metric.get("http_ok", False)
         or str(metric.get("status_detail", "")).startswith(("FETCH_FAILED", "DEGRADED_"))
     ]
-    lines.extend(["### 소스 연결·본문 상태", ""])
+    hold_counts = [
+        ("문맥 미확정", len(context_holds)),
+        ("이미 본 원문", len(rediscovered)),
+        ("신선도 초과", len(stale)),
+        ("보관 종료", len(archived)),
+        ("날짜 미확인", len(freshness_holds)),
+        ("활동량 기준선", len(baselines)),
+        ("실제 값 미확인 데이터", len(metadata_leads) + len(schema_leads)),
+    ]
+    largest_hold = max(hold_counts, key=lambda item: item[1], default=("없음", 0))
+
+    lines = [
+        "## C-실험. 신규 소스 발굴 요약",
+        "",
+        "### 한줄 판단",
+        "",
+    ]
+    if candidates:
+        lines.append(
+            f"**오늘 사람이 검토할 새 질문 후보는 {len(candidates)}건입니다.** "
+            "자동으로 아이템 장부나 S0 단계에 올리지는 않습니다."
+        )
+    else:
+        reason = (
+            f"가장 큰 병목은 {largest_hold[0]} {largest_hold[1]}건입니다."
+            if largest_hold[1]
+            else "수집된 자료에서 질문 후보를 만들지 못했습니다."
+        )
+        lines.append(f"**오늘 새 질문 후보는 없습니다.** {reason}")
+    lines.extend(
+        [
+            "",
+            f"- 새 질문 후보: {len(candidates)}건",
+            f"- 서울 근거 확인 대기: {len(localization)}건",
+            f"- 사람의 S0 전이 승인 대기: {len(proposals)}건",
+            "",
+            "### 오늘 검토할 후보",
+            "",
+        ]
+    )
+    if not candidates:
+        lines.extend(["- 없음", ""])
+    else:
+        for index, row in enumerate(candidates[:5], 1):
+            title = (
+                row.get("context_subject")
+                or row.get("source_name")
+                or row.get("source_id")
+                or f"후보 {index}"
+            )
+            question = row.get("question") or "검증 질문 미작성"
+            source_date = row.get("speech_date") or row.get("source_date") or "날짜 미확인"
+            lines.extend(
+                [
+                    f"#### {index}. {md(title, 100)}",
+                    "",
+                    f"- 기획 질문: {md(question, 300)}",
+                    f"- 출처·자료일: {md(row.get('source_name') or row.get('source_id') or '미상', 100)} · {source_date}",
+                    f"- [원문]({row.get('url', '')})",
+                    "",
+                ]
+            )
+        if len(candidates) > 5:
+            lines.extend([f"- 나머지 {len(candidates) - 5}건은 진단 파일에서 확인", ""])
+
+    lines.extend(["### 서울 근거 확인 대기", ""])
+    if not localization:
+        lines.extend(["- 없음", ""])
+    else:
+        for row in localization[:3]:
+            lines.append(
+                f"- {md(row.get('question') or row.get('context_subject') or '질문 미작성', 240)} "
+                f"([원문]({row.get('url', '')}))"
+            )
+        if len(localization) > 3:
+            lines.append(f"- 외 {len(localization) - 3}건")
+        lines.append("")
+
+    lines.extend(["### 보류 요약", ""])
+    nonzero_holds = [(label, count) for label, count in hold_counts if count]
+    if not nonzero_holds:
+        lines.extend(["- 보류 항목 없음", ""])
+    else:
+        lines.append("- " + " · ".join(f"{label} {count}건" for label, count in nonzero_holds))
+        lines.append(
+            "- 발언 조각·근거 문장·중복 원문·오래된 단서의 상세 내용은 브리핑에서 제외했습니다."
+        )
+        lines.append("")
+
+    lines.extend(["### 수집 이상", ""])
     if not unhealthy:
-        lines.extend(["- 연결 실패나 본문 저하가 감지되지 않음", ""])
+        lines.extend(["- 없음", ""])
     else:
         for metric in unhealthy:
             state = metric.get("status_detail") or "FETCH_FAILED"
-            detail = metric.get("error") or "본문에서 필요한 값을 확보하지 못함"
             lines.append(
                 f"- {md(metric.get('name', metric.get('id', '미상')), 80)}: "
-                f"{md(str(state), 60)} — {md(str(detail), 180)}"
+                f"{md(str(state), 80)}"
             )
         lines.extend(
             [
-                "- 위 소스의 0건은 현상 부재가 아니라 수집·본문 확인 실패로 해석",
+                "- 이 소스의 0건은 현상 부재가 아니라 수집·본문 확인 실패로 봅니다.",
                 "",
             ]
         )
-    lines.extend(
-        [
-        "### 핵심 발굴원 — 서울시의회 회의록",
-        "",
-        ]
-    )
-    if not core:
-        lines.extend(["- 오늘 자동 기준을 통과한 문맥 잠금 완료 단서 없음", ""])
-    else:
-        for index, row in enumerate(core, 1):
-            event = " · ".join(
-                value for value in (
-                    row.get("context_subject", ""),
-                    row.get("context_trigger", ""),
-                ) if value
-            )
-            claim_level = CLAIM_STATUS_LABELS.get(
-                row.get("claim_status", ""),
-                row.get("claim_status") or "확인 수준 미분류",
-            )
-            source_level = " · ".join(
-                value for value in (
-                    row.get("speaker", ""),
-                    row.get("speech_type_label", ""),
-                    claim_level,
-                    METRIC_SOURCE_LABELS.get(
-                        row.get("metric_source_status", ""),
-                        row.get("metric_source_status", ""),
-                    ),
-                ) if value
-            )
-            period_level = METRIC_PERIOD_LABELS.get(
-                row.get("metric_period_status", ""),
-                row.get("metric_period_status") or "미확인",
-            )
-            fact_label = row.get("statement_label") or "제시된 내용"
-            lines.extend(
-                [
-                    f"#### {index}. {row.get('context_subject') or '문맥 잠금 완료 단서'}",
-                    "",
-                    f"- 무슨 일: {md(event or '사안 미확인', 240)}",
-                    f"- 적용 범위: {md(row.get('sector_scope') or '확인 필요', 260)}",
-                    f"- 영향 확인 대상: {md(row.get('affected_group') or '확인 필요', 180)}",
-                    f"- {fact_label}: {md(row.get('display_fact') or row.get('question_basis') or row.get('text', ''), 300)}",
-                    (
-                        f"- 수치 범위·기준: {md(row.get('metric_scope') or '정량 수치 없음', 240)} · "
-                        f"{row.get('metric_period') or '확인 필요'} ({period_level})"
-                    ),
-                    f"- 출처·확인 수준: {md(source_level or row.get('source_name', '미상'), 220)}",
-                    f"- 회의록 문서일: {row.get('speech_date') or '미확인'}",
-                    f"- 범위 주의: {md(row.get('scope_exclusion') or '별도 주의 없음', 180)}",
-                    f"- 기획 질문: {md(row.get('question', ''), 300)}",
-                    f"- 질문 일치: {row.get('grounding_status', 'HOLD')} · 수집 정렬점수 {row.get('score', 0)}",
-                    f"- [원문]({row.get('url', '')})",
-                    "",
-                ]
-            )
 
-    lines.extend(["### 문맥 확인 대기 — 질문 생성 금지", ""])
-    if not context_holds:
-        lines.extend(["- 사건·대상·수치 범위·기준기간을 확정하지 못해 보류된 의회 단서 없음", ""])
-    else:
-        for row in context_holds:
-            missing = ", ".join(row.get("context_missing_fields", [])) or "세부 문맥"
-            lines.extend(
-                [
-                    f"- 발언 조각: {md(row.get('text', ''), 220)}",
-                    f"- 보류 이유: {md(row.get('context_reason') or '문맥 잠금 미완료', 220)}",
-                    f"- 빠진 항목: {md(missing, 160)}",
-                    f"- 회의록 문서일: {row.get('speech_date') or '미확인'}",
-                    f"- [원문]({row.get('url', '')})",
-                    "",
-                ]
-            )
-
-    lines.extend(["### 보완 발굴원", ""])
-    if not auxiliary:
-        lines.extend(["- 오늘 자동 기준을 통과한 보완 발굴 단서 없음", ""])
-    else:
-        for row in auxiliary:
-            lines.extend(
-                [
-                    f"- 출처: {row.get('source_name', row.get('source_id', '미상'))}",
-                    f"- 단서: {md(row.get('text', ''))}",
-                    f"- 근거 앵커: {row.get('evidence_anchor', 'NONE')}",
-                    f"- 신선도 기준일: {row.get('source_date') or '미상'} · {row.get('freshness_basis') or '기준 미상'} · 경과 {row.get('freshness_days', '미상')}일",
-                    f"- 질문: {md(row.get('question', ''))}",
-                    f"- [원문]({row.get('url', '')})",
-                    "",
-                ]
-            )
-
-    lines.extend(["### 서울 지역화 대기 — 서울 근거 확보 전 S0 불가", ""])
-    if not localization:
-        lines.extend(["- 오늘 서울 자료로 재확인할 전국 단서 없음", ""])
-    else:
-        for row in localization:
-            lines.extend(
-                [
-                    f"- 전국 단서: {md(row.get('question_basis') or row.get('text', ''), 220)}",
-                    f"- 서울 검증 질문: {md(row.get('question', ''), 220)}",
-                    f"- 출처: {row.get('source_name', row.get('source_id', '미상'))}",
-                    f"- 신선도 기준일: {row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'}",
-                    f"- [원문]({row.get('url', '')})",
-                    "- 상태: 서울 수치 미확보 — 편집 카드·S0 전이 대상 아님",
-                    "",
-                ]
-            )
-
-    lines.extend(["### 동일 원문 재등장 — 오늘 새 후보 제외", ""])
-    if not rediscovered:
-        lines.extend(["- 이전 실행과 동일한 원문·날짜의 재등장 없음", ""])
-    else:
-        for row in rediscovered:
-            lines.append(
-                f"- {md(row.get('question_basis') or row.get('text', ''), 190)} — "
-                "이전과 같은 원문 지문; 새 카드·자동 재활성화·S0 제안 제외"
-            )
-        lines.append("")
-    lines.extend(["### STALE_CARRYOVER — 오늘 후보 제외", ""])
-    if not stale:
-        lines.extend(["- 신선도 창을 넘긴 유효 단서 없음", ""])
-    else:
-        for row in stale:
-            lines.append(
-                f"- {md(row.get('question_basis') or row.get('text', ''), 190)} — "
-                f"{row.get('source_date', '날짜 미상')} 기준 {row.get('freshness_days', '?')}일 경과; "
-                "오늘 카드·재활성화·S0 제안 제외"
-            )
-        lines.append("")
-
-    lines.extend(["### 보관 종료 단서 — 감사용 표본", ""])
-    if not archived:
-        lines.extend(["- 보관 기한을 넘긴 유효 단서 표본 없음", ""])
-    else:
-        for row in archived:
-            lines.append(
-                f"- {md(row.get('question_basis') or row.get('text', ''), 190)} — "
-                f"{row.get('source_date', '날짜 미상')} 기준 {row.get('freshness_days', '?')}일 경과; "
-                f"오늘 후보 제외 · [원문]({row.get('url', '')})"
-            )
-        lines.append("")
-
-    lines.extend(["### 날짜 확인 대기 — 오늘 후보 제외", ""])
-    if not freshness_holds:
-        lines.extend(["- 날짜를 확인하지 못한 유효 단서 없음", ""])
-    else:
-        for row in freshness_holds:
-            lines.append(
-                f"- {md(row.get('question_basis') or row.get('text', ''), 190)} — "
-                f"{row.get('freshness_status', 'FRESHNESS_UNKNOWN')}; 원문 날짜 확인 전 후보 제외"
-            )
-        lines.append("")
-    lines.extend(["### 활동량 기준선 — 후보 아님", ""])
-    if not baselines:
-        lines.extend(["- 오늘 저장된 활동량 기준선 없음", ""])
-    else:
-        for row in baselines:
-            lines.append(
-                f"- {md(row.get('text', ''), 180)} — 전일·전월 누적 비교 전에는 이상 신호로 사용하지 않음"
-            )
-        lines.append("")
-
-    lines.extend(["### 데이터 구조 확인 — 실제 값 미수집", ""])
-    if not schema_leads:
-        lines.extend(["- 오늘 구조만 확인된 데이터셋 없음", ""])
-    else:
-        for row in schema_leads:
-            lines.append(
-                f"- {md(row.get('text', ''), 170)} — 실제 데이터 행 수집 전 검증 자산 사용 금지 "
-                f"(자료일 {row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'}) "
-                f"([원문]({row.get('url', '')}))"
-            )
-        lines.append("")
-
-    lines.extend(["### 데이터셋 후보 — 스키마·값 미확인", ""])
-    if not metadata_leads:
-        lines.extend(["- 오늘 스키마 확인 대기 중인 데이터셋 제목 없음", ""])
-    else:
-        for row in metadata_leads:
-            lines.append(
-                f"- {md(row.get('text', ''), 160)} — 컬럼·실제 값 확인 전 검증 자산 사용 금지 "
-                f"(자료일 {row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'}) "
-                f"([원문]({row.get('url', '')}))"
-            )
-        lines.append("")
-
-    lines.extend(["### 검증 데이터 지도", ""])
-    if not verification:
-        lines.extend(["- 오늘 연결할 검증 자료 없음", ""])
-    else:
-        lines.extend(
-            [
-                "| 자료 단서 | 자료일·상태 | 사용할 때 | 원문 |",
-                "|---|---|---|---|",
-            ]
-        )
-        for row in verification:
-            lines.append(
-                f"| {md(row.get('text', ''), 140)} | "
-                f"{row.get('source_date') or '미상'} · {row.get('freshness_status') or 'FRESHNESS_UNKNOWN'} | "
-                f"{md(row.get('question', ''), 120)} | [원문]({row.get('url', '')}) |"
-            )
-        lines.append("")
-
-    proposals = review.get("transition_proposals", [])
-    killer = review.get("killer_test")
-    legacy = review.get("legacy_rereview", [])
-    lines.extend(["### 사람 판정 이후", ""])
+    lines.extend(["### 다음 편집 판단", ""])
     lines.append(f"- S0 전이 승인 대기: {len(proposals)}건 — 자동 반영 없음")
     if killer:
-        lines.extend(
-            [
-                f"- 오늘의 킬러 테스트: {killer.get('candidate_id', '-')}",
-                f"- 테스트 질문: {md(killer.get('test_question', ''), 220)}",
-                f"- 통과선: {md(killer.get('test_pass_rule', ''), 180)}",
-                f"- 폐기선: {md(killer.get('test_kill_rule', ''), 180)}",
-                "- 상태: PLANNED — 아직 수행하지 않음",
-            ]
+        lines.append(
+            f"- 우선 검증: {md(killer.get('test_question') or killer.get('candidate_id', ''), 240)}"
         )
+        lines.append(f"- 통과선: {md(killer.get('test_pass_rule', ''), 180)}")
+        lines.append(f"- 폐기선: {md(killer.get('test_kill_rule', ''), 180)}")
     else:
-        lines.append("- 오늘의 킬러 테스트: 완전한 판정선이 입력된 항목 없음")
+        lines.append("- 우선 검증: 완전한 판정선이 입력된 항목 없음")
     if legacy:
         missing = sum(row.get("source_status") == "SOURCE_REQUIRED" for row in legacy)
         lines.append(f"- 기존 질문 재심사: {len(legacy)}건 · 원자료 복구 필요 {missing}건")
-    lines.append("")
     lines.extend(
         [
-            "- 편집 판정 기록: source-scout-v1/HUMAN_REVIEW_QUEUE.csv",
-            "- 자동 점수 통과는 검증 큐 진입 검토만 허용하며 ITEM_LEDGER에는 자동 등록하지 않음",
+            "",
+            "- 편집 판정은 source-scout-v1/HUMAN_REVIEW_QUEUE.csv에 기록합니다.",
+            "- 전체 근거와 수집 진단은 별도 source-scout 산출물에만 보존합니다.",
             "",
         ]
     )
     return "\n".join(lines)
-
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
