@@ -23,7 +23,7 @@
 - 원문: https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4
 - 전이 상태: 미승인 — 장부 변경 없음
 
-### 2. dc2cb56dd6da
+### 2. 7b33a7a2d06e
 
 - 무슨 일: 서울 자치구 수어통역센터 재정·서비스 · 자체수입 재투자 제한
 - 적용 범위: 서울 25개 자치구 수어통역센터
@@ -39,7 +39,7 @@
 - 사람 판정: PENDING
 - 오늘 신규: 아니오 · 검토 유지: 예 · 신선도 FRESH
 - 원문 최신일: 2026-09-11
-- 원문: https://ms.smc.seoul.kr/record/recordView.do?key=affc6139710ba49c1ab9cef1d7031523de57ac499b06f262cfb9671598f1f79613e9bcb8c28712ae
+- 원문: https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4
 - 전이 상태: 미승인 — 장부 변경 없음
 
 ### 3. 55c031a7cbf0
