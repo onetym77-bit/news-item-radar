@@ -150,8 +150,8 @@ def validate_thin_observation(payload: dict, registry: dict) -> list[str]:
     records = payload["records"]
     if not isinstance(records, list):
         return errors + ["records must be a list"]
-    if len(records) > 50:
-        errors.append("thin observation may contain at most 50 records")
+    if len(records) > 20:
+        errors.append("thin observation may contain at most 20 records")
     if payload["access_status"] == "FAILED" and records:
         errors.append("failed access cannot emit records")
     if source["maturity"] == "L0" and records:
