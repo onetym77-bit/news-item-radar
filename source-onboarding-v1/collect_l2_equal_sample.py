@@ -168,11 +168,6 @@ def common_metrics(observation: dict) -> dict:
         for row in available
         if int(row.get("article_text_chars_observed") or 0) > 0
     ]
-    unique = {
-        row.get("content_fingerprint")
-        for row in records
-        if row.get("content_fingerprint")
-    }
     attachment_links = sum(
         int(row.get("attachment_link_count_not_fetched") or 0) for row in records
     )
@@ -191,7 +186,6 @@ def common_metrics(observation: dict) -> dict:
         "title_aligned_count": len(aligned),
         "detail_text_available_count": len(available),
         "verified_date_count": sum(row.get("published_at_status") == "VERIFIED" for row in records),
-        "unique_content_count": len(unique),
         "median_detail_text_chars_observed": int(statistics.median(lengths)) if lengths else None,
         "attachment_links_not_fetched": attachment_links,
         "substantive_body_scope": substantive_scope,
@@ -250,11 +244,11 @@ def render_equal_summary(observations: list[dict], scorecard: dict) -> str:
             )
         lines.append("")
     lines.extend([
-        "## 공통 판정",
+        "## 이번 표본의 해석",
         "",
-        "- 두 소스 모두 5건의 상세 화면까지 안정적으로 도달했습니다.",
-        "- 감사 결과는 실질 지적 내용이 첨부 공개문에 있어 첨부 확인 전 편집 표본으로 간주할 수 없습니다.",
-        "- 시민제안은 상세 화면에서 제안문을 읽을 수 있지만, 게시일 확정과 사실 검증은 별도입니다.",
+        "- 기술적 접근과 실질 문제 단서 확보는 별개의 단계입니다.",
+        "- 감사 결과의 지적 내용은 첨부 공개문을 별도로 확인해야 합니다. 상세 화면 텍스트만으로 편집 가치를 판정하지 않습니다.",
+        "- 시민제안은 제목 기준 상세 텍스트를 읽었지만 메뉴·부가정보 혼입, 날짜 후보값, 주장 미검증을 분리해 검토해야 합니다.",
     ])
     return "\n".join(lines)
 
@@ -263,7 +257,7 @@ def write_review_queue(observations: list[dict], path: Path) -> None:
     with path.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=[
             "source_id", "source_record_id", "title", "detail_url",
-            "published_at", "body_available", "review_label", "review_note",
+            "published_at", "detail_text_available", "substantive_body_scope", "review_label", "review_note",
         ])
         writer.writeheader()
         for observation in observations:
@@ -274,7 +268,8 @@ def write_review_queue(observations: list[dict], path: Path) -> None:
                     "title": row["title"],
                     "detail_url": row["detail_url"],
                     "published_at": row.get("published_at") or "",
-                    "body_available": row.get("body_status") in BODY_AVAILABLE,
+                    "detail_text_available": row.get("body_status") in BODY_AVAILABLE,
+                    "substantive_body_scope": common_metrics(observation)["substantive_body_scope"],
                     "review_label": "",
                     "review_note": "",
                 })
