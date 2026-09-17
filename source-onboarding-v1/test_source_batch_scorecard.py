@@ -68,6 +68,14 @@ class SourceBatchScorecardTests(unittest.TestCase):
         self.assertEqual(result["sources"][0]["technical_gate"], "RETRY_ACCESS")
         self.assertNotEqual(result["sources"][1]["technical_gate"], "INVALID_OBSERVATION")
 
+    def test_l1_probe_of_higher_maturity_source_uses_observed_depth(self):
+        observation = self.observation(source_id="seoul_audit_results", count=10)
+        for record in observation["records"]:
+            record["body_status"] = "NOT_FETCHED"
+        row = score_observation(observation, self.registry, [])
+        self.assertEqual(row["technical_gate"], "READY_FOR_L2_SAMPLE")
+        self.assertEqual(row["editorial_gate"], "NOT_READY_FOR_EDITORIAL_REVIEW")
+
     def test_l1_listing_cannot_receive_editorial_value_judgment(self):
         observation = self.observation(source_id="district_councils_25", count=10)
         observation["source_url"] = "https://example.go.kr/list"
