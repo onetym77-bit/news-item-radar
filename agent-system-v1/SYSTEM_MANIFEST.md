@@ -67,6 +67,8 @@
 | 단체장 페이스북 검색 후보 L0 시험 | official-social-pilot/search_officeholder_names.py |
 | 단체장 게시물 주소 검색 색인 가능성 시험(성숙도 L0 유지) | official-social-pilot/probe_post_index.py |
 | 단체장 게시물 주소 검색 수동·PR·main 읽기 전용 실행 | .github/workflows/officeholder-post-index-feasibility.yml |
+| 편집자 제출 페이스북 게시물 링크 검증 | official-social-pilot/validate_manual_post_links.py |
+| 편집자 제출 링크 검증 수동·PR 읽기 전용 실행 | .github/workflows/facebook-manual-link-intake.yml |
 | 공식 홈페이지 연결 유튜브 채널 8곳 L1 표본 시험 목록 | official-social-pilot/youtube_feed_trial.json |
 | 공식 홈페이지 연결 유튜브 공개 피드 L1 표본 수집 | official-social-pilot/collect_youtube_feed_trial.py |
 | 공식 유튜브 L1 PR·main·수동 읽기 전용 실행 | .github/workflows/official-youtube-feed-trial.yml |
