@@ -2,7 +2,7 @@ import json
 import unittest
 from pathlib import Path
 
-from scan_official_sites import SocialLinkParser, social_platform
+from scan_official_sites import SocialLinkParser, render, social_platform
 from verify_registry import validate_registry
 
 HERE = Path(__file__).resolve().parent
@@ -31,6 +31,22 @@ class OfficialHomepageScanTests(unittest.TestCase):
             '<a href="/news">소식</a>'
         )
         self.assertEqual(parser.candidates, {"https://www.youtube.com/@district": "youtube"})
+
+    def test_summary_shows_candidate_url_and_official_evidence_without_approval(self):
+        result = {"sites": [{
+            "entity_id": "gwanak",
+            "status": "SUCCESS",
+            "reason": None,
+            "candidate_links": [{
+                "platform": "youtube",
+                "url": "https://www.youtube.com/@gwanak",
+                "evidence_page": "https://www.gwanak.go.kr/",
+            }],
+        }]}
+        summary = render(result)
+        self.assertIn("https://www.youtube.com/@gwanak", summary)
+        self.assertIn("https://www.gwanak.go.kr/", summary)
+        self.assertIn("계정 승인 아님", summary)
 
     def test_missing_evidence_rejected(self):
         data = json.loads((HERE / "accounts.json").read_text(encoding="utf-8"))
