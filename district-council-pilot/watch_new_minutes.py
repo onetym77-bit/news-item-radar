@@ -12,6 +12,7 @@ import hashlib
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import parse_qsl, urlencode, urlparse
 
 from collect_pilot import Client, discover_list, load_recent_tabs, select_rows
 
@@ -36,7 +37,9 @@ def load_state(path):
 
 
 def record_key(url):
-    return hashlib.sha256(url.encode("utf-8")).hexdigest()[:24]
+    parsed = urlparse(url)
+    identity = parsed.path + "?" + urlencode(sorted(parse_qsl(parsed.query)))
+    return hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24]
 
 
 def observe(source, limit=WINDOW_LIMIT):
