@@ -30,182 +30,260 @@
           "checked_on": "2026-09-18"
         }
       ],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "gangnam",
       "name": "강남구",
-      "official_site": null,
+      "official_site": "https://www.gangnam.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "gwanak",
       "name": "관악구",
-      "official_site": null,
+      "official_site": "https://www.gwanak.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "nowon",
       "name": "노원구",
-      "official_site": null,
+      "official_site": "https://www.nowon.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "mapo",
       "name": "마포구",
-      "official_site": null,
+      "official_site": "https://www.mapo.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "seongdong",
       "name": "성동구",
-      "official_site": null,
+      "official_site": "https://www.sd.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "jongno",
       "name": "종로구",
-      "official_site": null,
+      "official_site": "https://www.jongno.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "junggu",
       "name": "중구",
-      "official_site": null,
+      "official_site": "https://www.junggu.seoul.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "yongsan",
       "name": "용산구",
-      "official_site": null,
+      "official_site": "https://www.yongsan.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "seongbuk",
       "name": "성북구",
-      "official_site": null,
+      "official_site": "https://www.sb.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "gangbuk",
       "name": "강북구",
-      "official_site": null,
+      "official_site": "https://www.gangbuk.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "dobong",
       "name": "도봉구",
-      "official_site": null,
+      "official_site": "https://www.dobong.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "eunpyeong",
       "name": "은평구",
-      "official_site": null,
+      "official_site": "https://www.ep.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "seodaemun",
       "name": "서대문구",
-      "official_site": null,
+      "official_site": "https://www.sdm.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "yangcheon",
       "name": "양천구",
-      "official_site": null,
+      "official_site": "https://www.yangcheon.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "gangseo",
       "name": "강서구",
-      "official_site": null,
+      "official_site": "https://www.gangseo.seoul.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "gwangjin",
       "name": "광진구",
-      "official_site": null,
+      "official_site": "https://www.gwangjin.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "dongdaemun",
       "name": "동대문구",
-      "official_site": null,
+      "official_site": "https://www.ddm.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "jungnang",
       "name": "중랑구",
-      "official_site": null,
+      "official_site": "https://www.jungnang.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "guro",
       "name": "구로구",
-      "official_site": null,
+      "official_site": "https://www.guro.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "geumcheon",
       "name": "금천구",
-      "official_site": null,
+      "official_site": "https://www.geumcheon.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "yeongdeungpo",
       "name": "영등포구",
-      "official_site": null,
+      "official_site": "https://www.ydp.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "dongjak",
       "name": "동작구",
-      "official_site": null,
+      "official_site": "https://www.dongjak.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&pageIndex=2&srchAsndOrgClsCd=ALL&srchOrder=ABC&srchOrgCd=3070000&srchTxt=",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "seocho",
       "name": "서초구",
-      "official_site": null,
+      "official_site": "https://www.seocho.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "songpa",
       "name": "송파구",
-      "official_site": null,
+      "official_site": "https://www.songpa.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     },
     {
       "id": "gangdong",
       "name": "강동구",
-      "official_site": null,
+      "official_site": "https://www.gangdong.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": []
+      "officeholder_accounts": [],
+      "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
+      "official_site_verification": "GOV24_LISTED",
+      "official_site_checked_on": "2026-09-18"
     }
   ]
 }

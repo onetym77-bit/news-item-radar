@@ -35,17 +35,22 @@ jobs:
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
       - name: Recheck links on Seoul official directory only
         run: python -X utf8 official-social-pilot/verify_registry.py --output-dir official-social-pilot/output/l0
+      - name: Scan 26 official homepages for candidate links
+        run: python -X utf8 official-social-pilot/scan_official_sites.py --output-dir official-social-pilot/output/site-links
       - name: Show verification coverage
         if: always()
         run: |
           if [ -f official-social-pilot/output/l0/SUMMARY.md ]; then
             cat official-social-pilot/output/l0/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f official-social-pilot/output/site-links/SUMMARY.md ]; then
+            cat official-social-pilot/output/site-links/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Upload bounded diagnostics
         if: always()
         uses: actions/upload-artifact@v6
         with:
           name: official-social-l0-${{ github.run_id }}
-          path: official-social-pilot/output/l0/
+          path: official-social-pilot/output/
           if-no-files-found: warn
           retention-days: 7
