@@ -1,0 +1,27 @@
+name: Build app UI data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 3 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  build-ui-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main outputs
+        uses: actions/checkout@v4
+
+      - name: Build normalized UI data
+        run: python app-ui-v1/build_ui_data.py
+
+      - name: Commit changed UI data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app-ui-v1/data/latest.json
+          git diff --cached --quiet || git commit -m "Update app UI data snapshot"
+          git push
