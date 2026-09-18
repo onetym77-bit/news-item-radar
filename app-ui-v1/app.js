@@ -11,8 +11,7 @@ async function loadData() {
   try {
     const response = await fetch("data/latest.json", { cache: "no-store" });
     if (!response.ok) throw new Error("latest data unavailable");
-    const liveData = await response.json();
-    return { ...sampleData, ...liveData, dataMode: "실제 산출물" };
+    return { ...sampleData, ...(await response.json()), dataMode: "실제 산출물" };
   } catch {
     return sampleData;
   }
@@ -22,8 +21,22 @@ function render(data) {
   document.getElementById("lastRun").textContent = data.lastRun;
   document.getElementById("dataMode").textContent = data.dataMode;
   document.getElementById("metrics").innerHTML = data.metrics.map(([label, value]) => `<div class="metric"><span>${label}</span><b>${value}</b></div>`).join("");
-  document.getElementById("sources").innerHTML = data.sources.map(([name, level, status]) => `<div class="source"><span>${name}</span><span class="status">${level} · ${status}</span></div>`).join("");
-  document.getElementById("cards").innerHTML = data.cards.map(([title, meta, body]) => `<article class="card"><h3>${title}</h3><small>${meta}</small><p>${body}</p></article>`).join("");
+  const sourceFilter = document.getElementById("sourceFilter");
+  const levelFilter = document.getElementById("levelFilter");
+  [...new Set(data.sources.map(([name]) => name))].forEach(name => sourceFilter.insertAdjacentHTML("beforeend", `<option value="${name}">${name}</option>`));
+  [...new Set(data.sources.map(([, level]) => level))].sort().forEach(level => levelFilter.insertAdjacentHTML("beforeend", `<option value="${level}">${level}</option>`));
+
+  const update = () => {
+    const source = sourceFilter.value;
+    const level = levelFilter.value;
+    const visibleSources = data.sources.filter(([name, itemLevel]) => (!source || name === source) && (!level || itemLevel === level));
+    document.getElementById("sources").innerHTML = visibleSources.map(([name, itemLevel, status]) => `<div class="source"><span>${name}</span><span class="status">${itemLevel} · ${status}</span></div>`).join("") || '<p class="muted">조건에 맞는 소스가 없습니다.</p>';
+    const visibleCards = data.cards.filter(([, meta]) => !source || meta.includes(source));
+    document.getElementById("cards").innerHTML = visibleCards.map(([title, meta, body]) => `<article class="card"><h3>${title}</h3><small>${meta}</small><p>${body}</p></article>`).join("") || '<p class="muted">조건에 맞는 검토 카드가 없습니다.</p>';
+  };
+  sourceFilter.addEventListener("change", update);
+  levelFilter.addEventListener("change", update);
+  update();
   document.getElementById("queue").innerHTML = data.queue.map(([name, status]) => `<div class="queue"><strong>${name}</strong><span class="muted">${status}</span></div>`).join("");
 }
 
