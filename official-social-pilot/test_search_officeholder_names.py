@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 from search_officeholder_names import (
-    discover, profile_url, queries, validate_seeds,
+    discover, profile_url, queries, render, validate_seeds,
 )
 
 HERE = Path(__file__).resolve().parent
@@ -45,6 +45,14 @@ class OfficeholderNameSearchTests(unittest.TestCase):
         self.assertEqual(result["profile_candidates"][0]["status"], "UNVERIFIED_SEARCH_CANDIDATE")
         self.assertEqual(len(result["profile_candidates"]), 1)
         self.assertEqual(result["queries_attempted"], 1)
+
+    def test_review_summary_lists_unverified_profile_urls(self):
+        row = discover(self.seeds["entities"][0], "id", "secret", search=lambda *args: (
+            "SUCCESS", [{"link": "https://www.facebook.com/ohsehoon4you"}]
+        ))
+        summary = render({"entities": [row]})
+        self.assertIn("https://www.facebook.com/ohsehoon4you", summary)
+        self.assertIn("미승인 프로필 주소", summary)
 
     def test_empty_results_and_api_error_are_distinct_from_no_account(self):
         row = self.seeds["entities"][0]
