@@ -69,8 +69,7 @@ def observe(source, limit=WINDOW_LIMIT):
         return {"id": source["id"], "name": source["name"],
                 "status": "UNKNOWN_LIST_WINDOW", "listed": listed, "records": []}
     records = [{"key": record_key(row["url"]), "url": row["url"],
-                "meeting_date": row["meeting_date"],
-                "label": row["label"][:160]} for row in rows]
+                "meeting_date": row["meeting_date"]} for row in rows]
     return {"id": source["id"], "name": source["name"], "status": "OBSERVED",
             "listed": listed, "records": records}
 
@@ -143,7 +142,7 @@ def render(state):
             continue
         lines.extend(["", f"## {item['name']} · {item['status']}", ""])
         for row in item["candidates"]:
-            lines.append(f"- {row['meeting_date'] or '회의일 미확인'} · [{row['label']}]({row['url']})")
+            lines.append(f"- {row['meeting_date'] or '회의일 미확인'} · [공식 회의록]({row['url']})")
     return "\n".join(lines) + "\n"
 
 
