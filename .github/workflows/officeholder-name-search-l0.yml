@@ -1,0 +1,64 @@
+name: Search officeholder Facebook candidates L0
+
+on:
+  pull_request:
+    paths:
+      - "official-social-pilot/name_search_seeds.json"
+      - "official-social-pilot/search_officeholder_names.py"
+      - "official-social-pilot/test_search_officeholder_names.py"
+      - ".github/workflows/officeholder-name-search-l0.yml"
+  push:
+    branches: [main]
+    paths:
+      - "official-social-pilot/name_search_seeds.json"
+      - "official-social-pilot/search_officeholder_names.py"
+      - ".github/workflows/officeholder-name-search-l0.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: officeholder-name-search-l0-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Read-only checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test L0 candidate boundaries
+        run: python -X utf8 -m unittest discover -s official-social-pilot -p 'test_*.py' -v
+      - name: Validate existing discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: PR dry run without credentials
+        if: github.event_name == 'pull_request'
+        run: python -X utf8 official-social-pilot/search_officeholder_names.py --dry-run
+      - name: Read-only web search on main
+        if: github.event_name != 'pull_request'
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+        run: python -X utf8 official-social-pilot/search_officeholder_names.py
+      - name: Show discovery coverage
+        if: always()
+        run: |
+          if [ -f official-social-pilot/output/name-search/SUMMARY.md ]; then
+            cat official-social-pilot/output/name-search/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload bounded L0 results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: officeholder-name-search-l0-${{ github.run_id }}
+          path: official-social-pilot/output/name-search/
+          if-no-files-found: warn
+          retention-days: 7
