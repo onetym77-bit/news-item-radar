@@ -51,6 +51,6 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: official-social-l0-${{ github.run_id }}
-          path: official-social-pilot/output/l0/
+          path: official-social-pilot/output/
           if-no-files-found: warn
           retention-days: 7
