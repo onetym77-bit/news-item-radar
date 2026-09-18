@@ -37,12 +37,12 @@ class OfficeholderNameSearchTests(unittest.TestCase):
         row = self.seeds["entities"][0]
         def fake_search(query, client_id, client_secret):
             return "SUCCESS", [
-                {"link": "https://www.facebook.com/ohsehoon4you"},
-                {"link": "https://www.facebook.com/sharer.php?u=x"},
+                {"link": "https://www.facebook.com/ohsehoon4you", "title": "오세훈"},
+                {"link": "https://www.facebook.com/sharer.php?u=x", "title": "공유"},
             ]
         result = discover(row, "id", "secret", search=fake_search)
-        self.assertEqual(result["status"], "SEARCHED_WITH_CANDIDATES")
-        self.assertEqual(result["profile_candidates"][0]["status"], "UNVERIFIED_SEARCH_CANDIDATE")
+        self.assertEqual(result["status"], "SEARCHED_WITH_FACEBOOK_URLS")
+        self.assertEqual(result["profile_candidates"][0]["status"], "UNVERIFIED_FACEBOOK_URL_ONLY")
         self.assertEqual(len(result["profile_candidates"]), 1)
         self.assertEqual(result["queries_attempted"], 1)
 
@@ -52,14 +52,15 @@ class OfficeholderNameSearchTests(unittest.TestCase):
         ))
         summary = render({"entities": [row]})
         self.assertIn("https://www.facebook.com/ohsehoon4you", summary)
-        self.assertIn("미승인 프로필 주소", summary)
+        self.assertIn("미승인 페이스북 URL", summary)
+        self.assertIn("본인 계정으로 검증 완료: 0명", summary)
 
     def test_empty_results_and_api_error_are_distinct_from_no_account(self):
         row = self.seeds["entities"][0]
         empty = discover(row, "id", "secret", search=lambda *args: ("SUCCESS", []))
         failed = discover(row, "id", "secret", search=lambda *args: ("HTTP_403", []))
         unconfigured = discover(row, "", "")
-        self.assertEqual(empty["status"], "SEARCHED_NO_PROFILE_LINK")
+        self.assertEqual(empty["status"], "SEARCHED_NO_FACEBOOK_URL")
         self.assertEqual(failed["status"], "HTTP_403")
         self.assertEqual(unconfigured["status"], "NOT_CONFIGURED")
         self.assertEqual(empty["queries_attempted"], 2)
