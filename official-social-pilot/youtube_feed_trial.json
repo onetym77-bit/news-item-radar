@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "scope": "L1_FEED_TRIAL_FROM_L0_HOMEPAGE_CANDIDATES_NOT_ACCOUNT_APPROVAL",
+  "selected_on": "2026-09-18",
+  "channels": [
+    {
+      "entity_id": "gwanak",
+      "channel_id": "UCOPLCJFBP9WgaDBbfJYdyVg",
+      "channel_url": "https://www.youtube.com/channel/UCOPLCJFBP9WgaDBbfJYdyVg",
+      "evidence_page": "https://www.gwanak.go.kr/site/gwanak/main.do",
+      "source_status": "OFFICIAL_HOMEPAGE_LINK_CANDIDATE"
+    },
+    {
+      "entity_id": "nowon",
+      "channel_id": "UCJY_vHq3n_DkHcdc3g01RGQ",
+      "channel_url": "https://www.youtube.com/channel/UCJY_vHq3n_DkHcdc3g01RGQ",
+      "evidence_page": "https://www.nowon.kr/www/index.do",
+      "source_status": "OFFICIAL_HOMEPAGE_LINK_CANDIDATE"
+    },
+    {
+      "entity_id": "mapo",
+      "channel_id": "UCZ1Nw3mlYRJPp1XqVLD0gTw",
+      "channel_url": "https://www.youtube.com/channel/UCZ1Nw3mlYRJPp1XqVLD0gTw",
+      "evidence_page": "https://www.mapo.go.kr/site/main/home",
+      "source_status": "OFFICIAL_HOMEPAGE_LINK_CANDIDATE"
+    },
+    {
+      "entity_id": "jongno",
+      "channel_id": "UCElvTSAbQjunKseoz1u_-0A",
+      "channel_url": "https://www.youtube.com/channel/UCElvTSAbQjunKseoz1u_-0A",
+      "evidence_page": "https://www.jongno.go.kr/portalMain.do",
+      "source_status": "OFFICIAL_HOMEPAGE_LINK_CANDIDATE"
+    },
+    {
+      "entity_id": "yongsan",
+      "channel_id": "UCGsZ-8EHKTrkotIuumnz3rw",
+      "channel_url": "https://www.youtube.com/channel/UCGsZ-8EHKTrkotIuumnz3rw",
+      "evidence_page": "https://www.yongsan.go.kr/portal/main/main.do",
+      "source_status": "OFFICIAL_HOMEPAGE_LINK_CANDIDATE"
+    },
+    {
+      "entity_id": "guro",
+      "channel_id": "UCaZBVuz9Gp1l8tg-VTwRiKg",
+      "channel_url": "https://www.youtube.com/channel/UCaZBVuz9Gp1l8tg-VTwRiKg",
+      "evidence_page": "https://www.guro.go.kr",
+      "source_status": "OFFICIAL_HOMEPAGE_LINK_CANDIDATE"
+    },
+    {
+      "entity_id": "geumcheon",
+      "channel_id": "UCuwlFZQgh8FJ42wm06PbtDQ",
+      "channel_url": "https://www.youtube.com/channel/UCuwlFZQgh8FJ42wm06PbtDQ",
+      "evidence_page": "https://www.geumcheon.go.kr",
+      "source_status": "OFFICIAL_HOMEPAGE_LINK_CANDIDATE"
+    },
+    {
+      "entity_id": "dongjak",
+      "channel_id": "UCuy1F8rg5OrszNETHBGbPUA",
+      "channel_url": "https://www.youtube.com/channel/UCuy1F8rg5OrszNETHBGbPUA",
+      "evidence_page": "https://www.dongjak.go.kr/portal/main/main.do",
+      "source_status": "OFFICIAL_HOMEPAGE_LINK_CANDIDATE"
+    }
+  ]
+}
