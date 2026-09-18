@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import socket
+import ssl
 from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from verify_registry import REGISTRY, canonical, safe_https
 
@@ -21,6 +23,19 @@ TIMEOUT = 12
 def host_without_www(host: str | None) -> str:
     host = (host or "").lower()
     return host[4:] if host.startswith("www.") else host
+
+
+class SameSiteRedirect(HTTPRedirectHandler):
+    def __init__(self, original_url: str):
+        super().__init__()
+        self.host = host_without_www(urlparse(original_url).hostname)
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        absolute = urljoin(req.full_url, newurl)
+        target = urlparse(absolute)
+        if target.scheme != "https" or host_without_www(target.hostname) != self.host:
+            raise ValueError("redirect_outside_listed_host")
+        return super().redirect_request(req, fp, code, msg, headers, absolute)
 
 
 def social_platform(url: str) -> str | None:
@@ -85,7 +100,7 @@ def scan_one(entity: dict) -> dict:
         "Accept": "text/html,application/xhtml+xml",
     })
     try:
-        with urlopen(request, timeout=TIMEOUT) as response:
+        with build_opener(SameSiteRedirect(url)).open(request, timeout=TIMEOUT) as response:
             final_url = response.geturl()
             initial = urlparse(url)
             final = urlparse(final_url)
@@ -110,7 +125,21 @@ def scan_one(entity: dict) -> dict:
             return row
     except HTTPError as exc:
         row.update(status="FAILED", reason=f"HTTP_{exc.code}")
-    except (URLError, OSError, TimeoutError, ValueError, UnicodeError):
+    except (TimeoutError, socket.timeout):
+        row.update(status="FAILED", reason="TIMEOUT")
+    except URLError as exc:
+        if isinstance(exc.reason, socket.gaierror):
+            reason = "DNS_ERROR"
+        elif isinstance(exc.reason, ssl.SSLError):
+            reason = "TLS_ERROR"
+        elif isinstance(exc.reason, (TimeoutError, socket.timeout)):
+            reason = "TIMEOUT"
+        else:
+            reason = "NETWORK_ERROR"
+        row.update(status="FAILED", reason=reason)
+    except ValueError:
+        row.update(status="FAILED", reason="REDIRECT_OR_URL_ERROR")
+    except (OSError, UnicodeError):
         row.update(status="FAILED", reason="ACCESS_ERROR")
     return row
 
