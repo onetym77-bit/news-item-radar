@@ -1,0 +1,63 @@
+name: Probe officeholder Facebook post index feasibility
+
+on:
+  pull_request:
+    paths:
+      - "official-social-pilot/**"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+      - ".github/workflows/officeholder-post-index-feasibility.yml"
+  push:
+    branches: [main]
+    paths:
+      - "official-social-pilot/probe_post_index.py"
+      - "official-social-pilot/accounts.json"
+      - ".github/workflows/officeholder-post-index-feasibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: officeholder-post-index-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Read-only checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test ownership and evidence boundaries
+        run: python -X utf8 -m unittest discover -s official-social-pilot -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: PR dry run without credentials
+        if: github.event_name == 'pull_request'
+        run: python -X utf8 official-social-pilot/probe_post_index.py --dry-run
+      - name: Search index once on main or manual run
+        if: github.event_name != 'pull_request'
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+        run: python -X utf8 official-social-pilot/probe_post_index.py
+      - name: Show feasibility summary
+        if: always()
+        run: |
+          if [ -f official-social-pilot/output/post-index/SUMMARY.md ]; then
+            cat official-social-pilot/output/post-index/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload bounded results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: officeholder-post-index-${{ github.run_id }}
+          path: official-social-pilot/output/post-index/
+          if-no-files-found: warn
+          retention-days: 7

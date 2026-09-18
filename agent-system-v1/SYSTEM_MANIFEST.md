@@ -65,6 +65,8 @@
 | 공식 SNS 26개 공식 홈페이지 링크 후보 L0 시험 | official-social-pilot/scan_official_sites.py |
 | 단체장 26명 이름 검색 L0 씨앗 | official-social-pilot/name_search_seeds.json |
 | 단체장 페이스북 검색 후보 L0 시험 | official-social-pilot/search_officeholder_names.py |
+| 단체장 게시물 주소 검색 색인 가능성 시험(성숙도 L0 유지) | official-social-pilot/probe_post_index.py |
+| 단체장 게시물 주소 검색 수동·PR·main 읽기 전용 실행 | .github/workflows/officeholder-post-index-feasibility.yml |
 | 단체장 이름 검색 L0 PR·수동·main 변경 실행 | .github/workflows/officeholder-name-search-l0.yml |
 | 공식 SNS L0 수동·PR 읽기 전용 실행 | .github/workflows/official-social-l0.yml |
 | 비회기 보완소스 시험안(미편입) | district-council-pilot/OFF_SESSION_SOURCE_PLAN.md |
