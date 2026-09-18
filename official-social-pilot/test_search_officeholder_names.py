@@ -61,7 +61,7 @@ class OfficeholderNameSearchTests(unittest.TestCase):
         summary = render({"entities": [row]})
         self.assertIn("https://www.facebook.com/ohsehoon4you", summary)
         self.assertIn("미승인 페이스북 URL", summary)
-        self.assertIn("본인 계정으로 검증 완료: 0명", summary)
+        self.assertIn("이 검색으로 새로 검증·승인한 계정: 0명", summary)
 
     def test_empty_results_and_api_error_are_distinct_from_no_account(self):
         row = self.seeds["entities"][0]
