@@ -8,12 +8,14 @@ from datetime import datetime, timezone, timedelta
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import urljoin, urlparse
+from urllib.parse import parse_qs, urljoin, urlparse
 from urllib.request import Request, urlopen
 
 HERE = Path(__file__).resolve().parent
 REGISTRY = HERE / "accounts.json"
 DIRECTORY = "https://mediahub.seoul.go.kr/staticpage/sns.do"
+EDITOR_ROSTER = HERE / "editor_confirmed_officeholders.json"
+EDITOR_SOURCE = "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json"
 EXPECTED_DISTRICTS = {
     "gangnam", "gwanak", "nowon", "mapo", "seongdong", "jongno",
     "junggu", "yongsan", "seongbuk", "gangbuk", "dobong", "eunpyeong",
@@ -33,7 +35,11 @@ def safe_https(url: str) -> bool:
 
 def canonical(url: str) -> str:
     parsed = urlparse(url)
-    return f"{parsed.scheme.lower()}://{(parsed.hostname or '').lower()}{parsed.path.rstrip('/')}"
+    base = f"{parsed.scheme.lower()}://{(parsed.hostname or '').lower()}{parsed.path.rstrip('/')}"
+    if (parsed.hostname or "").lower() in {"facebook.com", "www.facebook.com", "m.facebook.com"} and parsed.path.rstrip("/").lower() == "/profile.php":
+        ids = parse_qs(parsed.query).get("id", [])
+        return f"{base}?id={ids[0]}" if len(ids) == 1 and ids[0].isdigit() else base
+    return base
 
 
 class LinkParser(HTMLParser):
@@ -64,7 +70,12 @@ def validate_registry(data: dict) -> list[str]:
         errors.append("exactly Seoul and the 25 district IDs are required")
     if len(ids) != len(set(ids)):
         errors.append("duplicate entity ID")
+    roster = json.loads(EDITOR_ROSTER.read_text(encoding="utf-8"))
+    editor_rows = {row["entity_id"]: row for row in roster["entities"]}
+    if len(editor_rows) != 26 or set(editor_rows) != EXPECTED_DISTRICTS | {"seoul"}:
+        errors.append("editor roster must contain exactly 26 distinct entities")
     account_urls = set()
+    editor_seen = set()
     for entity in entities:
         entity_id = entity.get("id", "?")
         if not entity.get("name"):
@@ -90,13 +101,27 @@ def validate_registry(data: dict) -> list[str]:
                     errors.append(f"{entity_id}: unsupported platform")
                 if not safe_https(url) or not safe_https(evidence):
                     errors.append(f"{entity_id}: account and evidence need safe HTTPS")
-                if account.get("verification_kind") != "OFFICIAL_DIRECTORY_LINK":
-                    errors.append(f"{entity_id}: account lacks official-link evidence")
+                kind = account.get("verification_kind")
+                if kind == "EDITOR_ATTESTED":
+                    if field != "officeholder_accounts" or account.get("platform") != "facebook" or evidence != EDITOR_SOURCE:
+                        errors.append(f"{entity_id}: editor attestation must be an officeholder Facebook account with roster evidence")
+                    row = editor_rows.get(entity_id)
+                    if row is None or account.get("officeholder_name") != row.get("officeholder_name") or url != row.get("url"):
+                        errors.append(f"{entity_id}: account does not match editor roster")
+                    editor_seen.add(entity_id)
+                elif kind != "OFFICIAL_DIRECTORY_LINK":
+                    errors.append(f"{entity_id}: account lacks approved evidence")
+                if account.get("platform") == "facebook" and urlparse(url).path.rstrip("/").lower() == "/profile.php":
+                    ids = parse_qs(urlparse(url).query).get("id", [])
+                    if len(ids) != 1 or not ids[0].isdigit():
+                        errors.append(f"{entity_id}: Facebook profile.php needs one numeric id")
                 if not account.get("checked_on"):
                     errors.append(f"{entity_id}: checked_on missing")
                 if canonical(url) in account_urls:
                     errors.append(f"{entity_id}: duplicate account URL")
                 account_urls.add(canonical(url))
+    if editor_seen != set(editor_rows):
+        errors.append("editor-attested registry accounts must cover the entire editor roster")
     return errors
 
 
@@ -128,7 +153,9 @@ def evaluate(data: dict, source_status: str, html: str | None) -> dict:
         accounts = entity["institution_accounts"] + entity["officeholder_accounts"]
         for account in accounts:
             listed = source_status == "SUCCESS" and canonical(account["url"]) in parser.links
-            if account["verification_source"] != DIRECTORY:
+            if account["verification_kind"] == "EDITOR_ATTESTED":
+                status = "EDITOR_ATTESTED_NOT_PLATFORM_RECHECKED"
+            elif account["verification_source"] != DIRECTORY:
                 status = "OTHER_OFFICIAL_SOURCE_NOT_PROBED"
             elif source_status != "SUCCESS":
                 status = "SOURCE_UNAVAILABLE"
@@ -167,11 +194,12 @@ def render(result: dict) -> str:
         f"- 대상: {result['entity_count']}개 행정 단위(서울시 + 25개 구)",
         f"- 계정 등록: {len(result['accounts'])}개; 미등록 행정 단위: {len(result['entities_without_registered_accounts'])}개",
         f"- 서울시 공식 목록 접근: {result['official_directory_status']}",
+        f"- 단체장 계정 편집자 확인 목록 등록(플랫폼 재확인 전): {counts.get('EDITOR_ATTESTED_NOT_PLATFORM_RECHECKED', 0)}개",
         f"- 목록 재확인: {counts.get('CONFIRMED_LISTED', 0)}개; 재검토 필요: {counts.get('NOT_LISTED_NEEDS_REVIEW', 0)}개",
         f"- 공식 목록 접속 불가로 확인 보류: {counts.get('SOURCE_UNAVAILABLE', 0)}개",
         "",
         "미등록은 계정이 없다는 뜻이 아니며, 접속 실패도 계정 삭제나 게시물 0건을 뜻하지 않습니다.",
-        "기관 계정과 단체장 개인 계정은 별도로 기록합니다. 이 단계는 게시물·질문·브리핑을 수집하거나 생성하지 않습니다.",
+        "기관 계정과 단체장 개인 계정은 별도로 기록합니다. 편집자 확인과 공식 디렉터리 직접 링크는 다른 근거이며, 이 단계는 게시물·질문·브리핑을 수집하거나 생성하지 않습니다.",
         "",
     ])
 

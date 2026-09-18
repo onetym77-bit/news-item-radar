@@ -14,7 +14,7 @@ class OfficialHomepageScanTests(unittest.TestCase):
         self.assertEqual(validate_registry(data), [])
         self.assertEqual(sum(bool(e["official_site"]) for e in data["entities"]), 26)
         self.assertEqual(sum(len(e["institution_accounts"]) for e in data["entities"]), 3)
-        self.assertEqual(sum(len(e["officeholder_accounts"]) for e in data["entities"]), 0)
+        self.assertEqual(sum(len(e["officeholder_accounts"]) for e in data["entities"]), 26)
 
     def test_profile_links_only_not_individual_posts(self):
         self.assertEqual(social_platform("https://www.youtube.com/@district"), "youtube")

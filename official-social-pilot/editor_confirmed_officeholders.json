@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "scope": "EDITOR_ATTESTED_OFFICEHOLDER_FACEBOOK_ACCOUNT_LIST_NOT_PLATFORM_RECHECKED",
+  "received_on": "2026-09-18",
+  "source_kind": "EDITOR_PROVIDED_VERIFIED_LIST",
+  "entities": [
+    {
+      "entity_id": "seoul",
+      "officeholder_name": "오세훈",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/ohsehoon4you"
+    },
+    {
+      "entity_id": "jongno",
+      "officeholder_name": "유찬종",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/cjnet21"
+    },
+    {
+      "entity_id": "junggu",
+      "officeholder_name": "김길성",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/kstar386"
+    },
+    {
+      "entity_id": "yongsan",
+      "officeholder_name": "김경대",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/gimgyeongdae.306174"
+    },
+    {
+      "entity_id": "seongdong",
+      "officeholder_name": "유보화",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/bohwaryoo"
+    },
+    {
+      "entity_id": "gwangjin",
+      "officeholder_name": "김경호",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/kkho59"
+    },
+    {
+      "entity_id": "dongdaemun",
+      "officeholder_name": "최동민",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/ddmvision"
+    },
+    {
+      "entity_id": "jungnang",
+      "officeholder_name": "류경기",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/gyounggee.liu"
+    },
+    {
+      "entity_id": "seongbuk",
+      "officeholder_name": "이승로",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/leeslo9167"
+    },
+    {
+      "entity_id": "gangbuk",
+      "officeholder_name": "정창수",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/jeongchangsu.712764"
+    },
+    {
+      "entity_id": "dobong",
+      "officeholder_name": "김동욱",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/dong112911"
+    },
+    {
+      "entity_id": "nowon",
+      "officeholder_name": "서준오",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/juno.seo1"
+    },
+    {
+      "entity_id": "eunpyeong",
+      "officeholder_name": "김미경",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/ep.kmk"
+    },
+    {
+      "entity_id": "seodaemun",
+      "officeholder_name": "박운기",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/sumwool"
+    },
+    {
+      "entity_id": "mapo",
+      "officeholder_name": "유동균",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/yooDongGyun"
+    },
+    {
+      "entity_id": "yangcheon",
+      "officeholder_name": "이기재",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/kijae.lee.56"
+    },
+    {
+      "entity_id": "gangseo",
+      "officeholder_name": "진교훈",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/jingyohoon"
+    },
+    {
+      "entity_id": "guro",
+      "officeholder_name": "장인홍",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/kurojih"
+    },
+    {
+      "entity_id": "geumcheon",
+      "officeholder_name": "최기찬",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/gichan6907"
+    },
+    {
+      "entity_id": "yeongdeungpo",
+      "officeholder_name": "조유진",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/profile.php?id=61586613525215"
+    },
+    {
+      "entity_id": "dongjak",
+      "officeholder_name": "류삼영",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/ryusamyoung2"
+    },
+    {
+      "entity_id": "gwanak",
+      "officeholder_name": "박준희",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/parkjunhee99"
+    },
+    {
+      "entity_id": "seocho",
+      "officeholder_name": "전성수",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/profile.php?id=100000660477712"
+    },
+    {
+      "entity_id": "gangnam",
+      "officeholder_name": "김현기",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/hyeonki.kim.52"
+    },
+    {
+      "entity_id": "songpa",
+      "officeholder_name": "서강석",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/sonpa8"
+    },
+    {
+      "entity_id": "gangdong",
+      "officeholder_name": "이수희",
+      "platform": "facebook",
+      "url": "https://www.facebook.com/leesh1970"
+    }
+  ]
+}

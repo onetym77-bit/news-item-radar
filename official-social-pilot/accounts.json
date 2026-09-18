@@ -30,7 +30,16 @@
           "checked_on": "2026-09-18"
         }
       ],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/ohsehoon4you",
+          "officeholder_name": "오세훈",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -40,7 +49,16 @@
       "name": "강남구",
       "official_site": "https://www.gangnam.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/hyeonki.kim.52",
+          "officeholder_name": "김현기",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -50,7 +68,16 @@
       "name": "관악구",
       "official_site": "https://www.gwanak.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/parkjunhee99",
+          "officeholder_name": "박준희",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -60,7 +87,16 @@
       "name": "노원구",
       "official_site": "https://www.nowon.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/juno.seo1",
+          "officeholder_name": "서준오",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -70,7 +106,16 @@
       "name": "마포구",
       "official_site": "https://www.mapo.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/yooDongGyun",
+          "officeholder_name": "유동균",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -80,7 +125,16 @@
       "name": "성동구",
       "official_site": "https://www.sd.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/bohwaryoo",
+          "officeholder_name": "유보화",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -90,7 +144,16 @@
       "name": "종로구",
       "official_site": "https://www.jongno.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/cjnet21",
+          "officeholder_name": "유찬종",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -100,7 +163,16 @@
       "name": "중구",
       "official_site": "https://www.junggu.seoul.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/kstar386",
+          "officeholder_name": "김길성",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -110,7 +182,16 @@
       "name": "용산구",
       "official_site": "https://www.yongsan.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/gimgyeongdae.306174",
+          "officeholder_name": "김경대",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -120,7 +201,16 @@
       "name": "성북구",
       "official_site": "https://www.sb.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/leeslo9167",
+          "officeholder_name": "이승로",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -130,7 +220,16 @@
       "name": "강북구",
       "official_site": "https://www.gangbuk.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/jeongchangsu.712764",
+          "officeholder_name": "정창수",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -140,7 +239,16 @@
       "name": "도봉구",
       "official_site": "https://www.dobong.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/dong112911",
+          "officeholder_name": "김동욱",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -150,7 +258,16 @@
       "name": "은평구",
       "official_site": "https://www.ep.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/ep.kmk",
+          "officeholder_name": "김미경",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -160,7 +277,16 @@
       "name": "서대문구",
       "official_site": "https://www.sdm.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/sumwool",
+          "officeholder_name": "박운기",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -170,7 +296,16 @@
       "name": "양천구",
       "official_site": "https://www.yangcheon.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/kijae.lee.56",
+          "officeholder_name": "이기재",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -180,7 +315,16 @@
       "name": "강서구",
       "official_site": "https://www.gangseo.seoul.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/jingyohoon",
+          "officeholder_name": "진교훈",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -190,7 +334,16 @@
       "name": "광진구",
       "official_site": "https://www.gwangjin.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/kkho59",
+          "officeholder_name": "김경호",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -200,7 +353,16 @@
       "name": "동대문구",
       "official_site": "https://www.ddm.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/ddmvision",
+          "officeholder_name": "최동민",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -210,7 +372,16 @@
       "name": "중랑구",
       "official_site": "https://www.jungnang.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/gyounggee.liu",
+          "officeholder_name": "류경기",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=1&srchOrgCd=3200000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -220,7 +391,16 @@
       "name": "구로구",
       "official_site": "https://www.guro.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/kurojih",
+          "officeholder_name": "장인홍",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -230,7 +410,16 @@
       "name": "금천구",
       "official_site": "https://www.geumcheon.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/gichan6907",
+          "officeholder_name": "최기찬",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -240,7 +429,16 @@
       "name": "영등포구",
       "official_site": "https://www.ydp.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/profile.php?id=61586613525215",
+          "officeholder_name": "조유진",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?pageIndex=2&srchOrgCd=6110000",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -250,7 +448,16 @@
       "name": "동작구",
       "official_site": "https://www.dongjak.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/ryusamyoung2",
+          "officeholder_name": "류삼영",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&pageIndex=2&srchAsndOrgClsCd=ALL&srchOrder=ABC&srchOrgCd=3070000&srchTxt=",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -260,7 +467,16 @@
       "name": "서초구",
       "official_site": "https://www.seocho.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/profile.php?id=100000660477712",
+          "officeholder_name": "전성수",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -270,7 +486,16 @@
       "name": "송파구",
       "official_site": "https://www.songpa.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/sonpa8",
+          "officeholder_name": "서강석",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
@@ -280,7 +505,16 @@
       "name": "강동구",
       "official_site": "https://www.gangdong.go.kr",
       "institution_accounts": [],
-      "officeholder_accounts": [],
+      "officeholder_accounts": [
+        {
+          "platform": "facebook",
+          "url": "https://www.facebook.com/leesh1970",
+          "officeholder_name": "이수희",
+          "verification_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+          "verification_kind": "EDITOR_ATTESTED",
+          "checked_on": "2026-09-18"
+        }
+      ],
       "official_site_source": "https://www.gov.kr/portal/orgSite?jrsdFsOrgCd=ALL&jrsdOrgCd=ALL&jrsdOrgCdAll=&srchAsndOrgClsCd=ALL&srchOrder=NEW&srchOrgCd=3090000&srchTxt=",
       "official_site_verification": "GOV24_LISTED",
       "official_site_checked_on": "2026-09-18"
