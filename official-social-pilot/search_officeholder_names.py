@@ -124,6 +124,10 @@ def discover(row: dict, client_id: str, client_secret: str, search=search_web) -
             return result
         result["results_seen"] += len(items)
         for rank, item in enumerate(items[:MAX_RESULTS], 1):
+            title = re.sub(r"<[^>]*>", "", unescape(str(item.get("title", "")))).strip()
+            # A Facebook URL in a search hit can belong to an institution or an unrelated page.
+            if title not in {f"{row['officeholder_name']} - Facebook", f"Facebook - {row['officeholder_name']}"}:
+                continue
             url = profile_url(str(item.get("link", "")))
             if url and url not in seen:
                 seen.add(url)
@@ -133,7 +137,7 @@ def discover(row: dict, client_id: str, client_secret: str, search=search_web) -
                     "search_query": query,
                     "result_rank": rank,
                     "status": "UNVERIFIED_FACEBOOK_URL_ONLY",
-                    "result_title": re.sub(r"<[^>]*>", "", unescape(str(item.get("title", ""))))[:120],
+                    "result_title": title[:120],
                 })
                 if len(result["profile_candidates"]) >= MAX_CANDIDATES:
                     break
@@ -151,12 +155,12 @@ def render(payload: dict) -> str:
     lines = [
         "# 서울시장·25개 구청장 이름 검색 L0",
         "",
-        "네이버 웹문서 검색 결과에 나온 페이스북 URL만 기록했습니다. 기관·언론·팬 페이지나 게시물 링크일 수 있어 개인 계정 발견 수로 해석하지 않습니다.",
+        "네이버 웹문서 검색 결과 제목이 해당 인물 이름과 일치하는 페이스북 URL만 기록했습니다. 동명이인·팬 페이지·과거 계정일 수 있어 본인 계정 확인 수로 해석하지 않습니다.",
         f"- 검색 대상: {len(rows)}명",
-        f"- 페이스북 URL 포함 검색 결과: {counts.get('SEARCHED_WITH_FACEBOOK_URLS', 0)}명",
-        f"- 검색은 됐으나 페이스북 URL 미발견: {counts.get('SEARCHED_NO_FACEBOOK_URL', 0)}명",
+        f"- 이름 일치 페이스북 URL 발견: {counts.get('SEARCHED_WITH_FACEBOOK_URLS', 0)}명",
+        f"- 검색은 됐으나 이름 일치 URL 미발견: {counts.get('SEARCHED_NO_FACEBOOK_URL', 0)}명",
         "- 본인 계정으로 검증 완료: 0명 (이 검색만으로 승인 불가)",
-        f"- 검색 미실행·실패: {len(rows) - counts.get('SEARCHED_WITH_CANDIDATES', 0) - counts.get('SEARCHED_NO_PROFILE_LINK', 0)}명",
+        f"- 검색 미실행·실패: {len(rows) - counts.get('SEARCHED_WITH_FACEBOOK_URLS', 0) - counts.get('SEARCHED_NO_FACEBOOK_URL', 0)}명",
         "",
         "| 행정 단위 | 이름 | 이름 근거 | 검색 상태 | URL 수 |",
         "|---|---|---|---|---:|",
@@ -173,7 +177,7 @@ def render(payload: dict) -> str:
             )
     lines += [
         "",
-        "미발견은 페이스북 계정 부재가 아닙니다. 검색 API가 해당 URL을 색인하지 않았을 수 있습니다.",
+        "미발견은 페이스북 계정 부재가 아닙니다. 검색 API가 해당 URL을 색인하지 않았거나 제목 형식이 달랐을 수 있습니다.",
         "2차 출처의 이름은 현직자 확인 전 검색용 씨앗일 뿐입니다. 위 URL은 검색 결과일 뿐이며 기관 계정·팬 페이지·과거 선거 계정을 포함할 수 있습니다.",
         "이 실행은 페이스북 프로필이나 게시물을 열지 않으며, 계정 자동 승인·질문·브리핑·장부 변경을 하지 않습니다.",
         "",

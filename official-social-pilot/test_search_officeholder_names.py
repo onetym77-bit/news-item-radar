@@ -37,7 +37,7 @@ class OfficeholderNameSearchTests(unittest.TestCase):
         row = self.seeds["entities"][0]
         def fake_search(query, client_id, client_secret):
             return "SUCCESS", [
-                {"link": "https://www.facebook.com/ohsehoon4you", "title": "오세훈"},
+                {"link": "https://www.facebook.com/ohsehoon4you", "title": "오세훈 - Facebook"},
                 {"link": "https://www.facebook.com/sharer.php?u=x", "title": "공유"},
             ]
         result = discover(row, "id", "secret", search=fake_search)
@@ -46,9 +46,17 @@ class OfficeholderNameSearchTests(unittest.TestCase):
         self.assertEqual(len(result["profile_candidates"]), 1)
         self.assertEqual(result["queries_attempted"], 1)
 
+    def test_unrelated_facebook_page_is_not_a_person_candidate(self):
+        row = self.seeds["entities"][0]
+        result = discover(row, "id", "secret", search=lambda *args: (
+            "SUCCESS", [{"link": "https://www.facebook.com/unrelated.city", "title": "시설관리공단 - Facebook"}]
+        ))
+        self.assertEqual(result["status"], "SEARCHED_NO_FACEBOOK_URL")
+        self.assertEqual(result["profile_candidates"], [])
+
     def test_review_summary_lists_unverified_profile_urls(self):
         row = discover(self.seeds["entities"][0], "id", "secret", search=lambda *args: (
-            "SUCCESS", [{"link": "https://www.facebook.com/ohsehoon4you"}]
+            "SUCCESS", [{"link": "https://www.facebook.com/ohsehoon4you", "title": "오세훈 - Facebook"}]
         ))
         summary = render({"entities": [row]})
         self.assertIn("https://www.facebook.com/ohsehoon4you", summary)
