@@ -1,0 +1,38 @@
+name: Validate editor Facebook post links
+
+on:
+  pull_request:
+    paths:
+      - "official-social-pilot/manual_post_links.json"
+      - "official-social-pilot/validate_manual_post_links.py"
+      - "official-social-pilot/test_validate_manual_post_links.py"
+      - "official-social-pilot/accounts.json"
+      - ".github/workflows/facebook-manual-link-intake.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read-only checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Validate manual links
+        run: python -X utf8 -m unittest discover -s official-social-pilot -p 'test_*.py' -v
+      - name: Render intake result
+        run: python -X utf8 official-social-pilot/validate_manual_post_links.py
+      - name: Upload bounded result
+        uses: actions/upload-artifact@v6
+        with:
+          name: facebook-manual-link-intake-${{ github.run_id }}
+          path: official-social-pilot/output/manual-post-links/
+          retention-days: 7
