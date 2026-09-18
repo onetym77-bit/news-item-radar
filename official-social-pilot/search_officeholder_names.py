@@ -61,7 +61,7 @@ def validate_seeds(data: dict, registry: dict) -> list[str]:
     for row in rows:
         if not row.get("officeholder_name") or not row.get("municipality"):
             errors.append(f"{row.get('entity_id')}: missing name or municipality")
-        if row.get("name_evidence") not in {"OFFICIAL_PAGE", "SECONDARY_ELECTION_ROSTER_SEED"}:
+        if row.get("name_evidence") not in {"OFFICIAL_PAGE", "SECONDARY_ELECTION_ROSTER_SEED", "EDITOR_ATTESTED"}:
             errors.append(f"{row.get('entity_id')}: invalid name evidence")
         source = row.get("name_source", "")
         parsed = urlsplit(source)
@@ -159,7 +159,7 @@ def render(payload: dict) -> str:
         f"- 검색 대상: {len(rows)}명",
         f"- 이름 일치 페이스북 URL 발견: {counts.get('SEARCHED_WITH_FACEBOOK_URLS', 0)}명",
         f"- 검색은 됐으나 이름 일치 URL 미발견: {counts.get('SEARCHED_NO_FACEBOOK_URL', 0)}명",
-        "- 본인 계정으로 검증 완료: 0명 (이 검색만으로 승인 불가)",
+        "- 이 검색으로 새로 검증·승인한 계정: 0명 (별도 편집자 확인 목록은 accounts.json 참조)",
         f"- 검색 미실행·실패: {len(rows) - counts.get('SEARCHED_WITH_FACEBOOK_URLS', 0) - counts.get('SEARCHED_NO_FACEBOOK_URL', 0)}명",
         "",
         "| 행정 단위 | 이름 | 이름 근거 | 검색 상태 | URL 수 |",
@@ -178,7 +178,7 @@ def render(payload: dict) -> str:
     lines += [
         "",
         "미발견은 페이스북 계정 부재가 아닙니다. 검색 API가 해당 URL을 색인하지 않았거나 제목 형식이 달랐을 수 있습니다.",
-        "2차 출처의 이름은 현직자 확인 전 검색용 씨앗일 뿐입니다. 위 URL은 검색 결과일 뿐이며 기관 계정·팬 페이지·과거 선거 계정을 포함할 수 있습니다.",
+        "이름 씨앗은 편집자 확인 목록을 따르지만 위 검색 URL은 별도 후보입니다. 등록된 계정과 일치하는지 재대조하기 전에는 검색 결과를 승인 근거로 사용하지 않습니다.",
         "이 실행은 페이스북 프로필이나 게시물을 열지 않으며, 계정 자동 승인·질문·브리핑·장부 변경을 하지 않습니다.",
         "",
     ]
