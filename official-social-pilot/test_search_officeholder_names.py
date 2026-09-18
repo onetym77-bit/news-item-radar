@@ -37,7 +37,7 @@ class OfficeholderNameSearchTests(unittest.TestCase):
         row = self.seeds["entities"][0]
         def fake_search(query, client_id, client_secret):
             return "SUCCESS", [
-                {"link": "https://www.facebook.com/ohsehoon4you", "title": "오세훈"},
+                {"link": "https://www.facebook.com/ohsehoon4you", "title": "오세훈 - Facebook"},
                 {"link": "https://www.facebook.com/sharer.php?u=x", "title": "공유"},
             ]
         result = discover(row, "id", "secret", search=fake_search)
