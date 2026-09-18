@@ -74,6 +74,14 @@ def observe(source, limit=WINDOW_LIMIT):
             "listed": listed, "records": records}
 
 
+def safe_observe(source):
+    try:
+        return observe(source)
+    except (ValueError, KeyError, TypeError, AttributeError):
+        return {"id": source["id"], "name": source["name"],
+                "status": "UNKNOWN_LIST_WINDOW", "listed": None, "records": []}
+
+
 def compare(previous, observations, collected_at):
     if previous.get("schema") != SCHEMA or not isinstance(previous.get("sources"), dict):
         raise ValueError("Unsupported council watch state")
@@ -158,7 +166,7 @@ def main():
     prior = load_state(args.state)
     from concurrent.futures import ThreadPoolExecutor
     with ThreadPoolExecutor(max_workers=4) as pool:
-        observed = list(pool.map(observe, sources))
+        observed = list(pool.map(safe_observe, sources))
     collected_at = datetime.now(KST).isoformat(timespec="seconds")
     state = compare(prior, observed, collected_at)
     args.output.mkdir(parents=True, exist_ok=True)
