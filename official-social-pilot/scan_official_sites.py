@@ -172,6 +172,20 @@ def render(result: dict) -> str:
         )
     lines += [
         "",
+        "## 첫 화면 링크 후보 (계정 승인 아님)",
+        "",
+        "| 기관 | 종류 | 계정 주소 | 근거 홈페이지 |",
+        "|---|---|---|---|",
+    ]
+    for row in result["sites"]:
+        for candidate in row["candidate_links"]:
+            link = candidate["url"].replace("|", "%7C").replace("<", "%3C").replace(">", "%3E")
+            evidence = candidate["evidence_page"].replace("|", "%7C").replace("<", "%3C").replace(">", "%3E")
+            lines.append(
+                f"| {row['entity_id']} | {candidate['platform']} | <{link}> | <{evidence}> |"
+            )
+    lines += [
+        "",
         "후보 0건은 계정 부재가 아닙니다. 첫 화면에 링크가 없거나 동적 구성일 수 있습니다.",
         "접속 실패는 계정·게시물 0건과 구분하며, 공식 홈페이지가 연결한 계정도 사람 확인 전에는 등록부에 자동 승인하지 않습니다.",
         "게시물·질문·브리핑·장부는 수집하거나 변경하지 않습니다.",
