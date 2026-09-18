@@ -173,16 +173,16 @@
       "official_url": null,
       "maturity": "L0",
       "candidate_role": "SOCIAL_FIELD_CANDIDATE",
-      "implementation_path": null,
+      "implementation_path": "official-social-pilot/verify_registry.py",
       "question_output": "NONE",
       "briefing_output": "NONE",
-      "schedule": "NONE",
+      "schedule": "MANUAL_PR",
       "persistence": "NONE",
       "automatic_ledger_write": false,
       "raw_personal_text_persisted": false,
       "approved_for_production": false,
       "evaluation": null,
-      "note": "계정 등록부·공식성·재유통 중복 기준 미구현"
+      "note": "26개 행정 단위 등록 슬롯과 서울시 공식 채널 3개 링크를 L0에서 확인. 25개 구청·단체장 계정은 아직 미등록/미검증. 공식 목록 재확인만 수행하며 게시물·질문·브리핑·장부에 연결하지 않음"
     }
   ]
 }

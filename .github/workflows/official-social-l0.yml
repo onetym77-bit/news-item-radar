@@ -1,0 +1,51 @@
+name: Verify official social accounts L0
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "official-social-pilot/**"
+      - "source-onboarding-v1/source_maturity_registry.json"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+      - ".github/workflows/official-social-l0.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: official-social-l0-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read-only checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test registry and safety boundaries
+        run: python -X utf8 -m unittest discover -s official-social-pilot -p 'test_*.py' -v
+      - name: Validate existing discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Recheck links on Seoul official directory only
+        run: python -X utf8 official-social-pilot/verify_registry.py --output-dir official-social-pilot/output/l0
+      - name: Show verification coverage
+        if: always()
+        run: |
+          if [ -f official-social-pilot/output/l0/SUMMARY.md ]; then
+            cat official-social-pilot/output/l0/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload bounded diagnostics
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: official-social-l0-${{ github.run_id }}
+          path: official-social-pilot/output/l0/
+          if-no-files-found: warn
+          retention-days: 7

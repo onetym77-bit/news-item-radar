@@ -1,0 +1,211 @@
+{
+  "schema": 1,
+  "scope": "OFFICIAL_SOCIAL_ACCOUNT_VERIFICATION_ONLY",
+  "last_reviewed_on": "2026-09-18",
+  "entities": [
+    {
+      "id": "seoul",
+      "name": "서울특별시",
+      "official_site": "https://www.seoul.go.kr/",
+      "institution_accounts": [
+        {
+          "platform": "youtube",
+          "url": "https://www.youtube.com/user/seoullive",
+          "verification_source": "https://mediahub.seoul.go.kr/staticpage/sns.do",
+          "verification_kind": "OFFICIAL_DIRECTORY_LINK",
+          "checked_on": "2026-09-18"
+        },
+        {
+          "platform": "instagram",
+          "url": "https://www.instagram.com/seoul_official",
+          "verification_source": "https://mediahub.seoul.go.kr/staticpage/sns.do",
+          "verification_kind": "OFFICIAL_DIRECTORY_LINK",
+          "checked_on": "2026-09-18"
+        },
+        {
+          "platform": "blog",
+          "url": "https://blog.naver.com/haechiseoul",
+          "verification_source": "https://mediahub.seoul.go.kr/staticpage/sns.do",
+          "verification_kind": "OFFICIAL_DIRECTORY_LINK",
+          "checked_on": "2026-09-18"
+        }
+      ],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "gangnam",
+      "name": "강남구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "gwanak",
+      "name": "관악구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "nowon",
+      "name": "노원구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "mapo",
+      "name": "마포구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "seongdong",
+      "name": "성동구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "jongno",
+      "name": "종로구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "junggu",
+      "name": "중구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "yongsan",
+      "name": "용산구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "seongbuk",
+      "name": "성북구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "gangbuk",
+      "name": "강북구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "dobong",
+      "name": "도봉구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "eunpyeong",
+      "name": "은평구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "seodaemun",
+      "name": "서대문구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "yangcheon",
+      "name": "양천구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "gangseo",
+      "name": "강서구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "gwangjin",
+      "name": "광진구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "dongdaemun",
+      "name": "동대문구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "jungnang",
+      "name": "중랑구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "guro",
+      "name": "구로구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "geumcheon",
+      "name": "금천구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "yeongdeungpo",
+      "name": "영등포구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "dongjak",
+      "name": "동작구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "seocho",
+      "name": "서초구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "songpa",
+      "name": "송파구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    },
+    {
+      "id": "gangdong",
+      "name": "강동구",
+      "official_site": null,
+      "institution_accounts": [],
+      "officeholder_accounts": []
+    }
+  ]
+}
