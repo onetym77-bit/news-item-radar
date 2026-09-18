@@ -161,6 +161,13 @@ def render(payload: dict) -> str:
     ]
     for row in rows:
         lines.append(f"| {row['municipality']} | {row['officeholder_name']} | {row['name_evidence']} | {row['status']} | {len(row['profile_candidates'])} |")
+    lines += ["", "## 미승인 프로필 주소 검토 목록", "", "| 행정 단위 | 이름 | 검색 URL 후보 | 검색 순위 |", "|---|---|---|---:|"]
+    for row in rows:
+        for candidate in row["profile_candidates"]:
+            lines.append(
+                f"| {row['municipality']} | {row['officeholder_name']} | "
+                f"<{candidate['url']}> | {candidate['result_rank']} |"
+            )
     lines += [
         "",
         "미발견은 페이스북 계정 부재가 아닙니다. 검색 API가 프로필을 색인하지 않았을 수 있습니다.",
