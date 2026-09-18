@@ -60,6 +60,32 @@
         "listing_candidate_count": 3,
         "listing_error_code": null
       }
+    },
+    {
+      "run_date_kst": "2026-09-18",
+      "run_id": "35315787806",
+      "listing_status": "SUCCESS",
+      "listing_diagnostics": {
+        "listing_pages_attempted": 2,
+        "listing_pages_successful": 2,
+        "listing_errors": [],
+        "eligible_listing_records": 18
+      },
+      "selected_ids": [
+        "577868",
+        "577396",
+        "576973"
+      ],
+      "diagnostics": {
+        "detail_requested": 3,
+        "pdf_found": 3,
+        "pdf_extracted": 3,
+        "ready_questions": 0,
+        "held_questions": 3,
+        "raw_reports_persisted": 0,
+        "listing_candidate_count": 3,
+        "listing_error_code": null
+      }
     }
   ],
   "records": [
@@ -415,6 +441,144 @@
         "HISTORICAL_BACKFILL_NOT_TODAY",
         "HUMAN_CHECK_ACTUAL_CITIZEN_EFFECT",
         "HUMAN_CHECK_AUDIT_SCOPE_VS_FINDING"
+      ]
+    },
+    {
+      "source_record_id": "577868",
+      "first_seen_kst": "2026-09-18",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "577868",
+        "title": "전기·정보통신공사 하도급 관리실태 감사결과 공개문",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/577868?listPage=1",
+        "published_at": "2026-05-15",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/05/6a0674dc69d8b0.31560207.pdf",
+        "attachment_sha256": "fd0db7e1f7bfc1a44894c66c81daaf3c75a1849cc5f9ee64150c3ea30769d1f0",
+        "report_text_sha256": "87e80476a41109520960cd4a22a4762eb4d56706be546e35fc35ee633b866cb1",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": false,
+        "documented_issue_in_table": false,
+        "dominant_domain_evidence_count": 0,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [],
+        "disposition_counts": {},
+        "risk_domains": [],
+        "risk_domain_counts": {},
+        "selected_finding_title": null,
+        "review_finding_titles": [],
+        "finding_candidate_count": 0,
+        "finding_selection_score": 0,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 126,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "577396",
+      "first_seen_kst": "2026-09-18",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "577396",
+        "title": "2026년도 처분요구 이행실태 감사 공개문",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/577396?listPage=1",
+        "published_at": "2026-04-24",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/04/69eb1b2eb64945.14213801.pdf",
+        "attachment_sha256": "4f1a45f6b85574fe67ceec3e675a13becd178a76e5cf1068caf6db5ee20c1a99",
+        "report_text_sha256": "811d63ae34ac814e4aa887b35169d8e0e5908c415867122f88222817eace7533",
+        "pdf_pages_sampled": 10,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": false,
+        "documented_issue_in_table": false,
+        "dominant_domain_evidence_count": 0,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [],
+        "disposition_counts": {},
+        "risk_domains": [],
+        "risk_domain_counts": {},
+        "selected_finding_title": null,
+        "review_finding_titles": [],
+        "finding_candidate_count": 0,
+        "finding_selection_score": 0,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 147,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "576973",
+      "first_seen_kst": "2026-09-18",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "576973",
+        "title": "청소년시설 운영실태 특정감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/576973?listPage=1",
+        "published_at": "2026-04-10",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/04/69cf25f334a5b9.08488564.pdf",
+        "attachment_sha256": "088e8384d05104506f193234507dd170e3139fda867d95a937e962c4e3c12d01",
+        "report_text_sha256": "7cf39f4b0d573a26ccd3ab5f15b53b817c0d541bd6ffb1b3940d4182b60952d0",
+        "pdf_pages_sampled": 20,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": false,
+        "documented_issue_in_table": false,
+        "dominant_domain_evidence_count": 0,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [],
+        "disposition_counts": {},
+        "risk_domains": [],
+        "risk_domain_counts": {},
+        "selected_finding_title": null,
+        "review_finding_titles": [],
+        "finding_candidate_count": 0,
+        "finding_selection_score": 0,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 161,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
       ]
     }
   ]
