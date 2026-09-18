@@ -60,6 +60,7 @@
 | 자치구의회 25곳 얇은 반복 관측 | district-council-pilot/watch_new_minutes.py |
 | 자치구의회 관측 예약·파생 상태 저장 | .github/workflows/district-council-watch.yml |
 | 공식 SNS 26개 단위 L0 계정 등록 | official-social-pilot/accounts.json |
+| 단체장 페이스북 26개 편집자 확인 원목록(플랫폼 재확인 전) | official-social-pilot/editor_confirmed_officeholders.json |
 | 공식 SNS 계정 링크 L0 재확인 | official-social-pilot/verify_registry.py |
 | 공식 SNS 26개 공식 홈페이지 링크 후보 L0 시험 | official-social-pilot/scan_official_sites.py |
 | 단체장 26명 이름 검색 L0 씨앗 | official-social-pilot/name_search_seeds.json |
