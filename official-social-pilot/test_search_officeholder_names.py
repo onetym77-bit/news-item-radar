@@ -56,7 +56,7 @@ class OfficeholderNameSearchTests(unittest.TestCase):
 
     def test_review_summary_lists_unverified_profile_urls(self):
         row = discover(self.seeds["entities"][0], "id", "secret", search=lambda *args: (
-            "SUCCESS", [{"link": "https://www.facebook.com/ohsehoon4you"}]
+            "SUCCESS", [{"link": "https://www.facebook.com/ohsehoon4you", "title": "오세훈 - Facebook"}]
         ))
         summary = render({"entities": [row]})
         self.assertIn("https://www.facebook.com/ohsehoon4you", summary)
