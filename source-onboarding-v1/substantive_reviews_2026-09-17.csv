@@ -1,7 +1,7 @@
 source_run_id,source_id,source_record_id,label,reviewed_on,note
-35202083001,seoul_audit_results,580883,,,
-35202083001,seoul_audit_results,580648,,,
-35202083001,seoul_audit_results,580103,,,
-35202083001,citizen_proposals,202825,,,
-35202083001,citizen_proposals,202821,,,
-35202083001,citizen_proposals,202820,,,
+35202083001,seoul_audit_results,580883,PROMISING,2026-09-18,계약·조달 지적이 구체적이며 확인 가능한 감사 기록이 있다. 취재 착수 검토이며 기사 확정은 아니다.
+35202083001,seoul_audit_results,580648,VERIFY,2026-09-18,감사 문서의 가치는 있으나 선택된 대표 각도는 약하다. 다른 지적 중 더 강한 쟁점을 확인한다.
+35202083001,seoul_audit_results,580103,VERIFY,2026-09-18,조달 관련 우려가 문서에 있으나 대표 각도는 더 강한 지적을 놓쳤을 가능성이 있다.
+35202083001,citizen_proposals,202825,NOISE,2026-09-18,QR 이용 불편 주장만으로 실제 지연 사례나 영향 규모가 확인되지 않는다.
+35202083001,citizen_proposals,202821,NOISE,2026-09-18,이동 기준 우선석 제안이며 영향을 받은 실제 사례 근거가 부족하다.
+35202083001,citizen_proposals,202820,NOISE,2026-09-18,지게차 포크 색상 개선 제안이며 실제 사고나 피해 사례는 확인되지 않았다.
