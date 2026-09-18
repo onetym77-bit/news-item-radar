@@ -14,7 +14,7 @@
       "label": "목록 수집",
       "max_question_output": "NONE",
       "max_briefing_output": "NONE",
-      "max_schedule": "MANUAL_PR",
+      "max_schedule": "SHADOW",
       "max_persistence": "DERIVED_ONLY"
     },
     "L2": {
@@ -56,13 +56,13 @@
       "implementation_path": "district-council-pilot/collect_pilot.py",
       "question_output": "NONE",
       "briefing_output": "NONE",
-      "schedule": "MANUAL_PR",
+      "schedule": "SHADOW",
       "persistence": "DERIVED_ONLY",
       "automatic_ledger_write": false,
       "raw_personal_text_persisted": false,
       "approved_for_production": false,
       "evaluation": null,
-      "note": "25곳 연결 상태 점검. 회의록 생산 공백과 사이트별 구조 차이 미평가",
+      "note": "25곳 연결 시험 뒤 첫 화면 최대 20건의 상태만 반복 관측. 접속 실패와 관측 범위 밖 누락 가능성을 표시하며 질문·브리핑·장부에 연결하지 않음",
       "source_set_path": "district-council-pilot/sources_25.json"
     },
     {

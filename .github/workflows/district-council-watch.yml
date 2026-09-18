@@ -1,0 +1,120 @@
+name: Watch 25 district council list windows
+
+on:
+  schedule:
+    - cron: "45 8 * * *"
+      timezone: "Asia/Seoul"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "district-council-pilot/watch_new_minutes.py"
+      - "district-council-pilot/test_watch_new_minutes.py"
+      - ".github/workflows/district-council-watch.yml"
+  pull_request:
+    paths:
+      - "district-council-pilot/watch_new_minutes.py"
+      - "district-council-pilot/test_watch_new_minutes.py"
+      - ".github/workflows/district-council-watch.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: district-window-watch-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test source adapters and watch states
+        run: python -X utf8 -m unittest discover -s district-council-pilot -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+
+  observe:
+    needs: test
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Observe official first-page windows
+        run: python -X utf8 district-council-pilot/watch_new_minutes.py
+      - name: Show bounded status
+        run: sed -n '1,90p' district-council-pilot/output/watch/status_latest.md
+      - name: Preserve derived state and status only
+        uses: actions/upload-artifact@v7
+        with:
+          name: district-window-watch-${{ github.run_id }}
+          path: |
+            district-council-pilot/output/watch/state_latest.json
+            district-council-pilot/output/watch/status_latest.md
+          if-no-files-found: error
+          retention-days: 7
+
+  persist-main:
+    needs: observe
+    if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact tested main commit
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - name: Download exact derived observation
+        uses: actions/download-artifact@v8
+        with:
+          name: district-window-watch-${{ github.run_id }}
+          path: district-council-pilot/output/watch
+      - name: Validate safe output and protected ledgers
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          state = json.loads(Path("district-council-pilot/output/watch/state_latest.json").read_text(encoding="utf-8"))
+          run = state["last_run"]
+          assert state["schema"] == 1
+          assert run["coverage"] == "FIRST_PAGE_VISIBLE_WINDOW_ONLY"
+          assert run["question_output"] == "NONE"
+          assert run["briefing_output"] == "NONE"
+          assert run["automatic_ledger_write"] is False
+          assert len(run["results"]) == 25
+          assert Path("district-council-pilot/output/watch/status_latest.md").is_file()
+          PY
+          git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+      - name: Persist explicit allowlist only
+        shell: bash
+        run: |
+          git config user.name "news-item-radar-bot"
+          git config user.email "news-item-radar-bot@users.noreply.github.com"
+          git add -f district-council-pilot/output/watch/state_latest.json
+          git add -f district-council-pilot/output/watch/status_latest.md
+          git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "Record bounded district windows for run $GITHUB_RUN_ID"
+            git push origin HEAD:main
+          fi
