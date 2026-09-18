@@ -1,6 +1,7 @@
 import unittest
+from unittest.mock import patch
 
-from watch_new_minutes import compare, empty_state, record_key, render
+from watch_new_minutes import compare, empty_state, record_key, render, safe_observe
 
 
 def row(number):
@@ -55,6 +56,12 @@ class ThinWatchRegression(unittest.TestCase):
         first = record_key("https://www.example.gov/record/main?uid=3&kind=B")
         second = record_key("https://example.gov/record/main?kind=B&uid=3")
         self.assertEqual(first, second)
+
+    def test_one_parser_failure_is_isolated(self):
+        with patch("watch_new_minutes.observe", side_effect=ValueError("bad list")):
+            result = safe_observe({"id": "example", "name": "예시구"})
+        self.assertEqual(result["status"], "UNKNOWN_LIST_WINDOW")
+        self.assertEqual(result["records"], [])
 
     def test_duplicate_identity_is_rejected(self):
         with self.assertRaises(ValueError):
