@@ -74,6 +74,8 @@
 | 공식 유튜브 L1 PR·main·수동 읽기 전용 실행 | .github/workflows/official-youtube-feed-trial.yml |
 | 단체장 이름 검색 L0 PR·수동·main 변경 실행 | .github/workflows/officeholder-name-search-l0.yml |
 | 공식 SNS L0 수동·PR 읽기 전용 실행 | .github/workflows/official-social-l0.yml |
+| 읽기 전용 운영 화면 설계·목업 | app-ui-v1/README.md |
+| 읽기 전용 운영 화면 | app-ui-v1/index.html, app-ui-v1/styles.css, app-ui-v1/app.js |
 | 비회기 보완소스 시험안(미편입) | district-council-pilot/OFF_SESSION_SOURCE_PLAN.md |
 | 브리핑 핵심 지침 | briefing-v3.0-draft/SKILL.md |
 | 시장 우선 발견 | briefing-v3.0-draft/MARKET_FIRST_DISCOVERY.md |
