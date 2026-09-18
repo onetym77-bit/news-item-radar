@@ -51,6 +51,11 @@ class ThinWatchRegression(unittest.TestCase):
         second = compare(first, [observed(status="UNKNOWN_LIST_WINDOW")], "2026-09-19T09:00:00+09:00")
         self.assertEqual(second["sources"]["example"], first["sources"]["example"])
 
+    def test_official_alias_and_query_order_keep_identity(self):
+        first = record_key("https://www.example.gov/record/main?uid=3&kind=B")
+        second = record_key("https://example.gov/record/main?kind=B&uid=3")
+        self.assertEqual(first, second)
+
     def test_duplicate_identity_is_rejected(self):
         with self.assertRaises(ValueError):
             compare(empty_state(), [observed(3, 3)], "2026-09-18T09:00:00+09:00")
