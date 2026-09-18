@@ -7,183 +7,183 @@
       "entity_id": "seoul",
       "municipality": "서울특별시",
       "officeholder_name": "오세훈",
-      "name_source": "https://mayor.seoul.go.kr/oh/seoul/briefingList.do?curPage=1",
-      "name_evidence": "OFFICIAL_PAGE"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "jongno",
       "municipality": "종로구",
       "officeholder_name": "유찬종",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "junggu",
       "municipality": "중구",
       "officeholder_name": "김길성",
-      "name_source": "https://www.junggu.seoul.kr/chief/",
-      "name_evidence": "OFFICIAL_PAGE"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "yongsan",
       "municipality": "용산구",
       "officeholder_name": "김경대",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "seongdong",
       "municipality": "성동구",
       "officeholder_name": "유보화",
-      "name_source": "https://www.sd.go.kr/mayor/index.do",
-      "name_evidence": "OFFICIAL_PAGE"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "gwangjin",
       "municipality": "광진구",
       "officeholder_name": "김경호",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "dongdaemun",
       "municipality": "동대문구",
       "officeholder_name": "최동민",
-      "name_source": "https://www.ddm.go.kr/www/index.do",
-      "name_evidence": "OFFICIAL_PAGE"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "jungnang",
       "municipality": "중랑구",
       "officeholder_name": "류경기",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "seongbuk",
       "municipality": "성북구",
       "officeholder_name": "이승로",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "gangbuk",
       "municipality": "강북구",
       "officeholder_name": "정창수",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "dobong",
       "municipality": "도봉구",
       "officeholder_name": "김동욱",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "nowon",
       "municipality": "노원구",
       "officeholder_name": "서준오",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "eunpyeong",
       "municipality": "은평구",
       "officeholder_name": "김미경",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "seodaemun",
       "municipality": "서대문구",
       "officeholder_name": "박운기",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "mapo",
       "municipality": "마포구",
       "officeholder_name": "유동균",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "yangcheon",
       "municipality": "양천구",
       "officeholder_name": "이기재",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "gangseo",
       "municipality": "강서구",
       "officeholder_name": "진교훈",
-      "name_source": "https://www.gangseo.seoul.kr/mayor/index",
-      "name_evidence": "OFFICIAL_PAGE"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "guro",
       "municipality": "구로구",
       "officeholder_name": "장인홍",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "geumcheon",
       "municipality": "금천구",
       "officeholder_name": "최기찬",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "yeongdeungpo",
       "municipality": "영등포구",
       "officeholder_name": "조유진",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "dongjak",
       "municipality": "동작구",
       "officeholder_name": "류삼영",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "gwanak",
       "municipality": "관악구",
       "officeholder_name": "박준희",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "seocho",
       "municipality": "서초구",
       "officeholder_name": "전성수",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "gangnam",
       "municipality": "강남구",
       "officeholder_name": "김현기",
-      "name_source": "https://v.daum.net/v/qsccARoM1L",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "songpa",
       "municipality": "송파구",
       "officeholder_name": "서강석",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     },
     {
       "entity_id": "gangdong",
       "municipality": "강동구",
       "officeholder_name": "이수희",
-      "name_source": "https://www.etoday.co.kr/news/view/2598763?trc=breaking_hot_news",
-      "name_evidence": "SECONDARY_ELECTION_ROSTER_SEED"
+      "name_source": "https://github.com/onetym77-bit/news-item-radar/blob/main/official-social-pilot/editor_confirmed_officeholders.json",
+      "name_evidence": "EDITOR_ATTESTED"
     }
   ]
 }
