@@ -4,12 +4,18 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "15 3 * * *"
+  workflow_run:
+    workflows:
+      - "Collect source signals"
+      - "Build daily item briefing"
+    types: [completed]
 
 permissions:
   contents: write
 
 jobs:
   build-ui-data:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main outputs
