@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "scope": "OFFICEHOLDER_NAME_SEARCH_CANDIDATES_ONLY",
+  "checked_on": "2026-09-18",
+  "rules": [
+    "현재 재직자 이름은 지자체 공식 열린시장실·열린구청장실에서 먼저 확인한다.",
+    "이름+직책+자치구+페이스북으로 검색해 개인 계정 후보를 찾는다. 구청 기관 계정과 구청장 개인 계정을 섞지 않는다.",
+    "검색 결과나 제3자 목록만으로 공식 계정으로 승인하지 않는다. 당사자 또는 기관의 직접 연결, 검증 가능한 공적 출처 등으로 별도 확인한다.",
+    "프로필 접근 실패는 계정 부재가 아니며, 게시물 수집·질문 생성·브리핑 연결은 하지 않는다."
+  ],
+  "candidates": [
+    {
+      "entity_id": "seoul",
+      "officeholder_name": "오세훈",
+      "officeholder_source": "https://mayor.seoul.go.kr/oh/seoul/briefingList.do?curPage=1",
+      "platform": "facebook",
+      "candidate_url": "https://www.facebook.com/ohsehoon4you",
+      "discovery_source": "https://www.khan.co.kr/article/202511191741001/amp",
+      "discovery_note": "2025년 언론 보도에서 시장의 페이스북 아카이브 주소로 명시. 2026년 현재 계정 직접 확인은 미완료.",
+      "status": "SEARCH_CANDIDATE_NEEDS_CURRENT_VERIFICATION"
+    },
+    {
+      "entity_id": "gangseo",
+      "officeholder_name": "진교훈",
+      "officeholder_source": "https://www.gangseo.seoul.kr/mayor/index",
+      "platform": "facebook",
+      "candidate_url": "https://www.facebook.com/jingyohoon",
+      "discovery_source": "https://www.wikidata.org/wiki/Q117434865",
+      "discovery_note": "Wikidata의 Facebook ID 항목에는 참고문헌이 없음. 계정 본인성·최근 활동 확인 전까지 미승인.",
+      "status": "SEARCH_CANDIDATE_NEEDS_IDENTITY_VERIFICATION"
+    }
+  ]
+}
