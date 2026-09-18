@@ -72,6 +72,12 @@ def validate_registry(data: dict) -> list[str]:
         site = entity.get("official_site")
         if site is not None and not safe_https(site):
             errors.append(f"{entity_id}: official_site must be safe HTTPS or null")
+        if site is not None and (
+            not safe_https(entity.get("official_site_source", ""))
+            or entity.get("official_site_verification") != "GOV24_LISTED"
+            or not entity.get("official_site_checked_on")
+        ):
+            errors.append(f"{entity_id}: official_site lacks government-directory evidence")
         for field in ("institution_accounts", "officeholder_accounts"):
             accounts = entity.get(field)
             if not isinstance(accounts, list):
