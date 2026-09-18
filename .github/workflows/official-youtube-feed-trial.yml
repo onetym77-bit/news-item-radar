@@ -1,0 +1,62 @@
+name: Trial homepage-linked YouTube Atom feeds L1
+
+on:
+  pull_request:
+    paths:
+      - "official-social-pilot/collect_youtube_feed_trial.py"
+      - "official-social-pilot/test_collect_youtube_feed_trial.py"
+      - "official-social-pilot/youtube_feed_trial.json"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+      - ".github/workflows/official-youtube-feed-trial.yml"
+  push:
+    branches: [main]
+    paths:
+      - "official-social-pilot/collect_youtube_feed_trial.py"
+      - "official-social-pilot/youtube_feed_trial.json"
+      - ".github/workflows/official-youtube-feed-trial.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: official-youtube-feed-trial-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  trial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Read-only checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test channel and metadata boundaries
+        run: python -X utf8 -m unittest discover -s official-social-pilot -p 'test_*.py' -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: PR dry run
+        if: github.event_name == 'pull_request'
+        run: python -X utf8 official-social-pilot/collect_youtube_feed_trial.py --dry-run
+      - name: Read public Atom feeds
+        if: github.event_name != 'pull_request'
+        run: python -X utf8 official-social-pilot/collect_youtube_feed_trial.py
+      - name: Show source coverage
+        if: always()
+        run: |
+          if [ -f official-social-pilot/output/youtube-feed-trial/SUMMARY.md ]; then
+            cat official-social-pilot/output/youtube-feed-trial/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload bounded trial output
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: official-youtube-feed-trial-${{ github.run_id }}
+          path: official-social-pilot/output/youtube-feed-trial/
+          if-no-files-found: warn
+          retention-days: 7
