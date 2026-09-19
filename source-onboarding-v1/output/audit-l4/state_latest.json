@@ -86,6 +86,32 @@
         "listing_candidate_count": 3,
         "listing_error_code": null
       }
+    },
+    {
+      "run_date_kst": "2026-09-19",
+      "run_id": "35427102345",
+      "listing_status": "SUCCESS",
+      "listing_diagnostics": {
+        "listing_pages_attempted": 2,
+        "listing_pages_successful": 2,
+        "listing_errors": [],
+        "eligible_listing_records": 18
+      },
+      "selected_ids": [
+        "576968",
+        "576627",
+        "575814"
+      ],
+      "diagnostics": {
+        "detail_requested": 3,
+        "pdf_found": 3,
+        "pdf_extracted": 3,
+        "ready_questions": 0,
+        "held_questions": 3,
+        "raw_reports_persisted": 0,
+        "listing_candidate_count": 3,
+        "listing_error_code": null
+      }
     }
   ],
   "records": [
@@ -565,6 +591,165 @@
         "finding_selection_version": "CONCRETE_FINDING_V3",
         "evidence_anchor": "UNRESOLVED",
         "freshness_days": 161,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "576968",
+      "first_seen_kst": "2026-09-19",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "576968",
+        "title": "하수처리 안전관리실태 감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/576968?listPage=2",
+        "published_at": "2026-04-10",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/04/69cf2405a34e12.90318191.pdf",
+        "attachment_sha256": "65c1833b593c1d2be1fe7d6d525ef7247c4d14088add4c0c88438d3662c12049",
+        "report_text_sha256": "4de771e76a39051275aa5af0e2a7319d46f0a55c7afbc69f9cd7799792bd3163",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": false,
+        "documented_issue_in_table": false,
+        "dominant_domain_evidence_count": 0,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [],
+        "disposition_counts": {},
+        "risk_domains": [],
+        "risk_domain_counts": {},
+        "selected_finding_title": null,
+        "review_finding_titles": [],
+        "finding_candidate_count": 0,
+        "finding_selection_score": 0,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 162,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "576627",
+      "first_seen_kst": "2026-09-19",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "576627",
+        "title": "캠퍼스타운사업 운영실태 특정감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/576627?listPage=2",
+        "published_at": "2026-03-27",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/03/69c4ffc95c7319.47736982.pdf",
+        "attachment_sha256": "d0c0c9f799074d02ae48adb4a9228b9482a3df8cfe3c98ad5e0c9dc4b22283cb",
+        "report_text_sha256": "e38e43122732c8f32e6a3c51e3a1ed46426305bca1f36dac78e8390f99082a91",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": true,
+        "documented_issue_in_table": true,
+        "dominant_domain_evidence_count": 1,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [
+          "시정",
+          "주의",
+          "개선",
+          "권고",
+          "통보",
+          "징계"
+        ],
+        "disposition_counts": {
+          "통보": 2
+        },
+        "risk_domains": [
+          "GOVERNANCE_CONTROL",
+          "PROCUREMENT_CONTRACT"
+        ],
+        "risk_domain_counts": {
+          "PROCUREMENT_CONTRACT": 2,
+          "GOVERNANCE_CONTROL": 8
+        },
+        "selected_finding_title": "사업 ♡♡대학교 캠퍼스타운사업 창업지원시설 운영·관리 미흡 주 의 운영",
+        "review_finding_titles": [
+          "사업 ♡♡대학교 캠퍼스타운사업 창업지원시설 운영·관리 미흡 주 의 운영",
+          "집행 하자검사 미실시 등 계약업무 처리 부적정 주 의",
+          "체계적 사업관리를 위한 사업 운영기준등 개선 필요 통 보",
+          "성과평가 지표 설정시기 및 예비창업자 성과평가 개선 필요 통보 (2)",
+          "창업경진대회 평가 및 관리비 수입금 집행 부적정 주 의"
+        ],
+        "finding_candidate_count": 11,
+        "finding_selection_score": 6,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 176,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "구체 지적은 확인했지만 기획 질문 생성 기준에 미달",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "575814",
+      "first_seen_kst": "2026-09-19",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "575814",
+        "title": "2024년 일상감사 의견 이행실태 등 점검결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/575814?listPage=2",
+        "published_at": "2026-03-13",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/03/69b36b70c95af3.89155379.pdf",
+        "attachment_sha256": "f24355c2f288d5819596f43b38ed519f0a6915a660ba52376e9cd2ad60a863d3",
+        "report_text_sha256": "7a26bf091d66ac88424b6ca0bf3f5435e352df794744a4ec34f5b1f4fef19c66",
+        "pdf_pages_sampled": 16,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": false,
+        "documented_issue_in_table": false,
+        "dominant_domain_evidence_count": 0,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [],
+        "disposition_counts": {},
+        "risk_domains": [],
+        "risk_domain_counts": {},
+        "selected_finding_title": null,
+        "review_finding_titles": [],
+        "finding_candidate_count": 0,
+        "finding_selection_score": 0,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 190,
         "why_now": "RECENT_REPORT_SAMPLE",
         "question_status": "HOLD",
         "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
