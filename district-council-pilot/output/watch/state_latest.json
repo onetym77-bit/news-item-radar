@@ -26,7 +26,7 @@
         "30721653bcfd2ced44b9aa57",
         "3b1e3bafa2865d59c3cf1740"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "gwanak": {
       "seen_keys": [
@@ -53,7 +53,7 @@
         "437de2aeb1d9214af3b113a2",
         "adf255cbef1c09d01b88cfd2"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "nowon": {
       "seen_keys": [
@@ -82,7 +82,7 @@
         "c9844ac94c330f9d492973f0",
         "90240cab2fca92d46f2d3971"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "mapo": {
       "seen_keys": [
@@ -110,7 +110,7 @@
         "8de8dd9557bf38a6c6bd3d82",
         "eccdc0454ef2beffec9c6db6"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "junggu": {
       "seen_keys": [
@@ -139,7 +139,7 @@
         "634931a37e47ba05805a9f8e",
         "494efa5f55c655667771cad7"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "yongsan": {
       "seen_keys": [
@@ -166,7 +166,7 @@
         "ac6d6e53ac28d7a48fdf5131",
         "a8f38420717e7649becc79cb"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "seongbuk": {
       "seen_keys": [
@@ -197,7 +197,7 @@
         "916edab4d06cd7ccd2421ea6",
         "132026d2ce359a4c60014c00"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "gangbuk": {
       "seen_keys": [
@@ -224,7 +224,7 @@
         "0a72dbf126b9f3aab4d2860f",
         "f20bedb5f6522cbbd8cc32bc"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "dobong": {
       "seen_keys": [
@@ -237,7 +237,7 @@
         "71a6e55897323f56f9b349d8",
         "a6ec807632b321d5de0ec695"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "eunpyeong": {
       "seen_keys": [
@@ -265,7 +265,7 @@
         "030e61eb9adb2548a2599779",
         "7807719aa2d9548d995f591c"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "seodaemun": {
       "seen_keys": [
@@ -296,10 +296,9 @@
         "c5659b6ad3593fa501ee76da",
         "d7872057b5d0d620e9d2ec12",
         "b05b6c8dec810cfda5283150",
-        "cfaff2d3fb3b663ed184f1c9",
-        "ef1c50b14872c6c364615442"
+        "cfaff2d3fb3b663ed184f1c9"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "gangseo": {
       "seen_keys": [
@@ -320,7 +319,7 @@
         "6b4dea3d1b1bb252c4117998",
         "2da5dddba85ac369a844e3b4"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "gwangjin": {
       "seen_keys": [
@@ -347,7 +346,7 @@
         "d161f64b7a75c7812dde4d6a",
         "40938cb524f28b43a0586bd3"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "jungnang": {
       "seen_keys": [
@@ -376,7 +375,7 @@
         "fda193fba798c1147d7f76fc",
         "53c73c083ef3fd13f990f270"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "guro": {
       "seen_keys": [
@@ -419,7 +418,7 @@
         "939e9dc95d1742a3dde1b892",
         "7dd00488d6ec0e7d6a7de8ae"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "geumcheon": {
       "seen_keys": [
@@ -446,7 +445,7 @@
         "c3dec5bba3a52b04c4ef61c1",
         "5587d55ccd87890613959d3a"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "dongjak": {
       "seen_keys": [
@@ -473,7 +472,7 @@
         "69db49f8e2ceb45b64894c17",
         "4963b106e09abeea33f9bebc"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "seocho": {
       "seen_keys": [
@@ -501,7 +500,7 @@
         "a656723aac089fc2e66a1fc8",
         "d825f6d374cd47812ffcceb9"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "songpa": {
       "seen_keys": [
@@ -513,6 +512,7 @@
         "cc25c82a8069c78cd8e70cce",
         "444dcd7ab73c464784716249",
         "7133e9ac5c00d357dc490699",
+        "ecae01b1f390be24e9b70308",
         "708861d8018d0a43f1719a2d",
         "300878bf8e9649f4c964753f",
         "e0c6f4b4b8d257abc2b7e0c8",
@@ -527,10 +527,10 @@
         "cc25c82a8069c78cd8e70cce",
         "444dcd7ab73c464784716249",
         "7133e9ac5c00d357dc490699",
-        "708861d8018d0a43f1719a2d",
-        "300878bf8e9649f4c964753f"
+        "ecae01b1f390be24e9b70308",
+        "708861d8018d0a43f1719a2d"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     },
     "gangdong": {
       "seen_keys": [
@@ -648,11 +648,38 @@
         "bafda04e98ce37cd14f2a004",
         "798e34927d226a2940ee64f7"
       ],
-      "last_successful_at_kst": "2026-09-19T10:34:39+09:00"
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
+    },
+    "yangcheon": {
+      "seen_keys": [
+        "a914677e45bd8591dc5f40ca",
+        "0091c2e56f213aa7a12a10bc",
+        "63f909b2b5204f88f38122ab",
+        "9f759ef7fcb8c61f857e0f70",
+        "2797e51c74cec43e9011f2ec",
+        "eddfc098ad16a4bf1cb6761f",
+        "b086e5435e09ce0c3571ddbd",
+        "9d70b6d0f5ccf29f5ed253d9",
+        "84359449af32ad35fcdf05f8",
+        "387a9554b4cd4f42853f7605"
+      ],
+      "window_keys": [
+        "a914677e45bd8591dc5f40ca",
+        "0091c2e56f213aa7a12a10bc",
+        "63f909b2b5204f88f38122ab",
+        "9f759ef7fcb8c61f857e0f70",
+        "2797e51c74cec43e9011f2ec",
+        "eddfc098ad16a4bf1cb6761f",
+        "b086e5435e09ce0c3571ddbd",
+        "9d70b6d0f5ccf29f5ed253d9",
+        "84359449af32ad35fcdf05f8",
+        "387a9554b4cd4f42853f7605"
+      ],
+      "last_successful_at_kst": "2026-09-20T10:37:25+09:00"
     }
   },
   "last_run": {
-    "collected_at_kst": "2026-09-19T10:34:39+09:00",
+    "collected_at_kst": "2026-09-20T10:37:25+09:00",
     "coverage": "FIRST_PAGE_VISIBLE_WINDOW_ONLY",
     "question_output": "NONE",
     "briefing_output": "NONE",
@@ -679,37 +706,20 @@
       {
         "id": "nowon",
         "name": "노원구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 2,
-        "candidates": [
-          {
-            "key": "8dedd6a0ad3c51c553f6d96a",
-            "url": "https://council.nowon.kr/record/recordView.do?key=9a3ec4945a371d958d2401d9e5b5a689b5ed7ada9271c974f2a4a3d74fb62ea346ee3be1399b73ba",
-            "meeting_date": "2026-09-01"
-          },
-          {
-            "key": "dbe9bd5fc12618e33ebce907",
-            "url": "https://council.nowon.kr/record/recordView.do?key=5d8b4e79125442e640d5fc4b243cd4a55bb92f2430ab82d7109c1b3bbadc7c8b2960c047eaf7b2d2",
-            "meeting_date": "2026-08-31"
-          }
-        ]
+        "new_count": 0,
+        "candidates": []
       },
       {
         "id": "mapo",
         "name": "마포구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 1,
-        "candidates": [
-          {
-            "key": "5ad45c1cc61a8a83e8f23f2f",
-            "url": "https://council.mapo.seoul.kr/record/recordView.do?key=041597c5c307c8669e3c41ab7b525c7552a88c4a368db0ffd653a6dced12c54681db63170fac2062",
-            "meeting_date": "2026-09-15"
-          }
-        ]
+        "new_count": 0,
+        "candidates": []
       },
       {
         "id": "seongdong",
@@ -723,31 +733,20 @@
       {
         "id": "jongno",
         "name": "종로구",
-        "status": "BASELINE",
-        "listed": 10,
-        "visible": 10,
+        "status": "UNKNOWN_COLLECTION",
+        "listed": null,
+        "visible": 0,
         "new_count": null,
         "candidates": []
       },
       {
         "id": "junggu",
         "name": "중구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 2,
-        "candidates": [
-          {
-            "key": "059b89a660c52f55c80c71c7",
-            "url": "https://council.junggu.seoul.kr/record/main?uid=6441",
-            "meeting_date": "2026-09-14"
-          },
-          {
-            "key": "a48908f91b23d62e663543c9",
-            "url": "https://council.junggu.seoul.kr/record/main?uid=6442",
-            "meeting_date": "2026-09-07"
-          }
-        ]
+        "new_count": 0,
+        "candidates": []
       },
       {
         "id": "yongsan",
@@ -761,32 +760,11 @@
       {
         "id": "seongbuk",
         "name": "성북구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 4,
-        "candidates": [
-          {
-            "key": "c027c6289f331dc91228c168",
-            "url": "https://www.sbc.go.kr/record/recordView.do?key=703f0846c6095cb1ba89246192b3c5c09281963495df1116585bc0957a40deea28ca34ddacf0e192",
-            "meeting_date": "2026-08-27"
-          },
-          {
-            "key": "53c295ae4811844dd6a9123a",
-            "url": "https://www.sbc.go.kr/record/recordView.do?key=91897f4f8f9bca776c4d499e82ac4663d760a777c6d6349821443d4e6a3efe645f053e7fbd623368",
-            "meeting_date": "2026-08-27"
-          },
-          {
-            "key": "916edab4d06cd7ccd2421ea6",
-            "url": "https://www.sbc.go.kr/record/recordView.do?key=f80b46dc871f12396682d02b0022db3cf9da15c5c81937b958d27dcf8285cda3ebc0cd9238ab406e",
-            "meeting_date": "2026-08-26"
-          },
-          {
-            "key": "132026d2ce359a4c60014c00",
-            "url": "https://www.sbc.go.kr/record/recordView.do?key=cdf7c84a72717dd0ce7d98e3e434741d1af78d2c00a693b93a58e9c5053cb0cc9a5aef96f2409275",
-            "meeting_date": "2026-08-25"
-          }
-        ]
+        "new_count": 0,
+        "candidates": []
       },
       {
         "id": "gangbuk",
@@ -809,65 +787,38 @@
       {
         "id": "eunpyeong",
         "name": "은평구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 1,
-        "candidates": [
-          {
-            "key": "acb5e6088f961369cbae75d7",
-            "url": "https://council.ep.go.kr/viewer/minutes.do?uid=6103",
-            "meeting_date": "2026-09-18"
-          }
-        ]
+        "new_count": 0,
+        "candidates": []
       },
       {
         "id": "seodaemun",
         "name": "서대문구",
         "status": "NO_NEW_IN_VISIBLE_WINDOW",
-        "listed": 13,
-        "visible": 13,
+        "listed": 12,
+        "visible": 12,
         "new_count": 0,
         "candidates": []
       },
       {
         "id": "yangcheon",
         "name": "양천구",
-        "status": "UNKNOWN_COLLECTION",
-        "listed": null,
-        "visible": 0,
+        "status": "BASELINE",
+        "listed": 10,
+        "visible": 10,
         "new_count": null,
         "candidates": []
       },
       {
         "id": "gangseo",
         "name": "강서구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 7,
         "visible": 7,
-        "new_count": 4,
-        "candidates": [
-          {
-            "key": "a4c46b834e1fd4c2e41df718",
-            "url": "https://gsc.gangseo.seoul.kr/meeting/confer/popup.do?ntime=323&contype=2&subtype=2&num=1&istemp=1",
-            "meeting_date": "2026-09-02"
-          },
-          {
-            "key": "85a2e9a33b0a513e8791cd72",
-            "url": "https://gsc.gangseo.seoul.kr/meeting/confer/popup.do?ntime=323&contype=2&subtype=3&num=1&istemp=1",
-            "meeting_date": "2026-09-02"
-          },
-          {
-            "key": "6b4dea3d1b1bb252c4117998",
-            "url": "https://gsc.gangseo.seoul.kr/meeting/confer/popup.do?ntime=323&contype=2&subtype=3&num=2&istemp=1",
-            "meeting_date": "2026-09-03"
-          },
-          {
-            "key": "2da5dddba85ac369a844e3b4",
-            "url": "https://gsc.gangseo.seoul.kr/meeting/confer/popup.do?ntime=323&contype=2&subtype=3&num=3&istemp=1",
-            "meeting_date": "2026-09-04"
-          }
-        ]
+        "new_count": 0,
+        "candidates": []
       },
       {
         "id": "gwangjin",
@@ -881,51 +832,29 @@
       {
         "id": "dongdaemun",
         "name": "동대문구",
-        "status": "BASELINE",
-        "listed": 10,
-        "visible": 10,
+        "status": "UNKNOWN_COLLECTION",
+        "listed": null,
+        "visible": 0,
         "new_count": null,
         "candidates": []
       },
       {
         "id": "jungnang",
         "name": "중랑구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 2,
-        "candidates": [
-          {
-            "key": "4de1d50da996bed6d2bc264d",
-            "url": "https://council.jungnang.go.kr/viewer/minutes.do?uid=6712",
-            "meeting_date": "2026-09-07"
-          },
-          {
-            "key": "dcf98640a75f6ae3d3720a59",
-            "url": "https://council.jungnang.go.kr/viewer/minutes.do?uid=6713",
-            "meeting_date": "2026-09-02"
-          }
-        ]
+        "new_count": 0,
+        "candidates": []
       },
       {
         "id": "guro",
         "name": "구로구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 18,
         "visible": 18,
-        "new_count": 2,
-        "candidates": [
-          {
-            "key": "07f5279c9ad6a56f90587465",
-            "url": "https://www.guroc.go.kr/meeting/confer/popup.do?ntime=349&contype=1&subtype=0&num=3&istemp=1",
-            "meeting_date": "2026-09-18"
-          },
-          {
-            "key": "7dd00488d6ec0e7d6a7de8ae",
-            "url": "https://www.guroc.go.kr/meeting/confer/popup.do?ntime=349&contype=4&subtype=4&num=1&istemp=1",
-            "meeting_date": "2026-09-09"
-          }
-        ]
+        "new_count": 0,
+        "candidates": []
       },
       {
         "id": "geumcheon",
@@ -939,10 +868,10 @@
       {
         "id": "yeongdeungpo",
         "name": "영등포구",
-        "status": "BASELINE",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 15,
         "visible": 15,
-        "new_count": null,
+        "new_count": 0,
         "candidates": []
       },
       {
@@ -957,17 +886,11 @@
       {
         "id": "seocho",
         "name": "서초구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 1,
-        "candidates": [
-          {
-            "key": "5fd8de34c2f3a7d4f452c727",
-            "url": "https://sdc.seoul.kr/main/minutes/html/MinutesView.do?MINTS_SN=5450",
-            "meeting_date": "2026-09-11"
-          }
-        ]
+        "new_count": 0,
+        "candidates": []
       },
       {
         "id": "songpa",
@@ -975,27 +898,22 @@
         "status": "NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 2,
+        "new_count": 1,
         "candidates": [
           {
-            "key": "ef8888c6ddf5bb03ba516f57",
-            "url": "https://council.songpa.go.kr/record/recordView.do?key=5a20c4fbf8f22fb5fc31416264d69400e25bafeda08a575cc1fac69739f245aef0125fa2f0f0fdb2",
-            "meeting_date": "2026-09-03"
-          },
-          {
-            "key": "444dcd7ab73c464784716249",
-            "url": "https://council.songpa.go.kr/record/recordView.do?key=8bc00903b126564325b45b2739ec4f126cbe5f555b5629cfecbb22e80c60fb89fb16240c404cc331",
-            "meeting_date": "2026-09-01"
+            "key": "ecae01b1f390be24e9b70308",
+            "url": "https://council.songpa.go.kr/record/recordView.do?key=66b93d183f0b9b4a1d41b955bc166bed730178799ffef1aeedce3d8fe10cc17cae867eb72009b15a",
+            "meeting_date": "2026-08-28"
           }
         ]
       },
       {
         "id": "gangdong",
         "name": "강동구",
-        "status": "NO_NEW_IN_VISIBLE_WINDOW",
-        "listed": 10,
-        "visible": 10,
-        "new_count": 0,
+        "status": "UNKNOWN_COLLECTION",
+        "listed": null,
+        "visible": 0,
+        "new_count": null,
         "candidates": []
       }
     ]
