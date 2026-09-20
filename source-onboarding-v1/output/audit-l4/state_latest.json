@@ -112,6 +112,30 @@
         "listing_candidate_count": 3,
         "listing_error_code": null
       }
+    },
+    {
+      "run_date_kst": "2026-09-20",
+      "run_id": "35495693592",
+      "listing_status": "PARTIAL",
+      "listing_diagnostics": {
+        "listing_pages_attempted": 2,
+        "listing_pages_successful": 1,
+        "listing_errors": [
+          "PAGE_2_SECURITY_OR_DECODE_ERROR"
+        ],
+        "eligible_listing_records": 9
+      },
+      "selected_ids": [],
+      "diagnostics": {
+        "detail_requested": 0,
+        "pdf_found": 0,
+        "pdf_extracted": 0,
+        "ready_questions": 0,
+        "held_questions": 0,
+        "raw_reports_persisted": 0,
+        "listing_candidate_count": 0,
+        "listing_error_code": null
+      }
     }
   ],
   "records": [
