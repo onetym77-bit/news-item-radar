@@ -182,12 +182,14 @@ for item in ranked_interest:
     })
     if len(interest_candidates) >= 3:
         break
+interest_queue_exists = "generated_at_utc" in interest_queue
 ui_editorial_brief = {
     **editorial_brief,
-    "candidates": interest_candidates or editorial_brief.get("candidates", []),
-    "count": len(interest_candidates) if interest_candidates else editorial_brief.get("count", 0),
-    "input": "interest-signal-pilot/review_queue_latest.json" if interest_candidates else editorial_brief.get("input", ""),
+    "candidates": interest_candidates if interest_queue_exists else editorial_brief.get("candidates", []),
+    "count": len(interest_candidates) if interest_queue_exists else editorial_brief.get("count", 0),
+    "input": "interest-signal-pilot/review_queue_latest.json" if interest_queue_exists else editorial_brief.get("input", ""),
     "selection_policy": "주제 중복을 피하고 갈등·시민 영향·기획 확장성이 높은 신호를 우선 표시",
+    "queue_status": "관심 신호 큐 비어 있음" if interest_queue_exists and not interest_candidates else "관심 신호 큐 연결됨",
 }
 
 data = {
