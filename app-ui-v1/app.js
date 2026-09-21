@@ -65,7 +65,8 @@ function render(data) {
   const levelFilter = document.getElementById("levelFilter");
   const statusFilter = document.getElementById("statusFilter");
   const sourceRows = data.sources || [];
-  [...new Set(sourceRows.map(([name]) => name))].forEach(name =>
+  const dataSources = [...new Set([...(data.pending || []).map(([, source]) => source), ...(data.cards || []).map(([, source]) => source)])];
+  [...new Set([...sourceRows.map(([name]) => name), ...dataSources])].filter(Boolean).sort().forEach(name =>
     sourceFilter.insertAdjacentHTML("beforeend", `<option value="${esc(name)}">${esc(name)}</option>`));
   [...new Set(sourceRows.map(([, level]) => level).filter(Boolean))].sort().forEach(level =>
     levelFilter.insertAdjacentHTML("beforeend", `<option value="${esc(level)}">${esc(level)}</option>`));
@@ -77,9 +78,12 @@ function render(data) {
     const source = sourceFilter.value;
     const level = levelFilter.value;
     const status = statusFilter.value;
-    const allowedSources = new Set(sourceRows
-      .filter(([name, itemLevel]) => (!source || name === source) && (!level || itemLevel === level))
-      .map(([name]) => name));
+    const allowedSources = new Set([
+      ...sourceRows
+        .filter(([name, itemLevel]) => (!source || name === source) && (!level || itemLevel === level))
+        .map(([name]) => name),
+      ...dataSources.filter(name => !source || name === source),
+    ]);
     const pending = (data.pending || []).filter(([, itemSource, , , , itemStatus]) =>
       allowedSources.has(itemSource) && (!status || itemStatus === status));
     const cards = (data.cards || []).filter(([, itemSource, , , , itemStatus]) =>
