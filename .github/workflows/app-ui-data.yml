@@ -7,6 +7,7 @@ on:
   workflow_run:
     workflows:
       - "Collect source signals"
+      - "Collect interest signals"
       - "Build daily item briefing"
     types: [completed]
 
