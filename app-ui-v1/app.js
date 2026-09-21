@@ -6,7 +6,8 @@ const sampleData = {
   cards: [],
   pending: [],
   pendingGroups: [],
-  history: []
+  history: [],
+  editorialBrief: { candidates: [] }
 };
 
 const esc = (value = "") => String(value).replace(/[&<>"']/g, char => ({
@@ -58,6 +59,13 @@ function renderGroups(items, emptyText) {
 function render(data) {
   document.getElementById("lastRun").textContent = data.lastRun || "미확인";
   document.getElementById("dataMode").textContent = data.dataMode;
+  const briefNode = document.getElementById("editorialBrief");
+  if (briefNode) {
+    const candidates = (data.editorialBrief && data.editorialBrief.candidates) || [];
+    briefNode.innerHTML = candidates.length ? candidates.map(item => {
+      const evidence = (item.evidence || [])[0] || {};
+      return `<article class="item-card editorial-card"><div class="item-head"><h3>${esc(item.title)}</h3><span class="status-badge">편집 후보</span></div><p class="item-meta">${esc(item.source || "출처 미상")}</p><p class="item-question"><strong>선정 이유</strong> ${esc(item.selection_reason)}</p><p class="item-question"><strong>시민 질문</strong> ${esc(item.citizen_question)}</p><p class="item-question"><strong>다른 각도</strong> ${esc(item.uncommon_angle)}</p>${evidence.url ? `<div class="item-actions"><a href="${esc(evidence.url)}" target="_blank" rel="noreferrer">근거 원문 보기 ↗</a></div>` : ""}</article>`; }).join("") : '<p class="empty">현재 기준을 충족한 편집 후보가 없습니다.</p>';
+  }
   document.getElementById("metrics").innerHTML = (data.metrics || []).map(([label, value]) =>
     `<div class="metric"><span>${esc(label)}</span><b>${esc(value)}</b></div>`).join("");
 
