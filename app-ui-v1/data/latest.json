@@ -1,168 +1,67 @@
 {
-  "lastRun": "2026-09-21T14:20:30+09:00",
+  "lastRun": "2026-09-21T17:58+09:00",
   "dataMode": "실제 산출물",
   "editorialBrief": {
-    "schema": 3,
-    "generated_at_kst": "2026-09-21T13:18:22.464112+09:00",
-    "run_policy": "월·수 09:00 KST, 원자료 피드에서 최대 3건",
+    "schema": 4,
     "input": "interest-signal-pilot/review_queue_latest.json",
-    "count": 3,
-    "candidates": [
+    "generated_at_utc": "2026-09-21T08:58:11.628983+00:00",
+    "count": 0,
+    "candidates": [],
+    "discovery_count": 3,
+    "discovery_signals": [
       {
-        "candidate_id": "CBMib0FVX3lxTE1kVENCNGtp",
-        "title": "주거 비용과 피해: 서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야”",
-        "topic": "서울 주거 피해",
-        "topic_label": "주거 비용과 피해",
-        "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+        "review_id": "CBMidkFVX3lxTFAxekZtVk52",
+        "headline": "‘강남 마지막 판자촌’ 구룡마을 불법 망루, 강제 철거한다 - 동아일보",
         "source": "검색 관심도·뉴스 확산",
-        "seed_event": "서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야” - 투데이신문",
-        "structural_question": "주거 피해가 특정 지역과 계약 유형에 집중되는 이유는 무엇이며, 피해 예방·회복 장치는 작동했는가?",
-        "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-        "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-        "citizen_questions": [
-          "주거 피해가 특정 지역과 계약 유형에 집중되는 이유는 무엇이며, 피해 예방·회복 장치는 작동했는가?",
-          "서울의 다른 자치구에서도 주거 비용과 피해이 반복되는지 어떤 자료와 현장을 비교해야 하는가?",
-          "문제가 확인되면 바뀌어야 할 예산·규정·운영 주체는 누구인가?"
-        ],
-        "conflict_groups": [
-          "직접 피해 시민·이용자",
-          "인근 주민",
-          "서울시·자치구",
-          "사업자·기관"
-        ],
-        "reporting_paths": [
-          "서울시·자치구 공식 계획·예산·통계 확인",
-          "25개 자치구 유사 사례 비교",
-          "당사자·주민·책임 기관 인터뷰"
-        ],
-        "title_options": [
-          "주거 비용과 피해: 서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야”",
-          "서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야”에서 서울 전체의 주거 비용과 피해을 묻다"
-        ],
-        "editorial_status": "확장 질문 초안",
-        "status": "DISCOVERY_ONLY",
+        "observed_signal": "검색 결과에 기사 제목이 표시됨",
+        "source_context_status": "TITLE_ONLY",
+        "problem_status": "UNASSESSED",
+        "first_check": "기사 본문 확인",
+        "counterpossibility": "",
         "evidence": [
           {
             "type": "news",
-            "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1kVENCNGtpaWhkSjZvVFNQTkV0Qnk3cHlPUS1BejhuRkdua2VzcE1GbFZTRWlMbzZMN2xCZGg3V0laQl9MaTBLcVphYl8ySm9RT25tWnEwTGtQcDlqZnZoN2J5ZkhmQ0hhTGFrYkNzRdIBb0FVX3lxTE1kVENCNGtpaWhkSjZvVFNQTkV0Qnk3cHlPUS1BejhuRkdua2VzcE1GbFZTRWlMbzZMN2xCZGg3V0laQl9MaTBLcVphYl8ySm9RT25tWnEwTGtQcDlqZnZoN2J5ZkhmQ0hhTGFrYkNzRQ?oc=5",
-            "published_at": "Mon, 14 Sep 2026 01:30:05 GMT"
+            "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAxekZtVk52blBnbnBHbFVCX3JCWHpzQXhPczVybFFKSkxVQ05nQ09RLWc2OVU1dl82RHVpdVdlY2F3VzZzNmlwbi0xNk5yX2R6RU9ZdTI1RXdwR1RYSDh3TmhNaHd5NDNYUGJLQkJXcVBvUk5UemfSAWZBVV95cUxNUmZOVmFzSnl5eGZ6Q2VjMlJwbWkzXzdmUjhyNHl1cndOR1NDVXZpX1p2Q09lRlZEei1lckd6VjJQSEtTY2FrWWUtdVBnZVVRaUplMlJZZjNzQ2UzTDNTWjBza0Zjd1E?oc=5",
+            "published_at": "Fri, 18 Sep 2026 01:42:00 GMT"
           }
-        ],
-        "editorial_score": 6
+        ]
       },
       {
-        "candidate_id": "CBMibkFVX3lxTE1MRG1qMlla",
-        "title": "복지 접근의 공백: “돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원",
-        "topic": "서울 복지 공백",
-        "topic_label": "복지 접근의 공백",
-        "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+        "review_id": "CBMickFVX3lxTE5mQVhBQkly",
+        "headline": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영 - 웹이코노미",
         "source": "검색 관심도·뉴스 확산",
-        "seed_event": "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원 - 아시아투데이",
-        "structural_question": "지원 제도가 있어도 이용하지 못하는 시민이 생기는 경로는 무엇이며, 자치구별 접근 차이는 얼마나 큰가?",
-        "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-        "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-        "citizen_questions": [
-          "지원 제도가 있어도 이용하지 못하는 시민이 생기는 경로는 무엇이며, 자치구별 접근 차이는 얼마나 큰가?",
-          "서울의 다른 자치구에서도 복지 접근의 공백이 반복되는지 어떤 자료와 현장을 비교해야 하는가?",
-          "문제가 확인되면 바뀌어야 할 예산·규정·운영 주체는 누구인가?"
-        ],
-        "conflict_groups": [
-          "직접 피해 시민·이용자",
-          "인근 주민",
-          "서울시·자치구",
-          "사업자·기관"
-        ],
-        "reporting_paths": [
-          "서울시·자치구 공식 계획·예산·통계 확인",
-          "25개 자치구 유사 사례 비교",
-          "당사자·주민·책임 기관 인터뷰"
-        ],
-        "title_options": [
-          "복지 접근의 공백: “돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원",
-          "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원에서 서울 전체의 복지 접근의 공백을 묻다"
-        ],
-        "editorial_status": "확장 질문 초안",
-        "status": "DISCOVERY_ONLY",
+        "observed_signal": "검색 결과에 기사 제목이 표시됨",
+        "source_context_status": "TITLE_ONLY",
+        "problem_status": "UNASSESSED",
+        "first_check": "기사 본문 확인",
+        "counterpossibility": "",
         "evidence": [
           {
             "type": "news",
-            "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1MRG1qMllaNEdCRnFtTlFDTEE2UkViQXBkNmE4NF9TY2d2eE16bEdkZENDbWZzRWFtTHBfYUVPZTROZUdzVXM3NEtMZy1ockpGaHFPbVR1WVlXOWdWR05WTWRSYWZqTndCY3REd2lR?oc=5",
-            "published_at": "Tue, 15 Sep 2026 08:34:05 GMT"
+            "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5mQVhBQklyWUFBWll6WENMZHZSWU15SzVDSmlGeVpycVlIRzRtanJoVnYwd1FEZkpWdy1ybXBMU0pvaVRESU9JTVUxaXVicFRmemg2R1VieWhYcHl1a0ZOSFp4dUxhd2tLMDktUWNCVVlFdw?oc=5",
+            "published_at": "Mon, 21 Sep 2026 03:01:55 GMT"
           }
-        ],
-        "editorial_score": 3
+        ]
       },
       {
-        "candidate_id": "CBMiakFVX3lxTE5iSmpmOUtf",
-        "title": "도시사업 지연과 책임: 공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적”",
-        "topic": "서울 건설 공사 지연",
-        "topic_label": "도시사업 지연과 책임",
-        "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+        "review_id": "CBMibkFVX3lxTE9iLWQzSDRG",
+        "headline": "강남구, 추석 종합대책 시행…재난·안전사고 예방 총력 - gukjenews.com",
         "source": "검색 관심도·뉴스 확산",
-        "seed_event": "공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적” - 서울Pn",
-        "structural_question": "공사 일정이 늦어진 비용과 불편을 누가 부담했으며, 지연을 사전에 막거나 공개할 장치는 작동했는가?",
-        "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-        "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-        "citizen_questions": [
-          "공사 일정이 늦어진 비용과 불편을 누가 부담했으며, 지연을 사전에 막거나 공개할 장치는 작동했는가?",
-          "서울의 다른 자치구에서도 도시사업 지연과 책임이 반복되는지 어떤 자료와 현장을 비교해야 하는가?",
-          "문제가 확인되면 바뀌어야 할 예산·규정·운영 주체는 누구인가?"
-        ],
-        "conflict_groups": [
-          "직접 피해 시민·이용자",
-          "인근 주민",
-          "서울시·자치구",
-          "사업자·기관"
-        ],
-        "reporting_paths": [
-          "서울시·자치구 공식 계획·예산·통계 확인",
-          "25개 자치구 유사 사례 비교",
-          "당사자·주민·책임 기관 인터뷰"
-        ],
-        "title_options": [
-          "도시사업 지연과 책임: 공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적”",
-          "공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적”에서 서울 전체의 도시사업 지연과 책임을 묻다"
-        ],
-        "editorial_status": "확장 질문 초안",
-        "status": "DISCOVERY_ONLY",
+        "observed_signal": "검색 결과에 기사 제목이 표시됨",
+        "source_context_status": "TITLE_ONLY",
+        "problem_status": "UNASSESSED",
+        "first_check": "기사 본문 확인",
+        "counterpossibility": "",
         "evidence": [
           {
             "type": "news",
-            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5iSmpmOUtfQTNsb2FCRjMtNVpzQWFOcUJfMFR3SHhRU21oQUF3LWdZMldrWl80MWM5SWdLeUhtTjFRUmlpWjY4bFYzRjV2cG9RZ1Jqbnc5aW9lZ0t6TXpZY0dxTEJBSnAtTXc?oc=5",
-            "published_at": "Mon, 07 Sep 2026 07:00:00 GMT"
+            "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9iLWQzSDRGSEJwb21OQlZmSExjNl9jUmVCcUJHRE9WR29WQmNPNnJCZ2Fxd1g3c2laTVA0eVJwdkhZMlY2RE5oOG1kTXpEOWlDOHRpeVZxSXpWdVNZU2E4by03U1dfZ1YwMTlZNGh3?oc=5",
+            "published_at": "Sun, 20 Sep 2026 23:59:49 GMT"
           }
-        ],
-        "editorial_score": 3
+        ]
       }
     ],
-    "lanes": {
-      "discovered": "문제가 발견됐으나 자료 추가 확인이 필요한 후보",
-      "verification": "독립 자료와 현장 확인이 진행 중인 후보",
-      "verified": "핵심 사실과 취재 확장성이 확인된 후보"
-    },
-    "quality_gate": {
-      "existing_items_excluded": [
-        "버스 통상임금",
-        "시내버스 통상임금",
-        "수어통역",
-        "수어통역센터",
-        "전세사기",
-        "국회대로",
-        "상부공원화",
-        "위기 여성 청소년",
-        "청소년 쉼터",
-        "안심ON센터"
-      ],
-      "primary_source_excluded": [
-        "건설알림이",
-        "건설 알림이",
-        "공사 변화 관측"
-      ],
-      "missing_data_is_not_auto_rejection": true,
-      "human_review_required": true
-    },
-    "selection_policy": "주제 중복을 피하고 갈등·시민 영향·기획 확장성이 높은 신호를 우선 표시",
-    "queue_status": "관심 신호 큐 연결됨"
+    "queue_status": "본문 검토 전 탐색 신호"
   },
   "metrics": [
     [
@@ -178,12 +77,16 @@
       "0"
     ],
     [
-      "브리핑 연결",
-      "가능"
+      "탐색 큐",
+      "연결됨"
+    ],
+    [
+      "검증할 신호",
+      "3"
     ],
     [
       "편집 후보",
-      "3"
+      "0"
     ]
   ],
   "sources": [
@@ -553,12 +456,12 @@
       "0/3건 완료"
     ],
     [
-      "브리핑",
-      "공개 가능"
+      "편집 후보",
+      "0건"
     ],
     [
       "데이터 신선도",
-      "정상"
+      "수집됨"
     ]
   ]
 }
