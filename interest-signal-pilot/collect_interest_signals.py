@@ -22,6 +22,7 @@ SEOUL_AREAS = [
     "강북", "도봉", "노원", "은평", "서대문", "마포", "양천", "강서", "구로",
     "금천", "영등포", "동작", "관악", "서초", "강남", "송파", "강동",
 ]
+SEOUL_NAME_ONLY = ("서울뉴스", "서울연구원", "서울본부", "서울자치신문", "서울뉴스통신")
 RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=ko&gl=KR&ceid=KR:ko"
 NAVER_URL = "https://openapi.naver.com/v1/datalab/search"
 USER_AGENT = "news-item-radar/interest-signal-pilot"
@@ -32,7 +33,6 @@ def clean(value: str | None) -> str:
 
 
 def title_key(value: str) -> str:
-    """Normalize headlines so syndicated copies collapse into one signal."""
     value = value.lower()
     value = re.sub(r"\[[^]]+\]|【[^】]+】|\([^)]*\)", " ", value)
     value = re.sub(r"[^0-9a-z가-힣]+", " ", value)
@@ -40,11 +40,15 @@ def title_key(value: str) -> str:
 
 
 def seoul_relevance(title: str, summary: str) -> tuple[bool, str]:
-    text = f"{title} {summary}"
+    # RSS title ends with a publisher after " - ". Never use publisher text as location evidence.
+    headline = re.split(r"\s[-|]\s", title, maxsplit=1)[0].strip()
     for area in SEOUL_AREAS:
-        if area in text:
-            return True, f"서울·자치구 명칭 포함: {area}"
-    return False, "서울·자치구 명칭 미확인"
+        if area not in headline:
+            continue
+        if area == "서울" and any(name in headline for name in SEOUL_NAME_ONLY):
+            continue
+        return True, f"기사 제목의 지역 표현: {area}"
+    return False, "기사 제목에서 서울·자치구 명칭 미확인"
 
 
 def fetch_news(query: str) -> list[dict]:
@@ -75,11 +79,11 @@ def fetch_news(query: str) -> list[dict]:
     return rows
 
 
-def fetch_naver_trends() -> tuple[list[dict], str | None, int]:
+def fetch_naver_trends() -> tuple[list[dict], str | None, int, list[str]]:
     client_id = os.getenv("NAVER_CLIENT_ID", "").strip()
     client_secret = os.getenv("NAVER_CLIENT_SECRET", "").strip()
     if not client_id or not client_secret:
-        return [], "missing_credentials", 0
+        return [], "missing_credentials", 0, []
     today = datetime.now(timezone.utc).date()
     start = today - timedelta(days=14)
     body = {
@@ -103,20 +107,25 @@ def fetch_naver_trends() -> tuple[list[dict], str | None, int]:
         with urllib.request.urlopen(request, timeout=20) as response:
             result = json.loads(response.read().decode("utf-8"))
     except Exception as exc:
-        return [], type(exc).__name__, 0
+        return [], type(exc).__name__, 0, []
     rows = []
     groups_seen = 0
+    groups_without_data = []
     for group in result.get("results", []):
         groups_seen += 1
-        for point in group.get("data", []):
+        title = group.get("title", "")
+        data = group.get("data", [])
+        if not data:
+            groups_without_data.append(title)
+        for point in data:
             rows.append({
-                "query": group.get("title", ""),
+                "query": title,
                 "period": point.get("period"),
                 "relative_ratio": point.get("ratio"),
                 "signal_type": "NAVER_SEARCH_TREND",
                 "status": "DISCOVERY_SIGNAL",
             })
-    return rows, None, groups_seen
+    return rows, None, groups_seen, groups_without_data
 
 
 def main() -> int:
@@ -136,7 +145,7 @@ def main() -> int:
             unique[key] = row
     news = list(unique.values())
 
-    trends, trend_error, trend_groups = fetch_naver_trends()
+    trends, trend_error, trend_groups, trend_groups_without_data = fetch_naver_trends()
     if trend_error:
         errors.append({"channel": "naver_datalab", "error": trend_error})
 
@@ -160,7 +169,7 @@ def main() -> int:
         })
 
     payload = {
-        "schema": 3,
+        "schema": 4,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_id": "search_news_interest",
         "source_name": "검색 관심도·뉴스 확산",
@@ -172,6 +181,7 @@ def main() -> int:
             "unique_news_count": len(news),
             "duplicate_or_irrelevant_count": len(raw_news) - len(news),
             "trend_groups": trend_groups,
+            "trend_groups_without_data": trend_groups_without_data,
             "trend_data_points": len(trends),
             "candidate_ready": False,
             "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요",
@@ -186,6 +196,7 @@ def main() -> int:
             "네이버 데이터랩 ratio는 절대 검색량이 아닌 상대 지수임",
             "검색·뉴스 반복은 시민 전체 의견이나 사실 확정이 아님",
             "동일·유사 제목은 묶었지만 기사 내용의 사실성은 검증하지 않음",
+            "지역성은 기사 제목 기준의 1차 분류이며 최종 사실 확인이 아님",
             "후보 승격 전 서울시의회·구의회·감사·통계·현장 확인 필요",
         ],
     }
