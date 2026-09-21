@@ -46,11 +46,28 @@ def main() -> int:
     args = parse_args()
     as_of = args.as_of or date.today()
     start = as_of - timedelta(days=max(args.days - 1, 0))
-    rows = [
+    raw_rows = [
         row
         for row in read_rows(args.queue)
         if start.isoformat() <= row.get("first_seen", "") <= as_of.isoformat()
+        and (
+            row.get("review_eligible", "").strip().lower() == "true"
+            or (
+                not row.get("review_eligible", "").strip()
+                and row.get("auto_active_today", "").strip().lower() == "true"
+            )
+        )
     ]
+    families = {}
+    for row in raw_rows:
+        family = "|".join([
+            row.get("source_id", "").strip(),
+            row.get("context_subject", "").strip(),
+            row.get("central_question", "").strip() or row.get("question", "").strip(),
+        ])
+        if family.strip("|"):
+            families[family] = row
+    rows = list(families.values()) if families else raw_rows
     labeled = [
         row for row in rows if row.get("editor_judgment", "").strip().upper() in VALID_LABELS
     ]

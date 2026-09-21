@@ -16,6 +16,7 @@ registry = load("source-onboarding-v1/source_maturity_registry.json", {"sources"
 cards_doc = load("source-scout-v1/output/editorial_review_cards_latest.json", {"review_cards": []})
 summary = load("source-scout-v1/output/review_summary_latest.json", {})
 manifest = load("daily-briefing-v5/output/run_manifest_latest.json", {})
+construction_state = load("construction-watch-pilot/output/state_latest.json", {})
 decisions = load("source-scout-v1/output/editorial_decisions.json", [])
 
 sources = [[
@@ -32,9 +33,13 @@ topic_aliases = {
 
 cards = []
 card_ids = set()
+card_topics = set()
 for card in cards_doc.get("review_cards", [])[:8]:
     candidate_id = card.get("candidate_id", "")
     card_ids.add(candidate_id)
+    card_topic = card.get("context_subject", "").strip()
+    if card_topic:
+        card_topics.add(card_topic)
     source_date = card.get("source_date") or card.get("speech_date") or "기준일 미상"
     cards.append([
         card.get("context_subject") or card.get("fact", "")[:80],
@@ -99,7 +104,7 @@ try:
                 })
                 continue
             topic_key = title
-            if topic_key in seen_topics:
+            if topic_key in card_topics or topic_key in seen_topics:
                 continue
             seen_topics.add(topic_key)
             pending_items.append([
@@ -113,6 +118,19 @@ try:
             ])
 except (FileNotFoundError, UnicodeError):
     pass
+
+observations = []
+for event in construction_state.get("events", {}).values():
+    if event.get("category") == "EXTENSION" and int(event.get("extension_days", 0) or 0) >= 14:
+        observations.append([
+            event.get("title", "공사명 미상"),
+            "서울 건설알림이 변화 관측",
+            f'{event.get("before_completion", "기존 일정")} → {event.get("after_completion", "변경 일정")}',
+            "공기 연장 사유가 무엇이며 시민 이용·예산·안전 영향으로 이어졌는가?",
+            event.get("source_url", ""),
+            "추가 확인",
+        ])
+observations = observations[:10]
 
 source_counts = Counter(item[1] for item in pending_items)
 source_performance = [[name, str(count), "판정 대기"] for name, count in sorted(source_counts.items())]
@@ -137,6 +155,7 @@ data = {
     "cards": cards,
     "pending": pending_items,
     "pendingGroups": source_groups,
+    "observations": observations,
     "quarantineCount": len(quarantine),
     "history": history,
     "sourcePerformance": source_performance,

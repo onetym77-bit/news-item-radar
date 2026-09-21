@@ -61,11 +61,21 @@ function render(data) {
   document.getElementById("metrics").innerHTML = (data.metrics || []).map(([label, value]) =>
     `<div class="metric"><span>${esc(label)}</span><b>${esc(value)}</b></div>`).join("");
 
+  const observationNode = document.getElementById("observations");
+  if (observationNode) {
+    const observations = data.observations || [];
+    observationNode.innerHTML = observations.length ? observations.map(item => {
+      const [title, source, date, question, url, status] = item;
+      return `<article class="item-card"><div class="item-head"><h3>${esc(title)}</h3><span class="status-badge">${esc(status)}</span></div><p class="item-meta">${esc(source)} · ${esc(date)}</p><p class="item-question">${esc(question)}</p>${url ? `<div class="item-actions"><a href="${esc(url)}" target="_blank" rel="noreferrer">공식 목록 보기 ↗</a></div>` : ""}</article>`;
+    }).join("") : '<p class="empty">추가 확인이 필요한 관측이 없습니다.</p>';
+  }
+
   const sourceFilter = document.getElementById("sourceFilter");
   const levelFilter = document.getElementById("levelFilter");
   const statusFilter = document.getElementById("statusFilter");
   const sourceRows = data.sources || [];
-  [...new Set(sourceRows.map(([name]) => name))].forEach(name =>
+  const dataSources = [...new Set([...(data.pending || []).map(([, source]) => source), ...(data.cards || []).map(([, source]) => source), ...(data.observations || []).map(([, source]) => source)])];
+  [...new Set([...sourceRows.map(([name]) => name), ...dataSources])].filter(Boolean).sort().forEach(name =>
     sourceFilter.insertAdjacentHTML("beforeend", `<option value="${esc(name)}">${esc(name)}</option>`));
   [...new Set(sourceRows.map(([, level]) => level).filter(Boolean))].sort().forEach(level =>
     levelFilter.insertAdjacentHTML("beforeend", `<option value="${esc(level)}">${esc(level)}</option>`));
@@ -77,9 +87,12 @@ function render(data) {
     const source = sourceFilter.value;
     const level = levelFilter.value;
     const status = statusFilter.value;
-    const allowedSources = new Set(sourceRows
-      .filter(([name, itemLevel]) => (!source || name === source) && (!level || itemLevel === level))
-      .map(([name]) => name));
+    const allowedSources = new Set([
+      ...sourceRows
+        .filter(([name, itemLevel]) => (!source || name === source) && (!level || itemLevel === level))
+        .map(([name]) => name),
+      ...dataSources.filter(name => !source || name === source),
+    ]);
     const pending = (data.pending || []).filter(([, itemSource, , , , itemStatus]) =>
       allowedSources.has(itemSource) && (!status || itemStatus === status));
     const cards = (data.cards || []).filter(([, itemSource, , , , itemStatus]) =>
