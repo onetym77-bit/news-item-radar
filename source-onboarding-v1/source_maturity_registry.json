@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "policy_version": "2026-09-16-v1",
+  "policy_version": "2026-09-21-discovery-sources-v2",
   "scope": "new_source_onboarding_only",
   "levels": {
     "L0": {
@@ -185,12 +185,12 @@
       "note": "L3 의미 해석을 유지하면서 매일 최대 3개 미평가 감사 문서를 7일 그림자 평가. 문서 가치와 대표 각도를 분리 판정하며 최소 12개 고유 문서, 사람 판정 80%, 대표 각도 적중률 기준을 충족해도 자동 L4 승격·브리핑·장부 연결 금지"
     },
     {
-      "source_id": "official_sns_network",
-      "source_name": "서울시장·25개 구청장 공식 SNS와 외부 출연 콘텐츠",
+      "source_id": "local_public_pages",
+      "source_name": "서울 지역 소식 공개 페이지",
       "official_url": null,
       "maturity": "L0",
-      "candidate_role": "SOCIAL_FIELD_CANDIDATE",
-      "implementation_path": "official-social-pilot/verify_registry.py",
+      "candidate_role": "CITIZEN_SIGNAL_DISCOVERY",
+      "implementation_path": "community-signal-pilot/public_pages.json",
       "question_output": "NONE",
       "briefing_output": "NONE",
       "schedule": "MANUAL_PR",
@@ -199,7 +199,58 @@
       "raw_personal_text_persisted": false,
       "approved_for_production": false,
       "evaluation": null,
-      "note": "서울시 + 25개 구의 공식 홈페이지 등록, 서울시 기관 SNS 3개 공식 목록 직접 링크 등록. 단체장 페이스북 계정 26개는 편집자 확인 목록으로 별도 등록했으나 플랫폼 현황은 자동 재확인하지 않음. 검색 색인에서 계정 경로와 일치하는 게시물 주소 후보를 제한적으로 시험하되 날짜·작성 주체 미검증이므로 L0 유지. 프로필·본문·질문·브리핑·장부 연결 금지"
+      "note": "페이스북·인스타그램 등 공개 지역 소식 페이지. 개인 계정·비공개 그룹·로그인 우회는 수집하지 않으며 게시물은 발견 신호로만 사용"
+    },
+    {
+      "source_id": "youtube_public_content",
+      "source_name": "서울 지역 유튜브 공개 콘텐츠",
+      "official_url": "https://www.youtube.com/",
+      "maturity": "L0",
+      "candidate_role": "CITIZEN_SIGNAL_DISCOVERY",
+      "implementation_path": "community-signal-pilot/public_pages.json",
+      "question_output": "NONE",
+      "briefing_output": "NONE",
+      "schedule": "MANUAL_PR",
+      "persistence": "NONE",
+      "automatic_ledger_write": false,
+      "raw_personal_text_persisted": false,
+      "approved_for_production": false,
+      "evaluation": null,
+      "note": "지역 현장·제보·뉴스형 공개 영상. 조회수는 관심 신호일 뿐 사실·가치 판단 근거로 사용하지 않음"
+    },
+    {
+      "source_id": "regional_community_reports",
+      "source_name": "지역 커뮤니티·시민 제보",
+      "official_url": null,
+      "maturity": "L0",
+      "candidate_role": "CITIZEN_SIGNAL_DISCOVERY",
+      "implementation_path": "community-signal-pilot/public_pages.json",
+      "question_output": "NONE",
+      "briefing_output": "NONE",
+      "schedule": "MANUAL_PR",
+      "persistence": "NONE",
+      "automatic_ledger_write": false,
+      "raw_personal_text_persisted": false,
+      "approved_for_production": false,
+      "evaluation": null,
+      "note": "공개 게시물과 시민 제보를 문제 발견용으로만 수집. 개인정보·비공개 글·단일 주장 자동 확정 금지"
+    },
+    {
+      "source_id": "popular_news_content",
+      "source_name": "서울 인기 뉴스·콘텐츠",
+      "official_url": null,
+      "maturity": "L0",
+      "candidate_role": "FOLLOWUP_DISCOVERY",
+      "implementation_path": "community-signal-pilot/public_pages.json",
+      "question_output": "NONE",
+      "briefing_output": "NONE",
+      "schedule": "MANUAL_PR",
+      "persistence": "NONE",
+      "automatic_ledger_write": false,
+      "raw_personal_text_persisted": false,
+      "approved_for_production": false,
+      "evaluation": null,
+      "note": "반응이 큰 뉴스·영상에서 후속 질문과 미해결 쟁점을 찾음. 인기·조회수 자체를 기사 가치로 확정하지 않음"
     }
   ]
 }
