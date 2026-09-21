@@ -11,6 +11,9 @@ permissions:
 jobs:
   collect:
     runs-on: ubuntu-latest
+    env:
+      NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+      NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
     steps:
       - uses: actions/checkout@v4
       - name: Collect public interest signals
