@@ -63,6 +63,7 @@ def fetch_news(query: str) -> list[dict]:
             continue
         summary = clean(re.sub("<[^>]+>", " ", item.findtext("description") or ""))[:500]
         relevant, reason = seoul_relevance(title, summary)
+        editorial_eligible, editorial_reason = classify_editorial_signal(title, summary)
         rows.append({"query": query, "title": title, "url": link, "published_at": clean(item.findtext("pubDate")), "summary": summary, "seoul_relevant": relevant, "relevance_reason": reason, "editorial_eligible": editorial_eligible, "editorial_reason": editorial_reason, "signal_type": "NEWS_ATTENTION", "status": "DISCOVERY_SIGNAL"})
     return rows
 
