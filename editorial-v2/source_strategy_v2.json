@@ -1,51 +1,48 @@
 {
-  "schema": 1,
-  "policy_version": "2026-09-21",
+  "schema": 2,
+  "policy_version": "2026-09-21-interest-news-v1",
   "run_schedule": "월·수 09:00 KST",
   "target_candidates": "2~3개",
-  "sources": [
-    {
-      "source_id": "district_councils_25",
-      "role": "지역 구조 확인",
-      "find": "자치구별 격차·반복 민원·예산·사업 지연",
-      "why": "서울 안의 지역별 차이와 사각지대"
-    },
-    {
-      "source_id": "seoul_audit_results",
-      "role": "책임·실패 확인",
-      "find": "구체 사례·반복 지적·개선 실패",
-      "why": "기관 책임과 재발 여부"
-    },
-    {
-      "source_id": "local_public_pages",
-      "role": "시민 신호 발견",
-      "find": "지역 소식 페이지의 반복 불편·현장 사건",
-      "why": "공식 문서보다 먼저 포착되는 생활 문제"
-    },
-    {
-      "source_id": "youtube_public_content",
-      "role": "현장·반응 발견",
-      "find": "지역 현장 영상·제보·반복 댓글",
-      "why": "시민 공감과 현장 장면"
-    },
-    {
-      "source_id": "regional_community_reports",
-      "role": "시민 신호 발견",
-      "find": "주민 제보·당사자 문제 제기",
-      "why": "공공자료에 아직 나타나지 않은 문제"
-    },
-    {
-      "source_id": "popular_news_content",
-      "role": "후속 질문 발견",
-      "find": "반응이 큰 서울 뉴스의 미해결 쟁점",
-      "why": "기존 보도에 새로운 각도와 후속 취재를 부여"
-    }
+  "purpose": "서울 시민을 위한 6~7분 기획 보도 아이템을 발견하고 검토 가능한 후보로 제시",
+  "core_discovery_sources": [
+    {"source_id":"council_minutes","name":"서울시의회 회의록","role":"서울시 전체 현안·정책 쟁점 발견"},
+    {"source_id":"district_councils_25","name":"25개 자치구의회 회의록","role":"지역별 격차·민원·사업 지연 발견"},
+    {"source_id":"seoul_audit_results","name":"서울시 감사 결과","role":"행정 실패·반복 지적·책임 소재 발견"},
+    {"source_id":"search_news_interest","name":"검색 관심도·뉴스 확산","role":"시민 관심 급증과 서울 이슈 확산 발견"},
+    {"source_id":"youtube_public_content","name":"지역 유튜브 콘텐츠","role":"현장 영상·시민 반응·제보 발견"},
+    {"source_id":"regional_community_reports","name":"지역 커뮤니티·시민 제보","role":"공식 자료 이전의 생활 문제 발견"},
+    {"source_id":"popular_news_content","name":"인기 뉴스 콘텐츠","role":"기존 보도의 후속 질문·새 각도 발견"}
   ],
-  "routing": {
-    "discovery": "발견 후보로 넓게 수용",
-    "verification": "공식자료·통계·현장으로 확인",
-    "editorial": "시민 영향·책임·6~7분 확장성 평가",
-    "output": "최대 3개"
+  "verification_sources": [
+    {"source_id":"eungdapso_stats","name":"서울시 응답소 민원통계","role":"민원 규모·추세·지역 차이 확인"},
+    {"source_id":"construction_watch","name":"서울 건설알림이","role":"사업 일정·지연·변경 확인"},
+    {"source_id":"citizen_proposals","name":"상상대로 서울 시민제안","role":"시민 요구와 반복 제안 확인"},
+    {"source_id":"environment_assessment","name":"서울 환경영향평가","role":"개발·환경 영향과 절차 확인"},
+    {"source_id":"opengov_approvals","name":"서울 정보소통광장 결재문서","role":"예산·행정 결정·사업 추진 과정 확인"}
+  ],
+  "context_feeds": [
+    {"source_id":"seoul_research","name":"서울연구원"},
+    {"source_id":"wage_arrears_stats","name":"고용노동부 임금체불 통계"},
+    {"source_id":"consumer_disputes","name":"한국소비자원 피해·분쟁 자료"},
+    {"source_id":"seoul_open_data","name":"서울 열린데이터광장"},
+    {"source_id":"seoul_bigdata","name":"서울 빅데이터캠퍼스"}
+  ],
+  "search_news_interest_contract": {
+    "channels": ["Google Trends","네이버 데이터랩","네이버·다음 뉴스","언론사 RSS"],
+    "signals": ["서울·자치구·동 단위 검색 급증","복수 언론사 반복 보도","후속 보도·관련 검색 증가"],
+    "not_evidence": ["검색량만으로 시민 전체 의견 확정","조회수만으로 공익성 확정"],
+    "status": "DISCOVERY_SIGNAL"
   },
-  "non_rejection": "자료 부족·새 사업·공식 통계 부재는 자동 탈락 사유가 아니며 추가 확인 상태로 표시"
+  "routing": {
+    "discovery": "자료 부족·새 사업도 발견 후보로 수용",
+    "verification": "공식자료·통계·현장으로 확인",
+    "editorial": "시민 영향·책임 주체·현장성·6~7분 확장성 평가",
+    "output": "최대 3개",
+    "missing_data": "자동 탈락하지 않고 추가 확인 항목으로 표시"
+  },
+  "deferred_source": {
+    "source_id": "local_public_pages",
+    "status": "DEFERRED",
+    "reason": "공개 SNS 페이지의 홍보성·접근성·운영성 검증이 어려워 당분간 자동 연결하지 않음"
+  }
 }
