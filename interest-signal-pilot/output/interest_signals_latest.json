@@ -1,6 +1,6 @@
 {
-  "schema": 4,
-  "generated_at_utc": "2026-09-21T06:57:59.390793+00:00",
+  "schema": 5,
+  "generated_at_utc": "2026-09-21T07:04:04.276881+00:00",
   "source_id": "search_news_interest",
   "source_name": "검색 관심도·뉴스 확산",
   "collection_mode": [
@@ -19,9 +19,9 @@
   ],
   "quality_gate": {
     "raw_news_count": 725,
-    "seoul_relevant_count": 518,
-    "unique_news_count": 513,
-    "duplicate_or_irrelevant_count": 212,
+    "seoul_relevant_count": 519,
+    "unique_news_count": 514,
+    "duplicate_or_irrelevant_count": 211,
     "trend_groups": 5,
     "trend_groups_without_data": [
       "서울 공사 지연",
@@ -33,7 +33,7 @@
     "candidate_ready": false,
     "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요"
   },
-  "news_count": 513,
+  "news_count": 514,
   "trend_count": 1,
   "news_signals": [
     {
@@ -126,10 +126,10 @@
     },
     {
       "query": "서울 민원",
-      "title": "서울 서초구, ‘특이민원대응전문관’ 투입 - 뉴뉴스",
+      "title": "서울 서초구, ‘특이민원대응전문관’ 투입 - nnewss.com",
       "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9jeDROSXY0U3BzNE5SWWxsUzhvZ1E5Wmo5VlpsNG5ISG9GbC15QmMwYnRoMjktSVN4ZGZMdFhtRXZOUW5yaDZmWVU0bDd5T2ljdThCenphM1k2WmJjYWZqbWREclRJZw?oc=5",
       "published_at": "Fri, 18 Sep 2026 01:01:44 GMT",
-      "summary": "서울 서초구, ‘특이민원대응전문관’ 투입 &nbsp;&nbsp; 뉴뉴스",
+      "summary": "서울 서초구, ‘특이민원대응전문관’ 투입 &nbsp;&nbsp; nnewss.com",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
@@ -335,10 +335,10 @@
     },
     {
       "query": "서울 민원",
-      "title": "서울 지하철 민원 17% 감소 - 뉴뉴스",
+      "title": "서울 지하철 민원 17% 감소 - nnewss.com",
       "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5KTjRMU3YwVXdYTzc4czlWRjNHM3NPNmdReUtjV19RWXZ5dzNRTTZMOUVTU0pCQ21hSEVJNDlZYzJDMGpkcnFtZW52bFhXeTBlTHZ4UGpMYWN4WFBmT1h3NVBGUEU1dw?oc=5",
       "published_at": "Fri, 04 Sep 2026 02:00:45 GMT",
-      "summary": "서울 지하철 민원 17% 감소 &nbsp;&nbsp; 뉴뉴스",
+      "summary": "서울 지하철 민원 17% 감소 &nbsp;&nbsp; nnewss.com",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
@@ -632,10 +632,10 @@
     },
     {
       "query": "서울 민원",
-      "title": "[단독] 온난화가 부른 ‘바퀴벌레 습격’… 서울 민원 4년새 5배 - 조선일보",
+      "title": "[단독] 온난화가 부른 ‘바퀴벌레 습격’… 서울 민원 4년새 5배 - chosun.com",
       "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOdmljdXR5WmE1dUwxSFhVNDZPUWZVZnMtWHhMRE45LVNQSFQ3b0NUdWJxNFVOY3p3amExQW1MSFZOdG9pSk16WDRtRW50NUJqVHdFSDhVcHRvdjFMY3BiQkhheXdrSy1uUGxzVkp4TklxdVl1NzRJbktYNEpGbHp2SE04WFdLYlFWYWhwVzNDd21TQ280aXcw?oc=5",
       "published_at": "Sat, 25 Jul 2026 07:00:00 GMT",
-      "summary": "[단독] 온난화가 부른 ‘바퀴벌레 습격’… 서울 민원 4년새 5배 &nbsp;&nbsp; 조선일보",
+      "summary": "[단독] 온난화가 부른 ‘바퀴벌레 습격’… 서울 민원 4년새 5배 &nbsp;&nbsp; chosun.com",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
@@ -1006,10 +1006,10 @@
     },
     {
       "query": "서울 공사 지연",
-      "title": "서울교통공사, '또타지하철'로 도시철도 열차 지연정보 한 번에 제공 - dailysisa.com",
+      "title": "서울교통공사, '또타지하철'로 도시철도 열차 지연정보 한 번에 제공 - 데일리시사닷컴",
       "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0xbXdmYjc2V0FwMUd3U2dqSzEwVGxHMFBZWXE5dzk5NFFMWUlNWkMteE1PX0pHWWt6NndEN3NzUUpybG0yVkYtalV3RmR4TEFYX3V4eXRBSTZoenI1N3l3c1VIMkI4aGhPLUxV?oc=5",
       "published_at": "Tue, 21 Jul 2026 07:00:00 GMT",
-      "summary": "서울교통공사, '또타지하철'로 도시철도 열차 지연정보 한 번에 제공 &nbsp;&nbsp; dailysisa.com",
+      "summary": "서울교통공사, '또타지하철'로 도시철도 열차 지연정보 한 번에 제공 &nbsp;&nbsp; 데일리시사닷컴",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
@@ -1083,10 +1083,10 @@
     },
     {
       "query": "서울 공사 지연",
-      "title": "서울7호선 청라연장사업 주민간담회 개최…박찬대 시장 \"지연 해결과 교통대책 마련에 총력\" - 뉴뉴스",
+      "title": "서울7호선 청라연장사업 주민간담회 개최…박찬대 시장 \"지연 해결과 교통대책 마련에 총력\" - nnewss.com",
       "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9SaFpLTGFiM3hlVGs1aHdrZ1RIc3F5eFhveDZGZ2dGV2hncWNMZ040S0tubGVlU1pfZDIwaUtnQUdrekpiNWt4REl6Y1k0QktGS190NUloWGhYdnI1RTJna0tuQzg2QQ?oc=5",
       "published_at": "Sun, 12 Jul 2026 07:00:00 GMT",
-      "summary": "서울7호선 청라연장사업 주민간담회 개최…박찬대 시장 \"지연 해결과 교통대책 마련에 총력\" &nbsp;&nbsp; 뉴뉴스",
+      "summary": "서울7호선 청라연장사업 주민간담회 개최…박찬대 시장 \"지연 해결과 교통대책 마련에 총력\" &nbsp;&nbsp; nnewss.com",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
