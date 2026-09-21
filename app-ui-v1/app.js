@@ -56,6 +56,28 @@ function renderGroups(items, emptyText) {
     </section>`).join("");
 }
 
+function renderEditorialItem(item) {
+  const evidence = (item.evidence || [])[0] || {};
+  const list = (values = []) => values.length
+    ? `<ul class="editorial-list">${values.map(value => `<li>${esc(value)}</li>`).join("")}</ul>`
+    : "";
+  return `<article class="item-card editorial-card">
+    <div class="item-head"><h3>${esc(item.title || item.seed_event)}</h3><span class="status-badge">${esc(item.editorial_status || item.status || "편집 후보")}</span></div>
+    <p class="item-meta">${esc(item.source || item.topic || "출처 미상")}</p>
+    ${item.seed_event ? `<p class="item-question"><strong>출발 사건</strong> ${esc(item.seed_event)}</p>` : ""}
+    ${item.structural_question ? `<p class="item-question"><strong>서울 전체로 확장할 질문</strong> ${esc(item.structural_question)}</p>` : ""}
+    ${item.scope_hypothesis ? `<p class="item-question"><strong>확장 가설</strong> ${esc(item.scope_hypothesis)}</p>` : ""}
+    ${item.selection_reason ? `<p class="item-question"><strong>선정 이유</strong> ${esc(item.selection_reason)}</p>` : ""}
+    ${item.citizen_question ? `<p class="item-question"><strong>시민 질문</strong> ${esc(item.citizen_question)}</p>` : ""}
+    ${item.citizen_questions ? `<p class="item-question"><strong>시민 질문</strong></p>${list(item.citizen_questions)}` : ""}
+    ${item.conflict_groups ? `<p class="item-question"><strong>이해관계 집단</strong></p>${list(item.conflict_groups)}` : ""}
+    ${item.reporting_paths ? `<p class="item-question"><strong>취재 경로</strong></p>${list(item.reporting_paths)}` : ""}
+    ${item.uncommon_angle ? `<p class="item-question"><strong>다른 각도</strong> ${esc(item.uncommon_angle)}</p>` : ""}
+    ${item.title_options ? `<p class="item-question"><strong>제목 후보</strong></p>${list(item.title_options)}` : ""}
+    ${evidence.url ? `<div class="item-actions"><a href="${esc(evidence.url)}" target="_blank" rel="noreferrer">근거 원문 보기 ↗</a></div>` : ""}
+  </article>`;
+}
+
 function render(data) {
   document.getElementById("lastRun").textContent = data.lastRun || "미확인";
   document.getElementById("dataMode").textContent = data.dataMode;
@@ -64,7 +86,7 @@ function render(data) {
     const candidates = (data.editorialBrief && data.editorialBrief.candidates) || [];
     briefNode.innerHTML = candidates.length ? candidates.map(item => {
       const evidence = (item.evidence || [])[0] || {};
-      return `<article class="item-card editorial-card"><div class="item-head"><h3>${esc(item.title)}</h3><span class="status-badge">편집 후보</span></div><p class="item-meta">${esc(item.source || "출처 미상")}</p><p class="item-question"><strong>선정 이유</strong> ${esc(item.selection_reason)}</p><p class="item-question"><strong>시민 질문</strong> ${esc(item.citizen_question)}</p><p class="item-question"><strong>다른 각도</strong> ${esc(item.uncommon_angle)}</p>${evidence.url ? `<div class="item-actions"><a href="${esc(evidence.url)}" target="_blank" rel="noreferrer">근거 원문 보기 ↗</a></div>` : ""}</article>`; }).join("") : '<p class="empty">현재 기준을 충족한 편집 후보가 없습니다.</p>';
+      return renderEditorialItem(item); }).join("") : '<p class="empty">현재 기준을 충족한 편집 후보가 없습니다.</p>';
   }
   document.getElementById("metrics").innerHTML = (data.metrics || []).map(([label, value]) =>
     `<div class="metric"><span>${esc(label)}</span><b>${esc(value)}</b></div>`).join("");
