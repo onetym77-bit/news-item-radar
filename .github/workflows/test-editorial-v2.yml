@@ -32,8 +32,9 @@ jobs:
           from pathlib import Path
           data = json.loads(Path("editorial-v2/output/briefing_latest.json").read_text())
           assert 0 <= data["count"] <= 3
+          required = ["title", "topic", "selection_reason", "citizen_question", "uncommon_angle", "evidence"]
           for item in data["candidates"]:
-              for key in data["quality_gate"]["required_fields"]:
+              for key in required:
                   assert item.get(key)
               assert "건설알림이" not in item["source"]
           print(f"validated {data['count']} candidates")
