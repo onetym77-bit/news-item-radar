@@ -10,22 +10,22 @@
     "candidates": [
       {
         "candidate_id": "CBMib0FVX3lxTE1kVENCNGtp",
-        "title": "서울 곳곳의 주거 비용과 피해…문제는 왜 특정 지역에 몰리나",
+        "title": "주거 비용과 피해: 서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야”",
         "topic": "서울 주거 피해",
         "topic_label": "주거 비용과 피해",
         "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
         "source": "검색 관심도·뉴스 확산",
         "seed_event": "서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야” - 투데이신문",
-        "structural_question": "이 사건은 서울에서 주거 비용과 피해이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+        "structural_question": "주거 피해가 특정 지역과 계약 유형에 집중되는 이유는 무엇이며, 피해 예방·회복 장치는 작동했는가?",
         "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
         "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
         "citizen_questions": [
-          "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-          "같은 문제가 서울 다른 지역에서도 반복되는가?",
-          "공공이 설명·지원·대체수단을 제공했는가?"
+          "주거 피해가 특정 지역과 계약 유형에 집중되는 이유는 무엇이며, 피해 예방·회복 장치는 작동했는가?",
+          "서울의 다른 자치구에서도 주거 비용과 피해이 반복되는지 어떤 자료와 현장을 비교해야 하는가?",
+          "문제가 확인되면 바뀌어야 할 예산·규정·운영 주체는 누구인가?"
         ],
         "conflict_groups": [
-          "직접 affected 시민·이용자",
+          "직접 피해 시민·이용자",
           "인근 주민",
           "서울시·자치구",
           "사업자·기관"
@@ -36,8 +36,8 @@
           "당사자·주민·책임 기관 인터뷰"
         ],
         "title_options": [
-          "서울 곳곳의 주거 비용과 피해…문제는 왜 특정 지역에 몰리나",
-          "한 지역 사건에서 서울 전체의 주거 비용과 피해을 묻다"
+          "주거 비용과 피해: 서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야”",
+          "서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야”에서 서울 전체의 주거 비용과 피해을 묻다"
         ],
         "editorial_status": "확장 질문 초안",
         "status": "DISCOVERY_ONLY",
@@ -51,65 +51,23 @@
         "editorial_score": 6
       },
       {
-        "candidate_id": "CBMibkFVX3lxTE9iLWQzSDRG",
-        "title": "서울 곳곳의 도시 안전의 사각지대…문제는 왜 특정 지역에 몰리나",
-        "topic": "서울 안전 사고",
-        "topic_label": "도시 안전의 사각지대",
-        "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-        "source": "검색 관심도·뉴스 확산",
-        "seed_event": "강남구, 추석 종합대책 시행…재난·안전사고 예방 총력 - gukjenews.com",
-        "structural_question": "이 사건은 서울에서 도시 안전의 사각지대이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-        "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-        "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-        "citizen_questions": [
-          "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-          "같은 문제가 서울 다른 지역에서도 반복되는가?",
-          "공공이 설명·지원·대체수단을 제공했는가?"
-        ],
-        "conflict_groups": [
-          "직접 affected 시민·이용자",
-          "인근 주민",
-          "서울시·자치구",
-          "사업자·기관"
-        ],
-        "reporting_paths": [
-          "서울시·자치구 공식 계획·예산·통계 확인",
-          "25개 자치구 유사 사례 비교",
-          "당사자·주민·책임 기관 인터뷰"
-        ],
-        "title_options": [
-          "서울 곳곳의 도시 안전의 사각지대…문제는 왜 특정 지역에 몰리나",
-          "한 지역 사건에서 서울 전체의 도시 안전의 사각지대을 묻다"
-        ],
-        "editorial_status": "확장 질문 초안",
-        "status": "DISCOVERY_ONLY",
-        "evidence": [
-          {
-            "type": "news",
-            "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9iLWQzSDRGSEJwb21OQlZmSExjNl9jUmVCcUJHRE9WR29WQmNPNnJCZ2Fxd1g3c2laTVA0eVJwdkhZMlY2RE5oOG1kTXpEOWlDOHRpeVZxSXpWdVNZU2E4by03U1dfZ1YwMTlZNGh3?oc=5",
-            "published_at": "Sun, 20 Sep 2026 23:59:49 GMT"
-          }
-        ],
-        "editorial_score": 3
-      },
-      {
         "candidate_id": "CBMibkFVX3lxTE1MRG1qMlla",
-        "title": "서울 곳곳의 복지 접근의 공백…문제는 왜 특정 지역에 몰리나",
+        "title": "복지 접근의 공백: “돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원",
         "topic": "서울 복지 공백",
         "topic_label": "복지 접근의 공백",
         "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
         "source": "검색 관심도·뉴스 확산",
         "seed_event": "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원 - 아시아투데이",
-        "structural_question": "이 사건은 서울에서 복지 접근의 공백이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+        "structural_question": "지원 제도가 있어도 이용하지 못하는 시민이 생기는 경로는 무엇이며, 자치구별 접근 차이는 얼마나 큰가?",
         "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
         "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
         "citizen_questions": [
-          "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-          "같은 문제가 서울 다른 지역에서도 반복되는가?",
-          "공공이 설명·지원·대체수단을 제공했는가?"
+          "지원 제도가 있어도 이용하지 못하는 시민이 생기는 경로는 무엇이며, 자치구별 접근 차이는 얼마나 큰가?",
+          "서울의 다른 자치구에서도 복지 접근의 공백이 반복되는지 어떤 자료와 현장을 비교해야 하는가?",
+          "문제가 확인되면 바뀌어야 할 예산·규정·운영 주체는 누구인가?"
         ],
         "conflict_groups": [
-          "직접 affected 시민·이용자",
+          "직접 피해 시민·이용자",
           "인근 주민",
           "서울시·자치구",
           "사업자·기관"
@@ -120,8 +78,8 @@
           "당사자·주민·책임 기관 인터뷰"
         ],
         "title_options": [
-          "서울 곳곳의 복지 접근의 공백…문제는 왜 특정 지역에 몰리나",
-          "한 지역 사건에서 서울 전체의 복지 접근의 공백을 묻다"
+          "복지 접근의 공백: “돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원",
+          "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원에서 서울 전체의 복지 접근의 공백을 묻다"
         ],
         "editorial_status": "확장 질문 초안",
         "status": "DISCOVERY_ONLY",
@@ -130,6 +88,48 @@
             "type": "news",
             "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1MRG1qMllaNEdCRnFtTlFDTEE2UkViQXBkNmE4NF9TY2d2eE16bEdkZENDbWZzRWFtTHBfYUVPZTROZUdzVXM3NEtMZy1ockpGaHFPbVR1WVlXOWdWR05WTWRSYWZqTndCY3REd2lR?oc=5",
             "published_at": "Tue, 15 Sep 2026 08:34:05 GMT"
+          }
+        ],
+        "editorial_score": 3
+      },
+      {
+        "candidate_id": "CBMiakFVX3lxTE5iSmpmOUtf",
+        "title": "도시사업 지연과 책임: 공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적”",
+        "topic": "서울 건설 공사 지연",
+        "topic_label": "도시사업 지연과 책임",
+        "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+        "source": "검색 관심도·뉴스 확산",
+        "seed_event": "공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적” - 서울Pn",
+        "structural_question": "공사 일정이 늦어진 비용과 불편을 누가 부담했으며, 지연을 사전에 막거나 공개할 장치는 작동했는가?",
+        "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+        "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+        "citizen_questions": [
+          "공사 일정이 늦어진 비용과 불편을 누가 부담했으며, 지연을 사전에 막거나 공개할 장치는 작동했는가?",
+          "서울의 다른 자치구에서도 도시사업 지연과 책임이 반복되는지 어떤 자료와 현장을 비교해야 하는가?",
+          "문제가 확인되면 바뀌어야 할 예산·규정·운영 주체는 누구인가?"
+        ],
+        "conflict_groups": [
+          "직접 피해 시민·이용자",
+          "인근 주민",
+          "서울시·자치구",
+          "사업자·기관"
+        ],
+        "reporting_paths": [
+          "서울시·자치구 공식 계획·예산·통계 확인",
+          "25개 자치구 유사 사례 비교",
+          "당사자·주민·책임 기관 인터뷰"
+        ],
+        "title_options": [
+          "도시사업 지연과 책임: 공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적”",
+          "공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적”에서 서울 전체의 도시사업 지연과 책임을 묻다"
+        ],
+        "editorial_status": "확장 질문 초안",
+        "status": "DISCOVERY_ONLY",
+        "evidence": [
+          {
+            "type": "news",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5iSmpmOUtfQTNsb2FCRjMtNVpzQWFOcUJfMFR3SHhRU21oQUF3LWdZMldrWl80MWM5SWdLeUhtTjFRUmlpWjY4bFYzRjV2cG9RZ1Jqbnc5aW9lZ0t6TXpZY0dxTEJBSnAtTXc?oc=5",
+            "published_at": "Mon, 07 Sep 2026 07:00:00 GMT"
           }
         ],
         "editorial_score": 3
