@@ -32,9 +32,13 @@ topic_aliases = {
 
 cards = []
 card_ids = set()
+card_topics = set()
 for card in cards_doc.get("review_cards", [])[:8]:
     candidate_id = card.get("candidate_id", "")
     card_ids.add(candidate_id)
+    card_topic = card.get("context_subject", "").strip()
+    if card_topic:
+        card_topics.add(card_topic)
     source_date = card.get("source_date") or card.get("speech_date") or "기준일 미상"
     cards.append([
         card.get("context_subject") or card.get("fact", "")[:80],
@@ -99,7 +103,7 @@ try:
                 })
                 continue
             topic_key = title
-            if topic_key in seen_topics:
+            if topic_key in card_topics or topic_key in seen_topics:
                 continue
             seen_topics.add(topic_key)
             pending_items.append([
