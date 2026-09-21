@@ -1,3 +1,4 @@
+import csv
 import json
 from pathlib import Path
 
@@ -24,7 +25,24 @@ for card in cards_doc.get("review_cards", [])[:8]:
         f'{card.get("source_name", "미상")} · {card.get("transition_state", "상태 미상")} · 기준일 {source_date}',
         card.get("question") or card.get("fact", ""),
         card.get("url", ""),
+        card.get("editor_judgment", "PENDING"),
     ])
+
+status_map = {"탈락": "기각", "보류": "보류", "장기 관찰": "관찰", "통과": "통과"}
+history = []
+try:
+    with (ROOT / "agent-system-v1" / "ITEM_LEDGER.csv").open(encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            status = status_map.get(row.get("status", ""), row.get("status", "미판정"))
+            history.append([
+                row.get("canonical_topic", "제목 미상"),
+                f'{status} · {row.get("first_seen", "")}~{row.get("last_seen", "")}',
+                row.get("structural_question", "") or row.get("question_hypothesis", ""),
+                row.get("source_report", ""),
+                status,
+            ])
+except (FileNotFoundError, UnicodeError):
+    history = []
 
 pending = summary.get("generated", 0) - summary.get("labeled", 0)
 data = {
@@ -33,6 +51,7 @@ data = {
     "metrics": [["등록 소스", str(len(sources))], ["사람 판정 대기", str(max(0, pending))], ["접속·수집 상태", "확인 필요"], ["브리핑 연결", "가능" if manifest.get("publishable") else "보류"]],
     "sources": sources,
     "cards": cards,
+    "history": history,
     "queue": [["사람 판정", f'{summary.get("labeled", 0)}/{summary.get("generated", 0)}건 완료'], ["브리핑", "공개 가능" if manifest.get("publishable") else "검토 필요"], ["데이터 신선도", "정상" if not manifest.get("stale_at_generation") else "오래됨"]],
 }
 OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
