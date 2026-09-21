@@ -1,0 +1,34 @@
+name: Editorial brief v2
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1,3"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: editorial-brief-v2-main
+  cancel-in-progress: false
+
+jobs:
+  editorial-brief:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Build editorial candidates
+        run: python editorial-v2/select_candidates.py
+
+      - name: Refresh app UI snapshot
+        run: python app-ui-v1/build_ui_data.py
+
+      - name: Commit editorial and UI outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add editorial-v2/output app-ui-v1/data/latest.json
+          git diff --cached --quiet || git commit -m "Update editorial brief v2"
+          git push
