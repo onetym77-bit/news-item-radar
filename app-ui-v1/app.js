@@ -74,7 +74,7 @@ function render(data) {
   const levelFilter = document.getElementById("levelFilter");
   const statusFilter = document.getElementById("statusFilter");
   const sourceRows = data.sources || [];
-  const dataSources = [...new Set([...(data.pending || []).map(([, source]) => source), ...(data.cards || []).map(([, source]) => source)])];
+  const dataSources = [...new Set([...(data.pending || []).map(([, source]) => source), ...(data.cards || []).map(([, source]) => source), ...(data.observations || []).map(([, source]) => source)])];
   [...new Set([...sourceRows.map(([name]) => name), ...dataSources])].filter(Boolean).sort().forEach(name =>
     sourceFilter.insertAdjacentHTML("beforeend", `<option value="${esc(name)}">${esc(name)}</option>`));
   [...new Set(sourceRows.map(([, level]) => level).filter(Boolean))].sort().forEach(level =>
