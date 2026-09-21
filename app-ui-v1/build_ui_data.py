@@ -48,6 +48,12 @@ decision_map = {str(item.get("candidate_id")): item for item in decisions if ite
 
 pending_items = []
 seen = set()
+seen_topics = set()
+topic_aliases = {
+    "seoul_bus_wage": "서울 시내버스 통상임금·노사 분쟁",
+    "sign_language_centers": "서울 자치구 수어통역센터 재정·서비스",
+    "seoul_rent_fraud": "서울 전세사기 피해 인정·지원",
+}
 try:
     with (ROOT / "source-scout-v1" / "HUMAN_REVIEW_QUEUE.csv").open(encoding="utf-8-sig", newline="") as handle:
         for row in csv.DictReader(handle):
@@ -58,13 +64,24 @@ try:
             decision = decision_map.get(candidate_id, {})
             if decision.get("decision") in {"COMPLETE", "DISCARD"}:
                 continue
-            raw_title = row.get("context_subject") or row.get("display_fact", "").split(" — ", 1)[0] or row.get("question", "")
+            question_text = row.get("question", "") or row.get("central_question", "")
+            raw_title = topic_aliases.get(row.get("context_rule", "")) or row.get("context_subject") or row.get("display_fact", "").split(" — ", 1)[0]
+            if not raw_title and "통상임금" in question_text:
+                raw_title = topic_aliases["seoul_bus_wage"]
+            elif not raw_title and "수어통역" in question_text:
+                raw_title = topic_aliases["sign_language_centers"]
+            elif not raw_title and "전세사기" in question_text:
+                raw_title = topic_aliases["seoul_rent_fraud"]
             title = raw_title.strip()[:100] if raw_title.strip() else f'검토 후보 {candidate_id}'
+            topic_key = title if raw_title.strip() else candidate_id
+            if topic_key in seen_topics:
+                continue
+            seen_topics.add(topic_key)
             status = row.get("editor_judgment") or "PENDING"
             pending_items.append([
                 title,
                 f'{row.get("source_name", "미상")} · {row.get("first_seen", "")}~{row.get("last_seen", "")}',
-                row.get("question", "") or row.get("central_question", ""),
+                question_text,
                 row.get("url", ""),
                 status,
                 row.get("evidence_values", ""),
