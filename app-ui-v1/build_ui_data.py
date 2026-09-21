@@ -17,6 +17,7 @@ cards_doc = load("source-scout-v1/output/editorial_review_cards_latest.json", {"
 summary = load("source-scout-v1/output/review_summary_latest.json", {})
 manifest = load("daily-briefing-v5/output/run_manifest_latest.json", {})
 construction_state = load("construction-watch-pilot/output/state_latest.json", {})
+editorial_brief = load("editorial-v2/output/briefing_latest.json", {"candidates": [], "count": 0})
 decisions = load("source-scout-v1/output/editorial_decisions.json", [])
 
 sources = [[
@@ -145,11 +146,13 @@ for source_name in sorted(source_counts):
 data = {
     "lastRun": manifest.get("generated_at_kst", "미확인"),
     "dataMode": "실제 산출물",
+    "editorialBrief": editorial_brief,
     "metrics": [
         ["검토 대상 소스", str(len(sources))],
         ["사람 판정 대기", str(len(pending_items))],
         ["문맥 보강 필요", str(len(quarantine))],
         ["브리핑 연결", "가능" if manifest.get("publishable") else "보류"],
+        ["편집 후보", str(editorial_brief.get("count", 0))],
     ],
     "sources": sources,
     "cards": cards,
