@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "policy_version": "2026-09-21",
+  "source_id": "local_public_pages",
+  "scope": "서울 지역 소식 공개 페이지·유튜브·지역 커뮤니티·인기 뉴스의 발견 신호",
+  "collection_rules": {
+    "public_only": true,
+    "private_groups": false,
+    "login_bypass": false,
+    "personal_accounts": false,
+    "raw_personal_text_persisted": false,
+    "views_are_interest_signal_only": true
+  },
+  "page_types": [
+    {
+      "type": "LOCAL_NEWS_PAGE",
+      "label": "지역 뉴스·미디어 페이지",
+      "platforms": [
+        "facebook",
+        "instagram",
+        "youtube"
+      ],
+      "items": []
+    },
+    {
+      "type": "NEIGHBORHOOD_SIGNAL_PAGE",
+      "label": "동네 생활·현장 소식 페이지",
+      "platforms": [
+        "facebook",
+        "instagram"
+      ],
+      "items": []
+    },
+    {
+      "type": "CITIZEN_ORG_PAGE",
+      "label": "시민단체·당사자 단체 공개 페이지",
+      "platforms": [
+        "facebook",
+        "instagram",
+        "youtube"
+      ],
+      "items": []
+    },
+    {
+      "type": "REGIONAL_COMMUNITY_REPORT",
+      "label": "지역 커뮤니티·시민 제보",
+      "platforms": [
+        "public_web"
+      ],
+      "items": []
+    },
+    {
+      "type": "POPULAR_NEWS_CONTENT",
+      "label": "인기 뉴스·콘텐츠",
+      "platforms": [
+        "youtube",
+        "news"
+      ],
+      "items": []
+    }
+  ],
+  "item_contract": {
+    "required": [
+      "url",
+      "platform",
+      "page_name",
+      "region",
+      "published_at",
+      "signal_summary"
+    ],
+    "optional": [
+      "engagement_snapshot",
+      "media_type"
+    ],
+    "next_status": "DISCOVERY_SIGNAL"
+  },
+  "promotion_rules": [
+    "지역·시간·문제가 구체적이어야 함",
+    "반복 제기 또는 독립 근거가 있어야 함",
+    "공식 자료·현장·당사자 확인 경로가 있어야 함",
+    "개인정보와 단일 주장만으로 자동 확정하지 않음"
+  ]
+}
