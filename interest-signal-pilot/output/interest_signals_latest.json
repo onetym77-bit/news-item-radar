@@ -1,0 +1,939 @@
+{
+  "schema": 2,
+  "generated_at_utc": "2026-09-21T06:04:26.848788+00:00",
+  "source_id": "search_news_interest",
+  "source_name": "검색 관심도·뉴스 확산",
+  "collection_mode": [
+    "google_news_rss_keyword_probe",
+    "naver_datalab_search_trend"
+  ],
+  "queries": [
+    "서울 민원",
+    "서울 공사 지연",
+    "서울 안전 사고",
+    "서울 재개발 갈등",
+    "서울 교통 불편",
+    "서울 주거 피해",
+    "서울 복지 공백",
+    "서울 자치구 논란"
+  ],
+  "news_count": 722,
+  "trend_count": 1,
+  "news_signals": [
+    {
+      "query": "서울 민원",
+      "title": "서울 금천구, AI 챗봇 '통합나래봇'으로 24시간 민원상담 제공 - 데일리안",
+      "url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxNX2lhRk1YcUtvaHgzRGZmeUgzVGlkd0hGNDFFeWVGcHQ1ZGM3WnRpZTdfTlMzQnBwY3l4QXhxeFVOTjAzbjdNS25kTkh4MHBpdE9oVnRPUlEwQ2M2Yk1qcFVMTDdSUVdsRXlXM1RUaXIyVVNOV3hPekRBVmRiWjg4NGtzcWotMVNfRVhDS0ZvajRkQWE1V0dFam51VzZqU01EWVhUXzNhMGFaYVQzNm5KTFBMdlhRSnV2U3piRnJPQU12ME8xZ2lRdzZKUXk4YWFrWm1zODU2NUtFOEpGdzdSUlAxQ1pUUjY5T1JoZ2RTQXYtWUdoU2VFUA?oc=5",
+      "published_at": "Mon, 21 Sep 2026 00:26:00 GMT",
+      "summary": "서울 금천구, AI 챗봇 '통합나래봇'으로 24시간 민원상담 제공 &nbsp;&nbsp; 데일리안",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "금천구, AI 민원상담 챗봇 ‘통합나래봇’ 확대 운영 - 뉴스홈(newshome)",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE0wakFiQ1JWc05vZ0pNbTd5d1JJdGZsMEh5dG5ObHNiU1IxaHZlY2xHQ19QcDhaUGdUUlR6TlcwX2ZDYV8tYm1na1oxWmx6ZGpydnlxNVRfeFFCdlhzRG40aTBJcEtSU29INkREZ25R?oc=5",
+      "published_at": "Mon, 21 Sep 2026 01:18:07 GMT",
+      "summary": "금천구, AI 민원상담 챗봇 ‘통합나래봇’ 확대 운영 &nbsp;&nbsp; 뉴스홈(newshome)",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "강동 무인민원발급기 연휴도 운영 - 서울동부신문",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFA5TklYTklodjQ1OWtoU0g2VHpsc2lJbTVjUUZ0TlhMQXZZcXF6SjR3VkVzdkwxOTVoVUZ3U0hlbzVYczZMZExBUDUyX2NnRzdnZHZ6UVAwaWU4M0laQVdKdXZhcjRHdWRuS2VWVS13?oc=5",
+      "published_at": "Mon, 21 Sep 2026 02:06:24 GMT",
+      "summary": "강동 무인민원발급기 연휴도 운영 &nbsp;&nbsp; 서울동부신문",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "강남구, 민원 데이터로 바로 답하는 ‘공동주택 AI 해결사’ 가동 - 뉴스파이어",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBaQWthdk1rT09udV9SMDJVT08yTXNxQlgweXUxVVR3U2xKSk9PMTQyU28tdmg0aXZYWHlFanNLb1BaZWs1Ykd3OUd1NmZVdkV6RThWZUdIOElOTk01TTk0b0phM3d2akFEUVRlWUROYw?oc=5",
+      "published_at": "Mon, 21 Sep 2026 01:34:38 GMT",
+      "summary": "강남구, 민원 데이터로 바로 답하는 ‘공동주택 AI 해결사’ 가동 &nbsp;&nbsp; 뉴스파이어",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영 - gukjenews.com",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1jbVlzWmk5RF9fdEZBOTRxN3EwR3Zndm5JVDZubUNYQWVuLU0ybDNYVXBidkNGMGppYm5ZMnhFelVSYlVzVjdOdGpDSGZBdllYcHByVGg1LTJvSmw3bWYwbTVoZ2ZzV1BNS0hCNE5n?oc=5",
+      "published_at": "Mon, 21 Sep 2026 02:52:35 GMT",
+      "summary": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영 &nbsp;&nbsp; gukjenews.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "“통합나래봇에게 물어보세요” 금천구, ‘AI 민원상담 챗봇’ 확대 운영 - 열린뉴스통신",
+      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE00RVN1SWZsTVhjZXJ4WVZGaGNNTFNwYlRidExUNjBLcmpUcWplb1luNExzbzRCX2VZZ0RxcjVHN0dWVDZ3ZWNwVndDR2dfWENGUlJEdnJ1a3lLeHpaZUZXNHRLYWtsQQ?oc=5",
+      "published_at": "Mon, 21 Sep 2026 00:05:56 GMT",
+      "summary": "“통합나래봇에게 물어보세요” 금천구, ‘AI 민원상담 챗봇’ 확대 운영 &nbsp;&nbsp; 열린뉴스통신",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "강남구 민원창구 가림막의 변신…\"말하면 번역 자막이 화면에\" - yna.co.kr",
+      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE92YkY2bm50TUwzeV83aXBDZ2c4X1FzeWE0VzFDdFY2WFBUZWFWNWdMVEFSejFGUENUT0hQYjlldFZPb1AzN2ZtSUR0OFdOSzVjZzlyYVdXekp6Y19fVlpDS9IBYEFVX3lxTE92YkY2bm50TUwzeV83aXBDZ2c4X1FzeWE0VzFDdFY2WFBUZWFWNWdMVEFSejFGUENUT0hQYjlldFZPb1AzN2ZtSUR0OFdOSzVjZzlyYVdXekp6Y19fVlpDSw?oc=5",
+      "published_at": "Thu, 17 Sep 2026 22:24:36 GMT",
+      "summary": "강남구 민원창구 가림막의 변신…\"말하면 번역 자막이 화면에\" &nbsp;&nbsp; yna.co.kr",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영 - 웹이코노미",
+      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5mQVhBQklyWUFBWll6WENMZHZSWU15SzVDSmlGeVpycVlIRzRtanJoVnYwd1FEZkpWdy1ybXBMU0pvaVRESU9JTVUxaXVicFRmemg2R1VieWhYcHl1a0ZOSFp4dUxhd2tLMDktUWNCVVlFdw?oc=5",
+      "published_at": "Mon, 21 Sep 2026 03:01:55 GMT",
+      "summary": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영 &nbsp;&nbsp; 웹이코노미",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 서초구, ‘특이민원대응전문관’ 투입 - 뉴뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9jeDROSXY0U3BzNE5SWWxsUzhvZ1E5Wmo5VlpsNG5ISG9GbC15QmMwYnRoMjktSVN4ZGZMdFhtRXZOUW5yaDZmWVU0bDd5T2ljdThCenphM1k2WmJjYWZqbWREclRJZw?oc=5",
+      "published_at": "Fri, 18 Sep 2026 01:01:44 GMT",
+      "summary": "서울 서초구, ‘특이민원대응전문관’ 투입 &nbsp;&nbsp; 뉴뉴스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "요즘 공공 기관 민원 전화, 10~20분이면 끊긴다는데 - 조선일보",
+      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNS2pEcXZSNFg0YlJaRFhPc1ZfXzdQV0VmOTRiLVg3MDQ2NnppRll1YmI2Qm1UdjlvcXFBd25xOXV3WVlhaFFSREhKa1J5eDJ4dzBFRWUtTE1aVU1sUExPeFFwTmlsUzBJSmQ1SWRCaHFRT1I0TGQ2UWJqTVRkNWdLcUk2dlU?oc=5",
+      "published_at": "Fri, 18 Sep 2026 15:30:00 GMT",
+      "summary": "요즘 공공 기관 민원 전화, 10~20분이면 끊긴다는데 &nbsp;&nbsp; 조선일보",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "민원 하나가 행정을 바꾸는… ‘민원왔수다’ 제작 첫 공개 - 서울신문",
+      "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTE5kTGRpbVRfNFNnWUlWSU1ZNHVsMkdLM1RMRW9FWXJyaHpiWXJXTFpORFV4WHR6dXhUTWRTUTA5UzJZU2NDbmN0WlRYYmxWQkMtR0JQU3c0RGdhTzk5RTlxNzFsb0NHd3ZBSl9FaG5zUFk3TmVBUTlGRmFXNA?oc=5",
+      "published_at": "Wed, 16 Sep 2026 05:08:47 GMT",
+      "summary": "민원 하나가 행정을 바꾸는… ‘민원왔수다’ 제작 첫 공개 &nbsp;&nbsp; 서울신문",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "연구보고서 - 서울연구원",
+      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE15TF9BMXU0ZGpBTXhDakowWVBqTHhXN3dqLU8zSkwzOWdQRWd6V2tfME9QLWRELVQwUUdCWkVKUnc0QkI4RE5YenJIcjl1WkxFVHl3VUJaanFmeVdYclRQczV2TUV1am42ZEFIdkdPeDBmQQ?oc=5",
+      "published_at": "Wed, 09 Sep 2026 08:57:52 GMT",
+      "summary": "연구보고서 &nbsp;&nbsp; 서울연구원",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "파주시-민원대행업체 청렴 간담회 개최 - snakorea.com",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0yUmpvWFdmR0cxNXQzTXZ6clVBcWlWNVV0WlpoZkpxN2R5cTlMVnN1WVI0bDZHVzhpWHRaSzJyUGpqT2tmNFg1V1BZS0pod2pFeF9IT1NHSlYtRFpNNkFrU1lnRWVzUEItSGpz?oc=5",
+      "published_at": "Wed, 16 Sep 2026 04:46:38 GMT",
+      "summary": "파주시-민원대행업체 청렴 간담회 개최 &nbsp;&nbsp; snakorea.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "120 민원센터 예산 일부·서울본부 인건비 부활 - 울산MBC",
+      "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBwNW5BT2hlc0FHTmV1SGhhenQ5ZGYtQWNFVXdvT0lkWG5IVy16TldNcjJCX2hlQnhBN1daNDIzU3Yydy1lQ1BQSnllVUo4ZGtKN3R2bw?oc=5",
+      "published_at": "Mon, 14 Sep 2026 06:14:09 GMT",
+      "summary": "120 민원센터 예산 일부·서울본부 인건비 부활 &nbsp;&nbsp; 울산MBC",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "‘특이민원대응전문관’이 나선다…서초, 특이민원 현장 대응 강화 - 서울신문",
+      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE4xUVlCckJGOWZvb2VLLUZJeEl2NERfaW9FSGxJaVVCamxIU0o1T056aVRHVHpRNTdkc1ZtRmNFcTVtY1hJNjMzVHpUNTd1clhkaFQ4?oc=5",
+      "published_at": "Thu, 17 Sep 2026 06:31:46 GMT",
+      "summary": "‘특이민원대응전문관’이 나선다…서초, 특이민원 현장 대응 강화 &nbsp;&nbsp; 서울신문",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서초구, 특이민원대응전문관 제도 도입…서울 자치구 최초 시행 - gukjenews.com",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE4wOUk4c3o4QXA3ZHZISlhIdlpzd05KR29ESlBTenJCLWdUeEgwMzNWTUwzbzhXU3ZhbWdFeVNlOGZxVHdId3VmUENKSUJ0MUpIQmJ4Y3kzb2F5c2NZaWlTbjN5dUFXTmdQeUZfWUN3?oc=5",
+      "published_at": "Thu, 17 Sep 2026 00:05:43 GMT",
+      "summary": "서초구, 특이민원대응전문관 제도 도입…서울 자치구 최초 시행 &nbsp;&nbsp; gukjenews.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 지하철 냉난방 민원 21.5% 감소…\"시민들 협조\" - yna.co.kr",
+      "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE11QVNCOXdVTEEyQ1J3MElPWFFMY05PWnlMdGxJVmt1VEdLMU1kOWZwSlNJY1NWYlhJdkxmRXVuZmFZUHhXM2FESDBxT3lUcUdDZ0EzakswOU52X0nSAWBBVV95cUxQTFNsc0ZuYmxrdEo5QkJhTnB0dVFYam02NzdQWW4wTm0tQkFndFNVdFlTWDFlTU1FOTBaNlZWQnM3V0FrTHN4bHgzVFR2YnJIMlNfSzRmSXE0WmtnSEpHWG8?oc=5",
+      "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
+      "summary": "서울 지하철 냉난방 민원 21.5% 감소…\"시민들 협조\" &nbsp;&nbsp; yna.co.kr",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "강남구 민원창구, 투명 가림막 대신 디지털 소통창구로 교체 - gukjenews.com",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBzaFJLYUplUVVFeTVoRVQwM3FXZlRMX1pkSjJHMVdlamxKQkhMdkR4c3h6bXNQanBxbng5cEgzdVRfaTdlUFhEb2lYQ294c3FWMTVhbVNHWkNrN0dFS1pieUI1TUtxUjdlUzdRdWtn?oc=5",
+      "published_at": "Fri, 18 Sep 2026 00:02:37 GMT",
+      "summary": "강남구 민원창구, 투명 가림막 대신 디지털 소통창구로 교체 &nbsp;&nbsp; gukjenews.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "민원부터 채용정보까지…서울 강서구 누리집에 AI 챗봇 서비스 - yna.co.kr",
+      "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1kOWFGdjZDcnZod2VWaEhGWmZPbDB2Y0RUdVlsX3pkV0NFbldrRTJJN1FzR1ZISHZpbnJfMlNJQWlhdWh4MkZjSEd5bDVDZHZuS2JZc3V3UEdFbmvSAWBBVV95cUxQbDVsRUJjN0VBSV83TS03MFkxMmxKdm9YZTg5NlY4dUVRcjVJdnNwakpTRTBldEpWS2xWb0tGRlFhMk5iOGZRM2x4M1JobmFLU3BBQ29iZG9GdXNrS1J4TnA?oc=5",
+      "published_at": "Tue, 08 Sep 2026 07:00:00 GMT",
+      "summary": "민원부터 채용정보까지…서울 강서구 누리집에 AI 챗봇 서비스 &nbsp;&nbsp; yna.co.kr",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "울산, 120민원센터·서울본부 예산 전액 삭감…김상욱 “의회가 시정 막아” vs 이영해 “시장이 의회와 소통 안 해” - 영남경제",
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE0wa3owYjhrWktHSS1oNHRDUUFKZ1NrZUJmVDY1eFJvbGZTclRFRHFoZ0JOY0x3SzdmNlhFTDlXOEd3TkVxY3daTnZiLVhCYXBTaE9ndjdFR0Y4b2prU0RfdzIzelBXQ00?oc=5",
+      "published_at": "Sun, 13 Sep 2026 07:24:07 GMT",
+      "summary": "울산, 120민원센터·서울본부 예산 전액 삭감…김상욱 “의회가 시정 막아” vs 이영해 “시장이 의회와 소통 안 해” &nbsp;&nbsp; 영남경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 지하철 냉난방 민원 22% 줄었다…질서 저해는 늘어 - 동아일보",
+      "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5XQ0lkQmdwQXhycGZBd2JrZTVDcVZnWkRsRXRWcUhxeFFJSHk5X3pZbFFKVzh0anNielQtMFV5TjZLZUxPWk1iUDgycVNuRFFFWWxsQm1YMjZjLWdOR2RLZkZvQjV4OTRaTmhPRW43WmtEVV9lM3fSAWZBVV95cUxQaWlZSXlvV1B2R1R4TVFsT0pHdmhRVmx5LWpIMlpZbnNDVExILVlUNm5WSFNYdmNmdFFULThBeHVyRU94alhpR3hPaUdqMWlsb0ViZ1hYZ0w3OU1GQ0dFWEtOUV8ySVE?oc=5",
+      "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
+      "summary": "서울 지하철 냉난방 민원 22% 줄었다…질서 저해는 늘어 &nbsp;&nbsp; 동아일보",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "박위, 서울시 홍보대사 해촉 검토 민원 접수…CCTV 공개 논란 여파 - YTN",
+      "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9TX3dBWVJDVExnekQxZ2M2cHllZ0I3TzBzR0tYZjItOGdLZlVxaTlFZDBHeWJPd3Q1MmQ0Z054RDdYV1hDTnVyX1Z5X0phemdSVXBVLThHaVJTWUdQMUE?oc=5",
+      "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
+      "summary": "박위, 서울시 홍보대사 해촉 검토 민원 접수…CCTV 공개 논란 여파 &nbsp;&nbsp; YTN",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울시의회, 시민권익위원회 출범…2027년까지 민원 해결 주력 - newspim.com",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5LX1J5c3N1blFkdVJiMGFWaHRpWmJkWllBdF9DTEJqLXZIWVNmX0RPWFh5MHV5ZG1WTkZpalVtbS1nSmhZMTg2WGhGNTMyc2g5MVhDbHlCV1lpNEVE?oc=5",
+      "published_at": "Fri, 11 Sep 2026 07:50:00 GMT",
+      "summary": "서울시의회, 시민권익위원회 출범…2027년까지 민원 해결 주력 &nbsp;&nbsp; newspim.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울시의회, 제2기 시민권익위원회 출범…민원 해결·제도개선 박차 - 인더스트리뉴스",
+      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1yTnZjNHNqUl9xX0dKbUVZeFBTZEkybWVSZnJqakswaEhRXzVzc2lOWFFuOTR3MlhJQzR3SHdSanJaUlV0RHVWR09oVFI1ejRQMk9Pa3B5TnRYUGM1ZDg5N21kamNxZy1UQlRKY0dabjkzQQ?oc=5",
+      "published_at": "Fri, 11 Sep 2026 08:51:04 GMT",
+      "summary": "서울시의회, 제2기 시민권익위원회 출범…민원 해결·제도개선 박차 &nbsp;&nbsp; 인더스트리뉴스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "울산시의회, 서울본부·120민원센터 삭감 예산 일부 부활…극적 타협 - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBINnRYVEt0ZVJvTVMzOVNxbkFTR2VGWnJUTWpCU3doNVA0STlrdjNtNEtsMGVOTjdSeTcwTlU2bzkyZDJNcWpZdzFaZjREdHM?oc=5",
+      "published_at": "Mon, 14 Sep 2026 08:11:49 GMT",
+      "summary": "울산시의회, 서울본부·120민원센터 삭감 예산 일부 부활…극적 타협 &nbsp;&nbsp; v.daum.net",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "김상욱 울산시장, “서울본부·120민원센터 예산 살려달라” - 아시아경제",
+      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBkdmZ0S2VPbjhHZWM2S2tuTjBibS1JQlVnS3NpbkQtek1McE5scUp6Q0lCLTdvTk45ZjdSSmxSeVV2b1hiQWQyVlRCbjgyZ0NmOTBjVk9VN0tJQmhOaWdwdA?oc=5",
+      "published_at": "Fri, 11 Sep 2026 07:00:00 GMT",
+      "summary": "김상욱 울산시장, “서울본부·120민원센터 예산 살려달라” &nbsp;&nbsp; 아시아경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울아리수본부, 야간 공사 소음 민원에 황당한 대응…노연수 시의원, 대책 매뉴얼 요청 - newspim.com",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1lNXl0WEFYY3BrSmt6U3JpS24zRXM3TDZYcWFfV3pkN044YmN5dk1DTTBISU1GcDhCOExKUkRoMlgxa0g0dnNhNUdaVmlxUVl5M1Q0cWdqa0JHS21C?oc=5",
+      "published_at": "Thu, 10 Sep 2026 07:00:00 GMT",
+      "summary": "서울아리수본부, 야간 공사 소음 민원에 황당한 대응…노연수 시의원, 대책 매뉴얼 요청 &nbsp;&nbsp; newspim.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "\"민원 해결 넘어 예방까지\"··· 장세훈 시의원, 제2기 시민권익위원 위촉 - newspim.com",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBwYldoT0thSW9KVkNsdnVTNGpZLVlBRnNPejUzbXpNR3YwRmVRMTcxZVNLanQzOEVIbEVxa3FSN0laeUp1ZEJ1SGo5dG9IWm9TMndGNGVWaklfOHg2?oc=5",
+      "published_at": "Fri, 11 Sep 2026 07:58:00 GMT",
+      "summary": "\"민원 해결 넘어 예방까지\"··· 장세훈 시의원, 제2기 시민권익위원 위촉 &nbsp;&nbsp; newspim.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 지하철 냉난방 민원 21.5% 감소…전체 민원도 감소세 - 스트레이트뉴스",
+      "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTFA3Q3NEVVZ6bkxOQl80d2E4Y0ZZbDR1eHFGaU9peV8zUUpsamhyUjBzM0lHZmVySEtONUM3MVJZRUlucnkwb2lmRF9RV2tncENRTmx5ZVN4UDRQVWdyZzdlZ2w3dWJWaThhZDZJVWVlLTFMZjjSAXdBVV95cUxORHNVX1FwTGszbUxTRGM2U1ljLUxrX011UzY4S01xcjMyZzJvVWllbFBzdWQxamx1NnZ4OU0wRHJJMVlBVG54SWhOOGxCS0pSTWFRUFpqQm42cVdGYk5ZN2NnU1QwMEtjbzRHRXdvYjV2VTdNMU9uRQ?oc=5",
+      "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
+      "summary": "서울 지하철 냉난방 민원 21.5% 감소…전체 민원도 감소세 &nbsp;&nbsp; 스트레이트뉴스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "김상욱 시장 “서울본부·120민원센터 예산 재검토해 달라” - 울산종합일보",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBHTEhKQzVFODdrZ3RqekFKem16VlAtbHVXckJReHhTYV8wTkR2YVAtNEJDSjJnSElJaldjYVM0Qzg0dDMtNVhUNW9LN2EybFVLZHpVT3lNcV90ZThBTktnOVRfRWFvRnp0SW9aWFNR?oc=5",
+      "published_at": "Fri, 11 Sep 2026 05:45:07 GMT",
+      "summary": "김상욱 시장 “서울본부·120민원센터 예산 재검토해 달라” &nbsp;&nbsp; 울산종합일보",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "\"120 울산민원센터·서울본부 예산, 되살려주십시오\" 김상욱 울산시장, 이례적 대시민 호소 - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9kWXEzYzkxMTh1OUFfbmVJWDItYXgwdHNVdE4wTU9wMVlhRzJfcXYtcUNmaThvQ194SEpqcVBOWjk2UTBPdkE?oc=5",
+      "published_at": "Fri, 11 Sep 2026 07:00:00 GMT",
+      "summary": "\"120 울산민원센터·서울본부 예산, 되살려주십시오\" 김상욱 울산시장, 이례적 대시민 호소 &nbsp;&nbsp; v.daum.net",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "＂덥다·춥다＂ 민원 11만 건 줄었다…서울 지하철, 냉난방 불만 뚝 - segyenews.com",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBpTUZ4MThnZGtESkVrTHpMc1JYTHRfV0MwNE5HZVJzN2hUVzFmSV81RmhZb19hOFFyTERlaXk5QzV6UENiVnRSTnhlNWF0bk43WnFCX1Z4Zk00UdIBVEFVX3lxTFBfX01idmU2VE14bWlYZm5jVmJwZTZSQ1FkdWNBOUxzMVRmZUFjXzU3aTZZc3RiT2xzb2FkTkx0dmRLaVI1TklCT1JUWFJuVjZnVUM1Qg?oc=5",
+      "published_at": "Thu, 03 Sep 2026 01:43:35 GMT",
+      "summary": "＂덥다·춥다＂ 민원 11만 건 줄었다…서울 지하철, 냉난방 불만 뚝 &nbsp;&nbsp; segyenews.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울지하철 냉난방 민원 지난해보다 21.5% 감소 - 철도경제신문",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFBRZm52Z0tSOFkxS1d5ajZGTm40TERJa000eDlmRXRLVV9TS093SVdIaFBJb3RjTU9Wek1jOXF2VTlTZnM1blU5bVJzd0dPZWZla2c0SURvWFI5YmdoV0hGQUljemktZUxVVl9n?oc=5",
+      "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
+      "summary": "서울지하철 냉난방 민원 지난해보다 21.5% 감소 &nbsp;&nbsp; 철도경제신문",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "“민원 해결 넘어 예방까지”… 장세훈 서울시의원, 제2기 시민권익위원 위촉 - 데일리시사닷컴",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1vS2V2bFQ2X3c3Y0Z6YXRVVXZIbEhrdlh0Q3JobTI4UUxtbEJNbE1wR0NTb21pcy11OHZrSkM0VUdGX3pKTEppZldDdTNQRk1NU0dqbWdNODBKem9FVUZFM0VCZVdCYTFGM3pz?oc=5",
+      "published_at": "Fri, 11 Sep 2026 08:08:14 GMT",
+      "summary": "“민원 해결 넘어 예방까지”… 장세훈 서울시의원, 제2기 시민권익위원 위촉 &nbsp;&nbsp; 데일리시사닷컴",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "성동구, 20분 넘는 통화 자동 종료…악성민원 강력조치 - 서울신문",
+      "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxPN3BvandHNXl6UTV5SEZCUkhGLV8tWDB6RFNOUkVLdTJDVG00NEVyZ1hPanpoMGZDS3FIQ0hqelRDZHR0bGhlaTRPeU0zUFhoVmtZcUVWVngyYzlaMUF3eHY1QlpYeC1jS04tcHM0Y3ZJMlN2T1hVS283U3pHWUhhbDBpaVZjZG1Pc1lCNWRUM011XzA?oc=5",
+      "published_at": "Thu, 10 Sep 2026 07:25:46 GMT",
+      "summary": "성동구, 20분 넘는 통화 자동 종료…악성민원 강력조치 &nbsp;&nbsp; 서울신문",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "‘120센터·서울본부’ 추경 두고 울산시·시의회 파열음 - 부산일보",
+      "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE1Obzc4Z2MyUXBuOEluaWk3R2hBeTVaWm05UHR2d2thdG94dEtuZGJDU1U0OE5YNndHUThXODJpcDlHUTdKa2FYSnlENWNmb1RmaS1jUXhuZWxTeE56elR1Z1NDU3JkWEY0akMyQVBrbElta3BhUzE2bg?oc=5",
+      "published_at": "Fri, 11 Sep 2026 10:11:38 GMT",
+      "summary": "‘120센터·서울본부’ 추경 두고 울산시·시의회 파열음 &nbsp;&nbsp; 부산일보",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "김상욱 시장 서울분부 및 120 민원센터 추경예산 반영 호소 - 뉴시스",
+      "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE03NUhZTjI3RFV1emUwZlV0aXRqYnlDYmZ6dEJTdjl5cFRIMjhFeTRHb1llWUlwODFrUFBZTnFQTzJFQXRHenVzOXdJSG1yck1sZlZxYzJRQW1DYU84d2hRa2RuVWhZRFVjbElfMlptbUhSUW1IVlRzR9IBeEFVX3lxTE03NUhZTjI3RFV1emUwZlV0aXRqYnlDYmZ6dEJTdjl5cFRIMjhFeTRHb1llWUlwODFrUFBZTnFQTzJFQXRHenVzOXdJSG1yck1sZlZxYzJRQW1DYU84d2hRa2RuVWhZRFVjbElfMlptbUhSUW1IVlRzRw?oc=5",
+      "published_at": "Fri, 11 Sep 2026 05:43:40 GMT",
+      "summary": "김상욱 시장 서울분부 및 120 민원센터 추경예산 반영 호소 &nbsp;&nbsp; 뉴시스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 중구, '복합민원 원스톱 서비스' 32종으로 확대 - yna.co.kr",
+      "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5zaEpIQzBsMTNtZDFIWnBHbnRjN2NpMWNOb2FIZldqNXBrSjlIcTI3MUV3cmhXTlQ0ZXlzNnVhYXdCVHFfcTJVdUdrU19ydUtqeXhvN0ZzNk5GMW_SAWBBVV95cUxQZmgxV2JaTGk3NWw1U3BEQi1aZGpKcElZSllzTjJIZW9IMS1EZGV0MldyZ0pVa21OVUpDdzBoX0hCSy1KQU5YRzRXbENLMnVQOGduSEk2VzRsUVB3S3h2ZGs?oc=5",
+      "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
+      "summary": "서울 중구, '복합민원 원스톱 서비스' 32종으로 확대 &nbsp;&nbsp; yna.co.kr",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "울산시 vs 시의회…서울본부도, 120민원센터도 예산복원 - 뉴시스",
+      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE84UkMwZXlrb2F5VldlMVZ1dFMyMkt6OWtMT19Na0ZnWTNPVmNWbnh4cTU3Yl81RW9fcWUzNEFUZEhWUGQ5UEtPaGxSM2lqN2hranMwUUU5M0c0aV80S1ByatIBeEFVX3lxTE80a0d1QjhjZWlpM3BxUzlpQkw3U3hIdjh5Q2FMbU1sNk5ZOVI5QWpsYUNTbUQ5MktHVHFrblNMX1VKb1Z6QWk1bHhvTlIxQVdUWFFYbmxwWnpTbE04MlB5RjlfVkV1M0FMN0Z4MUcxVzFUSVgxaURKaw?oc=5",
+      "published_at": "Mon, 14 Sep 2026 09:04:37 GMT",
+      "summary": "울산시 vs 시의회…서울본부도, 120민원센터도 예산복원 &nbsp;&nbsp; 뉴시스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "손해보험협회 ‘통합민원지원센터’ 개소… 보험민원 처리 역량 강화 - 한국보험신문",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1ZNWt5Z3JsV2g2NkpNTWs0Y09YRHFPN0FUMm83SnAtUFphZmpwWGFyd0xVQkZqWlFFZEZYVklXREJocHNCcGEtU3NmaEdvcEhMXzhDZW85LVR3VzRyM2MzUm4zeHpMM2xMaGhN0gFvQVVfeXFMTktnS05TNEFxOGlsX0pQcGRlbWU1Qnk1cGFGMDNBREtCNGJVRmJTaU9sei1HbE9YODRzXzJLRWZzOTlkN1JKUnVSZkVId1Q5OUozQ2d0Q1B4WlZlZ2xNS2hGM254OGJ2ZDRDcUlZMGZ3?oc=5",
+      "published_at": "Wed, 02 Sep 2026 07:00:00 GMT",
+      "summary": "손해보험협회 ‘통합민원지원센터’ 개소… 보험민원 처리 역량 강화 &nbsp;&nbsp; 한국보험신문",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 성동구, 스마트 흡연부스로 간접흡연 민원 급감 - 미디어시시비비",
+      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5FMlJXUnRIRHNFQzM3TUkxTndURTVmR0NNZHN3OE5GLWdQQklLTGtjMm1LNFZzOVljVU8wSG16Z2tWSVlGQ25RWUJleWZzWVlOZkR1QV9Gbm1QUVh2VEJ3Ql9LcXdhd1pNOFBJck5VMUk5UQ?oc=5",
+      "published_at": "Tue, 08 Sep 2026 01:17:01 GMT",
+      "summary": "서울 성동구, 스마트 흡연부스로 간접흡연 민원 급감 &nbsp;&nbsp; 미디어시시비비",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "\"민원 해결 넘어 예방까지”··· 장세훈 서울시의원, 제2기 시민권익위원 위촉 - 시사일보",
+      "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5HSmRCT3pOZlhsRjlpT2VQNGFzRDFCenQ2TGo4RG1ONFNDUXdXamF5ZHp2cmgxdUhHUURSdUN3YTJZNGR0MldjY1JxcHc?oc=5",
+      "published_at": "Fri, 11 Sep 2026 09:40:00 GMT",
+      "summary": "\"민원 해결 넘어 예방까지”··· 장세훈 서울시의원, 제2기 시민권익위원 위촉 &nbsp;&nbsp; 시사일보",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 지하철 민원 17% 감소 - 뉴뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5KTjRMU3YwVXdYTzc4czlWRjNHM3NPNmdReUtjV19RWXZ5dzNRTTZMOUVTU0pCQ21hSEVJNDlZYzJDMGpkcnFtZW52bFhXeTBlTHZ4UGpMYWN4WFBmT1h3NVBGUEU1dw?oc=5",
+      "published_at": "Fri, 04 Sep 2026 02:00:45 GMT",
+      "summary": "서울 지하철 민원 17% 감소 &nbsp;&nbsp; 뉴뉴스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "울산시, 예산 삭감 놓고 의회와 충돌…서울본부·민원센터 공방 - 뉴시스",
+      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE93UTBZa0NGbV9xZ0R6Qy1sWW9lUG9LWmI2V3cxV0lzbmdmVThzUjBWd05XVGVGQ250bGtTWk9IRElobHoyMS1YbUN5X3NJZDZKaV9CXzQtbG5temlySTZTVtIBeEFVX3lxTE4wZTZHdTJnLVVTemR1ZkdqRWlMY21SX1p3TER5SHBHSXNCcHN1aU1fdUNuSHVJal96U1M4QUFDUmdmUUJsNVpFYWJuOFFISk9zUEFSc2FkNGdfbl9nTVlTUnhxS24wMzNIT1REZWc4WGZNSGdJSGo5Zg?oc=5",
+      "published_at": "Fri, 11 Sep 2026 08:06:41 GMT",
+      "summary": "울산시, 예산 삭감 놓고 의회와 충돌…서울본부·민원센터 공방 &nbsp;&nbsp; 뉴시스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "[만화경] 청탁과 민원 사이 - 서울경제",
+      "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBTeTJHSllhTERFUjNrZ0NETWRhSTVxUW5vUkZla0VqNTY5YktuM2piLU5aa0VzRTVmMFVHdGU1UTNVM3BNRmxtZWFieFNNRXhqbkHSAVNBVV95cUxQWnpVNFl0ZmprRWRlN2YxTkxVOVYtT3B0NGp2WGljd3JBXzFfbnB3QWRuVmlFTmNKeUFReDNDWllZbDRBb2dTMHljUjdGcklBRzRkaw?oc=5",
+      "published_at": "Tue, 08 Sep 2026 07:00:00 GMT",
+      "summary": "[만화경] 청탁과 민원 사이 &nbsp;&nbsp; 서울경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "폭증하는 서울시 민원에 '수작업 한계'… AI 해법 될까? - 이투데이",
+      "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9RajBWbFM5ZkpKZXlpOTdTUWZxUFRWN2xYNVdiY05EY2s2QzZpTENQWlpSRW9fcHFCaVFzX3JYcm1yanBvM1NjQk5KdzAzdmxldVZLYw?oc=5",
+      "published_at": "Sat, 29 Aug 2026 07:00:00 GMT",
+      "summary": "폭증하는 서울시 민원에 '수작업 한계'… AI 해법 될까? &nbsp;&nbsp; 이투데이",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "[포토] 손보협회, 서울 금천구에 ‘통합민원지원센터’ 개소 - fetv.co.kr",
+      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBTMGpkMlNvVm9GV3RfakFpczhFOFdYM2lwT2ozeHd2Z0xnU1BIZjIwWnl5dXg1SUExZXhlMGk0SktaU0RDNnNLbTU1T3ljTEhiTnpKT1lYYVpPeVhQTE5uWmlmTDlNbWxl?oc=5",
+      "published_at": "Thu, 03 Sep 2026 04:49:57 GMT",
+      "summary": "[포토] 손보협회, 서울 금천구에 ‘통합민원지원센터’ 개소 &nbsp;&nbsp; fetv.co.kr",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "김승원·與는 “고충 민원 단순 전달”…野는 “뇌물 기소유예, 청문회 불가” - 서울신문",
+      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTFBCU1hOWlZVeVotZzlIZm1PY3U2UzRKQ3FISUxRaS0tSE84Q3NYR2FpMmVNMWlJTWkwZDJEaVNoZm9wOHVNVkxfVFJIRkxoVnEyYUxuSFVPS0M2UC1nXzE3NDhhb25NblRZaV9JbUVPaUk?oc=5",
+      "published_at": "Fri, 04 Sep 2026 07:00:00 GMT",
+      "summary": "김승원·與는 “고충 민원 단순 전달”…野는 “뇌물 기소유예, 청문회 불가” &nbsp;&nbsp; 서울신문",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "청주시, 민원 현장 곳곳서 ‘청주특례시’ 홍보 - snakorea.com",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFBHbUExb2JTLWQ0dzRNVExDVS1HdXpqRXdWNndrLTdTYkx1WS1XaDhKdnJmaFctRzJFeURiVnNrUWJhT2lFRG5USXdZcFJ0YkVONGxOVmRNRjlQSUdMR2JUNVBvWmxnSF9VOFRN?oc=5",
+      "published_at": "Thu, 10 Sep 2026 07:35:00 GMT",
+      "summary": "청주시, 민원 현장 곳곳서 ‘청주특례시’ 홍보 &nbsp;&nbsp; snakorea.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "法 \"임은정 '검사 집단행동 감찰' 민원 관련 결정문 공개해야\" - 뉴시스",
+      "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE0xZ2FzazhIbWVUdGdKclRkRmhjS0RkRzlMZ29VQW5nZ2g0N2lhalpnUW1UMDdVNzRkRkJwMDIycE4zdHBfSDlZRkRmcl9XVWhweDYyYkRVZ3BNSy11cngwX2VxQl9GWGpaRVlBX1o3UVdnRXlNMzRrZ9IBeEFVX3lxTE0xZ2FzazhIbWVUdGdKclRkRmhjS0RkRzlMZ29VQW5nZ2g0N2lhalpnUW1UMDdVNzRkRkJwMDIycE4zdHBfSDlZRkRmcl9XVWhweDYyYkRVZ3BNSy11cngwX2VxQl9GWGpaRVlBX1o3UVdnRXlNMzRrZw?oc=5",
+      "published_at": "Mon, 14 Sep 2026 07:32:30 GMT",
+      "summary": "法 \"임은정 '검사 집단행동 감찰' 민원 관련 결정문 공개해야\" &nbsp;&nbsp; 뉴시스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울지하철 냉난방 민원 21.5% 감소…'덥다·춥다' 11만건 줄어 - 미디어인뉴스",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5KaG9VUDJnX2lzWGd6YkQzaXp6MlFvUEN2UFJEMWNFVjk2RVZWdHlfYXZnSHVORlpzY2k4ZlBXd2d2QU5tZ2ZER1lvR1kxTmVsNnFMNkZBeHBZRTg1MEZEbjc3VWtLVm5lMDNzTXlB?oc=5",
+      "published_at": "Thu, 03 Sep 2026 00:57:32 GMT",
+      "summary": "서울지하철 냉난방 민원 21.5% 감소…'덥다·춥다' 11만건 줄어 &nbsp;&nbsp; 미디어인뉴스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "도봉구, 민원 해결 전담조직 '열린 구청장실' 문 연다 - 서울시티",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE9jd0Q1OHVLNDgzV1d3dXNKMUJSakxGY3dYYzdBRk5MT19uNTViYzBkaVBvQ3NZYTl5MnVZcWgtOHBRQUhDTUFUb2YtN0JPQV9GUXpfY2JTM3NhNmxOdWF3d1dSUzJDYTZyNVhDNURtTQ?oc=5",
+      "published_at": "Tue, 01 Sep 2026 07:00:00 GMT",
+      "summary": "도봉구, 민원 해결 전담조직 '열린 구청장실' 문 연다 &nbsp;&nbsp; 서울시티",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "“덥다·춥다”... 서울 지하철 냉난방 민원 11만 건(21.5%) ↓ - 헤럴드경제",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1zLVpBY29wMFJreEZKSDJRemg5WlhocUlfUmhIWHEzSE5tOVpvdUdSb3lGRUZQMmt1ckNtT0w2cWhOSXJHNmdfa19pemxJLW94dWh1SF9B?oc=5",
+      "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
+      "summary": "“덥다·춥다”... 서울 지하철 냉난방 민원 11만 건(21.5%) ↓ &nbsp;&nbsp; 헤럴드경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "완도군, 민원 서비스 만족도 높인다! ‘친절 교육’ 실시 - snakorea.com",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1EYzZvTm1YMXFfSUkyWEIzakxPa3dPa2ctYjMzWGVsT0l2Qi0zTm1jU2xmMC1fQ1puQVNIUXNvUVU1YjFwN0JaRFV3RHVPR3FKdjU2NXUwNmNaa0hXd1N5WFdtUkc1MW1SMmZn?oc=5",
+      "published_at": "Fri, 11 Sep 2026 05:01:53 GMT",
+      "summary": "완도군, 민원 서비스 만족도 높인다! ‘친절 교육’ 실시 &nbsp;&nbsp; snakorea.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 중구, '복합민원 원스톱 서비스' 32종으로 확대 - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBtelZJTGpCa1JHZGpsMEVLaTdkOUFMTnRSSUNtdEpVRGVmXzVUZWNuZU5oamt4NHFCWmt5VGw3NkZxQk1DbVl1aGhZWnBEcDQ?oc=5",
+      "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
+      "summary": "서울 중구, '복합민원 원스톱 서비스' 32종으로 확대 &nbsp;&nbsp; v.daum.net",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 중구, '복합민원 원스톱 서비스' 32종으로 확대 - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE1FQjFOcDlDSE5YTWV3X1lpcmRoNGpPcXhsMzBHN3hzZEtfdDVNTkdMREVvUENYM3hZWTIzTEZaMXFRMXJMaVE?oc=5",
+      "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
+      "summary": "서울 중구, '복합민원 원스톱 서비스' 32종으로 확대 &nbsp;&nbsp; v.daum.net",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "노조원 채용 거절하면 민원…드론 띄워 공사장 감시까지 - 서울경제",
+      "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBjWFQxOU5laW9XYlg0U01FZ0d5ZFVTZVZKVk5lQVEyVUx2Z3hXYmlHOVdJOXNLTTdRY0lfaUM5X2ZEdFhqU2hKZWNEdTVvNURaMkE?oc=5",
+      "published_at": "Mon, 07 Sep 2026 07:00:00 GMT",
+      "summary": "노조원 채용 거절하면 민원…드론 띄워 공사장 감시까지 &nbsp;&nbsp; 서울경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울지하철 덥다·춥다 민원 11만건 줄었다…냉난방 불편 21.5%↓ - 글로벌E",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFBqYXhacm1BYWlkNTRlcF9NbElNc2JvaWxkRUYzUjV4TmlOaUVzOHlSb2toRTRKWFhHdTZEa205RVQ0eVBQblRiLTA1UWlVLUNrMEJLX2FzX1hqSnp2eWxqSmlucWN2MHYzLUdj0gFvQVVfeXFMUG15TWZNdFhfRkFqUkhjaDdrZUdROFlkVUNOSmRkcTNqRXg0dHJHWVl4cUNnd3k1eHFPbXlQeGdhc0gzcXB0ei12U3ZrRUtrT2tRdmVrZVY5U1ZnZzBDYTdhLWhGY09fOC1Wbk5yaDFr?oc=5",
+      "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
+      "summary": "서울지하철 덥다·춥다 민원 11만건 줄었다…냉난방 불편 21.5%↓ &nbsp;&nbsp; 글로벌E",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "생보협, 민원대응 이젠 AI가 한다 - 서울경제",
+      "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE96RmxPcm1fUGZzR2dvRFotSlRzdkZwdGdIdjF1Q0pIM3Ezb0syX3FhRVIyWDUwRkRqY2IyQTFVSlY5U0FKSXI5TnRhNE5NemxjRHfSAVNBVV95cUxOVDU3ZUhsVDN3T0J6NDhjRmYweDN3MG5mQk9xN1hGZ1dzYzBwX0NleFpGZEdFUFoybjVjRDNhSGdGVEw0Y3RRT3lVb0IzLVR4QkM5NA?oc=5",
+      "published_at": "Mon, 07 Sep 2026 07:00:00 GMT",
+      "summary": "생보협, 민원대응 이젠 AI가 한다 &nbsp;&nbsp; 서울경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "공사장 막고 민원 넣고...건설사 덮친 ‘건폭 리스크’ - 서울경제",
+      "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE9rb19saVdkY1pWWjB1cjRHTTBwUzJRSUR1OUhDUTc0VnlnMnc5MWhtdWFyZ2dIT2dVYUR6OHFMRWtWMVVVUnZhU25TcjU0VmNRbFHSAVNBVV95cUxOSjBBRW5vMVE0UGJCSkhhUl9rbDMtVjhPNE96QkNsY2R0WVVEQ213VC1ZM29IeDJ3bllUaGxuYkxZSXdZZGdjdVozUUZkSzJ2eDl4TQ?oc=5",
+      "published_at": "Tue, 08 Sep 2026 07:00:00 GMT",
+      "summary": "공사장 막고 민원 넣고...건설사 덮친 ‘건폭 리스크’ &nbsp;&nbsp; 서울경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "\"덥다·춥다\" 민원 11만 건 줄었다... 서울지하철 냉난방 민원 21.5% 감소 - 데일리중앙",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFA5MFMxcnlyRFM4cFIzT09TeXNSeDg1LUlhOGtmSHpsUG5WMXpWQUFTT2xadjlHZ0hITWptYU1PY25keURfZ05hdkhraGY2NkgtUTVhMHd4R19QYjFMRUtsZC02dHRMTngwSXI0Ng?oc=5",
+      "published_at": "Thu, 03 Sep 2026 01:18:46 GMT",
+      "summary": "\"덥다·춥다\" 민원 11만 건 줄었다... 서울지하철 냉난방 민원 21.5% 감소 &nbsp;&nbsp; 데일리중앙",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "박위, 서울시 홍보대사 자격 박탈?...해촉 민원 접수됐다 (+내용) - 아주경제",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1CN2xaNGk1MGM0cnlBYVZhSGxuMVlaODNJRnNuY0VaOVlzRDk4LTJaMzdIRF9CcFBJZ3FJblh0MXVNRXFxS0dzODI0ZFVxeUQ0TnQ2MTl6ZHNjd9IBWEFVX3lxTE5qelVobUliS2RhbmdkNFVid2Q4SmxPRl96NE5IalV6d3cxZjlFZU5KcEdMdS15bG9SX2NkeURZSHl6SUhqVjlSZ0YtZzFrbjBCU1djX0R0X1I?oc=5",
+      "published_at": "Tue, 25 Aug 2026 07:00:00 GMT",
+      "summary": "박위, 서울시 홍보대사 자격 박탈?...해촉 민원 접수됐다 (+내용) &nbsp;&nbsp; 아주경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "장세훈 서울시의원 “민원 해결 넘어 예방까지”… 제2기 시민권익위원 위촉 - 서울Pn",
+      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5BcThYS3lJSVAzVXlWOFlrOGRSYmRsRlpxb1A5M1RLTzhQWlNId3dfRnBRLWZKWHdPajBRTW9SWUExTkRQRHhSajlLUGE3MlBZd3hsLWhrNFFJTGpqclVMeVhzU1Q2eXZpUEE?oc=5",
+      "published_at": "Fri, 11 Sep 2026 08:05:10 GMT",
+      "summary": "장세훈 서울시의원 “민원 해결 넘어 예방까지”… 제2기 시민권익위원 위촉 &nbsp;&nbsp; 서울Pn",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "냄새난다는 민원에…\"올해 서울 은행나무 최소 792그루 사라질것\" - yna.co.kr",
+      "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE8zSlo4Mi1JRV81YTJZM0JqZk9xaVV6SGxIM2Z2UVZUQTVtY0t2Uk9DTjRGR2xKVHZCYnRmaUVJdXNNTHdmR3V1MnRKTzRoa1BqRjYxeE40YTVzdlXSAWBBVV95cUxQSXlONW9TcHZoekhOUVhHemltSjZ4dFEwS01QTUFaNUh4d3A3NkJOSWItU0NIay16N0VPZmJlQ2RsV0p4RVRrWDllR1haei1TNmdMdjZ4eHFxbVIzQWNFbm0?oc=5",
+      "published_at": "Wed, 22 Jul 2026 07:00:00 GMT",
+      "summary": "냄새난다는 민원에…\"올해 서울 은행나무 최소 792그루 사라질것\" &nbsp;&nbsp; yna.co.kr",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "같은 온도인데 민원 11만 건 줄었다…서울교통공사, ‘덥다·춥다’ 21.5%↓ - 이코노미사이언스",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBjYk1ncW43QWZQZ1M1VW1KanVOak01UWxBR0RNenhJaUlDSmJHRzhBbklDYzlxb3JJNzE4X0hNTXdYT1NISkpXUTlUdHZFemE1ZVFjWUFOU0UyaG9ySWIzeGZwdzZmUzdpb3Q3WU5VQQ?oc=5",
+      "published_at": "Thu, 03 Sep 2026 01:02:26 GMT",
+      "summary": "같은 온도인데 민원 11만 건 줄었다…서울교통공사, ‘덥다·춥다’ 21.5%↓ &nbsp;&nbsp; 이코노미사이언스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "장세훈 서울시의원 \"민원 해결 넘어 예방까지\"…제2기 시민권익위원 위촉 - 네이트",
+      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1BNUhOSHBnelVxYThrZUQ1Zzk2QlV5WDZhdng1TTVNa2dMZUNObjRlczYtVDRpM3V4TnhBVjlkSmZ6VFZ2Y3ZkbFFRT2U5ODBITU8w?oc=5",
+      "published_at": "Fri, 11 Sep 2026 08:08:00 GMT",
+      "summary": "장세훈 서울시의원 \"민원 해결 넘어 예방까지\"…제2기 시민권익위원 위촉 &nbsp;&nbsp; 네이트",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "성동구, 장시간 민원전화 자동 종료 시스템 도입…악성 민원 막는다 - gukjenews.com",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE85bmNPQnNBejA0c2xaRC1KVVNZUDdfVzlldmVSYWVRZTFBWm1OWjkzaXRxb3kxT2ZScC1yUmVQd1diVW54VEQtekdtV1pDTl9Nc1J1Tlpjdk9KcGFvQ2JFNS1aRWw5Tk43MGd1RXRn?oc=5",
+      "published_at": "Fri, 11 Sep 2026 01:45:04 GMT",
+      "summary": "성동구, 장시간 민원전화 자동 종료 시스템 도입…악성 민원 막는다 &nbsp;&nbsp; gukjenews.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 지하철 민원 17.3% 줄었다, 냉난방 불편 11만 건 감소 - 이뉴스투데이",
+      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE9SU3VVRzlzV3kxWGVQS1Zpc3ZFNzV4MndMQktGcTl1VDRLNEZYcFhORko3VERncTVoWTdQSDc1UmdUWHVLX3R4cTg3U0I5ZXJEYnplSUhWSnBtTnEwZHBzeXNOTEk2Sy00RFlaV1JQZXrSAXRBVV95cUxNOEU1eEVJckJGZlhKcm1fOTk4bHZ2M1dPX2tCUVh5ZXc5UFJzR21sWWhiMmltd2FCOWVhMXlKRk02Mk9adWU3MzA1LVp2OUdrN1FUM1U0YkVHZHZKNHVEdC1KVURVYklWSU5KYjh3ZzNHNzY1Rg?oc=5",
+      "published_at": "Wed, 02 Sep 2026 23:45:00 GMT",
+      "summary": "서울 지하철 민원 17.3% 줄었다, 냉난방 불편 11만 건 감소 &nbsp;&nbsp; 이뉴스투데이",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "여수시, 2026여수세계섬박람회 종합민원상황실 본격 가동 - snakorea.com",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0ybkRNWjhpUzdIVXZqaFRDb2tDU0tGaGVLN3pYWTJhM2RsNHozWDF3eG9LWUtYVVdTVzZCT2tkdXYzQU5iR3BpN0d4d2dBb2c2ZE5qR09qUVRwd2FLbDdDTk1pbUV4b0sxTm1n?oc=5",
+      "published_at": "Mon, 31 Aug 2026 06:43:28 GMT",
+      "summary": "여수시, 2026여수세계섬박람회 종합민원상황실 본격 가동 &nbsp;&nbsp; snakorea.com",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "강연 취소→해촉 민원 끝에…박위, 서울시 홍보대사 자진 사임 - 아주경제",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE12MnJfcldZWGY3QTJ3VzRnWGo1YmoyRlFyNi1TX1FBZGhvblNXSU1XRVB1Qk5Nb2lSTER6bERLQXJRbWNyRkhibDIyOVlCN1BKbGVFVnVuV2xaUdIBWEFVX3lxTFBIZ1J0UW1rR2VRWW5GZzJUUFJocEJGQ2FGbnA3a3lZeHVCNmtYbnpIbU1xNDRVZkhPRTZZQThaQ3pCS3BVUGkzY3pkSnQyNmZXdUZuMmpWcTI?oc=5",
+      "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
+      "summary": "강연 취소→해촉 민원 끝에…박위, 서울시 홍보대사 자진 사임 &nbsp;&nbsp; 아주경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "인천 영종구, 복합 민원 ‘원스톱’ 해결체계 가동 - 뉴스프리존",
+      "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE1rRHdNTW1JaTBwRHlqWHJFQUpCOEYwRHUxbV9ERzJsVVlvVDlNSWlvOWxXYXdPY1NpN0hTRW5nUU9VWXNTWEhyV0kxNzRsU2JSNUNEM2dZYV9CZjBkV0NpNVJfWUFfcDZQMnVWc3Zrd1BpSW_SAXdBVV95cUxPVnJOZXZITjdkenZRbXJpZ2ZWOXNlNWtfY2o3Q0NhUWtvZWtIQlpja05DemdJdExROHBIYWp1WFlIejFRMGNITmU0VkFIRTJhdWZCcUZiXzh1RF9JOTVSd0c4cmg1MWdFd2NfczFUSl9YLWFjQXhETQ?oc=5",
+      "published_at": "Wed, 02 Sep 2026 07:00:00 GMT",
+      "summary": "인천 영종구, 복합 민원 ‘원스톱’ 해결체계 가동 &nbsp;&nbsp; 뉴스프리존",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "\"버스기사 라디오 못 듣게 해달라\" 민원에…서울시 \"일률 금지는 어려워\" - 연합뉴스TV",
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFA5dWU5X01wTEkwejExU2YxakNkdzczZXZ1cmZsVlRyLUNoSXV0N3J4Q3FiOE1kQzJ5X3dlQlZVcFF4WDlCbWU1aWVUcTFKWkZXQVpkTVlXUm1oNWxUa0gxcnBkWm5JUFE?oc=5",
+      "published_at": "Tue, 14 Jul 2026 07:00:00 GMT",
+      "summary": "\"버스기사 라디오 못 듣게 해달라\" 민원에…서울시 \"일률 금지는 어려워\" &nbsp;&nbsp; 연합뉴스TV",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "울산시의회, 서울본부·120민원센터 삭감 예산 일부 부활…극적 타협 - 스포탈코리아",
+      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOa0lxNlF1blVwbnBfY3lHRHU3LVZ0THR0bG91YU5hOVJrMzVEdnNaemZHQ3FKSkcwRXVkcXhMc1RuNkszRTg3Rzc4d2pfZkpRYW5OWlpIMzBBT2c0bHltbkhNNTd5Nm9IcWxrbWRrOGNRc0NTcUZwQ1FoMTJrYzhFdDNB?oc=5",
+      "published_at": "Mon, 14 Sep 2026 08:10:39 GMT",
+      "summary": "울산시의회, 서울본부·120민원센터 삭감 예산 일부 부활…극적 타협 &nbsp;&nbsp; 스포탈코리아",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "“지금 무슨 역?” 민원 9천건 터진 서울지하철, 드디어 바뀐다 - edaily.co.kr",
+      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOZlZJcGF6OHd3LVh0bXlud0RzMkZPT3VCRC1oOEE3XzJuM3hsS2dhUkVhczdmblJzSDU5bFZGR1ZHY0F2RnB1eDRjOTVsVnBRV0J6cG8za0k0b0VNNXY0QzE5QU9LLXllU3FGU0dRY2thbUVDcTcwM2p0ZDdUc2RiUQ?oc=5",
+      "published_at": "Mon, 31 Aug 2026 07:00:00 GMT",
+      "summary": "“지금 무슨 역?” 민원 9천건 터진 서울지하철, 드디어 바뀐다 &nbsp;&nbsp; edaily.co.kr",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 중구, 복합민원 ‘원스톱’ 처리 32종으로 확대...구민 발걸음 줄인다 - 한국미디어뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE92XzZGWjVIb1hxbThRTEhNT2NkdndPMm1wYTlUZ2lfWWdoamxSdmJ1YXg4aXN1c0FrSUVaTkZBaE0xemNhYXdXZEZYWGJTeU12cXVRRmM3Z1FvTEJQMlhaUGpWNHdKQQ?oc=5",
+      "published_at": "Thu, 27 Aug 2026 01:30:22 GMT",
+      "summary": "서울 중구, 복합민원 ‘원스톱’ 처리 32종으로 확대...구민 발걸음 줄인다 &nbsp;&nbsp; 한국미디어뉴스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울지하철 냉난방 민원 감소세…'이용행태' 관련 민원은 늘어 - 네이트",
+      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBlRGt5SlphYVBqbDlLU0oySnlNeXZNV2FPeVJiUlBIUjFQQlJBNDl4LXlUNDdIaWpZRmNIcE1UWVQ3NTE2THpnbzE0ZjFSUmluMWJF?oc=5",
+      "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
+      "summary": "서울지하철 냉난방 민원 감소세…'이용행태' 관련 민원은 늘어 &nbsp;&nbsp; 네이트",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울시의회, 시민권익위원회 출범…2027년까지 민원 해결 주력 - 네이트",
+      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1NN05KZHAtb3RRY2pGaU9Bb09OQ1RWeUZqTHpXR2JlUm42Z0Nqdl9DUGFHQ0dYbF9VSS1BYUtGUHFweFhtanU5and0N2ZROHVpOU8w?oc=5",
+      "published_at": "Fri, 11 Sep 2026 07:51:00 GMT",
+      "summary": "서울시의회, 시민권익위원회 출범…2027년까지 민원 해결 주력 &nbsp;&nbsp; 네이트",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "지식재산처장, 서울사무소 민원업무 담당직원 간담회 개최 - 뉴시스",
+      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9TbnRzRjl5V3Q3MkNZTUo2dVBsRGI3dkFzZjZ3WjUyakM4OVlpVnN1ZF9mLTQxal9kRXZzdE9IS2c2VVNvSVNqcFU2U2lDOXBRZ1Qtd0RMa242eXM5Q0YxRA?oc=5",
+      "published_at": "Fri, 28 Aug 2026 07:00:00 GMT",
+      "summary": "지식재산처장, 서울사무소 민원업무 담당직원 간담회 개최 &nbsp;&nbsp; 뉴시스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "박위, 서울시 홍보대사 해촉 민원 접수…KTX 사고 영상 후폭풍 - 머니투데이 - 머니투데이",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFBaY2FmWF9GanFFbmRwRVBNYVVLMHNIZ0ZGRGlUaHV3aFJWUlY5X0tuVU1FZnRlaE03M1d5amVYdm1uU29lTk5GN19FWW5XVEVGWHc0cXhLZTBkMHNCT19GeXNERjVzdHd2eFVr0gFwQVVfeXFMTVdyNm5CUVV1cmwtRVNtV2tTMzZUb2tMTmNibEFWejc2bE43VmJYUzZfMjh4X0Q3MVdSUG0xMTdmcFpSR0tpNi1KZ2JhQkJDalJIaU14N0ZkWmpTRUVfZV9YLUtmNDd6OTlfRTA2bXlrTw?oc=5",
+      "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
+      "summary": "박위, 서울시 홍보대사 해촉 민원 접수…KTX 사고 영상 후폭풍 - 머니투데이 &nbsp;&nbsp; 머니투데이",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "박위, KTX 영상 공개 '역풍'…서울시 홍보대사 해촉 민원까지 - 한국경제",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE14MXVqQkF1bEY4WEtUdjRjRWpISG56dTJLMXdha0tIUUIzSm9IbW55aURwbzBSamFkT0JaaUZZczliUE80MUoxczgyRno4WlZxQ2NNdGR4dTlzdw?oc=5",
+      "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
+      "summary": "박위, KTX 영상 공개 '역풍'…서울시 홍보대사 해촉 민원까지 &nbsp;&nbsp; 한국경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "[단독] 온난화가 부른 ‘바퀴벌레 습격’… 서울 민원 4년새 5배 - 조선일보",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOdmljdXR5WmE1dUwxSFhVNDZPUWZVZnMtWHhMRE45LVNQSFQ3b0NUdWJxNFVOY3p3amExQW1MSFZOdG9pSk16WDRtRW50NUJqVHdFSDhVcHRvdjFMY3BiQkhheXdrSy1uUGxzVkp4TklxdVl1NzRJbktYNEpGbHp2SE04WFdLYlFWYWhwVzNDd21TQ280aXcw?oc=5",
+      "published_at": "Sat, 25 Jul 2026 07:00:00 GMT",
+      "summary": "[단독] 온난화가 부른 ‘바퀴벌레 습격’… 서울 민원 4년새 5배 &nbsp;&nbsp; 조선일보",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "[클릭! 자치뉴스] 서울 동대문구, 퇴직교원이 학교 민원 첫 접수 맡는다 - 한국일보",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1EdVJoSXBjakVXQjR3U2NUMWxJN0NVbHF6UFdwbEpBZS12MG84WTEzZnVMWHgtb3RZMWhEWEJQSllYZ2FTaUlkcnNUbGNkM01vc0ptQW9NNzF6U1NaZWVJQ25YYzhUUDVYS0VWUkdR0gFzQVVfeXFMTkIwSFRudWJjRzVacjlrVnNhNXRYNDR6MDNlVXd5a09CbzdWMGd3Y0RsMTVJa2JvbXFMeHlYdEJJTVRjeFNmaV8zMWZJbTNDNWZ5UkFiR2JrT1VnQ3F6bkVIQlRxNDVjV3E0a2hlaWxENFNpWQ?oc=5",
+      "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
+      "summary": "[클릭! 자치뉴스] 서울 동대문구, 퇴직교원이 학교 민원 첫 접수 맡는다 &nbsp;&nbsp; 한국일보",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 중구, 복합민원 ‘원스톱’ 처리 32종으로 확대...구민 발걸음 줄인다 - 서울포커스",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5Qd1p6dl96eTZFVDlWZVRkS3dsb015SW1nTGV5bzIzUUNqNjZkdkpfR3FMSDRMM19tblQtVFBPLUctYlRobjNKRHFhV0liY0RINUdNay1CamRwekIyZldPUmFFbWRSaDNaeURYMw?oc=5",
+      "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
+      "summary": "서울 중구, 복합민원 ‘원스톱’ 처리 32종으로 확대...구민 발걸음 줄인다 &nbsp;&nbsp; 서울포커스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "‘KTX 영상 논란’ 박위, “서울시 홍보대사 해촉” 민원 등장 - 스포츠경향",
+      "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE10bGJybWRFS0gtRHFYMFZyeWhlOUxfQTVTRU90cHp6RHQySmJRNGxTQVA4cXlmY1l0Sjd0b2Z0OGhCaW1LWTFCb25Say13SzkzQWtBbzdsOEJVRGRheWfSAWNBVV95cUxNQUJjY0VwN01Ec21YYkx1NlVDT054T0RtUTVhTHpuNExqNjJ1VldLT3VueGI2N09fS01ia3g5RjNiOExCRWVSckV1SzNQYWlDcXRBb3hPVE1DcGhwYmNaZ3Vqekk?oc=5",
+      "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
+      "summary": "‘KTX 영상 논란’ 박위, “서울시 홍보대사 해촉” 민원 등장 &nbsp;&nbsp; 스포츠경향",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울교총–정근식 교육감 간담회, “지능형 악성민원 증가 .. 교육청이 적극 나서야” - 에듀프레스",
+      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE0zbDNGaDE3X3V1RzB4WG5HZ3l0X25XdjAzY3RuWVNiWml0SEpCUlh5Sk5DaEVoLV9LTjFaV2NWVTVFM1VhRWJIMHBNcExiX2JmYms1NG16RVBqQjRPTFItcUU2UFkxMWJU?oc=5",
+      "published_at": "Fri, 24 Jul 2026 07:00:00 GMT",
+      "summary": "서울교총–정근식 교육감 간담회, “지능형 악성민원 증가 .. 교육청이 적극 나서야” &nbsp;&nbsp; 에듀프레스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "박위, ‘CCTV 공개’ 후폭풍…‘서울시 홍보대사 해촉’ 위기? 민원 접수 - 헤럴드경제",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1VcWxPd0hLbzljaUV5Nkpvdk1WMXd6aUVBMDNLcDhLT1pndmFaUFFXMFd2NzNZS3FUaU9QLTlnSVJxQ3VIVVo2QldkVi1zcXpnWVpBUWZR?oc=5",
+      "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
+      "summary": "박위, ‘CCTV 공개’ 후폭풍…‘서울시 홍보대사 해촉’ 위기? 민원 접수 &nbsp;&nbsp; 헤럴드경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "“민원 상담 20분 넘기면 안 돼요” .. 서울시교육청 ‘면담 권장시간’ 운영 - 에듀프레스",
+      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9CbDRScEZ0QzBnOGxfVFFhOXE4QjJxTVIzRGI3YlhRWnZOeEV2dmtieDVISVR0VEw5dzRxeGhzTmx1cS1raXhUSFJoMEg2UG10LUFuS3lXRTFhYjZzaGVCb0I0VWVNY0Nx?oc=5",
+      "published_at": "Mon, 13 Jul 2026 07:00:00 GMT",
+      "summary": "“민원 상담 20분 넘기면 안 돼요” .. 서울시교육청 ‘면담 권장시간’ 운영 &nbsp;&nbsp; 에듀프레스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "4년 만에 돌아온 ‘미추홀 민원 해결사’ - 서울신문",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOR2dxVlFsM1c5cFFmRkYwUzllaU10d3UtSDluZjlLQzduLXI2UjlqN0ZhTndWTURQbmQzeU0zb0JYZERCVTNnVjJqZ2R1TkJROXllQ3QzM05BQ213RzdiZno3Mkk3M3JIemdNQWdNMThwdGdCMmJRYmNxcXk3ZGNqeWhNSEtBRE9yTVUtV1NZRi1HYUpS?oc=5",
+      "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
+      "summary": "4년 만에 돌아온 ‘미추홀 민원 해결사’ &nbsp;&nbsp; 서울신문",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "2026년 제30회 민원봉사대상 후보자 공적요약서 게시 - 분야별정보",
+      "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE1wTDRCY25hODlmT2RiOGVBUWxaUDMwa0xQcHk1eVhTdTFGZ2VZUWVNRVlyUXc2SnFwLWlEbkNxblZDMFoxdkJfWmpVOXEtYWk0dWFkTmNjYw?oc=5",
+      "published_at": "Tue, 14 Jul 2026 07:00:00 GMT",
+      "summary": "2026년 제30회 민원봉사대상 후보자 공적요약서 게시 &nbsp;&nbsp; 분야별정보",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "중구, 9월부터 복합 민원 ‘원스톱’ 처리 32종으로 늘린다 - 서울Pn",
+      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1IVldZSFg4VkxYMXFlNXZpRVlHTzdkT3dOMTROdUdnVkQtUm1YR1RaYkdsaGp1MlNQOU5RQ3phV2tWZnB1WEQteTIzRW5DQ0RWZUdtUjFfaHQ0c1RJR3ZPMkF4YjdZcG5XdUE?oc=5",
+      "published_at": "Fri, 28 Aug 2026 07:00:00 GMT",
+      "summary": "중구, 9월부터 복합 민원 ‘원스톱’ 처리 32종으로 늘린다 &nbsp;&nbsp; 서울Pn",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "폭증하는 서울시 민원에 '수작업 한계'…AI 해법 될까? - 네이트",
+      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1BN0VBS3ZTa2xWRzEyUmVyY09HQnRHbUFwR0Vmclc3NUFIWTI2U2RNNDZXWFo1NngtLTZJWGxmNVZFMzFNMW9TNHIxcnYwSElQOTdz?oc=5",
+      "published_at": "Fri, 28 Aug 2026 22:01:00 GMT",
+      "summary": "폭증하는 서울시 민원에 '수작업 한계'…AI 해법 될까? &nbsp;&nbsp; 네이트",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "'KTX 저격' 박위, '서울시 홍보대사' 해촉 위기..\"국민신문고 민원 접수했다\" [스타이슈] - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1YdW9ISHRiZVA3bzRnbUs5NkRGN3FUbDF0M0w1dW9ld2p6RDZIMnlUcW5TcVVmYmhmbjQ2ak9wbkJOM0EteE8wajFldw?oc=5",
+      "published_at": "Tue, 25 Aug 2026 07:00:00 GMT",
+      "summary": "'KTX 저격' 박위, '서울시 홍보대사' 해촉 위기..\"국민신문고 민원 접수했다\" [스타이슈] &nbsp;&nbsp; v.daum.net",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "\"빨리 처리해달라\" 민원 폭탄…서울시도 황당한 전말 - news.sbs.co.kr",
+      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBMcWdJZ1YwQkUzUDFCRkNIbTRld3VmNHRQSlQzaGJZUnFyLTlBaHFleld3ZmRFTG1UOTJCRlJLVHVMQjlPTHdOZm0td1pSN1FYc21ZVy1YWXJ5czkzV3FqNnhfTWVhMlFULXfSAWZBVV95cUxQUDl3am0yZEJRU2h5a1FrYVRVTU92bUNESERmOFA3UDg2RHNESUtHRFdISDVXejdPWmM2T05iN3JxdDRnZXJqbERJUzA5aEZrd0d0bnloOUZ1ZzN1MmlXYnNPbzVhYXc?oc=5",
+      "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
+      "summary": "\"빨리 처리해달라\" 민원 폭탄…서울시도 황당한 전말 &nbsp;&nbsp; news.sbs.co.kr",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "도봉구, 민원 해결 전담조직 ‘열린 구청장실’ 시작 - 서울Pn",
+      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE81V3ZLTDhJLTUwY3lPZ2I5ZE1EeFhoY3BaSXhtR2FTVzQ3Zy0yWWpuVEd1OFZaTF9DU1M1cUQxc1F5dFJadFpaNE1TTEp5bXg1ZTJjM0RmbGdrRE5xeDB2cklFSTM4cWE0cVE?oc=5",
+      "published_at": "Tue, 01 Sep 2026 02:01:30 GMT",
+      "summary": "도봉구, 민원 해결 전담조직 ‘열린 구청장실’ 시작 &nbsp;&nbsp; 서울Pn",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울시, 러브버그 발생 집중 시기 대비 민원 다발지역 중심 현장 대응체계 강화 - 환경포커스",
+      "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTFBhQ3dqSzVFMTI5Yk9MaFNRcnoxTktFOVFOWTBoQ1hSSmVaR2dpbjlETVhSWkhNMFNfWUp5dGRNWEtWdGcxb2txbG9DSC1veFFOUExGTTlYSnFEUmZ2dXBjUVJ5cw?oc=5",
+      "published_at": "Sun, 28 Jun 2026 07:00:00 GMT",
+      "summary": "서울시, 러브버그 발생 집중 시기 대비 민원 다발지역 중심 현장 대응체계 강화 &nbsp;&nbsp; 환경포커스",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "강남구청, 치과의원 민원 처리 논란… “178건 사안별 조치” - 전국매일신문",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE93aWlBcGw3dGZmb2VfemFQZ0hLbXNodTNSU2xQeE4tYmFkczhQdnR2bzcyQms3RGJLSnJqUnFsSXlNTHQ1RlliNmhMc2hac1JXZHhGNzJ0WV9KUkV4dUVYVS1kd3NpQ0hkNWlwQWx3?oc=5",
+      "published_at": "Wed, 02 Sep 2026 07:00:00 GMT",
+      "summary": "강남구청, 치과의원 민원 처리 논란… “178건 사안별 조치” &nbsp;&nbsp; 전국매일신문",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "‘러브버그’ 선제 방제 효과봤나… 수도권 민원 절반 뚝 - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9oQ2NDUkdveERPVl9zT0dZcS02VXFIU0NIbHk4S2RzVmNjS1hnZzMzdXhtQjhYcm9TRHFUWGV0YmsxaWI3Nnc?oc=5",
+      "published_at": "Tue, 25 Aug 2026 07:00:00 GMT",
+      "summary": "‘러브버그’ 선제 방제 효과봤나… 수도권 민원 절반 뚝 &nbsp;&nbsp; v.daum.net",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "박위, CCTV 공개 역풍 계속…서울시 홍보대사 해촉 '민원 접수' - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE5ubGF4X0VLUE9BSWNNUktKWGk1S2NZN3ZnXzVoZTNJcnVjblV6VmR0VHIyM01nZGdVWTlJX1UtNVJFdEYtYkE?oc=5",
+      "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
+      "summary": "박위, CCTV 공개 역풍 계속…서울시 홍보대사 해촉 '민원 접수' &nbsp;&nbsp; v.daum.net",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "[만화경] 기후부 장관과 현장 민원 - 서울경제",
+      "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE4wbWlNYzBZeUFvRXM1bXRERmxRZ0NKVWtLV01nRXVzRk5NMTZtNEIzZHZuMllZWGxFNFNOVG83R2h0X1ViZnVnUGs3UmRVQUJDU0HSAVNBVV95cUxQVm94RHA5OGdTakhzRUtQbjUtVnFhVU9kSm5iT1k5emI4RTUzckhNN2c4N2dGSkFnd0tzSDdFdkVYV2hQQXVqWkxzdXBBR1gyX0Mxaw?oc=5",
+      "published_at": "Mon, 24 Aug 2026 07:00:00 GMT",
+      "summary": "[만화경] 기후부 장관과 현장 민원 &nbsp;&nbsp; 서울경제",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울시약, 지하철역 내 ‘의원+약국’ 상가 낙찰 법인 민원 - 데일리팜",
+      "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9UbmF4VUJEWGpGVFNHTDB4YWRpeTA1b3VDNEMwaVA2WnVRSThXVDUyWEF5ZjQ5cEpVaTR6eXZ1MTNUVURTM3o3Y09sNVJrN2hGX1hjek5FQlZIX2NsV24yY1RpRFk?oc=5",
+      "published_at": "Wed, 05 Aug 2026 07:00:00 GMT",
+      "summary": "서울시약, 지하철역 내 ‘의원+약국’ 상가 낙찰 법인 민원 &nbsp;&nbsp; 데일리팜",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    }
+  ],
+  "trend_signals": [
+    {
+      "query": "서울 민원",
+      "period": "2026-09-07",
+      "relative_ratio": 100,
+      "signal_type": "NAVER_SEARCH_TREND",
+      "status": "DISCOVERY_SIGNAL"
+    }
+  ],
+  "errors": [],
+  "limitations": [
+    "네이버 데이터랩 ratio는 절대 검색량이 아닌 상대 지수임",
+    "검색·뉴스 반복은 시민 전체 의견이나 사실 확정이 아님",
+    "후보 승격 전 서울시의회·구의회·감사·통계·현장 확인 필요"
+  ]
+}
