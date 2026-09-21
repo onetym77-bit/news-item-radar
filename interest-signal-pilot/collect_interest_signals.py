@@ -44,7 +44,8 @@ def classify_editorial_signal(title: str, summary: str) -> tuple[bool, str]:
     if is_transit_delay:
         return False, "교통 운행 지연으로 건설사업 지연과 구분 필요"
     has_impact = any(term in text for term in IMPACT_TERMS)
-    strong_routine = any(term in text for term in ("종합대책", "예방 총력", "명절 대책", "안전관리 강화"))\n    is_routine = any(term in text for term in ROUTINE_TERMS) and (not has_impact or strong_routine)
+    strong_routine = any(term in text for term in ("종합대책", "예방 총력", "명절 대책", "안전관리 강화"))
+    is_routine = any(term in text for term in ROUTINE_TERMS) and (not has_impact or strong_routine)
     if is_routine:
         return False, "기관 운영·홍보성 안내로 기획 후보 우선순위 하향"
     if has_impact or any(term in text for term in CONSTRUCTION_TERMS):
