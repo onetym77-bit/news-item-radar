@@ -1,6 +1,7 @@
 import csv
 import json
 from collections import Counter
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,6 +12,16 @@ def load(path, default):
         return json.loads((ROOT / path).read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError):
         return default
+
+def display_kst(value):
+    if not value:
+        return "미확인"
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        return parsed.astimezone(timezone(timedelta(hours=9))).isoformat(timespec="minutes")
+    except ValueError:
+        return value
+
 
 registry = load("source-onboarding-v1/source_maturity_registry.json", {"sources": []})
 cards_doc = load("source-scout-v1/output/editorial_review_cards_latest.json", {"review_cards": []})
@@ -186,14 +197,14 @@ ui_editorial_brief = {
 }
 
 data = {
-    "lastRun": interest_queue.get("generated_at_utc") or manifest.get("generated_at_kst", "미확인"),
+    "lastRun": display_kst(interest_queue.get("generated_at_utc")) if interest_queue.get("generated_at_utc") else manifest.get("generated_at_kst", "미확인"),
     "dataMode": "실제 산출물",
     "editorialBrief": ui_editorial_brief,
     "metrics": [
         ["검토 대상 소스", str(len(sources))],
         ["사람 판정 대기", str(len(pending_items))],
         ["문맥 보강 필요", str(len(quarantine))],
-        ["브리핑 연결", "가능" if manifest.get("publishable") else "보류"],
+        ["탐색 큐", "연결됨" if interest_queue.get("generated_at_utc") else "미수집"],
         ["검증할 신호", str(len(discovery_signals))],
         ["편집 후보", str(len(ui_editorial_brief["candidates"]))],
     ],
@@ -207,8 +218,8 @@ data = {
     "sourcePerformance": source_performance,
     "queue": [
         ["사람 판정", f'{summary.get("labeled", 0)}/{summary.get("generated", 0)}건 완료'],
-        ["브리핑", "공개 가능" if manifest.get("publishable") else "검토 필요"],
-        ["데이터 신선도", "정상" if not manifest.get("stale_at_generation") else "오래됨"],
+        ["편집 후보", f'{len(ui_editorial_brief["candidates"])}건'],
+        ["데이터 신선도", "수집 시각 확인 필요" if not interest_queue.get("generated_at_utc") else "수집됨"],
     ],
 }
 OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
