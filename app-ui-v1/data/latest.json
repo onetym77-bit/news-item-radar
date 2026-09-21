@@ -6,15 +6,15 @@
     "generated_at_kst": "2026-09-21T13:18:22.464112+09:00",
     "run_policy": "월·수 09:00 KST, 원자료 피드에서 최대 3건",
     "input": "interest-signal-pilot/review_queue_latest.json",
-    "count": 3,
+    "count": 2,
     "candidates": [
       {
-        "candidate_id": "CBMickFVX3lxTE5mQVhBQkly",
-        "title": "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "topic": "서울 민원",
+        "candidate_id": "CBMiowJBVV95cUxNLUk5Qy12",
+        "title": "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
+        "topic": "서울 공사 지연",
         "source": "검색 관심도·뉴스 확산",
-        "seed_event": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영 - 웹이코노미",
-        "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+        "seed_event": "지하철 출발 고의로 지연시킨 남성…서울교통공사 \"형사고발 검토\" - 데일리안",
+        "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
         "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
         "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
         "citizen_questions": [
@@ -34,25 +34,26 @@
           "당사자·주민·책임 기관 인터뷰"
         ],
         "title_options": [
-          "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-          "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
+          "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
+          "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
         ],
         "editorial_status": "확장 질문 초안",
         "status": "DISCOVERY_ONLY",
         "evidence": [
           {
             "type": "news",
-            "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5mQVhBQklyWUFBWll6WENMZHZSWU15SzVDSmlGeVpycVlIRzRtanJoVnYwd1FEZkpWdy1ybXBMU0pvaVRESU9JTVUxaXVicFRmemg2R1VieWhYcHl1a0ZOSFp4dUxhd2tLMDktUWNCVVlFdw?oc=5",
-            "published_at": "Mon, 21 Sep 2026 03:01:55 GMT"
+            "url": "https://news.google.com/rss/articles/CBMiowJBVV95cUxNLUk5Qy12Q2VvZHF5NlZCN3BUV0VSbDZiNWQ1cG9UdlFEcnh6MmJqU2szbG1KVkVVb2ZUbXYxT1AtVllpU3JHNDhwS3ZMXzlLNm9GMlpOQ21EUmJycXN2NXhGT1VwUFJYc0tuUGRiSU4tb1NwMjVQWVFRWjBBNWlYNy03Q2lpQ0F1dXBENVIyY19MQWdPVU00UURrQmE5T3pnRlpMaGtUQWRWVjJSNnZnaU5RejJIZFZrMWNEMG1jQVgtMGJVak5ma2VOR1Mybjd2VXZxdVBHU0hVWC1wbVBJSXQ1OW82V2RfTXNsQ3p2LU1TTTQwYS1NWGxZakc4MXVqN1VTQjdXckhxWHZiMTB4TEFsV25hXzlrcXRrOEVUV2FKZkU?oc=5",
+            "published_at": "Wed, 16 Sep 2026 08:13:00 GMT"
           }
-        ]
+        ],
+        "editorial_score": 6
       },
       {
-        "candidate_id": "CBMibkFVX3lxTE1jbVlzWmk5",
+        "candidate_id": "CBMib0FVX3lxTFBaQWthdk1r",
         "title": "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
         "topic": "서울 민원",
         "source": "검색 관심도·뉴스 확산",
-        "seed_event": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영 - gukjenews.com",
+        "seed_event": "강남구, 민원 데이터로 바로 답하는 ‘공동주택 AI 해결사’ 가동 - newsfire.co.kr",
         "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
         "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
         "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
@@ -81,49 +82,11 @@
         "evidence": [
           {
             "type": "news",
-            "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1jbVlzWmk5RF9fdEZBOTRxN3EwR3Zndm5JVDZubUNYQWVuLU0ybDNYVXBidkNGMGppYm5ZMnhFelVSYlVzVjdOdGpDSGZBdllYcHByVGg1LTJvSmw3bWYwbTVoZ2ZzV1BNS0hCNE5n?oc=5",
-            "published_at": "Mon, 21 Sep 2026 02:52:35 GMT"
+            "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBaQWthdk1rT09udV9SMDJVT08yTXNxQlgweXUxVVR3U2xKSk9PMTQyU28tdmg0aXZYWHlFanNLb1BaZWs1Ykd3OUd1NmZVdkV6RThWZUdIOElOTk01TTk0b0phM3d2akFEUVRlWUROYw?oc=5",
+            "published_at": "Mon, 21 Sep 2026 01:34:38 GMT"
           }
-        ]
-      },
-      {
-        "candidate_id": "CBMibkFVX3lxTFA5TklYTklo",
-        "title": "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "topic": "서울 민원",
-        "source": "검색 관심도·뉴스 확산",
-        "seed_event": "강동 무인민원발급기 연휴도 운영 - dongbunews.co.kr",
-        "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-        "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-        "selection_reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-        "citizen_questions": [
-          "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-          "같은 문제가 서울 다른 지역에서도 반복되는가?",
-          "공공이 설명·지원·대체수단을 제공했는가?"
         ],
-        "conflict_groups": [
-          "직접 affected 시민·이용자",
-          "인근 주민",
-          "서울시·자치구",
-          "사업자·기관"
-        ],
-        "reporting_paths": [
-          "서울시·자치구 공식 계획·예산·통계 확인",
-          "25개 자치구 유사 사례 비교",
-          "당사자·주민·책임 기관 인터뷰"
-        ],
-        "title_options": [
-          "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-          "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-        ],
-        "editorial_status": "확장 질문 초안",
-        "status": "DISCOVERY_ONLY",
-        "evidence": [
-          {
-            "type": "news",
-            "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFA5TklYTklodjQ1OWtoU0g2VHpsc2lJbTVjUUZ0TlhMQXZZcXF6SjR3VkVzdkwxOTVoVUZ3U0hlbzVYczZMZExBUDUyX2NnRzdnZHZ6UVAwaWU4M0laQVdKdXZhcjRHdWRuS2VWVS13?oc=5",
-            "published_at": "Mon, 21 Sep 2026 02:06:24 GMT"
-          }
-        ]
+        "editorial_score": 0
       }
     ],
     "lanes": {
@@ -151,7 +114,8 @@
       ],
       "missing_data_is_not_auto_rejection": true,
       "human_review_required": true
-    }
+    },
+    "selection_policy": "주제 중복을 피하고 갈등·시민 영향·기획 확장성이 높은 신호를 우선 표시"
   },
   "metrics": [
     [
