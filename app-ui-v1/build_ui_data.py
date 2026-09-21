@@ -144,12 +144,24 @@ for source_name in sorted(source_counts):
         "items": [item for item in pending_items if item[1] == source_name],
     })
 
+def editorial_score(item):
+    text = " ".join([item.get("seed_event", ""), item.get("topic", "")]).lower()
+    positive = ("갈등", "논란", "지연", "피해", "공백", "부담", "반발", "폐쇄", "위험", "차별", "사고", "누락", "사기")
+    routine = ("운영", "제공", "개최", "안내", "확대", "캠페인", "행사", "홍보", "연휴", "발급기")
+    return sum(word in text for word in positive) * 3 - sum(word in text for word in routine)
+
+ranked_interest = sorted(interest_queue.get("items", []), key=editorial_score, reverse=True)
 interest_candidates = []
-for item in interest_queue.get("items", [])[:3]:
+seen_topics = set()
+for item in ranked_interest:
+    topic = item.get("topic", "")
+    if topic in seen_topics:
+        continue
+    seen_topics.add(topic)
     interest_candidates.append({
         "candidate_id": item.get("review_id", ""),
         "title": (item.get("title_options") or [item.get("seed_event", "제목 미상")])[0],
-        "topic": item.get("topic", ""),
+        "topic": topic,
         "source": "검색 관심도·뉴스 확산",
         "seed_event": item.get("seed_event", ""),
         "structural_question": item.get("structural_question", ""),
@@ -162,12 +174,16 @@ for item in interest_queue.get("items", [])[:3]:
         "editorial_status": item.get("editorial_status", "확장 질문 초안"),
         "status": item.get("status", "DISCOVERY_ONLY"),
         "evidence": item.get("evidence", []),
+        "editorial_score": editorial_score(item),
     })
+    if len(interest_candidates) >= 3:
+        break
 ui_editorial_brief = {
     **editorial_brief,
     "candidates": interest_candidates or editorial_brief.get("candidates", []),
     "count": len(interest_candidates) if interest_candidates else editorial_brief.get("count", 0),
     "input": "interest-signal-pilot/review_queue_latest.json" if interest_candidates else editorial_brief.get("input", ""),
+    "selection_policy": "주제 중복을 피하고 갈등·시민 영향·기획 확장성이 높은 신호를 우선 표시",
 }
 
 data = {

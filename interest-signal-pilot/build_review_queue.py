@@ -57,14 +57,23 @@ def make_item(row: dict) -> dict:
 def main() -> int:
     payload = json.loads(INPUT.read_text(encoding="utf-8"))
     rows = sorted(payload.get("news_signals", []), key=published_key, reverse=True)
-    unique, seen = [], set()
+    # Keep discovery breadth: interleave query groups instead of taking 30 from one topic.
+    grouped = {}
     for row in rows:
-        key = story_key(row.get("title", ""))
-        if not key or key in seen:
-            continue
-        seen.add(key)
-        unique.append(row)
-    queue = [make_item(row) for row in unique[:30]]
+        grouped.setdefault(row.get("query", "기타"), []).append(row)
+    unique, seen = [], set()
+    while grouped and len(unique) < 30:
+        for query in list(grouped):
+            row = grouped[query].pop(0)
+            key = story_key(row.get("title", ""))
+            if key and key not in seen:
+                seen.add(key)
+                unique.append(row)
+            if not grouped[query]:
+                del grouped[query]
+            if len(unique) >= 30:
+                break
+    queue = [make_item(row) for row in unique]
     output = {
         "schema": 2,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
