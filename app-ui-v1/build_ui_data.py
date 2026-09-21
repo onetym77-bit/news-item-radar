@@ -166,7 +166,7 @@ for item in ranked_interest:
         "topic": topic,
         "topic_label": item.get("topic_label", topic),
         "editorial_reason": item.get("editorial_reason", ""),
-        "source": "검색 관심도·뉴스 확산",
+        "source": item.get("source_name", "검색 관심도·뉴스 확산"),
         "seed_event": item.get("seed_event", ""),
         "structural_question": item.get("structural_question", ""),
         "scope_hypothesis": item.get("scope_hypothesis", ""),
