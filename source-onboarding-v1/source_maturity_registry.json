@@ -72,7 +72,7 @@
       "maturity": "L3",
       "candidate_role": "CORE_DISCOVERY_CANDIDATE",
       "implementation_path": "source-scout-v1/collect_daily_feed.py",
-      "question_output": "HUMAN_REVIEW_QUEUE",
+      "question_output": "VERIFICATION_ONLY",
       "briefing_output": "NONE",
       "schedule": "SHADOW",
       "persistence": "DERIVED_ONLY",
