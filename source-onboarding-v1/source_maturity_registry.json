@@ -66,6 +66,23 @@
       "source_set_path": "district-council-pilot/sources_25.json"
     },
     {
+      "source_id": "council_minutes",
+      "source_name": "서울시의회 회의록",
+      "official_url": "https://ms.smc.seoul.kr/record/recordList.do",
+      "maturity": "L3",
+      "candidate_role": "CORE_DISCOVERY_CANDIDATE",
+      "implementation_path": "source-scout-v1/collect_daily_feed.py",
+      "question_output": "HUMAN_REVIEW_QUEUE",
+      "briefing_output": "NONE",
+      "schedule": "SHADOW",
+      "persistence": "DERIVED_ONLY",
+      "automatic_ledger_write": false,
+      "raw_personal_text_persisted": false,
+      "approved_for_production": false,
+      "evaluation": null,
+      "note": "서울시의회 회의록에서 문맥 잠금과 근거 앵커를 통과한 후보만 사람 판정 대기 목록에 연결"
+    },
+    {
       "source_id": "eungdapso_stats",
       "source_name": "서울시 응답소 민원통계",
       "official_url": "https://eungdapso.seoul.go.kr/gud/chart/chart_progress.do",
