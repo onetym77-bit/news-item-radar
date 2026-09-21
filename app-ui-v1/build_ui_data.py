@@ -18,6 +18,7 @@ summary = load("source-scout-v1/output/review_summary_latest.json", {})
 manifest = load("daily-briefing-v5/output/run_manifest_latest.json", {})
 construction_state = load("construction-watch-pilot/output/state_latest.json", {})
 editorial_brief = load("editorial-v2/output/briefing_latest.json", {"candidates": [], "count": 0})
+interest_queue = load("interest-signal-pilot/output/review_queue_latest.json", {"items": []})
 decisions = load("source-scout-v1/output/editorial_decisions.json", [])
 
 sources = [[
@@ -143,10 +144,36 @@ for source_name in sorted(source_counts):
         "items": [item for item in pending_items if item[1] == source_name],
     })
 
+interest_candidates = []
+for item in interest_queue.get("items", [])[:3]:
+    interest_candidates.append({
+        "candidate_id": item.get("review_id", ""),
+        "title": (item.get("title_options") or [item.get("seed_event", "제목 미상")])[0],
+        "topic": item.get("topic", ""),
+        "source": "검색 관심도·뉴스 확산",
+        "seed_event": item.get("seed_event", ""),
+        "structural_question": item.get("structural_question", ""),
+        "scope_hypothesis": item.get("scope_hypothesis", ""),
+        "selection_reason": item.get("reason", ""),
+        "citizen_questions": item.get("citizen_questions", []),
+        "conflict_groups": item.get("conflict_groups", []),
+        "reporting_paths": item.get("reporting_paths", []),
+        "title_options": item.get("title_options", []),
+        "editorial_status": item.get("editorial_status", "확장 질문 초안"),
+        "status": item.get("status", "DISCOVERY_ONLY"),
+        "evidence": item.get("evidence", []),
+    })
+ui_editorial_brief = {
+    **editorial_brief,
+    "candidates": interest_candidates or editorial_brief.get("candidates", []),
+    "count": len(interest_candidates) if interest_candidates else editorial_brief.get("count", 0),
+    "input": "interest-signal-pilot/review_queue_latest.json" if interest_candidates else editorial_brief.get("input", ""),
+}
+
 data = {
     "lastRun": manifest.get("generated_at_kst", "미확인"),
     "dataMode": "실제 산출물",
-    "editorialBrief": editorial_brief,
+    "editorialBrief": ui_editorial_brief,
     "metrics": [
         ["검토 대상 소스", str(len(sources))],
         ["사람 판정 대기", str(len(pending_items))],
