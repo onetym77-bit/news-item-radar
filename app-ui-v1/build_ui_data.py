@@ -154,6 +154,8 @@ ranked_interest = sorted(interest_queue.get("items", []), key=editorial_score, r
 interest_candidates = []
 seen_topics = set()
 for item in ranked_interest:
+    if item.get("editorial_eligible") is False:
+        continue
     topic = item.get("topic", "")
     if topic in seen_topics:
         continue
@@ -163,6 +165,7 @@ for item in ranked_interest:
         "title": (item.get("title_options") or [item.get("seed_event", "제목 미상")])[0],
         "topic": topic,
         "topic_label": item.get("topic_label", topic),
+        "editorial_reason": item.get("editorial_reason", ""),
         "source": "검색 관심도·뉴스 확산",
         "seed_event": item.get("seed_event", ""),
         "structural_question": item.get("structural_question", ""),
