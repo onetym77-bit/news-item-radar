@@ -136,6 +136,32 @@
         "listing_candidate_count": 0,
         "listing_error_code": null
       }
+    },
+    {
+      "run_date_kst": "2026-09-21",
+      "run_id": "35571643574",
+      "listing_status": "SUCCESS",
+      "listing_diagnostics": {
+        "listing_pages_attempted": 2,
+        "listing_pages_successful": 2,
+        "listing_errors": [],
+        "eligible_listing_records": 18
+      },
+      "selected_ids": [
+        "575100",
+        "575097",
+        "575094"
+      ],
+      "diagnostics": {
+        "detail_requested": 3,
+        "pdf_found": 3,
+        "pdf_extracted": 3,
+        "ready_questions": 0,
+        "held_questions": 3,
+        "raw_reports_persisted": 0,
+        "listing_candidate_count": 3,
+        "listing_error_code": null
+      }
     }
   ],
   "records": [
@@ -774,6 +800,163 @@
         "finding_selection_version": "CONCRETE_FINDING_V3",
         "evidence_anchor": "UNRESOLVED",
         "freshness_days": 190,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "575100",
+      "first_seen_kst": "2026-09-21",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "575100",
+        "title": "서울역사박물관 기관운영 종합감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/575100?listPage=2",
+        "published_at": "2026-02-20",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/02/6997c987bcd914.46082120.pdf",
+        "attachment_sha256": "198c4978a112c76761ff43bb2e122e7cf00f070a43aa9bfd9bf9151e4736a5bf",
+        "report_text_sha256": "b0d6ee67d7319f6f8f52a70fe33040352199efcc1f82495ab35ccd445e2b9c94",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": true,
+        "documented_issue_in_table": true,
+        "dominant_domain_evidence_count": 1,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [
+          "시정",
+          "주의",
+          "개선",
+          "권고",
+          "통보",
+          "징계"
+        ],
+        "disposition_counts": {},
+        "risk_domains": [
+          "GOVERNANCE_CONTROL",
+          "RIGHTS_SAFETY"
+        ],
+        "risk_domain_counts": {
+          "RIGHTS_SAFETY": 2,
+          "GOVERNANCE_CONTROL": 4
+        },
+        "selected_finding_title": "부설주차장 운영 및 진출입로 보행자 안전 개선 필요 통 보 이행완료 시민",
+        "review_finding_titles": [
+          "부설주차장 운영 및 진출입로 보행자 안전 개선 필요 통 보 이행완료 시민",
+          "채용공고문 기재사항 관련 업무 개선 필요 통 보 이행완료",
+          "유연근무제 복무관리 미흡 주의요구 이행완료",
+          "외부강의등 신고업무 처리 부적정 주의요구 이행완료",
+          "영상정보처리기기 운영·관리 부적정 주의요구 · 통보 이행완료"
+        ],
+        "finding_candidate_count": 7,
+        "finding_selection_score": 6,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 213,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "구체 지적은 확인했지만 기획 질문 생성 기준에 미달",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "575097",
+      "first_seen_kst": "2026-09-21",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "575097",
+        "title": "생활밀착형 공원 조성 등 재배정사업 운영실태 특정감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/575097?listPage=2",
+        "published_at": "2026-02-20",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/02/6997c9bdb15a85.72274109.pdf",
+        "attachment_sha256": "fb276ca0397d7110bb4a101a152ca760c21ab11930eee3a005eb73b3168ab1b4",
+        "report_text_sha256": "9c140797ed8de9a13fc4030f1c260f19f543fe21cd7b8c37af681b06210817ab",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": false,
+        "documented_issue_in_table": false,
+        "dominant_domain_evidence_count": 0,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [],
+        "disposition_counts": {},
+        "risk_domains": [],
+        "risk_domain_counts": {},
+        "selected_finding_title": null,
+        "review_finding_titles": [],
+        "finding_candidate_count": 0,
+        "finding_selection_score": 0,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 213,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "575094",
+      "first_seen_kst": "2026-09-21",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "575094",
+        "title": "국민권익위원회 제도개선 권고 이행실태 감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/575094?listPage=2",
+        "published_at": "2026-02-20",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/02/6997c95e84c927.36250796.pdf",
+        "attachment_sha256": "b3b95f444d5fcfacd1b7647457b1b3df2967b8ef4f35df3ee014760e056b9b46",
+        "report_text_sha256": "bd9f0a1ca54299400b15f5fe9ac2c594fbb1630be15e0ddf0a3a09b63826cf79",
+        "pdf_pages_sampled": 8,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": false,
+        "documented_issue_in_table": false,
+        "dominant_domain_evidence_count": 0,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [],
+        "disposition_counts": {},
+        "risk_domains": [],
+        "risk_domain_counts": {},
+        "selected_finding_title": null,
+        "review_finding_titles": [],
+        "finding_candidate_count": 0,
+        "finding_selection_score": 0,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 213,
         "why_now": "RECENT_REPORT_SAMPLE",
         "question_status": "HOLD",
         "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
