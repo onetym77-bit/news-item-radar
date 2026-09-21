@@ -162,6 +162,7 @@ for item in ranked_interest:
         "candidate_id": item.get("review_id", ""),
         "title": (item.get("title_options") or [item.get("seed_event", "제목 미상")])[0],
         "topic": topic,
+        "topic_label": item.get("topic_label", topic),
         "source": "검색 관심도·뉴스 확산",
         "seed_event": item.get("seed_event", ""),
         "structural_question": item.get("structural_question", ""),
