@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 INPUT = ROOT / "interest-signal-pilot" / "output" / "interest_signals_latest.json"
 OUTPUT = ROOT / "interest-signal-pilot" / "output" / "review_queue_latest.json"
-TOPIC_LABELS = {"서울 민원": "공공서비스의 지역 격차", "서울 공사 지연": "도시사업 지연과 책임", "서울 안전 사고": "도시 안전의 사각지대", "서울 재개발 갈등": "재개발 이익과 부담의 충돌", "서울 교통 불편": "교통 불편과 이동권", "서울 주거 피해": "주거 비용과 피해", "서울 복지 공백": "복지 접근의 공백", "서울 자치구 논란": "자치구 행정의 책임"}
+TOPIC_LABELS = {"서울 민원": "공공서비스의 지역 격차", "서울 건설 공사 지연": "도시사업 지연과 책임", "서울 안전 사고": "도시 안전의 사각지대", "서울 재개발 갈등": "재개발 이익과 부담의 충돌", "서울 교통 불편": "교통 불편과 이동권", "서울 주거 피해": "주거 비용과 피해", "서울 복지 공백": "복지 접근의 공백", "서울 자치구 논란": "자치구 행정의 책임"}
 
 def published_key(row: dict) -> float:
     try:
@@ -55,6 +55,8 @@ def make_item(row: dict) -> dict:
         "needs_human_review": True,
         "needs_official_cross_check": True,
         "source_query": topic,
+        "editorial_eligible": row.get("editorial_eligible", True),
+        "editorial_reason": row.get("editorial_reason", ""),
     }
 
 def main() -> int:
