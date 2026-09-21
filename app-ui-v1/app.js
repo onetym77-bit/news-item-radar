@@ -56,6 +56,15 @@ function renderGroups(items, emptyText) {
     </section>`).join("");
 }
 
+function renderDiscoveryItem(item) {
+  const evidence = (item.evidence || [])[0] || {};
+  return `<article class="item-card">
+    <div class="item-head"><h3>${esc(item.headline || "제목 미상")}</h3><span class="status-badge">본문 확인 전</span></div>
+    <p class="item-meta">${esc(item.source || "출처 미상")}</p>
+    <p class="item-question">${esc(item.observed_signal || "검색 결과에서 제목을 확인했습니다.")} 본문 내용과 시민 영향은 아직 확인하지 않았습니다.</p>
+    ${evidence.url ? `<div class="item-actions"><a href="${esc(evidence.url)}" target="_blank" rel="noreferrer">기사 확인 ↗</a></div>` : ""}
+  </article>`;
+}
 function renderEditorialItem(item) {
   const evidence = (item.evidence || [])[0] || {};
   const list = (values = []) => values.length
@@ -84,9 +93,16 @@ function render(data) {
   const briefNode = document.getElementById("editorialBrief");
   if (briefNode) {
     const candidates = (data.editorialBrief && data.editorialBrief.candidates) || [];
-    briefNode.innerHTML = candidates.length ? candidates.map(item => {
-      const evidence = (item.evidence || [])[0] || {};
-      return renderEditorialItem(item); }).join("") : '<p class="empty">현재 기준을 충족한 편집 후보가 없습니다.</p>';
+    briefNode.innerHTML = candidates.length
+      ? candidates.map(renderEditorialItem).join("")
+      : '<p class="empty">본문 맥락과 시민에게 의미 있는 질문을 검토해 승격한 후보가 아직 없습니다.</p>';
+  }
+  const discoveryNode = document.getElementById("discoverySignals");
+  if (discoveryNode) {
+    const signals = (data.editorialBrief && data.editorialBrief.discovery_signals) || [];
+    discoveryNode.innerHTML = signals.length
+      ? signals.map(renderDiscoveryItem).join("")
+      : '<p class="empty">현재 검증할 새 신호가 없습니다.</p>';
   }
   document.getElementById("metrics").innerHTML = (data.metrics || []).map(([label, value]) =>
     `<div class="metric"><span>${esc(label)}</span><b>${esc(value)}</b></div>`).join("");
