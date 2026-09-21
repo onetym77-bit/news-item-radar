@@ -1,0 +1,38 @@
+name: Test editorial brief v2
+
+on:
+  pull_request:
+    paths:
+      - "editorial-v2/**"
+      - "app-ui-v1/build_ui_data.py"
+      - "app-ui-v1/app.js"
+      - "app-ui-v1/index.html"
+      - ".github/workflows/editorial-brief-v2.yml"
+      - ".github/workflows/test-editorial-v2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Python syntax
+        run: python -m py_compile editorial-v2/select_candidates.py app-ui-v1/build_ui_data.py
+      - name: Build editorial output
+        run: python editorial-v2/select_candidates.py
+      - name: Check output contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("editorial-v2/output/briefing_latest.json").read_text())
+          assert 0 <= data["count"] <= 3
+          for item in data["candidates"]:
+              for key in data["quality_gate"]["required_fields"]:
+                  assert item.get(key)
+              assert "건설알림이" not in item["source"]
+          print(f"validated {data['count']} candidates")
+          PY
