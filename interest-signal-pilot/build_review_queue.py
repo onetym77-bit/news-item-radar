@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 INPUT = ROOT / "interest-signal-pilot" / "output" / "interest_signals_latest.json"
 OUTPUT = ROOT / "interest-signal-pilot" / "output" / "review_queue_latest.json"
+TOPIC_LABELS = {"서울 민원": "공공서비스의 지역 격차", "서울 공사 지연": "도시사업 지연과 책임", "서울 안전 사고": "도시 안전의 사각지대", "서울 재개발 갈등": "재개발 이익과 부담의 충돌", "서울 교통 불편": "교통 불편과 이동권", "서울 주거 피해": "주거 비용과 피해", "서울 복지 공백": "복지 접근의 공백", "서울 자치구 논란": "자치구 행정의 책임"}
 
 def published_key(row: dict) -> float:
     try:
@@ -24,11 +25,13 @@ def story_key(title: str) -> str:
 def make_item(row: dict) -> dict:
     title = row.get("title", "").strip()
     topic = row.get("query", "서울 지역 현안")
+    topic_label = TOPIC_LABELS.get(topic, "서울 시민 생활의 구조적 격차")
     return {
         "review_id": row.get("url", "").split("/")[-1][:24] or title[:24],
         "seed_event": title,
         "topic": topic,
-        "structural_question": f"이 사건은 서울에서 {topic} 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+        "topic_label": topic_label,
+        "structural_question": f"이 사건은 서울에서 {topic_label}이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
         "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
         "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
         "conflict_groups": ["직접 affected 시민·이용자", "인근 주민", "서울시·자치구", "사업자·기관"],
@@ -43,8 +46,8 @@ def make_item(row: dict) -> dict:
             "당사자·주민·책임 기관 인터뷰",
         ],
         "title_options": [
-            f"서울 곳곳 ‘{topic}’…문제는 왜 특정 지역에 몰리나",
-            f"한 지역 사건에서 서울 전체의 ‘{topic}’을 묻다",
+            f"서울 곳곳의 {topic_label}…문제는 왜 특정 지역에 몰리나",
+            f"한 지역 사건에서 서울 전체의 {topic_label}을 묻다",
         ],
         "evidence": [{"type": "news", "url": row.get("url"), "published_at": row.get("published_at")}],
         "status": "DISCOVERY_ONLY",
