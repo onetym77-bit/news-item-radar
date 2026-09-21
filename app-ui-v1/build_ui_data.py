@@ -145,7 +145,7 @@ for source_name in sorted(source_counts):
 
 def signal_priority(item):
     """Order review work; this score never promotes a signal to a story."""
-    headline = item.get("headline", "")
+    headline = item.get("headline") or item.get("seed_event", "")
     concrete = ("철거", "폐쇄", "사망", "부상", "고발", "기소", "체납", "미지급")
     return (item.get("screening_priority") == "높음", sum(word in headline for word in concrete))
 
@@ -160,7 +160,7 @@ for item in ranked_interest:
     seen_queries.add(query)
     discovery_signals.append({
         "review_id": item.get("review_id", ""),
-        "headline": item.get("headline") or item.get("source_headline", "제목 미상"),
+        "headline": item.get("headline") or item.get("source_headline") or item.get("seed_event", "제목 미상"),
         "source": item.get("source_name", "검색 관심도·뉴스 확산"),
         "observed_signal": item.get("observed_signal", "검색 결과에 기사 제목이 표시됨"),
         "source_context_status": item.get("source_context_status", "TITLE_ONLY"),
