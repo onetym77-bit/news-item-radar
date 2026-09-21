@@ -1,7 +1,7 @@
 {
   "schema": 2,
-  "generated_at_utc": "2026-09-21T07:39:28.569665+00:00",
-  "source_snapshot": "2026-09-21T07:39:28.515578+00:00",
+  "generated_at_utc": "2026-09-21T07:56:33.258205+00:00",
+  "source_snapshot": "2026-09-21T07:56:33.195639+00:00",
   "candidate_ready": false,
   "review_count": 30,
   "items": [
@@ -9,7 +9,8 @@
       "review_id": "CBMickFVX3lxTE5mQVhBQkly",
       "seed_event": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영 - 웹이코노미",
       "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "topic_label": "공공서비스의 지역 격차",
+      "structural_question": "이 사건은 서울에서 공공서비스의 지역 격차이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -29,8 +30,8 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
+        "서울 곳곳의 공공서비스의 지역 격차…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 공공서비스의 지역 격차을 묻다"
       ],
       "evidence": [
         {
@@ -46,10 +47,11 @@
       "source_query": "서울 민원"
     },
     {
-      "review_id": "CBMiowJBVV95cUxNLUk5Qy12",
-      "seed_event": "지하철 출발 고의로 지연시킨 남성…서울교통공사 \"형사고발 검토\" - 데일리안",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "review_id": "CBMibkFVX3lxTE9iLWQzSDRG",
+      "seed_event": "강남구, 추석 종합대책 시행…재난·안전사고 예방 총력 - gukjenews.com",
+      "topic": "서울 안전 사고",
+      "topic_label": "도시 안전의 사각지대",
+      "structural_question": "이 사건은 서울에서 도시 안전의 사각지대이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -69,8 +71,90 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
+        "서울 곳곳의 도시 안전의 사각지대…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 도시 안전의 사각지대을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9iLWQzSDRGSEJwb21OQlZmSExjNl9jUmVCcUJHRE9WR29WQmNPNnJCZ2Fxd1g3c2laTVA0eVJwdkhZMlY2RE5oOG1kTXpEOWlDOHRpeVZxSXpWdVNZU2E4by03U1dfZ1YwMTlZNGh3?oc=5",
+          "published_at": "Sun, 20 Sep 2026 23:59:49 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 안전 사고"
+    },
+    {
+      "review_id": "CBMidkFVX3lxTFAxekZtVk52",
+      "seed_event": "‘강남 마지막 판자촌’ 구룡마을 불법 망루, 강제 철거한다 - 동아일보",
+      "topic": "서울 재개발 갈등",
+      "topic_label": "재개발 이익과 부담의 충돌",
+      "structural_question": "이 사건은 서울에서 재개발 이익과 부담의 충돌이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 재개발 이익과 부담의 충돌…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 재개발 이익과 부담의 충돌을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTFAxekZtVk52blBnbnBHbFVCX3JCWHpzQXhPczVybFFKSkxVQ05nQ09RLWc2OVU1dl82RHVpdVdlY2F3VzZzNmlwbi0xNk5yX2R6RU9ZdTI1RXdwR1RYSDh3TmhNaHd5NDNYUGJLQkJXcVBvUk5UemfSAWZBVV95cUxNUmZOVmFzSnl5eGZ6Q2VjMlJwbWkzXzdmUjhyNHl1cndOR1NDVXZpX1p2Q09lRlZEei1lckd6VjJQSEtTY2FrWWUtdVBnZVVRaUplMlJZZjNzQ2UzTDNTWjBza0Zjd1E?oc=5",
+          "published_at": "Fri, 18 Sep 2026 01:42:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 재개발 갈등"
+    },
+    {
+      "review_id": "CBMiowJBVV95cUxNLUk5Qy12",
+      "seed_event": "지하철 출발 고의로 지연시킨 남성…서울교통공사 \"형사고발 검토\" - 데일리안",
+      "topic": "서울 공사 지연",
+      "topic_label": "도시사업 지연과 책임",
+      "structural_question": "이 사건은 서울에서 도시사업 지연과 책임이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 도시사업 지연과 책임…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 도시사업 지연과 책임을 묻다"
       ],
       "evidence": [
         {
@@ -86,10 +170,11 @@
       "source_query": "서울 공사 지연"
     },
     {
-      "review_id": "CBMibkFVX3lxTE1jbVlzWmk5",
-      "seed_event": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영 - gukjenews.com",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "review_id": "CBMiaEFVX3lxTE9CY2VvNWRx",
+      "seed_event": "시내버스 파업, 서울 교통 대란 예고... 대체 교통수단 총동원 - 공감신문",
+      "topic": "서울 교통 불편",
+      "topic_label": "교통 불편과 이동권",
+      "structural_question": "이 사건은 서울에서 교통 불편과 이동권이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -109,8 +194,172 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
+        "서울 곳곳의 교통 불편과 이동권…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 교통 불편과 이동권을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9CY2VvNWRxdTRFa1NxTEctWGJWc2MtdjZUOVJ4R210QjlaUjF4cW0zbmlhRmtYbVNmUk01ZmJSRms5aFNyLVpCNUhjcjBjUTZ3a3FiVW1LeUxRTVNxak5TV3FzNzFOREJl?oc=5",
+          "published_at": "Tue, 15 Sep 2026 22:09:14 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 교통 불편"
+    },
+    {
+      "review_id": "CBMibkFVX3lxTE1MRG1qMlla",
+      "seed_event": "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원 - 아시아투데이",
+      "topic": "서울 복지 공백",
+      "topic_label": "복지 접근의 공백",
+      "structural_question": "이 사건은 서울에서 복지 접근의 공백이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 복지 접근의 공백…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 복지 접근의 공백을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1MRG1qMllaNEdCRnFtTlFDTEE2UkViQXBkNmE4NF9TY2d2eE16bEdkZENDbWZzRWFtTHBfYUVPZTROZUdzVXM3NEtMZy1ockpGaHFPbVR1WVlXOWdWR05WTWRSYWZqTndCY3REd2lR?oc=5",
+          "published_at": "Tue, 15 Sep 2026 08:34:05 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 복지 공백"
+    },
+    {
+      "review_id": "CBMib0FVX3lxTE1kVENCNGtp",
+      "seed_event": "서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야” - 투데이신문",
+      "topic": "서울 주거 피해",
+      "topic_label": "주거 비용과 피해",
+      "structural_question": "이 사건은 서울에서 주거 비용과 피해이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 주거 비용과 피해…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 주거 비용과 피해을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1kVENCNGtpaWhkSjZvVFNQTkV0Qnk3cHlPUS1BejhuRkdua2VzcE1GbFZTRWlMbzZMN2xCZGg3V0laQl9MaTBLcVphYl8ySm9RT25tWnEwTGtQcDlqZnZoN2J5ZkhmQ0hhTGFrYkNzRdIBb0FVX3lxTE1kVENCNGtpaWhkSjZvVFNQTkV0Qnk3cHlPUS1BejhuRkdua2VzcE1GbFZTRWlMbzZMN2xCZGg3V0laQl9MaTBLcVphYl8ySm9RT25tWnEwTGtQcDlqZnZoN2J5ZkhmQ0hhTGFrYkNzRQ?oc=5",
+          "published_at": "Mon, 14 Sep 2026 01:30:05 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 주거 피해"
+    },
+    {
+      "review_id": "CBMiYEFVX3lxTE03U3o1dlpJ",
+      "seed_event": "서울시 \"구역지정 권한 자치구 이양, 난개발·투기 초래\"(종합) - 뉴시스",
+      "topic": "서울 자치구 논란",
+      "topic_label": "자치구 행정의 책임",
+      "structural_question": "이 사건은 서울에서 자치구 행정의 책임이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 자치구 행정의 책임…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 자치구 행정의 책임을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE03U3o1dlpJRmJLMFY4Sm0xb0NtVzNScHFla3VORFZJcjczRzFZVVBZTGkzQ2JraUxxN0tRVFVYWVVXdnlUM2hRMThGWk9yTkZ1dnNyS2ZOaTlFRllDdFFGONIBeEFVX3lxTE11UEZWc0M1VFJ2M1BzZ3RwRV9DdE1XS3pLSW1vb25xdlZ3Z2hETHBtVFFJQkNqU1BETHFwQVcxcm5QY3NCTHJtNW1HRlM2d25lMEk5WHVidlBVSV9hTFBCQXBCSWRCb1pXZWdpYjRCbzJPNGhISW1TUw?oc=5",
+          "published_at": "Mon, 24 Aug 2026 07:00:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 자치구 논란"
+    },
+    {
+      "review_id": "CBMibkFVX3lxTE1jbVlzWmk5",
+      "seed_event": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영 - gukjenews.com",
+      "topic": "서울 민원",
+      "topic_label": "공공서비스의 지역 격차",
+      "structural_question": "이 사건은 서울에서 공공서비스의 지역 격차이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 공공서비스의 지역 격차…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 공공서비스의 지역 격차을 묻다"
       ],
       "evidence": [
         {
@@ -126,10 +375,11 @@
       "source_query": "서울 민원"
     },
     {
-      "review_id": "CBMilgFBVV95cUxQc1R6amw1",
-      "seed_event": "공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적” - 서울신문",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "review_id": "CBMia0FVX3lxTE9LeV9UeHM3",
+      "seed_event": "서울교통공사, 지하철안전사고적극 예방 직원 특별 격려 \"안전최우선\" - 마일드경제",
+      "topic": "서울 안전 사고",
+      "topic_label": "도시 안전의 사각지대",
+      "structural_question": "이 사건은 서울에서 도시 안전의 사각지대이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -149,8 +399,90 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
+        "서울 곳곳의 도시 안전의 사각지대…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 도시 안전의 사각지대을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9LeV9UeHM3RWd0TjBpckdiTXV1bWNnbmFTaXpabm8wV051dUZicFBraVRLTUM1WEpGSGl6a3paRnNGUXZhS3A2MGlaWV8yMVVoQ0hURkZ2a1JNSmdSbWRSc2czeWtKTjJqV2Vj?oc=5",
+          "published_at": "Sat, 19 Sep 2026 02:42:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 안전 사고"
+    },
+    {
+      "review_id": "CBMiaEFVX3lxTE9DbkxsVHVM",
+      "seed_event": "“갈등은 막고, 속도는 빠르게”… 도봉구, 재건축·재개발 총력 지원 - 한국주택경제신문",
+      "topic": "서울 재개발 갈등",
+      "topic_label": "재개발 이익과 부담의 충돌",
+      "structural_question": "이 사건은 서울에서 재개발 이익과 부담의 충돌이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 재개발 이익과 부담의 충돌…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 재개발 이익과 부담의 충돌을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9DbkxsVHVMNEdnR19MU2JPcGhFTkFVM0VBYTZ3TldpOFZlOUZBb2FnVzhCTE5kdHI1bldGS05nWC13R2RqLUthRFdyck02MzR0TjdWVVZrOUc4bHdaQzFZV0x3b0FLS1Bh?oc=5",
+          "published_at": "Wed, 16 Sep 2026 07:00:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 재개발 갈등"
+    },
+    {
+      "review_id": "CBMilgFBVV95cUxQc1R6amw1",
+      "seed_event": "공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적” - 서울신문",
+      "topic": "서울 공사 지연",
+      "topic_label": "도시사업 지연과 책임",
+      "structural_question": "이 사건은 서울에서 도시사업 지연과 책임이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 도시사업 지연과 책임…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 도시사업 지연과 책임을 묻다"
       ],
       "evidence": [
         {
@@ -166,10 +498,11 @@
       "source_query": "서울 공사 지연"
     },
     {
-      "review_id": "CBMibkFVX3lxTFA5TklYTklo",
-      "seed_event": "강동 무인민원발급기 연휴도 운영 - 서울동부신문",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "review_id": "CBMiakFVX3lxTE1SM0VyTno0",
+      "seed_event": "서울시의회 김정애 의원, 501번·5516번 버스 노선 조정 이끌어내, 교통 불편 해소 - gtimes.co.kr",
+      "topic": "서울 교통 불편",
+      "topic_label": "교통 불편과 이동권",
+      "structural_question": "이 사건은 서울에서 교통 불편과 이동권이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -189,8 +522,172 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
+        "서울 곳곳의 교통 불편과 이동권…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 교통 불편과 이동권을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1SM0VyTno0NGJBaFJfWmtCbHlPRVpNV1hpZDkwZmUtdTY5YTBDS01LdmRXU01ITDRzN0hRODNzZEd6RmpiMWxxdnBFVVFXTV9aUjB3dkxCV3AzZkI1cTZRYzZJSmY2djdhb1E?oc=5",
+          "published_at": "Tue, 15 Sep 2026 03:04:23 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 교통 불편"
+    },
+    {
+      "review_id": "CBMiZEFVX3lxTE1RVmgyaUQ0",
+      "seed_event": "대한적십자사 서울지사, ‘치매 예방 및 대화법 교육’… 어르신 돌봄 공백 메우다 - 서울복지신문",
+      "topic": "서울 복지 공백",
+      "topic_label": "복지 접근의 공백",
+      "structural_question": "이 사건은 서울에서 복지 접근의 공백이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 복지 접근의 공백…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 복지 접근의 공백을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE1RVmgyaUQ0aEx1NlFYaEZyTW1WdVQ5R3g4dFFiRlBuTUNJRVR0UHNHcUZBYWd6QTBuMzhsRUdBRG5Wb0RTSVVqR3pESGNWQTc2UEFiS0ZyM3Rsek5Xd0RZVXdGSVrSAWhBVV95cUxPWGhidE5yYUJsVjA4VU9WaUdvLWZpWmQ5cC0zc3ItUkhCemE4QnU0U1p4dlotT2dqVmhXWDZ4NmlDX3lOd1NVS2EzTWpDLThDOWxWdXd4QjRoTkhJX0h3VGpMXzBDZ3hjZA?oc=5",
+          "published_at": "Thu, 30 Jul 2026 07:00:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 복지 공백"
+    },
+    {
+      "review_id": "CBMickFVX3lxTE9aVnZxX0ht",
+      "seed_event": "서울시, 전세사기 피해주택 ‘집 내부’까지 수리 지원 - 1인 최대 500만원 - 고령자주택신문",
+      "topic": "서울 주거 피해",
+      "topic_label": "주거 비용과 피해",
+      "structural_question": "이 사건은 서울에서 주거 비용과 피해이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 주거 비용과 피해…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 주거 비용과 피해을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE9aVnZxX0htVTNub1dLcWVoSExiekxValdobVFXa3FXbDdPNkZYSGNBcGlHOGZvSzg5YVhWSHJxUWlJVnV5dWJNYkFZR3E1V1R1YWdwdVpFRkJKYW45RklwTEJPaDFQS3VhcHhQYXp0azdoQQ?oc=5",
+          "published_at": "Wed, 02 Sep 2026 07:00:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 주거 피해"
+    },
+    {
+      "review_id": "CBMia0FVX3lxTE94TVkzaHVG",
+      "seed_event": "재개발·재건축 권한 자치구로…속도 기대에도 ‘실효성’ 논란 - 더퍼블릭",
+      "topic": "서울 자치구 논란",
+      "topic_label": "자치구 행정의 책임",
+      "structural_question": "이 사건은 서울에서 자치구 행정의 책임이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 자치구 행정의 책임…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 자치구 행정의 책임을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE94TVkzaHVGeG14WVRTVm5kVHdpYkdxYzRaUHZqXzJRN21ZY0RZeEMxbE5UQkN2M2RQTmtBc3FpQ1lWMFE5MmlMZ1RnZlFiSUh1OWZOaUxQbzNhRVJOblhiSjdWelB5TWc3em9R0gFvQVVfeXFMTlU5ZGVHVDBkTEtKRXhxazlmVzVibHNydHRJdFdDdnVkcXBUM3ZRUGk1dGRfTlJndV9Rb1N5ekZFczBHMGpUV01XcEhpbVpuR3VZZUdyOGV3alg2dkZJTlNQcHFmSVJ5MGEyUlpEM2Fn?oc=5",
+          "published_at": "Mon, 24 Aug 2026 07:00:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 자치구 논란"
+    },
+    {
+      "review_id": "CBMibkFVX3lxTFA5TklYTklo",
+      "seed_event": "강동 무인민원발급기 연휴도 운영 - 서울동부신문",
+      "topic": "서울 민원",
+      "topic_label": "공공서비스의 지역 격차",
+      "structural_question": "이 사건은 서울에서 공공서비스의 지역 격차이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 공공서비스의 지역 격차…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 공공서비스의 지역 격차을 묻다"
       ],
       "evidence": [
         {
@@ -206,10 +703,11 @@
       "source_query": "서울 민원"
     },
     {
-      "review_id": "CBMifkFVX3lxTFBWU1lIbHQt",
-      "seed_event": "김준성 서울시의원, 창동·상계 지하차도 준공 4개월 지연…“공기 단축해야” - thepowernews.co.kr",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "review_id": "CBMibkFVX3lxTE5kUzRtSFBR",
+      "seed_event": "서울교통공사, 안전사고 예방 기여한 직원 3명 표창 - gukjenews.com",
+      "topic": "서울 안전 사고",
+      "topic_label": "도시 안전의 사각지대",
+      "structural_question": "이 사건은 서울에서 도시 안전의 사각지대이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -229,8 +727,90 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
+        "서울 곳곳의 도시 안전의 사각지대…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 도시 안전의 사각지대을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5kUzRtSFBRaDVSMmZOakdTUDRiczVZNFNGeU81QllTQUhNWnBEbUlXeTZuUzVlc0NHTHBWaVpfeGlTWVE5WGtaM05Fa0ZNVTNvLWtQOWhueUQtM3Bkbk1NZnVBemxkMlp5UUs0YmdR?oc=5",
+          "published_at": "Fri, 18 Sep 2026 14:58:05 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 안전 사고"
+    },
+    {
+      "review_id": "CBMiZEFVX3lxTFBoQ2YzenNo",
+      "seed_event": "정비사업 갈등은 막고 속도는 빠르게…도봉구, 재건축·재개발 총력 지원 - 티뉴스",
+      "topic": "서울 재개발 갈등",
+      "topic_label": "재개발 이익과 부담의 충돌",
+      "structural_question": "이 사건은 서울에서 재개발 이익과 부담의 충돌이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 재개발 이익과 부담의 충돌…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 재개발 이익과 부담의 충돌을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBoQ2YzenNoS2taSmRTVTBCVlg1eDVEWXJLS3llNkRVT2JqN0NnbFR2R3F5c200aXVBYlptOGFYRzlqMTNOdmljeW9vZ0ZvZHFyZlNPNEJ1NWFuTUtVWlc1dExrX0g?oc=5",
+          "published_at": "Fri, 11 Sep 2026 15:01:24 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 재개발 갈등"
+    },
+    {
+      "review_id": "CBMifkFVX3lxTFBWU1lIbHQt",
+      "seed_event": "김준성 서울시의원, 창동·상계 지하차도 준공 4개월 지연…“공기 단축해야” - thepowernews.co.kr",
+      "topic": "서울 공사 지연",
+      "topic_label": "도시사업 지연과 책임",
+      "structural_question": "이 사건은 서울에서 도시사업 지연과 책임이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 도시사업 지연과 책임…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 도시사업 지연과 책임을 묻다"
       ],
       "evidence": [
         {
@@ -246,10 +826,11 @@
       "source_query": "서울 공사 지연"
     },
     {
-      "review_id": "CBMib0FVX3lxTFBaQWthdk1r",
-      "seed_event": "강남구, 민원 데이터로 바로 답하는 ‘공동주택 AI 해결사’ 가동 - newsfire.co.kr",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "review_id": "CBMia0FVX3lxTE14WTBfLVZ1",
+      "seed_event": "이재식 서울시의원, “따릉이, 언덕길 이용 불편 개선해야” - 서울일보",
+      "topic": "서울 교통 불편",
+      "topic_label": "교통 불편과 이동권",
+      "structural_question": "이 사건은 서울에서 교통 불편과 이동권이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -269,8 +850,172 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
+        "서울 곳곳의 교통 불편과 이동권…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 교통 불편과 이동권을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE14WTBfLVZ1SGtoSmJKVGRBbVNZQlhwWTVBdUhIZ3otckREam1WdEsxaU9rRUJEX2phclg5bGI3Q2xRazh0SGVCVDZ4QXQwMUt3SjJkNnlIeEZqLTZLV01nVDlZV0EtRmZzOW1B0gFvQVVfeXFMUEVQemZPaHItYXBfTG5lRFMzeGlxcmViZGhERXREMGZrMUY2MnJYaGM2OUc4VWNLY0ctenRHem56dkpJWHVfZFY1Q1I0d1c0X2FHTjhkRVlzNTc3Y1psNWdEMUY1MUJ1ajV1c0djOUZz?oc=5",
+          "published_at": "Thu, 10 Sep 2026 17:07:04 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 교통 불편"
+    },
+    {
+      "review_id": "CBMibkFVX3lxTE9DOUVpZVVl",
+      "seed_event": "[인터뷰] 정진우 서울시 복지실장 “장애인 생활체육 인프라 확충할 것” - 아시아투데이",
+      "topic": "서울 복지 공백",
+      "topic_label": "복지 접근의 공백",
+      "structural_question": "이 사건은 서울에서 복지 접근의 공백이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 복지 접근의 공백…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 복지 접근의 공백을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9DOUVpZVVlZzlXTnU4Tm01bS1NVndKN1Q3MU5sNTZCN21QQjMtTVduWHpYU1ZNV2hTM2dXaWNqYjlOaDd6cUNFT09XUUdNWkN2bjR4cllRSi1LZXAtR2hZSmZTOTRrdnBmejg5T1R3?oc=5",
+          "published_at": "Sun, 19 Jul 2026 07:00:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 복지 공백"
+    },
+    {
+      "review_id": "CBMiY0FVX3lxTE43cGw1Wmww",
+      "seed_event": "서울시, 공용부분에만 제공하던 전세사기피해주택 수리비를 이제 집 내부까지 확대해 지원 - 환경포커스",
+      "topic": "서울 주거 피해",
+      "topic_label": "주거 비용과 피해",
+      "structural_question": "이 사건은 서울에서 주거 비용과 피해이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 주거 비용과 피해…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 주거 비용과 피해을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE43cGw1WmwwSmZ4eTIwR0ZjWEdwQXBkcVdzTTcwMDItX0NCNWdSek9hNkU1ZFZqZmdwT1ZzODNORUJBQnk3ZGtkMTA3QjFKVVZkTlYtQzJZai1tSnE2NXlzRzJzVQ?oc=5",
+          "published_at": "Tue, 01 Sep 2026 07:00:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 주거 피해"
+    },
+    {
+      "review_id": "CBMiW0FVX3lxTFBWUjduQUg0",
+      "seed_event": "서울시 \"정비사업 인허가 대부분 자치구 권한…이양 실효성 없어\"(종합) - 뉴스1",
+      "topic": "서울 자치구 논란",
+      "topic_label": "자치구 행정의 책임",
+      "structural_question": "이 사건은 서울에서 자치구 행정의 책임이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 자치구 행정의 책임…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 자치구 행정의 책임을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBWUjduQUg0d3QzdHlVeE9zLVBKUC1TMHJ1WDBVU2dVUm5vZ0lIbFVybnpuU3BoMHVVREpVOVoyd24yOVNYWnEyMDlXal95NHlMRXVJdzZMUktQbGPSAWBBVV95cUxPNURBX2E2S3ZOanlEUmJkUjVxejZGRDI0WVlubjNvd1Vja3VxT2dabXJBYTNmVFVWUW9SX0NsVDBYU2JTMmZfUTF6MUZXeG5HR2ZxZFBlS0hhVFV5NHd5T3U?oc=5",
+          "published_at": "Mon, 24 Aug 2026 07:00:00 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 자치구 논란"
+    },
+    {
+      "review_id": "CBMib0FVX3lxTFBaQWthdk1r",
+      "seed_event": "강남구, 민원 데이터로 바로 답하는 ‘공동주택 AI 해결사’ 가동 - 뉴스파이어",
+      "topic": "서울 민원",
+      "topic_label": "공공서비스의 지역 격차",
+      "structural_question": "이 사건은 서울에서 공공서비스의 지역 격차이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 공공서비스의 지역 격차…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 공공서비스의 지역 격차을 묻다"
       ],
       "evidence": [
         {
@@ -286,10 +1031,11 @@
       "source_query": "서울 민원"
     },
     {
-      "review_id": "CBMiYkFVX3lxTFBfSE1BOXV5",
-      "seed_event": "김준성 서울시의원 “창동·상계 지하차도 4개월 지연… 서울아레나 공연 전 공기 단축해야” - twig24.com",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "review_id": "CBMiY0FVX3lxTE41OEJnRDFP",
+      "seed_event": "서울교통공사, 지하철 안전사고 예방 직원 3명 표창ⵈ “현장 중심 안전경영” - 국토일보",
+      "topic": "서울 안전 사고",
+      "topic_label": "도시 안전의 사각지대",
+      "structural_question": "이 사건은 서울에서 도시 안전의 사각지대이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -309,8 +1055,90 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
+        "서울 곳곳의 도시 안전의 사각지대…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 도시 안전의 사각지대을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE41OEJnRDFPTkh6aWlGV25jemRMYWhLSHF3eDN0VFNDUFppa0pzN2JRcmdLVWRWQ3lCNmg2T3lrU1RNeURNVTFtLW8zYzF0VGk3eks0T1BwMmpkMlNmVFFmMU5vdw?oc=5",
+          "published_at": "Fri, 18 Sep 2026 07:22:15 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 안전 사고"
+    },
+    {
+      "review_id": "CBMia0FVX3lxTE14OXBLc1kz",
+      "seed_event": "정비사업 갈등은 막고 속도는 빠르게…도봉구, 재건축·재개발 총력 지원 - 연합투데이",
+      "topic": "서울 재개발 갈등",
+      "topic_label": "재개발 이익과 부담의 충돌",
+      "structural_question": "이 사건은 서울에서 재개발 이익과 부담의 충돌이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 재개발 이익과 부담의 충돌…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 재개발 이익과 부담의 충돌을 묻다"
+      ],
+      "evidence": [
+        {
+          "type": "news",
+          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE14OXBLc1kzMXpycksyM0R6a2pMNkszaVhPYjUzclBsTktWU0o0VkI2dUFoMkdValg1cVFyQk5SRXhzNVAyRzdWTVZ1dTNrR3duZTBoelRvMjFSdHhYZzJqR21iN2NyekxQMkdr0gFvQVVfeXFMT3BJbWZFaXpWb203LS1FYUtYR3BYT2ZEVmhIYUNqRXM4TVp3eEhUVFFoYlc1dE5ZMXU1SDNibXR6LVpQSGZjOWJHT2xDXzlDNjN5bjl1RkRhcGR0cDVWc25rTG5ZS2VkVTlZNG51RVZ3?oc=5",
+          "published_at": "Thu, 10 Sep 2026 23:29:56 GMT"
+        }
+      ],
+      "status": "DISCOVERY_ONLY",
+      "editorial_status": "확장 질문 초안",
+      "needs_human_review": true,
+      "needs_official_cross_check": true,
+      "source_query": "서울 재개발 갈등"
+    },
+    {
+      "review_id": "CBMiYkFVX3lxTFBfSE1BOXV5",
+      "seed_event": "김준성 서울시의원 “창동·상계 지하차도 4개월 지연… 서울아레나 공연 전 공기 단축해야” - twig24.com",
+      "topic": "서울 공사 지연",
+      "topic_label": "도시사업 지연과 책임",
+      "structural_question": "이 사건은 서울에서 도시사업 지연과 책임이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
+      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
+      "conflict_groups": [
+        "직접 affected 시민·이용자",
+        "인근 주민",
+        "서울시·자치구",
+        "사업자·기관"
+      ],
+      "citizen_questions": [
+        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
+        "같은 문제가 서울 다른 지역에서도 반복되는가?",
+        "공공이 설명·지원·대체수단을 제공했는가?"
+      ],
+      "reporting_paths": [
+        "서울시·자치구 공식 계획·예산·통계 확인",
+        "25개 자치구 유사 사례 비교",
+        "당사자·주민·책임 기관 인터뷰"
+      ],
+      "title_options": [
+        "서울 곳곳의 도시사업 지연과 책임…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 도시사업 지연과 책임을 묻다"
       ],
       "evidence": [
         {
@@ -326,10 +1154,11 @@
       "source_query": "서울 공사 지연"
     },
     {
-      "review_id": "CBMibkFVX3lxTE0wakFiQ1JW",
-      "seed_event": "금천구, AI 민원상담 챗봇 ‘통합나래봇’ 확대 운영 - 뉴스홈(newshome)",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "review_id": "CBMigAFBVV95cUxQZE54ejlp",
+      "seed_event": "정상회의 열리는 16일 서울 도심 교통통제…“대중교통 이용하세요” - edaily.co.kr",
+      "topic": "서울 교통 불편",
+      "topic_label": "교통 불편과 이동권",
+      "structural_question": "이 사건은 서울에서 교통 불편과 이동권이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -349,27 +1178,28 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
+        "서울 곳곳의 교통 불편과 이동권…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 교통 불편과 이동권을 묻다"
       ],
       "evidence": [
         {
           "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE0wakFiQ1JWc05vZ0pNbTd5d1JJdGZsMEh5dG5ObHNiU1IxaHZlY2xHQ19QcDhaUGdUUlR6TlcwX2ZDYV8tYm1na1oxWmx6ZGpydnlxNVRfeFFCdlhzRG40aTBJcEtSU29INkREZ25R?oc=5",
-          "published_at": "Mon, 21 Sep 2026 01:18:07 GMT"
+          "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQZE54ejlpM3lhTnFNYnhyZ1dGTEoyMmQzdldGZjNaZWFpbDNpd2ZWaVNpRktNNnM4NVZMQm51OXJDd3NWVzQyM3NOVC1BdGFRUG5EOHpxQ2Ftclk0cDF6c25lYkJ6a3dTMVNkSVBHNkVFQmwzYnhWclBDaFpLR2RhNQ?oc=5",
+          "published_at": "Tue, 08 Sep 2026 07:00:00 GMT"
         }
       ],
       "status": "DISCOVERY_ONLY",
       "editorial_status": "확장 질문 초안",
       "needs_human_review": true,
       "needs_official_cross_check": true,
-      "source_query": "서울 민원"
+      "source_query": "서울 교통 불편"
     },
     {
-      "review_id": "CBMickFVX3lxTE5Fb2hSWVJj",
-      "seed_event": "이수진 서울시의원, 영등포·신길 배수시설 개선사업 공사 지연 및 예산 점검 - 웹이코노미",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
+      "review_id": "CBMiXEFVX3lxTFB2MFBYUERj",
+      "seed_event": "서울시복지재단, 가족돌봄청년·실무자 교육 본격 운영 - 뉴스1",
+      "topic": "서울 복지 공백",
+      "topic_label": "복지 접근의 공백",
+      "structural_question": "이 사건은 서울에서 복지 접근의 공백이 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
       "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
       "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
       "conflict_groups": [
@@ -389,821 +1219,21 @@
         "당사자·주민·책임 기관 인터뷰"
       ],
       "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
+        "서울 곳곳의 복지 접근의 공백…문제는 왜 특정 지역에 몰리나",
+        "한 지역 사건에서 서울 전체의 복지 접근의 공백을 묻다"
       ],
       "evidence": [
         {
           "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5Fb2hSWVJjQV9rUU8zZTdGbHR5OU9HSFVNZVlIbWxUTjVRVm5hRUFYTkRjSkF0Z0M2QmFoVlBFTjJTRnFUcGw0cWV3bTZGWHZRc0VBYkhvRVVHVmROUnhPN25uSk85dWF2b2xBanM0QkppUQ?oc=5",
-          "published_at": "Fri, 04 Sep 2026 09:44:22 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFB2MFBYUERjaUs0SlJVYUVYZGhHWHBOeVJuVXJGZW5hSlpJdFBnaDNKUnE2N1djSGhORkN0VGtBTVlPWFNpS3NsLTNpdFdYbnAwUkNmcjlnZHJ0YjRs0gFiQVVfeXFMUDdUMFpzcTRaX0QwQklFNXFEaEVRenlDZE9BMjFhN2Q1RzBpeXVNTU1FVG5NRVlfaHlhZzNvMVIydkdSWlh3MG15VWJQLUFZc21jRnBQbUxIR3FjdHh4eVA2dnc?oc=5",
+          "published_at": "Fri, 19 Jun 2026 07:00:00 GMT"
         }
       ],
       "status": "DISCOVERY_ONLY",
       "editorial_status": "확장 질문 초안",
       "needs_human_review": true,
       "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMi-AFBVV95cUxNX2lhRk1Y",
-      "seed_event": "서울 금천구, AI 챗봇 '통합나래봇'으로 24시간 민원상담 제공 - 데일리안",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxNX2lhRk1YcUtvaHgzRGZmeUgzVGlkd0hGNDFFeWVGcHQ1ZGM3WnRpZTdfTlMzQnBwY3l4QXhxeFVOTjAzbjdNS25kTkh4MHBpdE9oVnRPUlEwQ2M2Yk1qcFVMTDdSUVdsRXlXM1RUaXIyVVNOV3hPekRBVmRiWjg4NGtzcWotMVNfRVhDS0ZvajRkQWE1V0dFam51VzZqU01EWVhUXzNhMGFaYVQzNm5KTFBMdlhRSnV2U3piRnJPQU12ME8xZ2lRdzZKUXk4YWFrWm1zODU2NUtFOEpGdzdSUlAxQ1pUUjY5T1JoZ2RTQXYtWUdoU2VFUA?oc=5",
-          "published_at": "Mon, 21 Sep 2026 00:26:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMib0FVX3lxTE5UU3N1andX",
-      "seed_event": "이수진 서울시의원, 영등포·신길 배수시설 개선사업 공사 지연·추경 산출근거 점검 - 서울시티",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5UU3N1andXWUtaaTRnX3hJeVVyeFR4aER0UHlzS2J3WHNZZkl1Vjl4OG9jOWpDTG9aWDVWcVN6ajRhV0xsZlhNcUwyNlIwSXAwZUxpdmhLQnpGb3RGSUJKbFpaeFNVMFlpQ29MVDgzYw?oc=5",
-          "published_at": "Fri, 04 Sep 2026 07:00:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMiZkFVX3lxTE00RVN1SWZs",
-      "seed_event": "“통합나래봇에게 물어보세요” 금천구, ‘AI 민원상담 챗봇’ 확대 운영 - 열린뉴스통신",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE00RVN1SWZsTVhjZXJ4WVZGaGNNTFNwYlRidExUNjBLcmpUcWplb1luNExzbzRCX2VZZ0RxcjVHN0dWVDZ3ZWNwVndDR2dfWENGUlJEdnJ1a3lLeHpaZUZXNHRLYWtsQQ?oc=5",
-          "published_at": "Mon, 21 Sep 2026 00:05:56 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMia0FVX3lxTE13UWgycXB5",
-      "seed_event": "이수진 시의원 “영등포·신길 배수사업, 공사 지연·추경 따져야” - snakorea.com",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE13UWgycXB5T04yaGlMZjdKYTRONFFmZ0UxYmhuOXVjdHJacFk1NjFMN2N6VWxjM19VTVlkLXRZMzR5MzYxMkRQOHo3R3BkSFowQ0g2NlNDT2xmUjRORmZodkw5aWdFTDZxRGFZ?oc=5",
-          "published_at": "Fri, 04 Sep 2026 06:39:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMiZkFVX3lxTE9jeDROSXY0",
-      "seed_event": "서울 서초구, ‘특이민원대응전문관’ 투입 - 뉴뉴스",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9jeDROSXY0U3BzNE5SWWxsUzhvZ1E5Wmo5VlpsNG5ISG9GbC15QmMwYnRoMjktSVN4ZGZMdFhtRXZOUW5yaDZmWVU0bDd5T2ljdThCenphM1k2WmJjYWZqbWREclRJZw?oc=5",
-          "published_at": "Fri, 18 Sep 2026 01:01:44 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMickFVX3lxTFByX3ZudEFP",
-      "seed_event": "서울시의회 강신욱 의원, 거여119안전센터 공사 지연 지적…사전점검 강화 촉구 - 웹이코노미",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFByX3ZudEFPdUpEQlg3NEtiU1FPVHkzOUJudDk3WXJvTU5TNEpZbHdHN0ZSa1NJUkZEWkFLUFNHZU1sZ3FFX3JUUWxfQWJlRWVabUJRcEpweE1UY29PUUpQUmpKUENDWV91TjVWVXFpTzZkZw?oc=5",
-          "published_at": "Thu, 03 Sep 2026 06:33:07 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMibkFVX3lxTFBzaFJLYUpl",
-      "seed_event": "강남구 민원창구, 투명 가림막 대신 디지털 소통창구로 교체 - gukjenews.com",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBzaFJLYUplUVVFeTVoRVQwM3FXZlRMX1pkSjJHMVdlamxKQkhMdkR4c3h6bXNQanBxbng5cEgzdVRfaTdlUFhEb2lYQ294c3FWMTVhbVNHWkNrN0dFS1pieUI1TUtxUjdlUzdRdWtn?oc=5",
-          "published_at": "Fri, 18 Sep 2026 00:02:37 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMiakFVX3lxTFA5MFRpM0VK",
-      "seed_event": "김준성 서울시의원, 중랑천 보행교량 공사 지연 지적… “사전협의부터 제대로 했어야” - 서울Pn",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFA5MFRpM0VKVGRmVkFBY1lFRkNMdnNkeDRKRnI1YWVpMFpKVkg2NFpOdmc5V3UzZ3E4UmNCMGRyYXBQYWdwOFk1dDFPNVpGR0UxTlc3LTY4ZDNuNXNCSmtnTjllRTRDeUZYeXc?oc=5",
-          "published_at": "Wed, 02 Sep 2026 07:00:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMiYEFVX3lxTE92YkY2bm50",
-      "seed_event": "강남구 민원창구 가림막의 변신…\"말하면 번역 자막이 화면에\" - 연합뉴스",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE92YkY2bm50TUwzeV83aXBDZ2c4X1FzeWE0VzFDdFY2WFBUZWFWNWdMVEFSejFGUENUT0hQYjlldFZPb1AzN2ZtSUR0OFdOSzVjZzlyYVdXekp6Y19fVlpDS9IBYEFVX3lxTE92YkY2bm50TUwzeV83aXBDZ2c4X1FzeWE0VzFDdFY2WFBUZWFWNWdMVEFSejFGUENUT0hQYjlldFZPb1AzN2ZtSUR0OFdOSzVjZzlyYVdXekp6Y19fVlpDSw?oc=5",
-          "published_at": "Thu, 17 Sep 2026 22:24:36 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMicEFVX3lxTE9mUHIyUm9Z",
-      "seed_event": "서울 7호선 청라 연장 비용 '껑충'…공사 지연 돌파구 찾기 총력 - 인천일보",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE9mUHIyUm9ZR084bjR5YW5GSVdqMjFuaC1wMXpSV2hPRDVNUERLNnlaYjFnQ1dNbFpIOXVNNFBYMGpLRkk1amJtREFZWGtTN05udm84LUEyYmJWV29zeUFUUm5UdHZaSmM4emI0TTI1MjY?oc=5",
-          "published_at": "Wed, 12 Aug 2026 07:00:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMiU0FVX3lxTE4xUVlCckJG",
-      "seed_event": "‘특이민원대응전문관’이 나선다…서초, 특이민원 현장 대응 강화 - 서울신문",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE4xUVlCckJGOWZvb2VLLUZJeEl2NERfaW9FSGxJaVVCamxIU0o1T056aVRHVHpRNTdkc1ZtRmNFcTVtY1hJNjMzVHpUNTd1clhkaFQ4?oc=5",
-          "published_at": "Thu, 17 Sep 2026 06:31:46 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMiakFVX3lxTE94SVBObS1x",
-      "seed_event": "서울교통공사, ‘또타지하철’ 앱서 수도권 지하철 지연 정보 한눈에 제공 - the-pr.co.kr",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE94SVBObS1xN3VkUjdvS3ltZGZWMjduaHdEcWJmUzBueXhFUWQ3bkZ1MzlvdmNoYkFLbXIwbmVIZGZndDJGbFBmbS0ySkg2OHZJLUthQVBYQXNsOWVsZHdfcVByc2dDRkhZdWfSAW5BVV95cUxNXzhFU3hRYmhJVlIzRjdKZDdvdHk2RUxQRjBRYUxnMEt4a2tOVjVCZmdfcU14QXdteDNteldTR1Z4anUwbG5mUUFOSHhmU0E4cUlPckJsYWJUcldSMFMtLWxYbmQzZGljdGp2WkRRZw?oc=5",
-          "published_at": "Thu, 30 Jul 2026 07:00:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMibkFVX3lxTE4wOUk4c3o4",
-      "seed_event": "서초구, 특이민원대응전문관 제도 도입…서울 자치구 최초 시행 - gukjenews.com",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE4wOUk4c3o4QXA3ZHZISlhIdlpzd05KR29ESlBTenJCLWdUeEgwMzNWTUwzbzhXU3ZhbWdFeVNlOGZxVHdId3VmUENKSUJ0MUpIQmJ4Y3kzb2F5c2NZaWlTbjN5dUFXTmdQeUZfWUN3?oc=5",
-          "published_at": "Thu, 17 Sep 2026 00:05:43 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMiZEFVX3lxTFAzYV9VcnRY",
-      "seed_event": "서울교통공사, ‘또타지하철 앱’으로 실시간 지하철 지연 정보 한눈에 확인 - 국토일보",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFAzYV9VcnRYaTJyS0l2TlN1dDNtakotM25oNlFxMnZmVnR0Y25ITFBkckxxeXcyX1V3ZUN4M2VtRU5mdF8wRk9JVWh5Y1lOLVBPVFFwcDk2b2ZUODNpNmhVdXVLM24?oc=5",
-          "published_at": "Tue, 21 Jul 2026 07:00:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMiTEFVX3lxTE5HSmRCT3pO",
-      "seed_event": "\"민원 해결 넘어 예방까지”··· 장세훈 서울시의원, 제2기 시민권익위원 위촉 - koreasisailbo.com",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5HSmRCT3pOZlhsRjlpT2VQNGFzRDFCenQ2TGo4RG1ONFNDUXdXamF5ZHp2cmgxdUhHUURSdUN3YTJZNGR0MldjY1JxcHc?oc=5",
-          "published_at": "Fri, 11 Sep 2026 09:40:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMia0FVX3lxTE0xbXdmYjc2",
-      "seed_event": "서울교통공사, '또타지하철'로 도시철도 열차 지연정보 한 번에 제공 - 데일리시사닷컴",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0xbXdmYjc2V0FwMUd3U2dqSzEwVGxHMFBZWXE5dzk5NFFMWUlNWkMteE1PX0pHWWt6NndEN3NzUUpybG0yVkYtalV3RmR4TEFYX3V4eXRBSTZoenI1N3l3c1VIMkI4aGhPLUxV?oc=5",
-          "published_at": "Tue, 21 Jul 2026 07:00:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMickFVX3lxTE1yTnZjNHNq",
-      "seed_event": "서울시의회, 제2기 시민권익위원회 출범…민원 해결·제도개선 박차 - 인더스트리뉴스",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1yTnZjNHNqUl9xX0dKbUVZeFBTZEkybWVSZnJqakswaEhRXzVzc2lOWFFuOTR3MlhJQzR3SHdSanJaUlV0RHVWR09oVFI1ejRQMk9Pa3B5TnRYUGM1ZDg5N21kamNxZy1UQlRKY0dabjkzQQ?oc=5",
-          "published_at": "Fri, 11 Sep 2026 08:51:04 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMiUEFVX3lxTE8zRkZQRDFN",
-      "seed_event": "서울교통공사, ‘또타지하철’로 도시철도 지연정보 한눈에…열차지연 플랫폼 구축 - munhwa.com",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE8zRkZQRDFNcFZKLVRmXzVnN1F1bDBNdE5USEU3dVYxaVVBdmdmb0Z1WTFDX3A3SlU0Snd4ZEFjQjd4TE1JTEpQQm9ENFVTS3Ru?oc=5",
-          "published_at": "Mon, 20 Jul 2026 07:00:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
-    },
-    {
-      "review_id": "CBMia0FVX3lxTE1vS2V2bFQ2",
-      "seed_event": "“민원 해결 넘어 예방까지”… 장세훈 서울시의원, 제2기 시민권익위원 위촉 - 데일리시사닷컴",
-      "topic": "서울 민원",
-      "structural_question": "이 사건은 서울에서 서울 민원 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 민원’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 민원’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1vS2V2bFQ2X3c3Y0Z6YXRVVXZIbEhrdlh0Q3JobTI4UUxtbEJNbE1wR0NTb21pcy11OHZrSkM0VUdGX3pKTEppZldDdTNQRk1NU0dqbWdNODBKem9FVUZFM0VCZVdCYTFGM3pz?oc=5",
-          "published_at": "Fri, 11 Sep 2026 08:08:14 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 민원"
-    },
-    {
-      "review_id": "CBMia0FVX3lxTE81dHozOHB4",
-      "seed_event": "서울교통公, '또타지하철 앱'으로 지하철 지연 정보 한눈에 확인 - 철도경제신문",
-      "topic": "서울 공사 지연",
-      "structural_question": "이 사건은 서울에서 서울 공사 지연 문제가 특정 지역과 시민에게 집중되는 구조를 보여주는가?",
-      "scope_hypothesis": "한 지역의 사례가 서울 다른 자치구에서도 반복되는지 비교한다.",
-      "reason": "지역 뉴스 관심 신호에서 출발해 서울 전체의 제도·배치·책임 구조로 확장할 수 있는지 검토하기 위해",
-      "conflict_groups": [
-        "직접 affected 시민·이용자",
-        "인근 주민",
-        "서울시·자치구",
-        "사업자·기관"
-      ],
-      "citizen_questions": [
-        "이 사안의 부담과 혜택은 누구에게 돌아가는가?",
-        "같은 문제가 서울 다른 지역에서도 반복되는가?",
-        "공공이 설명·지원·대체수단을 제공했는가?"
-      ],
-      "reporting_paths": [
-        "서울시·자치구 공식 계획·예산·통계 확인",
-        "25개 자치구 유사 사례 비교",
-        "당사자·주민·책임 기관 인터뷰"
-      ],
-      "title_options": [
-        "서울 곳곳 ‘서울 공사 지연’…문제는 왜 특정 지역에 몰리나",
-        "한 지역 사건에서 서울 전체의 ‘서울 공사 지연’을 묻다"
-      ],
-      "evidence": [
-        {
-          "type": "news",
-          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE81dHozOHB4eW9uUjJqVmFINi1tS0drWDdWRThnc0pBanprbHNRTHFMVS1NcDlpSDBPb0VJZ25zTjZzcDRCUjVOczRPeng0MUszcmpud0FCMDU1LTM4QjRIMDdUUTQwZy1vaS1z?oc=5",
-          "published_at": "Mon, 20 Jul 2026 07:00:00 GMT"
-        }
-      ],
-      "status": "DISCOVERY_ONLY",
-      "editorial_status": "확장 질문 초안",
-      "needs_human_review": true,
-      "needs_official_cross_check": true,
-      "source_query": "서울 공사 지연"
+      "source_query": "서울 복지 공백"
     }
   ],
   "policy": "관심 신호는 자동 후보가 아니며, 출발 사건에서 구조적 질문을 확장한 뒤 공식 자료·시민 영향 확인을 거쳐 사람이 판정한다."
