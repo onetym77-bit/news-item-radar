@@ -75,6 +75,22 @@ def fetch_naver_trends() -> tuple[list[dict], str | None, int, list[str]]:
                 rows.append({"query": title, "period": point.get("period"), "relative_ratio": point.get("ratio"), "signal_type": "NAVER_SEARCH_TREND", "status": "DISCOVERY_SIGNAL"})
     return rows, None, groups_seen, groups_without_data
 
+def diversify_news(rows: list[dict], limit: int = 120) -> list[dict]:
+    """Interleave query groups so one search term cannot fill the whole snapshot."""
+    grouped: dict[str, list[dict]] = {}
+    for row in rows:
+        grouped.setdefault(row.get("query", "기타"), []).append(row)
+    output = []
+    while grouped and len(output) < limit:
+        for query in list(grouped):
+            output.append(grouped[query].pop(0))
+            if not grouped[query]:
+                del grouped[query]
+            if len(output) >= limit:
+                break
+    return output
+
+
 def main() -> int:
     raw_news, errors = [], []
     for query in QUERIES:
@@ -105,7 +121,7 @@ def main() -> int:
         "schema": 5, "generated_at_utc": datetime.now(timezone.utc).isoformat(), "source_id": "search_news_interest", "source_name": "검색 관심도·뉴스 확산",
         "collection_mode": ["google_news_rss_keyword_probe", "naver_datalab_search_trend"], "queries": QUERIES,
         "quality_gate": {"raw_news_count": len(raw_news), "seoul_relevant_count": len(relevant_news), "unique_news_count": len(news), "duplicate_or_irrelevant_count": len(raw_news) - len(news), "trend_groups": trend_groups, "trend_groups_without_data": trend_groups_without_data, "trend_data_points": len(trends), "candidate_ready": False, "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요"},
-        "news_count": len(news), "trend_count": len(trends), "news_signals": news[:120], "trend_signals": trends[:500], "trend_summary": trend_summary, "errors": errors,
+        "news_count": len(news), "trend_count": len(trends), "news_signals": diversify_news(news), "trend_signals": trends[:500], "trend_summary": trend_summary, "errors": errors,
         "limitations": ["네이버 데이터랩 ratio는 절대 검색량이 아닌 상대 지수임", "검색·뉴스 반복은 시민 전체 의견이나 사실 확정이 아님", "동일·유사 제목은 묶었지만 기사 내용의 사실성은 검증하지 않음", "지역성은 기사 제목 기준의 1차 분류이며 최종 사실 확인이 아님", "후보 승격 전 서울시의회·구의회·감사·통계·현장 확인 필요"],
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
