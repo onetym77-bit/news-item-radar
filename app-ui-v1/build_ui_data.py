@@ -17,7 +17,6 @@ cards_doc = load("source-scout-v1/output/editorial_review_cards_latest.json", {"
 summary = load("source-scout-v1/output/review_summary_latest.json", {})
 manifest = load("daily-briefing-v5/output/run_manifest_latest.json", {})
 construction_state = load("construction-watch-pilot/output/state_latest.json", {})
-editorial_brief = load("editorial-v2/output/briefing_latest.json", {"candidates": [], "count": 0})
 interest_queue = load("interest-signal-pilot/output/review_queue_latest.json", {"items": []})
 decisions = load("source-scout-v1/output/editorial_decisions.json", [])
 
@@ -144,56 +143,50 @@ for source_name in sorted(source_counts):
         "items": [item for item in pending_items if item[1] == source_name],
     })
 
-def editorial_score(item):
-    text = " ".join([item.get("seed_event", ""), item.get("topic", "")]).lower()
-    positive = ("갈등", "논란", "지연", "피해", "공백", "부담", "반발", "폐쇄", "위험", "차별", "사고", "누락", "사기")
-    routine = ("운영", "제공", "개최", "안내", "확대", "캠페인", "행사", "홍보", "연휴", "발급기")
-    return sum(word in text for word in positive) * 3 - sum(word in text for word in routine)
+def signal_priority(item):
+    """Order review work; this score never promotes a signal to a story."""
+    headline = item.get("headline", "")
+    concrete = ("철거", "폐쇄", "사망", "부상", "고발", "기소", "체납", "미지급")
+    return (item.get("screening_priority") == "높음", sum(word in headline for word in concrete))
 
-ranked_interest = sorted(interest_queue.get("items", []), key=editorial_score, reverse=True)
-interest_candidates = []
-seen_topics = set()
+
+ranked_interest = sorted(interest_queue.get("items", []), key=signal_priority, reverse=True)
+discovery_signals = []
+seen_queries = set()
 for item in ranked_interest:
-    if item.get("editorial_eligible") is False:
+    query = item.get("source_query", "")
+    if query in seen_queries:
         continue
-    topic = item.get("topic", "")
-    if topic in seen_topics:
-        continue
-    seen_topics.add(topic)
-    interest_candidates.append({
-        "candidate_id": item.get("review_id", ""),
-        "title": (item.get("title_options") or [item.get("seed_event", "제목 미상")])[0],
-        "topic": topic,
-        "topic_label": item.get("topic_label", topic),
-        "editorial_reason": item.get("editorial_reason", ""),
+    seen_queries.add(query)
+    discovery_signals.append({
+        "review_id": item.get("review_id", ""),
+        "headline": item.get("headline") or item.get("source_headline", "제목 미상"),
         "source": item.get("source_name", "검색 관심도·뉴스 확산"),
-        "seed_event": item.get("seed_event", ""),
-        "structural_question": item.get("structural_question", ""),
-        "scope_hypothesis": item.get("scope_hypothesis", ""),
-        "selection_reason": item.get("reason", ""),
-        "citizen_questions": item.get("citizen_questions", []),
-        "conflict_groups": item.get("conflict_groups", []),
-        "reporting_paths": item.get("reporting_paths", []),
-        "title_options": item.get("title_options", []),
-        "editorial_status": item.get("editorial_status", "확장 질문 초안"),
-        "status": item.get("status", "DISCOVERY_ONLY"),
+        "observed_signal": item.get("observed_signal", "검색 결과에 기사 제목이 표시됨"),
+        "source_context_status": item.get("source_context_status", "TITLE_ONLY"),
+        "problem_status": item.get("problem_status", "UNASSESSED"),
+        "first_check": item.get("first_check", "기사 본문 확인"),
+        "counterpossibility": item.get("counterpossibility", ""),
         "evidence": item.get("evidence", []),
-        "editorial_score": editorial_score(item),
     })
-    if len(interest_candidates) >= 3:
+    if len(discovery_signals) >= 3:
         break
-interest_queue_exists = "generated_at_utc" in interest_queue
+
+# The search feed contains titles, not verified article bodies. Editorial candidates
+# need an explicit later decision based on context and a meaningful reporting question.
 ui_editorial_brief = {
-    **editorial_brief,
-    "candidates": interest_candidates if interest_queue_exists else editorial_brief.get("candidates", []),
-    "count": len(interest_candidates) if interest_queue_exists else editorial_brief.get("count", 0),
-    "input": "interest-signal-pilot/review_queue_latest.json" if interest_queue_exists else editorial_brief.get("input", ""),
-    "selection_policy": "주제 중복을 피하고 갈등·시민 영향·기획 확장성이 높은 신호를 우선 표시",
-    "queue_status": "관심 신호 큐 비어 있음" if interest_queue_exists and not interest_candidates else "관심 신호 큐 연결됨",
+    "schema": 4,
+    "input": "interest-signal-pilot/review_queue_latest.json",
+    "generated_at_utc": interest_queue.get("generated_at_utc"),
+    "count": 0,
+    "candidates": [],
+    "discovery_count": len(discovery_signals),
+    "discovery_signals": discovery_signals,
+    "queue_status": "본문 검토 전 탐색 신호" if discovery_signals else "탐색 신호 없음",
 }
 
 data = {
-    "lastRun": manifest.get("generated_at_kst", "미확인"),
+    "lastRun": interest_queue.get("generated_at_utc") or manifest.get("generated_at_kst", "미확인"),
     "dataMode": "실제 산출물",
     "editorialBrief": ui_editorial_brief,
     "metrics": [
@@ -201,7 +194,8 @@ data = {
         ["사람 판정 대기", str(len(pending_items))],
         ["문맥 보강 필요", str(len(quarantine))],
         ["브리핑 연결", "가능" if manifest.get("publishable") else "보류"],
-        ["편집 후보", str(editorial_brief.get("count", 0))],
+        ["검증할 신호", str(len(discovery_signals))],
+        ["편집 후보", str(len(ui_editorial_brief["candidates"]))],
     ],
     "sources": sources,
     "cards": cards,
