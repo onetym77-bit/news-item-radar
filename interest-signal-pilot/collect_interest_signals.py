@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect public interest signals from Google News RSS and Naver DataLab."""
+"""Collect and quality-gate public interest signals from Google News RSS and Naver DataLab."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,7 @@ import re
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +17,11 @@ QUERIES = [
     "서울 민원", "서울 공사 지연", "서울 안전 사고", "서울 재개발 갈등",
     "서울 교통 불편", "서울 주거 피해", "서울 복지 공백", "서울 자치구 논란",
 ]
+SEOUL_AREAS = [
+    "서울", "종로", "중구", "용산", "성동", "광진", "동대문", "중랑", "성북",
+    "강북", "도봉", "노원", "은평", "서대문", "마포", "양천", "강서", "구로",
+    "금천", "영등포", "동작", "관악", "서초", "강남", "송파", "강동",
+]
 RSS_TEMPLATE = "https://news.google.com/rss/search?q={query}&hl=ko&gl=KR&ceid=KR:ko"
 NAVER_URL = "https://openapi.naver.com/v1/datalab/search"
 USER_AGENT = "news-item-radar/interest-signal-pilot"
@@ -24,6 +29,22 @@ USER_AGENT = "news-item-radar/interest-signal-pilot"
 
 def clean(value: str | None) -> str:
     return " ".join((value or "").split())
+
+
+def title_key(value: str) -> str:
+    """Normalize headlines so syndicated copies collapse into one signal."""
+    value = value.lower()
+    value = re.sub(r"\[[^]]+\]|【[^】]+】|\([^)]*\)", " ", value)
+    value = re.sub(r"[^0-9a-z가-힣]+", " ", value)
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def seoul_relevance(title: str, summary: str) -> tuple[bool, str]:
+    text = f"{title} {summary}"
+    for area in SEOUL_AREAS:
+        if area in text:
+            return True, f"서울·자치구 명칭 포함: {area}"
+    return False, "서울·자치구 명칭 미확인"
 
 
 def fetch_news(query: str) -> list[dict]:
@@ -38,29 +59,34 @@ def fetch_news(query: str) -> list[dict]:
         if not title or not link:
             continue
         description = re.sub("<[^>]+>", " ", item.findtext("description") or "")
+        summary = clean(description)[:500]
+        relevant, reason = seoul_relevance(title, summary)
         rows.append({
-            "query": query, "title": title, "url": link,
+            "query": query,
+            "title": title,
+            "url": link,
             "published_at": clean(item.findtext("pubDate")),
-            "summary": clean(description)[:500],
-            "signal_type": "NEWS_ATTENTION", "status": "DISCOVERY_SIGNAL",
+            "summary": summary,
+            "seoul_relevant": relevant,
+            "relevance_reason": reason,
+            "signal_type": "NEWS_ATTENTION",
+            "status": "DISCOVERY_SIGNAL",
         })
     return rows
 
 
-def fetch_naver_trends() -> tuple[list[dict], str | None]:
+def fetch_naver_trends() -> tuple[list[dict], str | None, int]:
     client_id = os.getenv("NAVER_CLIENT_ID", "").strip()
     client_secret = os.getenv("NAVER_CLIENT_SECRET", "").strip()
     if not client_id or not client_secret:
-        return [], "missing_credentials"
+        return [], "missing_credentials", 0
     today = datetime.now(timezone.utc).date()
-    start = today.replace(day=max(1, today.day - 14))
+    start = today - timedelta(days=14)
     body = {
         "startDate": start.isoformat(),
         "endDate": today.isoformat(),
         "timeUnit": "date",
-        "keywordGroups": [
-            {"groupName": q, "keywords": [q]} for q in QUERIES[:5]
-        ],
+        "keywordGroups": [{"groupName": q, "keywords": [q]} for q in QUERIES[:5]],
     }
     request = urllib.request.Request(
         NAVER_URL,
@@ -77,9 +103,11 @@ def fetch_naver_trends() -> tuple[list[dict], str | None]:
         with urllib.request.urlopen(request, timeout=20) as response:
             result = json.loads(response.read().decode("utf-8"))
     except Exception as exc:
-        return [], type(exc).__name__
+        return [], type(exc).__name__, 0
     rows = []
+    groups_seen = 0
     for group in result.get("results", []):
+        groups_seen += 1
         for point in group.get("data", []):
             rows.append({
                 "query": group.get("title", ""),
@@ -88,44 +116,85 @@ def fetch_naver_trends() -> tuple[list[dict], str | None]:
                 "signal_type": "NAVER_SEARCH_TREND",
                 "status": "DISCOVERY_SIGNAL",
             })
-    return rows, None
+    return rows, None, groups_seen
 
 
 def main() -> int:
-    news: list[dict] = []
+    raw_news: list[dict] = []
     errors: list[dict] = []
     for query in QUERIES:
         try:
-            news.extend(fetch_news(query))
+            raw_news.extend(fetch_news(query))
         except Exception as exc:
             errors.append({"channel": "google_news_rss", "query": query, "error": type(exc).__name__})
-    trends, trend_error = fetch_naver_trends()
+
+    relevant_news = [row for row in raw_news if row["seoul_relevant"]]
+    unique: dict[str, dict] = {}
+    for row in relevant_news:
+        key = title_key(row["title"])
+        if key and key not in unique:
+            unique[key] = row
+    news = list(unique.values())
+
+    trends, trend_error, trend_groups = fetch_naver_trends()
     if trend_error:
         errors.append({"channel": "naver_datalab", "error": trend_error})
-    unique = {}
-    for row in news:
-        unique.setdefault(row["url"], row)
+
+    trend_summary = []
+    by_query: dict[str, list[dict]] = {}
+    for row in trends:
+        by_query.setdefault(row["query"], []).append(row)
+    for query, rows in by_query.items():
+        rows = [r for r in rows if isinstance(r.get("relative_ratio"), (int, float))]
+        if not rows:
+            continue
+        peak = max(rows, key=lambda r: r["relative_ratio"])
+        latest = max(rows, key=lambda r: r.get("period") or "")
+        trend_summary.append({
+            "query": query,
+            "peak_period": peak.get("period"),
+            "peak_ratio": peak.get("relative_ratio"),
+            "latest_period": latest.get("period"),
+            "latest_ratio": latest.get("relative_ratio"),
+            "data_points": len(rows),
+        })
+
     payload = {
-        "schema": 2,
+        "schema": 3,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_id": "search_news_interest",
         "source_name": "검색 관심도·뉴스 확산",
         "collection_mode": ["google_news_rss_keyword_probe", "naver_datalab_search_trend"],
         "queries": QUERIES,
-        "news_count": len(unique),
+        "quality_gate": {
+            "raw_news_count": len(raw_news),
+            "seoul_relevant_count": len(relevant_news),
+            "unique_news_count": len(news),
+            "duplicate_or_irrelevant_count": len(raw_news) - len(news),
+            "trend_groups": trend_groups,
+            "trend_data_points": len(trends),
+            "candidate_ready": False,
+            "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요",
+        },
+        "news_count": len(news),
         "trend_count": len(trends),
-        "news_signals": list(unique.values())[:100],
+        "news_signals": news[:120],
         "trend_signals": trends[:500],
+        "trend_summary": trend_summary,
         "errors": errors,
         "limitations": [
             "네이버 데이터랩 ratio는 절대 검색량이 아닌 상대 지수임",
             "검색·뉴스 반복은 시민 전체 의견이나 사실 확정이 아님",
+            "동일·유사 제목은 묶었지만 기사 내용의 사실성은 검증하지 않음",
             "후보 승격 전 서울시의회·구의회·감사·통계·현장 확인 필요",
         ],
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"news={len(unique)} trends={len(trends)} errors={len(errors)}")
+    print(
+        f"raw_news={len(raw_news)} relevant={len(relevant_news)} "
+        f"unique={len(news)} trends={len(trends)} errors={len(errors)}"
+    )
     return 0
 
 
