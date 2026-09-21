@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "policy_version": "2026-09-21",
+  "run_schedule": "월·수 09:00 KST",
+  "target_candidates": "2~3개",
+  "sources": [
+    {
+      "source_id": "district_councils_25",
+      "role": "지역 구조 확인",
+      "find": "자치구별 격차·반복 민원·예산·사업 지연",
+      "why": "서울 안의 지역별 차이와 사각지대"
+    },
+    {
+      "source_id": "seoul_audit_results",
+      "role": "책임·실패 확인",
+      "find": "구체 사례·반복 지적·개선 실패",
+      "why": "기관 책임과 재발 여부"
+    },
+    {
+      "source_id": "local_public_pages",
+      "role": "시민 신호 발견",
+      "find": "지역 소식 페이지의 반복 불편·현장 사건",
+      "why": "공식 문서보다 먼저 포착되는 생활 문제"
+    },
+    {
+      "source_id": "youtube_public_content",
+      "role": "현장·반응 발견",
+      "find": "지역 현장 영상·제보·반복 댓글",
+      "why": "시민 공감과 현장 장면"
+    },
+    {
+      "source_id": "regional_community_reports",
+      "role": "시민 신호 발견",
+      "find": "주민 제보·당사자 문제 제기",
+      "why": "공공자료에 아직 나타나지 않은 문제"
+    },
+    {
+      "source_id": "popular_news_content",
+      "role": "후속 질문 발견",
+      "find": "반응이 큰 서울 뉴스의 미해결 쟁점",
+      "why": "기존 보도에 새로운 각도와 후속 취재를 부여"
+    }
+  ],
+  "routing": {
+    "discovery": "발견 후보로 넓게 수용",
+    "verification": "공식자료·통계·현장으로 확인",
+    "editorial": "시민 영향·책임·6~7분 확장성 평가",
+    "output": "최대 3개"
+  },
+  "non_rejection": "자료 부족·새 사업·공식 통계 부재는 자동 탈락 사유가 아니며 추가 확인 상태로 표시"
+}
