@@ -1,6 +1,6 @@
 {
-  "schema": 3,
-  "generated_at_utc": "2026-09-21T06:19:58.640256+00:00",
+  "schema": 4,
+  "generated_at_utc": "2026-09-21T06:57:59.390793+00:00",
   "source_id": "search_news_interest",
   "source_name": "검색 관심도·뉴스 확산",
   "collection_mode": [
@@ -19,28 +19,23 @@
   ],
   "quality_gate": {
     "raw_news_count": 725,
-    "seoul_relevant_count": 566,
-    "unique_news_count": 558,
-    "duplicate_or_irrelevant_count": 167,
+    "seoul_relevant_count": 518,
+    "unique_news_count": 513,
+    "duplicate_or_irrelevant_count": 212,
     "trend_groups": 5,
+    "trend_groups_without_data": [
+      "서울 공사 지연",
+      "서울 안전 사고",
+      "서울 재개발 갈등",
+      "서울 교통 불편"
+    ],
     "trend_data_points": 1,
     "candidate_ready": false,
     "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요"
   },
-  "news_count": 558,
+  "news_count": 513,
   "trend_count": 1,
   "news_signals": [
-    {
-      "query": "서울 민원",
-      "title": "서울 금천구, AI 챗봇 '통합나래봇'으로 24시간 민원상담 제공 - 데일리안",
-      "url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxNX2lhRk1YcUtvaHgzRGZmeUgzVGlkd0hGNDFFeWVGcHQ1ZGM3WnRpZTdfTlMzQnBwY3l4QXhxeFVOTjAzbjdNS25kTkh4MHBpdE9oVnRPUlEwQ2M2Yk1qcFVMTDdSUVdsRXlXM1RUaXIyVVNOV3hPekRBVmRiWjg4NGtzcWotMVNfRVhDS0ZvajRkQWE1V0dFam51VzZqU01EWVhUXzNhMGFaYVQzNm5KTFBMdlhRSnV2U3piRnJPQU12ME8xZ2lRdzZKUXk4YWFrWm1zODU2NUtFOEpGdzdSUlAxQ1pUUjY5T1JoZ2RTQXYtWUdoU2VFUA?oc=5",
-      "published_at": "Mon, 21 Sep 2026 00:26:00 GMT",
-      "summary": "서울 금천구, AI 챗봇 '통합나래봇'으로 24시간 민원상담 제공 &nbsp;&nbsp; 데일리안",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
     {
       "query": "서울 민원",
       "title": "금천구, AI 민원상담 챗봇 ‘통합나래봇’ 확대 운영 - 뉴스홈(newshome)",
@@ -48,7 +43,7 @@
       "published_at": "Mon, 21 Sep 2026 01:18:07 GMT",
       "summary": "금천구, AI 민원상담 챗봇 ‘통합나래봇’ 확대 운영 &nbsp;&nbsp; 뉴스홈(newshome)",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 금천",
+      "relevance_reason": "기사 제목의 지역 표현: 금천",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -59,7 +54,18 @@
       "published_at": "Mon, 21 Sep 2026 02:06:24 GMT",
       "summary": "강동 무인민원발급기 연휴도 운영 &nbsp;&nbsp; dongbunews.co.kr",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 강동",
+      "relevance_reason": "기사 제목의 지역 표현: 강동",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울 금천구, AI 챗봇 '통합나래봇'으로 24시간 민원상담 제공 - 데일리안",
+      "url": "https://news.google.com/rss/articles/CBMiV0FVX3lxTE9Zd2w2YTh4OXpzUXBjWVhZUHVZMkFVTW41NkxvMk1JaGZJaEo3VzNZUGpSaDVnWEJ1ZGtnSkRjN1RvaWtOakRzRVIxRk1xTHliUExyQ0RIbw?oc=5",
+      "published_at": "Mon, 21 Sep 2026 00:26:00 GMT",
+      "summary": "서울 금천구, AI 챗봇 '통합나래봇'으로 24시간 민원상담 제공 &nbsp;&nbsp; 데일리안",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -70,7 +76,7 @@
       "published_at": "Mon, 21 Sep 2026 01:34:38 GMT",
       "summary": "강남구, 민원 데이터로 바로 답하는 ‘공동주택 AI 해결사’ 가동 &nbsp;&nbsp; 뉴스파이어",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 강남",
+      "relevance_reason": "기사 제목의 지역 표현: 강남",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -81,7 +87,7 @@
       "published_at": "Mon, 21 Sep 2026 02:52:35 GMT",
       "summary": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영 &nbsp;&nbsp; gukjenews.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 강동",
+      "relevance_reason": "기사 제목의 지역 표현: 강동",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -92,7 +98,7 @@
       "published_at": "Mon, 21 Sep 2026 00:05:56 GMT",
       "summary": "“통합나래봇에게 물어보세요” 금천구, ‘AI 민원상담 챗봇’ 확대 운영 &nbsp;&nbsp; 열린뉴스통신",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 금천",
+      "relevance_reason": "기사 제목의 지역 표현: 금천",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -103,7 +109,7 @@
       "published_at": "Thu, 17 Sep 2026 22:24:36 GMT",
       "summary": "강남구 민원창구 가림막의 변신…\"말하면 번역 자막이 화면에\" &nbsp;&nbsp; 연합뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 강남",
+      "relevance_reason": "기사 제목의 지역 표현: 강남",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -114,7 +120,7 @@
       "published_at": "Mon, 21 Sep 2026 03:01:55 GMT",
       "summary": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영 &nbsp;&nbsp; 웹이코노미",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 강동",
+      "relevance_reason": "기사 제목의 지역 표현: 강동",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -125,40 +131,7 @@
       "published_at": "Fri, 18 Sep 2026 01:01:44 GMT",
       "summary": "서울 서초구, ‘특이민원대응전문관’ 투입 &nbsp;&nbsp; 뉴뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "연구보고서 - 서울연구원",
-      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE15TF9BMXU0ZGpBTXhDakowWVBqTHhXN3dqLU8zSkwzOWdQRWd6V2tfME9QLWRELVQwUUdCWkVKUnc0QkI4RE5YenJIcjl1WkxFVHl3VUJaanFmeVdYclRQczV2TUV1am42ZEFIdkdPeDBmQQ?oc=5",
-      "published_at": "Wed, 09 Sep 2026 08:57:52 GMT",
-      "summary": "연구보고서 &nbsp;&nbsp; 서울연구원",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "파주시-민원대행업체 청렴 간담회 개최 - 서울뉴스통신",
-      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0yUmpvWFdmR0cxNXQzTXZ6clVBcWlWNVV0WlpoZkpxN2R5cTlMVnN1WVI0bDZHVzhpWHRaSzJyUGpqT2tmNFg1V1BZS0pod2pFeF9IT1NHSlYtRFpNNkFrU1lnRWVzUEItSGpz?oc=5",
-      "published_at": "Wed, 16 Sep 2026 04:46:38 GMT",
-      "summary": "파주시-민원대행업체 청렴 간담회 개최 &nbsp;&nbsp; 서울뉴스통신",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "120 민원센터 예산 일부·서울본부 인건비 부활 - usmbc.co.kr",
-      "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBwNW5BT2hlc0FHTmV1SGhhenQ5ZGYtQWNFVXdvT0lkWG5IVy16TldNcjJCX2hlQnhBN1daNDIzU3Yydy1lQ1BQSnllVUo4ZGtKN3R2bw?oc=5",
-      "published_at": "Mon, 14 Sep 2026 06:14:09 GMT",
-      "summary": "120 민원센터 예산 일부·서울본부 인건비 부활 &nbsp;&nbsp; usmbc.co.kr",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -169,7 +142,7 @@
       "published_at": "Thu, 17 Sep 2026 06:31:46 GMT",
       "summary": "‘특이민원대응전문관’이 나선다…서초, 특이민원 현장 대응 강화 &nbsp;&nbsp; seoul.co.kr",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서초",
+      "relevance_reason": "기사 제목의 지역 표현: 서초",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -180,7 +153,7 @@
       "published_at": "Thu, 17 Sep 2026 00:05:43 GMT",
       "summary": "서초구, 특이민원대응전문관 제도 도입…서울 자치구 최초 시행 &nbsp;&nbsp; gukjenews.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -191,7 +164,7 @@
       "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
       "summary": "서울 지하철 냉난방 민원 21.5% 감소…\"시민들 협조\" &nbsp;&nbsp; 연합뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -202,7 +175,7 @@
       "published_at": "Fri, 18 Sep 2026 00:02:37 GMT",
       "summary": "강남구 민원창구, 투명 가림막 대신 디지털 소통창구로 교체 &nbsp;&nbsp; gukjenews.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 구로",
+      "relevance_reason": "기사 제목의 지역 표현: 구로",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -213,29 +186,29 @@
       "published_at": "Tue, 08 Sep 2026 07:00:00 GMT",
       "summary": "민원부터 채용정보까지…서울 강서구 누리집에 AI 챗봇 서비스 &nbsp;&nbsp; 연합뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
     {
       "query": "서울 민원",
-      "title": "울산, 120민원센터·서울본부 예산 전액 삭감…김상욱 “의회가 시정 막아” vs 이영해 “시장이 의회와 소통 안 해” - 영남경제",
-      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE0wa3owYjhrWktHSS1oNHRDUUFKZ1NrZUJmVDY1eFJvbGZTclRFRHFoZ0JOY0x3SzdmNlhFTDlXOEd3TkVxY3daTnZiLVhCYXBTaE9ndjdFR0Y4b2prU0RfdzIzelBXQ00?oc=5",
-      "published_at": "Sun, 13 Sep 2026 07:24:07 GMT",
-      "summary": "울산, 120민원센터·서울본부 예산 전액 삭감…김상욱 “의회가 시정 막아” vs 이영해 “시장이 의회와 소통 안 해” &nbsp;&nbsp; 영남경제",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "서울 지하철 냉난방 민원 22% 줄었다…질서 저해는 늘어 - 동아일보",
+      "title": "서울 지하철 냉난방 민원 22% 줄었다…질서 저해는 늘어 - donga.com",
       "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5XQ0lkQmdwQXhycGZBd2JrZTVDcVZnWkRsRXRWcUhxeFFJSHk5X3pZbFFKVzh0anNielQtMFV5TjZLZUxPWk1iUDgycVNuRFFFWWxsQm1YMjZjLWdOR2RLZkZvQjV4OTRaTmhPRW43WmtEVV9lM3fSAWZBVV95cUxQaWlZSXlvV1B2R1R4TVFsT0pHdmhRVmx5LWpIMlpZbnNDVExILVlUNm5WSFNYdmNmdFFULThBeHVyRU94alhpR3hPaUdqMWlsb0ViZ1hYZ0w3OU1GQ0dFWEtOUV8ySVE?oc=5",
       "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
-      "summary": "서울 지하철 냉난방 민원 22% 줄었다…질서 저해는 늘어 &nbsp;&nbsp; 동아일보",
+      "summary": "서울 지하철 냉난방 민원 22% 줄었다…질서 저해는 늘어 &nbsp;&nbsp; donga.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "서울시의회, 시민권익위원회 출범…2027년까지 민원 해결 주력 - 뉴스핌",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5LX1J5c3N1blFkdVJiMGFWaHRpWmJkWllBdF9DTEJqLXZIWVNmX0RPWFh5MHV5ZG1WTkZpalVtbS1nSmhZMTg2WGhGNTMyc2g5MVhDbHlCV1lpNEVE?oc=5",
+      "published_at": "Fri, 11 Sep 2026 07:50:00 GMT",
+      "summary": "서울시의회, 시민권익위원회 출범…2027년까지 민원 해결 주력 &nbsp;&nbsp; 뉴스핌",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -246,18 +219,7 @@
       "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
       "summary": "박위, 서울시 홍보대사 해촉 검토 민원 접수…CCTV 공개 논란 여파 &nbsp;&nbsp; YTN",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "서울시의회, 시민권익위원회 출범…2027년까지 민원 해결 주력 - newspim.com",
-      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5LX1J5c3N1blFkdVJiMGFWaHRpWmJkWllBdF9DTEJqLXZIWVNmX0RPWFh5MHV5ZG1WTkZpalVtbS1nSmhZMTg2WGhGNTMyc2g5MVhDbHlCV1lpNEVE?oc=5",
-      "published_at": "Fri, 11 Sep 2026 07:50:00 GMT",
-      "summary": "서울시의회, 시민권익위원회 출범…2027년까지 민원 해결 주력 &nbsp;&nbsp; newspim.com",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -268,40 +230,18 @@
       "published_at": "Fri, 11 Sep 2026 08:51:04 GMT",
       "summary": "서울시의회, 제2기 시민권익위원회 출범…민원 해결·제도개선 박차 &nbsp;&nbsp; 인더스트리뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
     {
       "query": "서울 민원",
-      "title": "울산시의회, 서울본부·120민원센터 삭감 예산 일부 부활…극적 타협 - v.daum.net",
-      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBINnRYVEt0ZVJvTVMzOVNxbkFTR2VGWnJUTWpCU3doNVA0STlrdjNtNEtsMGVOTjdSeTcwTlU2bzkyZDJNcWpZdzFaZjREdHM?oc=5",
-      "published_at": "Mon, 14 Sep 2026 08:11:49 GMT",
-      "summary": "울산시의회, 서울본부·120민원센터 삭감 예산 일부 부활…극적 타협 &nbsp;&nbsp; v.daum.net",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "김상욱 울산시장, “서울본부·120민원센터 예산 살려달라” - 아시아경제",
-      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBkdmZ0S2VPbjhHZWM2S2tuTjBibS1JQlVnS3NpbkQtek1McE5scUp6Q0lCLTdvTk45ZjdSSmxSeVV2b1hiQWQyVlRCbjgyZ0NmOTBjVk9VN0tJQmhOaWdwdA?oc=5",
-      "published_at": "Fri, 11 Sep 2026 07:00:00 GMT",
-      "summary": "김상욱 울산시장, “서울본부·120민원센터 예산 살려달라” &nbsp;&nbsp; 아시아경제",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "서울아리수본부, 야간 공사 소음 민원에 황당한 대응…노연수 시의원, 대책 매뉴얼 요청 - newspim.com",
+      "title": "서울아리수본부, 야간 공사 소음 민원에 황당한 대응…노연수 시의원, 대책 매뉴얼 요청 - 뉴스핌",
       "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE1lNXl0WEFYY3BrSmt6U3JpS24zRXM3TDZYcWFfV3pkN044YmN5dk1DTTBISU1GcDhCOExKUkRoMlgxa0g0dnNhNUdaVmlxUVl5M1Q0cWdqa0JHS21C?oc=5",
       "published_at": "Thu, 10 Sep 2026 07:00:00 GMT",
-      "summary": "서울아리수본부, 야간 공사 소음 민원에 황당한 대응…노연수 시의원, 대책 매뉴얼 요청 &nbsp;&nbsp; newspim.com",
+      "summary": "서울아리수본부, 야간 공사 소음 민원에 황당한 대응…노연수 시의원, 대책 매뉴얼 요청 &nbsp;&nbsp; 뉴스핌",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -312,7 +252,7 @@
       "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
       "summary": "서울 지하철 냉난방 민원 21.5% 감소…전체 민원도 감소세 &nbsp;&nbsp; 스트레이트뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -323,7 +263,7 @@
       "published_at": "Sun, 13 Sep 2026 07:07:25 GMT",
       "summary": "성동, 악성 반복민원 방지…20분 넘는 전화 자동 종료 &nbsp;&nbsp; 서울일보",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 성동",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -334,29 +274,7 @@
       "published_at": "Fri, 11 Sep 2026 09:40:09 GMT",
       "summary": "\"민원 해결 넘어 예방까지”··· 장세훈 서울시의원, 제2기 시민권익위원 위촉 &nbsp;&nbsp; fnnews21.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "김상욱 시장 “서울본부·120민원센터 예산 재검토해 달라” - 울산종합일보",
-      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBHTEhKQzVFODdrZ3RqekFKem16VlAtbHVXckJReHhTYV8wTkR2YVAtNEJDSjJnSElJaldjYVM0Qzg0dDMtNVhUNW9LN2EybFVLZHpVT3lNcV90ZThBTktnOVRfRWFvRnp0SW9aWFNR?oc=5",
-      "published_at": "Fri, 11 Sep 2026 05:45:07 GMT",
-      "summary": "김상욱 시장 “서울본부·120민원센터 예산 재검토해 달라” &nbsp;&nbsp; 울산종합일보",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "\"120 울산민원센터·서울본부 예산, 되살려주십시오\" 김상욱 울산시장, 이례적 대시민 호소 - v.daum.net",
-      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9kWXEzYzkxMTh1OUFfbmVJWDItYXgwdHNVdE4wTU9wMVlhRzJfcXYtcUNmaThvQ194SEpqcVBOWjk2UTBPdkE?oc=5",
-      "published_at": "Fri, 11 Sep 2026 07:00:00 GMT",
-      "summary": "\"120 울산민원센터·서울본부 예산, 되살려주십시오\" 김상욱 울산시장, 이례적 대시민 호소 &nbsp;&nbsp; v.daum.net",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -367,7 +285,7 @@
       "published_at": "Thu, 03 Sep 2026 01:43:35 GMT",
       "summary": "＂덥다·춥다＂ 민원 11만 건 줄었다…서울 지하철, 냉난방 불만 뚝 &nbsp;&nbsp; segyenews.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -378,18 +296,7 @@
       "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
       "summary": "서울지하철 냉난방 민원 지난해보다 21.5% 감소 &nbsp;&nbsp; 철도경제신문",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "‘120센터·서울본부’ 추경 두고 울산시·시의회 파열음 - 부산일보",
-      "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE1Obzc4Z2MyUXBuOEluaWk3R2hBeTVaWm05UHR2d2thdG94dEtuZGJDU1U0OE5YNndHUThXODJpcDlHUTdKa2FYSnlENWNmb1RmaS1jUXhuZWxTeE56elR1Z1NDU3JkWEY0akMyQVBrbElta3BhUzE2bg?oc=5",
-      "published_at": "Fri, 11 Sep 2026 10:11:38 GMT",
-      "summary": "‘120센터·서울본부’ 추경 두고 울산시·시의회 파열음 &nbsp;&nbsp; 부산일보",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -400,7 +307,7 @@
       "published_at": "Fri, 11 Sep 2026 05:43:40 GMT",
       "summary": "김상욱 시장 서울분부 및 120 민원센터 추경예산 반영 호소 &nbsp;&nbsp; 뉴시스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -411,18 +318,7 @@
       "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
       "summary": "서울 중구, '복합민원 원스톱 서비스' 32종으로 확대 &nbsp;&nbsp; 연합뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "울산시 vs 시의회…서울본부도, 120민원센터도 예산복원 - 뉴시스",
-      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE84UkMwZXlrb2F5VldlMVZ1dFMyMkt6OWtMT19Na0ZnWTNPVmNWbnh4cTU3Yl81RW9fcWUzNEFUZEhWUGQ5UEtPaGxSM2lqN2hranMwUUU5M0c0aV80S1ByatIBeEFVX3lxTE80a0d1QjhjZWlpM3BxUzlpQkw3U3hIdjh5Q2FMbU1sNk5ZOVI5QWpsYUNTbUQ5MktHVHFrblNMX1VKb1Z6QWk1bHhvTlIxQVdUWFFYbmxwWnpTbE04MlB5RjlfVkV1M0FMN0Z4MUcxVzFUSVgxaURKaw?oc=5",
-      "published_at": "Mon, 14 Sep 2026 09:04:37 GMT",
-      "summary": "울산시 vs 시의회…서울본부도, 120민원센터도 예산복원 &nbsp;&nbsp; 뉴시스",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -433,7 +329,7 @@
       "published_at": "Fri, 11 Sep 2026 09:40:00 GMT",
       "summary": "\"민원 해결 넘어 예방까지”··· 장세훈 서울시의원, 제2기 시민권익위원 위촉 &nbsp;&nbsp; koreasisailbo.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -444,7 +340,7 @@
       "published_at": "Fri, 04 Sep 2026 02:00:45 GMT",
       "summary": "서울 지하철 민원 17% 감소 &nbsp;&nbsp; 뉴뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -455,18 +351,7 @@
       "published_at": "Tue, 08 Sep 2026 07:00:00 GMT",
       "summary": "서울 성동구, 스마트 흡연부스로 간접흡연 민원 급감 &nbsp;&nbsp; 미디어시시비비",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "울산시, 예산 삭감 놓고 의회와 충돌…서울본부·민원센터 공방 - 뉴시스",
-      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE93UTBZa0NGbV9xZ0R6Qy1sWW9lUG9LWmI2V3cxV0lzbmdmVThzUjBWd05XVGVGQ250bGtTWk9IRElobHoyMS1YbUN5X3NJZDZKaV9CXzQtbG5temlySTZTVtIBeEFVX3lxTE4wZTZHdTJnLVVTemR1ZkdqRWlMY21SX1p3TER5SHBHSXNCcHN1aU1fdUNuSHVJal96U1M4QUFDUmdmUUJsNVpFYWJuOFFISk9zUEFSc2FkNGdfbl9nTVlTUnhxS24wMzNIT1REZWc4WGZNSGdJSGo5Zg?oc=5",
-      "published_at": "Fri, 11 Sep 2026 07:00:00 GMT",
-      "summary": "울산시, 예산 삭감 놓고 의회와 충돌…서울본부·민원센터 공방 &nbsp;&nbsp; 뉴시스",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -477,7 +362,7 @@
       "published_at": "Sat, 29 Aug 2026 07:00:00 GMT",
       "summary": "폭증하는 서울시 민원에 '수작업 한계'… AI 해법 될까? &nbsp;&nbsp; 이투데이",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -488,18 +373,7 @@
       "published_at": "Thu, 03 Sep 2026 04:49:57 GMT",
       "summary": "[포토] 손보협회, 서울 금천구에 ‘통합민원지원센터’ 개소 &nbsp;&nbsp; fetv.co.kr",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "청주시, 민원 현장 곳곳서 ‘청주특례시’ 홍보 - 서울뉴스통신",
-      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTFBHbUExb2JTLWQ0dzRNVExDVS1HdXpqRXdWNndrLTdTYkx1WS1XaDhKdnJmaFctRzJFeURiVnNrUWJhT2lFRG5USXdZcFJ0YkVONGxOVmRNRjlQSUdMR2JUNVBvWmxnSF9VOFRN?oc=5",
-      "published_at": "Thu, 10 Sep 2026 07:35:00 GMT",
-      "summary": "청주시, 민원 현장 곳곳서 ‘청주특례시’ 홍보 &nbsp;&nbsp; 서울뉴스통신",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -510,7 +384,7 @@
       "published_at": "Thu, 03 Sep 2026 00:57:32 GMT",
       "summary": "서울지하철 냉난방 민원 21.5% 감소…'덥다·춥다' 11만건 줄어 &nbsp;&nbsp; 미디어인뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -521,7 +395,7 @@
       "published_at": "Tue, 01 Sep 2026 07:00:00 GMT",
       "summary": "도봉구, 민원 해결 전담조직 '열린 구청장실' 문 연다 &nbsp;&nbsp; 서울시티",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 도봉",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -532,18 +406,7 @@
       "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
       "summary": "“덥다·춥다”... 서울 지하철 냉난방 민원 11만 건(21.5%) ↓ &nbsp;&nbsp; 헤럴드경제",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "완도군, 민원 서비스 만족도 높인다! ‘친절 교육’ 실시 - 서울뉴스통신",
-      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1EYzZvTm1YMXFfSUkyWEIzakxPa3dPa2ctYjMzWGVsT0l2Qi0zTm1jU2xmMC1fQ1puQVNIUXNvUVU1YjFwN0JaRFV3RHVPR3FKdjU2NXUwNmNaa0hXd1N5WFdtUkc1MW1SMmZn?oc=5",
-      "published_at": "Fri, 11 Sep 2026 05:01:53 GMT",
-      "summary": "완도군, 민원 서비스 만족도 높인다! ‘친절 교육’ 실시 &nbsp;&nbsp; 서울뉴스통신",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -554,7 +417,7 @@
       "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
       "summary": "서울 중구, '복합민원 원스톱 서비스' 32종으로 확대 &nbsp;&nbsp; v.daum.net",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -565,7 +428,7 @@
       "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
       "summary": "서울지하철 덥다·춥다 민원 11만건 줄었다…냉난방 불편 21.5%↓ &nbsp;&nbsp; 글로벌E",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -576,29 +439,18 @@
       "published_at": "Thu, 27 Aug 2026 01:28:14 GMT",
       "summary": "서울 중구, '복합민원 원스톱 서비스' 32종으로 확대 &nbsp;&nbsp; 연합뉴스 한민족센터",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
     {
       "query": "서울 민원",
-      "title": "\"120 울산민원센터·서울본부 예산, 되살려주십시오\" 김상욱 울산시장, 이례적 대시민 호소 - 네이트",
-      "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFAyYVNWWTJNaUIyZWhxXzVNZW5RYVFnNG5GLUlLVjNVR250OWY4OW1sRlJncXdlTHIzM213OGdfN1NvSFA2SmQxbjZQX0c1aW5fRExCV215dlgyb2pNeUJ4SXVjQlZ4TVVXVEgzVTFuY1VheWl5OU00?oc=5",
-      "published_at": "Fri, 11 Sep 2026 08:30:00 GMT",
-      "summary": "\"120 울산민원센터·서울본부 예산, 되살려주십시오\" 김상욱 울산시장, 이례적 대시민 호소 &nbsp;&nbsp; 네이트",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "\"덥다·춥다\" 민원 11만 건 줄었다... 서울지하철 냉난방 민원 21.5% 감소 - dailiang.co.kr",
+      "title": "\"덥다·춥다\" 민원 11만 건 줄었다... 서울지하철 냉난방 민원 21.5% 감소 - 데일리중앙",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFA5MFMxcnlyRFM4cFIzT09TeXNSeDg1LUlhOGtmSHpsUG5WMXpWQUFTT2xadjlHZ0hITWptYU1PY25keURfZ05hdkhraGY2NkgtUTVhMHd4R19QYjFMRUtsZC02dHRMTngwSXI0Ng?oc=5",
       "published_at": "Thu, 03 Sep 2026 01:18:46 GMT",
-      "summary": "\"덥다·춥다\" 민원 11만 건 줄었다... 서울지하철 냉난방 민원 21.5% 감소 &nbsp;&nbsp; dailiang.co.kr",
+      "summary": "\"덥다·춥다\" 민원 11만 건 줄었다... 서울지하철 냉난방 민원 21.5% 감소 &nbsp;&nbsp; 데일리중앙",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -609,18 +461,18 @@
       "published_at": "Fri, 11 Sep 2026 08:05:10 GMT",
       "summary": "장세훈 서울시의원 “민원 해결 넘어 예방까지”… 제2기 시민권익위원 위촉 &nbsp;&nbsp; 서울Pn",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
     {
       "query": "서울 민원",
-      "title": "박위, 서울시 홍보대사 자격 박탈?...해촉 민원 접수됐다 (+내용) - 아주경제",
+      "title": "박위, 서울시 홍보대사 자격 박탈?...해촉 민원 접수됐다 (+내용) - ajunews.com",
       "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1CN2xaNGk1MGM0cnlBYVZhSGxuMVlaODNJRnNuY0VaOVlzRDk4LTJaMzdIRF9CcFBJZ3FJblh0MXVNRXFxS0dzODI0ZFVxeUQ0TnQ2MTl6ZHNjd9IBWEFVX3lxTE5qelVobUliS2RhbmdkNFVid2Q4SmxPRl96NE5IalV6d3cxZjlFZU5KcEdMdS15bG9SX2NkeURZSHl6SUhqVjlSZ0YtZzFrbjBCU1djX0R0X1I?oc=5",
       "published_at": "Tue, 25 Aug 2026 07:00:00 GMT",
-      "summary": "박위, 서울시 홍보대사 자격 박탈?...해촉 민원 접수됐다 (+내용) &nbsp;&nbsp; 아주경제",
+      "summary": "박위, 서울시 홍보대사 자격 박탈?...해촉 민원 접수됐다 (+내용) &nbsp;&nbsp; ajunews.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -631,7 +483,7 @@
       "published_at": "Wed, 22 Jul 2026 07:00:00 GMT",
       "summary": "냄새난다는 민원에…\"올해 서울 은행나무 최소 792그루 사라질것\" &nbsp;&nbsp; 연합뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -642,7 +494,7 @@
       "published_at": "Thu, 03 Sep 2026 01:02:26 GMT",
       "summary": "같은 온도인데 민원 11만 건 줄었다…서울교통공사, ‘덥다·춥다’ 21.5%↓ &nbsp;&nbsp; 이코노미사이언스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -653,7 +505,7 @@
       "published_at": "Fri, 11 Sep 2026 08:08:00 GMT",
       "summary": "장세훈 서울시의원 \"민원 해결 넘어 예방까지\"…제2기 시민권익위원 위촉 &nbsp;&nbsp; 네이트",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -664,7 +516,7 @@
       "published_at": "Fri, 11 Sep 2026 01:45:04 GMT",
       "summary": "성동구, 장시간 민원전화 자동 종료 시스템 도입…악성 민원 막는다 &nbsp;&nbsp; gukjenews.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 성동",
+      "relevance_reason": "기사 제목의 지역 표현: 성동",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -675,29 +527,18 @@
       "published_at": "Wed, 02 Sep 2026 23:45:00 GMT",
       "summary": "서울 지하철 민원 17.3% 줄었다, 냉난방 불편 11만 건 감소 &nbsp;&nbsp; 이뉴스투데이",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
     {
       "query": "서울 민원",
-      "title": "여수시, 2026여수세계섬박람회 종합민원상황실 본격 가동 - 서울뉴스통신",
-      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE0ybkRNWjhpUzdIVXZqaFRDb2tDU0tGaGVLN3pYWTJhM2RsNHozWDF3eG9LWUtYVVdTVzZCT2tkdXYzQU5iR3BpN0d4d2dBb2c2ZE5qR09qUVRwd2FLbDdDTk1pbUV4b0sxTm1n?oc=5",
-      "published_at": "Mon, 31 Aug 2026 06:43:28 GMT",
-      "summary": "여수시, 2026여수세계섬박람회 종합민원상황실 본격 가동 &nbsp;&nbsp; 서울뉴스통신",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "강연 취소→해촉 민원 끝에…박위, 서울시 홍보대사 자진 사임 - 아주경제",
+      "title": "강연 취소→해촉 민원 끝에…박위, 서울시 홍보대사 자진 사임 - ajunews.com",
       "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE12MnJfcldZWGY3QTJ3VzRnWGo1YmoyRlFyNi1TX1FBZGhvblNXSU1XRVB1Qk5Nb2lSTER6bERLQXJRbWNyRkhibDIyOVlCN1BKbGVFVnVuV2xaUdIBWEFVX3lxTFBIZ1J0UW1rR2VRWW5GZzJUUFJocEJGQ2FGbnA3a3lZeHVCNmtYbnpIbU1xNDRVZkhPRTZZQThaQ3pCS3BVUGkzY3pkSnQyNmZXdUZuMmpWcTI?oc=5",
       "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
-      "summary": "강연 취소→해촉 민원 끝에…박위, 서울시 홍보대사 자진 사임 &nbsp;&nbsp; 아주경제",
+      "summary": "강연 취소→해촉 민원 끝에…박위, 서울시 홍보대사 자진 사임 &nbsp;&nbsp; ajunews.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -708,18 +549,7 @@
       "published_at": "Tue, 14 Jul 2026 07:00:00 GMT",
       "summary": "\"버스기사 라디오 못 듣게 해달라\" 민원에…서울시 \"일률 금지는 어려워\" &nbsp;&nbsp; 연합뉴스TV",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 민원",
-      "title": "울산시의회, 서울본부·120민원센터 삭감 예산 일부 부활…극적 타협 - 스포탈코리아",
-      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxOa0lxNlF1blVwbnBfY3lHRHU3LVZ0THR0bG91YU5hOVJrMzVEdnNaemZHQ3FKSkcwRXVkcXhMc1RuNkszRTg3Rzc4d2pfZkpRYW5OWlpIMzBBT2c0bHltbkhNNTd5Nm9IcWxrbWRrOGNRc0NTcUZwQ1FoMTJrYzhFdDNB?oc=5",
-      "published_at": "Mon, 14 Sep 2026 08:10:39 GMT",
-      "summary": "울산시의회, 서울본부·120민원센터 삭감 예산 일부 부활…극적 타협 &nbsp;&nbsp; 스포탈코리아",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -730,7 +560,7 @@
       "published_at": "Mon, 31 Aug 2026 07:00:00 GMT",
       "summary": "“지금 무슨 역?” 민원 9천건 터진 서울지하철, 드디어 바뀐다 &nbsp;&nbsp; edaily.co.kr",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -741,7 +571,7 @@
       "published_at": "Thu, 27 Aug 2026 01:30:22 GMT",
       "summary": "서울 중구, 복합민원 ‘원스톱’ 처리 32종으로 확대...구민 발걸음 줄인다 &nbsp;&nbsp; 한국미디어뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -752,7 +582,7 @@
       "published_at": "Thu, 03 Sep 2026 07:00:00 GMT",
       "summary": "서울지하철 냉난방 민원 감소세…'이용행태' 관련 민원은 늘어 &nbsp;&nbsp; 네이트",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -763,7 +593,7 @@
       "published_at": "Fri, 11 Sep 2026 07:51:00 GMT",
       "summary": "서울시의회, 시민권익위원회 출범…2027년까지 민원 해결 주력 &nbsp;&nbsp; 네이트",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -774,7 +604,7 @@
       "published_at": "Fri, 28 Aug 2026 07:00:00 GMT",
       "summary": "지식재산처장, 서울사무소 민원업무 담당직원 간담회 개최 &nbsp;&nbsp; 뉴시스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -785,7 +615,7 @@
       "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
       "summary": "박위, 서울시 홍보대사 해촉 민원 접수…KTX 사고 영상 후폭풍 - 머니투데이 &nbsp;&nbsp; 머니투데이",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -796,7 +626,7 @@
       "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
       "summary": "박위, KTX 영상 공개 '역풍'…서울시 홍보대사 해촉 민원까지 &nbsp;&nbsp; 한국경제",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -807,7 +637,7 @@
       "published_at": "Sat, 25 Jul 2026 07:00:00 GMT",
       "summary": "[단독] 온난화가 부른 ‘바퀴벌레 습격’… 서울 민원 4년새 5배 &nbsp;&nbsp; 조선일보",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -818,18 +648,18 @@
       "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
       "summary": "[클릭! 자치뉴스] 서울 동대문구, 퇴직교원이 학교 민원 첫 접수 맡는다 &nbsp;&nbsp; 한국일보",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
     {
       "query": "서울 민원",
-      "title": "서울 중구, 복합민원 ‘원스톱’ 처리 32종으로 확대...구민 발걸음 줄인다 - seoulfocus.kr",
+      "title": "서울 중구, 복합민원 ‘원스톱’ 처리 32종으로 확대...구민 발걸음 줄인다 - 서울포커스",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5Qd1p6dl96eTZFVDlWZVRkS3dsb015SW1nTGV5bzIzUUNqNjZkdkpfR3FMSDRMM19tblQtVFBPLUctYlRobjNKRHFhV0liY0RINUdNay1CamRwekIyZldPUmFFbWRSaDNaeURYMw?oc=5",
       "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
-      "summary": "서울 중구, 복합민원 ‘원스톱’ 처리 32종으로 확대...구민 발걸음 줄인다 &nbsp;&nbsp; seoulfocus.kr",
+      "summary": "서울 중구, 복합민원 ‘원스톱’ 처리 32종으로 확대...구민 발걸음 줄인다 &nbsp;&nbsp; 서울포커스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -840,7 +670,7 @@
       "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
       "summary": "‘KTX 영상 논란’ 박위, “서울시 홍보대사 해촉” 민원 등장 &nbsp;&nbsp; 스포츠경향",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -851,7 +681,7 @@
       "published_at": "Fri, 24 Jul 2026 07:00:00 GMT",
       "summary": "서울교총–정근식 교육감 간담회, “지능형 악성민원 증가 .. 교육청이 적극 나서야” &nbsp;&nbsp; 에듀프레스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -862,7 +692,7 @@
       "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
       "summary": "박위, ‘CCTV 공개’ 후폭풍…‘서울시 홍보대사 해촉’ 위기? 민원 접수 &nbsp;&nbsp; 헤럴드경제",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -873,7 +703,7 @@
       "published_at": "Mon, 13 Jul 2026 07:00:00 GMT",
       "summary": "“민원 상담 20분 넘기면 안 돼요” .. 서울시교육청 ‘면담 권장시간’ 운영 &nbsp;&nbsp; 에듀프레스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -884,7 +714,7 @@
       "published_at": "Fri, 28 Aug 2026 07:00:00 GMT",
       "summary": "중구, 9월부터 복합 민원 ‘원스톱’ 처리 32종으로 늘린다 &nbsp;&nbsp; 서울Pn",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 중구",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -895,7 +725,7 @@
       "published_at": "Fri, 28 Aug 2026 22:01:00 GMT",
       "summary": "폭증하는 서울시 민원에 '수작업 한계'…AI 해법 될까? &nbsp;&nbsp; 네이트",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -906,7 +736,7 @@
       "published_at": "Tue, 25 Aug 2026 07:00:00 GMT",
       "summary": "'KTX 저격' 박위, '서울시 홍보대사' 해촉 위기..\"국민신문고 민원 접수했다\" [스타이슈] &nbsp;&nbsp; v.daum.net",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -917,7 +747,7 @@
       "published_at": "Thu, 27 Aug 2026 07:00:00 GMT",
       "summary": "\"빨리 처리해달라\" 민원 폭탄…서울시도 황당한 전말 &nbsp;&nbsp; news.sbs.co.kr",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -928,7 +758,7 @@
       "published_at": "Tue, 01 Sep 2026 02:01:30 GMT",
       "summary": "도봉구, 민원 해결 전담조직 ‘열린 구청장실’ 시작 &nbsp;&nbsp; 서울Pn",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 도봉",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -939,7 +769,7 @@
       "published_at": "Sun, 28 Jun 2026 07:00:00 GMT",
       "summary": "서울시, 러브버그 발생 집중 시기 대비 민원 다발지역 중심 현장 대응체계 강화 &nbsp;&nbsp; 환경포커스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -950,7 +780,18 @@
       "published_at": "Wed, 02 Sep 2026 07:00:00 GMT",
       "summary": "강남구청, 치과의원 민원 처리 논란… “178건 사안별 조치” &nbsp;&nbsp; 전국매일신문",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 강남",
+      "relevance_reason": "기사 제목의 지역 표현: 강남",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 민원",
+      "title": "박위, CCTV 공개 역풍 계속…서울시 홍보대사 해촉 '민원 접수' - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE5ubGF4X0VLUE9BSWNNUktKWGk1S2NZN3ZnXzVoZTNJcnVjblV6VmR0VHIyM01nZGdVWTlJX1UtNVJFdEYtYkE?oc=5",
+      "published_at": "Wed, 26 Aug 2026 07:00:00 GMT",
+      "summary": "박위, CCTV 공개 역풍 계속…서울시 홍보대사 해촉 '민원 접수' &nbsp;&nbsp; v.daum.net",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -961,7 +802,7 @@
       "published_at": "Wed, 16 Sep 2026 08:13:00 GMT",
       "summary": "지하철 출발 고의로 지연시킨 남성…서울교통공사 \"형사고발 검토\" &nbsp;&nbsp; 데일리안",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -972,7 +813,7 @@
       "published_at": "Fri, 04 Sep 2026 07:00:00 GMT",
       "summary": "이수진 서울시의원, 영등포·신길 배수시설 개선사업 공사 지연·추경 산출근거 점검 &nbsp;&nbsp; 서울시티",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -983,18 +824,7 @@
       "published_at": "Mon, 07 Sep 2026 07:00:00 GMT",
       "summary": "공우석 서울시의원 “16년째 제자리걸음 신림~봉천터널 공사 지연 강력 지적” &nbsp;&nbsp; seoul.co.kr",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 공사 지연",
-      "title": "“13년째 공사 중인데 또 6년”…김병진 시의원, 국회대로 지연 질타 - 서울뉴스통신",
-      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5KcGRsMDNfLTZKZ0U1WUlvaXlQV01GTG4tWnZ5OFVhVHh0eFY4MHlFa1QzZzVMSl9xUHUzdzI0dWxYYk05QnN5b0FMYnAwUWZxZWJvanN0bnpaTEMwZExxb1NoRkhxQ0NSc0lj?oc=5",
-      "published_at": "Mon, 14 Sep 2026 00:46:48 GMT",
-      "summary": "“13년째 공사 중인데 또 6년”…김병진 시의원, 국회대로 지연 질타 &nbsp;&nbsp; 서울뉴스통신",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1005,7 +835,7 @@
       "published_at": "Wed, 12 Aug 2026 07:00:00 GMT",
       "summary": "서울 7호선 청라 연장 비용 '껑충'…공사 지연 돌파구 찾기 총력 &nbsp;&nbsp; 인천일보",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1016,7 +846,7 @@
       "published_at": "Mon, 07 Sep 2026 07:00:00 GMT",
       "summary": "김준성 서울시의원, 창동·상계 지하차도 준공 4개월 지연…“공기 단축해야” &nbsp;&nbsp; thepowernews.co.kr",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1027,7 +857,7 @@
       "published_at": "Fri, 04 Sep 2026 09:44:22 GMT",
       "summary": "이수진 서울시의원, 영등포·신길 배수시설 개선사업 공사 지연 및 예산 점검 &nbsp;&nbsp; 웹이코노미",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1038,7 +868,7 @@
       "published_at": "Tue, 21 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, ‘또타지하철 앱’으로 실시간 지하철 지연 정보 한눈에 확인 &nbsp;&nbsp; 국토일보",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1049,7 +879,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, ‘또타지하철’로 도시철도 지연정보 한눈에…열차지연 플랫폼 구축 &nbsp;&nbsp; 문화일보",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1060,18 +890,18 @@
       "published_at": "Sat, 11 Jul 2026 07:00:00 GMT",
       "summary": "박찬대 “7호선 지연 해결 위해 서울교통공사 예비차량 대차 등 총력” &nbsp;&nbsp; v.daum.net",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
     {
       "query": "서울 공사 지연",
-      "title": "이수진 시의원 “영등포·신길 배수사업, 공사 지연·추경 따져야” - 서울뉴스통신",
+      "title": "이수진 시의원 “영등포·신길 배수사업, 공사 지연·추경 따져야” - snakorea.com",
       "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE13UWgycXB5T04yaGlMZjdKYTRONFFmZ0UxYmhuOXVjdHJacFk1NjFMN2N6VWxjM19VTVlkLXRZMzR5MzYxMkRQOHo3R3BkSFowQ0g2NlNDT2xmUjRORmZodkw5aWdFTDZxRGFZ?oc=5",
       "published_at": "Fri, 04 Sep 2026 06:39:00 GMT",
-      "summary": "이수진 시의원 “영등포·신길 배수사업, 공사 지연·추경 따져야” &nbsp;&nbsp; 서울뉴스통신",
+      "summary": "이수진 시의원 “영등포·신길 배수사업, 공사 지연·추경 따져야” &nbsp;&nbsp; snakorea.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 영등포",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1082,7 +912,7 @@
       "published_at": "Thu, 03 Sep 2026 06:33:07 GMT",
       "summary": "서울시의회 강신욱 의원, 거여119안전센터 공사 지연 지적…사전점검 강화 촉구 &nbsp;&nbsp; 웹이코노미",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1093,18 +923,7 @@
       "published_at": "Wed, 02 Sep 2026 07:00:00 GMT",
       "summary": "김준성 서울시의원, 중랑천 보행교량 공사 지연 지적… “사전협의부터 제대로 했어야” &nbsp;&nbsp; 서울Pn",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 공사 지연",
-      "title": "강신욱 시의원 “거여119안전센터 공사 지연…착공 전 점검 강화해야” - 서울뉴스통신",
-      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9XUnJ0WmVrcC1aVGoxTXZvbEVHaDdVaU43aldiU0FNNjRNRVl3RUlyRDd5V1lkVjN6Y2xRVHl0dVNha1ZGTmtDVXhsbVp4REkzbjlXc1RzWGxPU202WkN3bGh3bWFrSTd1LTQ4?oc=5",
-      "published_at": "Thu, 03 Sep 2026 03:03:19 GMT",
-      "summary": "강신욱 시의원 “거여119안전센터 공사 지연…착공 전 점검 강화해야” &nbsp;&nbsp; 서울뉴스통신",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1115,7 +934,7 @@
       "published_at": "Mon, 07 Sep 2026 07:00:00 GMT",
       "summary": "김준성 서울시의원 “창동·상계 지하차도 4개월 지연… 서울아레나 공연 전 공기 단축해야” &nbsp;&nbsp; twig24.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1126,7 +945,7 @@
       "published_at": "Mon, 22 Jun 2026 07:00:00 GMT",
       "summary": "“서울7호선 청라 연장선 개통 지연, 진상규명·정상 개통 추진해야” &nbsp;&nbsp; 인천투데이",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1137,7 +956,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통公, '또타지하철 앱'으로 지하철 지연 정보 한눈에 확인 &nbsp;&nbsp; 철도경제신문",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1148,7 +967,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, ‘또타지하철 앱’ 인프라 활용 서울 도시철도 지연 통합 안내 &nbsp;&nbsp; 매일일보",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1159,7 +978,7 @@
       "published_at": "Thu, 30 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, ‘또타지하철’ 앱서 수도권 지하철 지연 정보 한눈에 제공 &nbsp;&nbsp; the-pr.co.kr",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1170,7 +989,7 @@
       "published_at": "Wed, 17 Jun 2026 07:00:00 GMT",
       "summary": "서울영화센터 공사 지연으로 예비비 지출… 구미경 서울시의원, 재발 방지 촉구 &nbsp;&nbsp; 디스커버리뉴스(DISCOVERYNEWS)",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1181,7 +1000,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, '또타지하철 앱' 인프라 활용… 서울 도시철도 통합 안내 체계 마련 &nbsp;&nbsp; 한경매거진&북",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1192,7 +1011,7 @@
       "published_at": "Tue, 21 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, '또타지하철'로 도시철도 열차 지연정보 한 번에 제공 &nbsp;&nbsp; dailysisa.com",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1203,7 +1022,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, '또타지하철 앱'을 활용한 ‘열차지연장애 플랫폼’구축 &nbsp;&nbsp; BBS불교방송",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1214,7 +1033,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울 지하철 지연 정보, '또타지하철' 앱 하나로 확인한다 &nbsp;&nbsp; 미디어인뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1225,7 +1044,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, '또타지하철' 열차지연장애 플랫폼 구축…실시간 지연 정보 한곳에서 확인 &nbsp;&nbsp; 이로운넷",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1236,7 +1055,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, 지하철 지연정보 한 번에 확인…또타지하철 통합 플랫폼 구축 &nbsp;&nbsp; 이코노미사이언스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1247,7 +1066,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, '또타지하철'에 열차지연장애 플랫폼 가동 &nbsp;&nbsp; 핀포인트뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1258,7 +1077,7 @@
       "published_at": "Wed, 17 Jun 2026 07:00:00 GMT",
       "summary": "서울7호선 청라연장선 '1단계 2030년·2단계 2033년' 최대 4년 지연 &nbsp;&nbsp; 인천투데이",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1269,7 +1088,7 @@
       "published_at": "Sun, 12 Jul 2026 07:00:00 GMT",
       "summary": "서울7호선 청라연장사업 주민간담회 개최…박찬대 시장 \"지연 해결과 교통대책 마련에 총력\" &nbsp;&nbsp; 뉴뉴스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1280,7 +1099,7 @@
       "published_at": "Thu, 18 Jun 2026 07:00:00 GMT",
       "summary": "서울7호선 청라 연장선 개통 지연에 SSG랜더스 청라돔 이전 ‘불똥’ &nbsp;&nbsp; 인천투데이",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1291,7 +1110,7 @@
       "published_at": "Sun, 21 Jun 2026 07:00:00 GMT",
       "summary": "“서울 7호선 청라연장 지연 알고도 숨겼나”… 유정복 민선 8기 시정부, 시민 신뢰 저버린 ‘밀실 행정’ 논란 &nbsp;&nbsp; v.daum.net",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1302,18 +1121,7 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, '또타지하철' 열차지연 통합 알림 서비스 시작 &nbsp;&nbsp; 한국철도일보",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
-      "signal_type": "NEWS_ATTENTION",
-      "status": "DISCOVERY_SIGNAL"
-    },
-    {
-      "query": "서울 공사 지연",
-      "title": "오 시장,“과도한 정치공방으로 GTX-A 개통 일정 지연·재정부담 안타까워\" - 서울자치신문",
-      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE4tRV9XbVV6bVhEb2tPMUZvOU5Dd3RRZUFvR0dHT1JxNW1VZTU1ZUJvbkxkU01fUXBobFloZGZ5UFBGbHBQd3N5Mm40dDBZNHFKR1JqS194UmFHd2hkSFJ5YTh3T2dIVGYy?oc=5",
-      "published_at": "Thu, 11 Jun 2026 07:00:00 GMT",
-      "summary": "오 시장,“과도한 정치공방으로 GTX-A 개통 일정 지연·재정부담 안타까워\" &nbsp;&nbsp; 서울자치신문",
-      "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1324,7 +1132,7 @@
       "published_at": "Mon, 22 Jun 2026 07:00:00 GMT",
       "summary": "“서울 7호선 청라 연장 지연 알고도 묵인…주민들 농락한 것” &nbsp;&nbsp; 경기신문",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1335,7 +1143,7 @@
       "published_at": "Wed, 01 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사 \"7월 1~2일 1·2·4호선 일부 구간 열차 지연 가능\" &nbsp;&nbsp; 스페셜타임스",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     },
@@ -1346,7 +1154,205 @@
       "published_at": "Mon, 20 Jul 2026 07:00:00 GMT",
       "summary": "서울교통공사, '또타지하철' 열차지연장애 플랫폼 구축 &nbsp;&nbsp; 이뉴스투데이",
       "seoul_relevant": true,
-      "relevance_reason": "서울·자치구 명칭 포함: 서울",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "\"안전성 이상 없다\"서울시, GTX-A 지연 가능성 제기 - 한국철도일보",
+      "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE4xXzh2Nl90a241VWRrdWl6Rm9kZFBvNjFHNWQ0a0IxaWJYcnAzekFVZlhPbld4M05NLW1kN3owS2NTQy1xNzhzdjQzLWFuQWJOTE1fRDc4RWZBVlJKNnBrb29QNVNlVUZtbHFFcDROR0k?oc=5",
+      "published_at": "Sun, 14 Jun 2026 07:00:00 GMT",
+      "summary": "\"안전성 이상 없다\"서울시, GTX-A 지연 가능성 제기 &nbsp;&nbsp; 한국철도일보",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "서울7호선 청라 연장, '최대 49개월' 지연…이용우 의원 대책 마련 약속에도 주민들은 '싸늘' - 포커스인천",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1FSUNieEZ3UmxrMzRjZ3pKZVBpM0VXNlNvYURhQ2dsOVJnZFFtczJoeUhhamFVVHZJOEhhcjlvS0hBcWhHa0pRbEpFdktCMjZDYldCVzBBZDFZU2l1d05JRVZ0YV95T3ZnOW5NStIBcEFVX3lxTE1OLWtwOElPMGxwYjViOVg1QzJEbERBQ3BvUlgzMHNXUVYwbDNqTm5iY1pUaFgtZGlQckI3aXlqai1hLUdLZ2VHV0tXbHd5MVJVeUtPVEZFTHl4UTRoYzdpcjFNT1d2aEQ3cVhjY19KeFU?oc=5",
+      "published_at": "Tue, 23 Jun 2026 07:00:00 GMT",
+      "summary": "서울7호선 청라 연장, '최대 49개월' 지연…이용우 의원 대책 마련 약속에도 주민들은 '싸늘' &nbsp;&nbsp; 포커스인천",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "서울교통공사 \"지하철 불법시위 무관용 대응\"…시청역 8분 지연, 천막농성도 법적 조치 - 지이코노미",
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE95dHY1X3JDbk1mYkEwaWdSbjh4OVhnemhqSl93VGhXOEtoVWl6Vll2YjM0ekNVRUxmMVJPQ1U0Y21aaV8tU1JILW05d2d1VEM3SnpUZnZLTElCUm9LV3FOQy1NYlRvSG8?oc=5",
+      "published_at": "Thu, 02 Jul 2026 07:00:00 GMT",
+      "summary": "서울교통공사 \"지하철 불법시위 무관용 대응\"…시청역 8분 지연, 천막농성도 법적 조치 &nbsp;&nbsp; 지이코노미",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "[단독] \"툭하면 연착·고장\"…늙어가는 서울지하철 - 한국경제",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBHNUhmRlFpeHp1eVVxQ1hXdU5rRDllWEM4SDZLLWZzSENMcFg0VWxEQkpTTlQxdHM4dVc4S2E2aEV1RUgwTXBnMzRXSHNvYmw5NklOeVpNVGUzUQ?oc=5",
+      "published_at": "Fri, 01 May 2026 07:00:00 GMT",
+      "summary": "[단독] \"툭하면 연착·고장\"…늙어가는 서울지하철 &nbsp;&nbsp; 한국경제",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "“지연·응급상황도 차분하게”…서울교통공사 ‘최우수 방송왕’ 선발 - 지이코노미",
+      "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9oaXE5U21GMVJLWm9IbmQ4WkdBeFY5TXJRTlFkY25mVjJPWmtRd3FqX3hnUDJEZHBvd2xTZTNkbFhPZ1JaaGg3Z1ExM2lpRHAxaDdYX0c5bEItZFJUdXlEWlpfMnI?oc=5",
+      "published_at": "Fri, 22 May 2026 07:00:00 GMT",
+      "summary": "“지연·응급상황도 차분하게”…서울교통공사 ‘최우수 방송왕’ 선발 &nbsp;&nbsp; 지이코노미",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "오세훈 서울시장 \"과도한 정치공방에 GTX-A 개통 지연…안타까워\" - 데일리안",
+      "url": "https://news.google.com/rss/articles/CBMijgJBVV95cUxNdmM2dG5EMUpfTWxuYV9VWk1xRGNfbVpXa2c4NXRrVGZvZlI5LXNoXzFIUWxxYzliRWpFblF2Mnp3MnpJVHNLX1Vfcm0wQ2JvN1hGeDdydUxaX3FjUlp4blM1aXNSRWkyMUhQZjhZbjNJZ1F5dlM0Z0RIRjh1SGVtQ1VuWXNGNmVMWUdLMi13SnlrY081cUhibWtuNWRtNXhjTldWc2sxMDQ0QnJIUU5LaDBzMW9LZFNmcm03a1Nqd3ZGV0FPZ29jamg4dF9iVzFCeUpOa2dvODZPV3lrMTNGZ3ZWME9OaVRYeUtTd0dNVUZENHk3elFxajZBbElySGRrSEJhZVM5OTVRQU1tYXc?oc=5",
+      "published_at": "Fri, 12 Jun 2026 07:00:00 GMT",
+      "summary": "오세훈 서울시장 \"과도한 정치공방에 GTX-A 개통 지연…안타까워\" &nbsp;&nbsp; 데일리안",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "서울교통공사 \"7월 1~2일 지하철 이촌역~서울역 구간 열차 지연 가능\" - 공감신문",
+      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5vQmVpdmlqdGdrdFBkZEdYNnNTUkRqSk9DRE5PbkpOTTh4QkkwdzhySW5oUDF3aXNRUWNqR1RMQ3BhTW5tT1JvNXF6TVBqMThIcWNBVHZ2cUtmUWFGNkFLcTNGblhCdVlz?oc=5",
+      "published_at": "Tue, 30 Jun 2026 07:00:00 GMT",
+      "summary": "서울교통공사 \"7월 1~2일 지하철 이촌역~서울역 구간 열차 지연 가능\" &nbsp;&nbsp; 공감신문",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "서울시, 중동 정세로 급등한 자재가격 즉시 반영… 공사지연·품질저하 막는다 - 서울시티",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBVdGh0VnVsQ0hlYXRQY1VGeVVWX3lscGMwWUwzWXNIRThrWEc3Z1J2MWNMRTdpdTdPLWpVTld3U1NMcDk4a2VqYThjc3ZDODVzU1NTU1JHVjlkOGlWaFBDSWdETXZNSkZBSnpUMDgydw?oc=5",
+      "published_at": "Tue, 31 Mar 2026 07:00:00 GMT",
+      "summary": "서울시, 중동 정세로 급등한 자재가격 즉시 반영… 공사지연·품질저하 막는다 &nbsp;&nbsp; 서울시티",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "서울시, 중동전쟁에 자잿값 급등 '즉시 반영'…공사지연·품질저하 막는다 - 뉴스1",
+      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9xOGNyWjljZ3BRSWR5OHg0TDdaa2UxMkpQZXpOM0ZDOUZVQjh2TnUwU1ZGU1JjbE1Pb0lLRE0zTXBNN19kS2JFUm9mMjZCUW_SAVRBVV95cUxQeENkalkxclZPVUdzU2U4XzhzRUlDVTdoazVqcjU4eEdCbjVCdDVOYUJVcWZYTjBvNkNwVnJsaE9USkc1UGlYZTN4d3pkdTNCc0tISV8?oc=5",
+      "published_at": "Tue, 31 Mar 2026 07:00:00 GMT",
+      "summary": "서울시, 중동전쟁에 자잿값 급등 '즉시 반영'…공사지연·품질저하 막는다 &nbsp;&nbsp; 뉴스1",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "GTX-A 서울역~수서, 공사 지연에 개통 6월서 8월로 미뤄져 - 뉴스핌",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9kY2F3dDRJZEc0UHNoNlZOemZzOVpQQW9HWXh2UkllbWZROWw4dnZXMlczSmI2TEF0RXNyQ0RsM05XMUZVZnBJV2JvX3MtSC1DQlN4RVBUYnBOd3JJ?oc=5",
+      "published_at": "Sun, 29 Mar 2026 07:00:00 GMT",
+      "summary": "GTX-A 서울역~수서, 공사 지연에 개통 6월서 8월로 미뤄져 &nbsp;&nbsp; 뉴스핌",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "서울역~수서역 잇는 GTX-A 공사 지연...올해 8월 개통 예정 - wikitree.co.kr",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9LN1hmekdkVXRHZk5PTHdpR3FYbXEteHAwNmdBUFZsOWxwdWN2TUh2TW9RekF4ZklOWllLVkFYQXF4TkZ2OG5RaDRpOVlfSjh1RklIYjJR?oc=5",
+      "published_at": "Sun, 29 Mar 2026 07:00:00 GMT",
+      "summary": "서울역~수서역 잇는 GTX-A 공사 지연...올해 8월 개통 예정 &nbsp;&nbsp; wikitree.co.kr",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "[서울시 팩트브리핑] 위례선 트램은 근린공원 공사와는 무관하게 지연 없이 정상 추진 중입니다 - 서울특별시",
+      "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE95Q3lLcVJ6MUFVbUxCS18yVHhGd3NlbjVNRzRsY05SdXBzUnliU3FYdExZcktqMzRCNzZlWWtZNDZURS1fNEhVWUpRWWtRMWw2SVAyNjlUOGw?oc=5",
+      "published_at": "Fri, 23 Jan 2026 08:00:00 GMT",
+      "summary": "[서울시 팩트브리핑] 위례선 트램은 근린공원 공사와는 무관하게 지연 없이 정상 추진 중입니다 &nbsp;&nbsp; 서울특별시",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "유정복 인천시장, 서울지하철 7호선 청라연장선 공사 지연 지적 - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9Qa0l4ek5NeWljeGpfdUtiVkhuYkZWVG9QZGU5aG9zZDBjbC1LSjhnWkxkaXNzQTloMExRbEVJajFkeEVQSGc?oc=5",
+      "published_at": "Tue, 13 Jan 2026 08:00:00 GMT",
+      "summary": "유정복 인천시장, 서울지하철 7호선 청라연장선 공사 지연 지적 &nbsp;&nbsp; v.daum.net",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "상습 납품지연 업체에 계속 일감 줘놓고···서울교통공사 “손해배상 청구” 뒷북 - 경향신문",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9GS0N6dUtCUHBsVkVQNTdCSGhLRGhPZ3NvdnFoOXVQMGp0Y08yWXB1SzAyTVhtdTZVSENhbmFqVTNyR2V3akhhUk8tZnFFbGZkcXJZcFhDWXBuQdIBX0FVX3lxTE5LbHdvYTVJczN3VERscmZJa05fZ1NzdjloMVBJRG95NW4zY2N3MlEwRTkwMmhpWW5SaGpheURoREdPOUE1NXhVYnE1Y2lvN2FzaEpMS1drWDh3T08xYXVV?oc=5",
+      "published_at": "Tue, 20 Jan 2026 08:00:00 GMT",
+      "summary": "상습 납품지연 업체에 계속 일감 줘놓고···서울교통공사 “손해배상 청구” 뒷북 &nbsp;&nbsp; 경향신문",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "서울지하철 노조 ‘준법 운행’…출근길 지연 우려 - 연합뉴스TV",
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5PcDczZTJCejR0WVpHNzJ1dFNiVHp6cDF0cm81MksydkxkNUNweHlMa3g0WUl6cUJSUTNSSVF6ZmRhRG1GTzFQaWxwcngwaHJQdUdSdkUtWGZKbzFOYlQtY3ZEcjdVVjg?oc=5",
+      "published_at": "Mon, 01 Dec 2025 08:00:00 GMT",
+      "summary": "서울지하철 노조 ‘준법 운행’…출근길 지연 우려 &nbsp;&nbsp; 연합뉴스TV",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "서울교통공사, 전동차 납품 지연에 '다원시스' 경찰 고소 - 한국경제",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1JeTVpdF9sNjFtMjVLdnBQQl83VEZVd1JZZENaQms1T0MxdmhWYVA0TDhwVlFnV2hWM1BiVklvZUpkX0hwcWVCVVY0empPTXYtZG5YalkxWnZiQQ?oc=5",
+      "published_at": "Mon, 09 Feb 2026 08:00:00 GMT",
+      "summary": "서울교통공사, 전동차 납품 지연에 '다원시스' 경찰 고소 &nbsp;&nbsp; 한국경제",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "유정복 인천시장, 서울지하철 7호선 청라연장선 공사 지연 지적 - 중부일보",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5GQkJMVDJ3NXM2ZVJScDA0b0pzRnIxXzlncW9zcG13QTlFSXpVVVE5R2xCREd3NDdjZTBlQlV1dlliOUtxSEFNN3k1LXJWemtCeDNwUWFtM1dUOTJsNWxQWDlXVWRDWlFGaEFqNDRyOA?oc=5",
+      "published_at": "Tue, 13 Jan 2026 08:00:00 GMT",
+      "summary": "유정복 인천시장, 서울지하철 7호선 청라연장선 공사 지연 지적 &nbsp;&nbsp; 중부일보",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL"
+    },
+    {
+      "query": "서울 공사 지연",
+      "title": "서울교통공사, 다원시스 사기죄 고소…\"전동차 납품지연 반복\" - 연합뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9CTlY0OHhZOEd3bzhDMEJsVUplb2ZqRzJmVmlBXzBVYWt0TnFXcHFmWWJSVlRaNGZmRUJsT0Y3TnNhUTA5WXBmczJTMzg5bExwSmpnaUxwX3loelXSAWBBVV95cUxNc1c4emhmMFlRank1Q0htQlNMcjE5YkYtMGgyNmJFTENpMWVtZlhsc2E0bzJ4VFBmNjh0bmZfMUxuRk04ZmlaRkJFbXN6SlJvelBsVVBLeENGaTROZHpZOUU?oc=5",
+      "published_at": "Mon, 09 Feb 2026 08:00:00 GMT",
+      "summary": "서울교통공사, 다원시스 사기죄 고소…\"전동차 납품지연 반복\" &nbsp;&nbsp; 연합뉴스",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL"
     }
@@ -1375,6 +1381,7 @@
     "네이버 데이터랩 ratio는 절대 검색량이 아닌 상대 지수임",
     "검색·뉴스 반복은 시민 전체 의견이나 사실 확정이 아님",
     "동일·유사 제목은 묶었지만 기사 내용의 사실성은 검증하지 않음",
+    "지역성은 기사 제목 기준의 1차 분류이며 최종 사실 확인이 아님",
     "후보 승격 전 서울시의회·구의회·감사·통계·현장 확인 필요"
   ]
 }
