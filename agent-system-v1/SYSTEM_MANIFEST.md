@@ -1,6 +1,6 @@
 # 서울 기획 아이템 발굴 시스템 v3.1 — 활성 구성
 
-기준일: 2026-09-17
+기준일: 2026-09-22
 
 이 문서는 예약 실행과 수동 실행이 참조할 단일 활성 구성을 지정한다. 아래에 없는 초안·구버전 수집기는 참고 자료이며 자동 실행에 사용하지 않는다.
 
@@ -76,6 +76,13 @@
 | 공식 SNS L0 수동·PR 읽기 전용 실행 | .github/workflows/official-social-l0.yml |
 | 읽기 전용 운영 화면 설계·목업 | app-ui-v1/README.md |
 | 읽기 전용 운영 화면 | app-ui-v1/index.html, app-ui-v1/styles.css, app-ui-v1/app.js |
+| 검색·뉴스 관심 신호 수집(탐색용) | interest-signal-pilot/collect_interest_signals.py |
+| 검색 제목 사람 검토 큐(자동 후보 승격 금지) | interest-signal-pilot/build_review_queue.py |
+| 관심 신호 예약·수동 실행 | .github/workflows/collect-interest-signals.yml |
+| 화면 데이터 생성·품질 게이트 | app-ui-v1/build_ui_data.py, editorial-v3/validate_candidate_contract.py |
+| 화면 데이터 예약·수동 실행 | .github/workflows/app-ui-data.yml |
+| 탐색 신호 승격 경계 PR 검증 | .github/workflows/editorial-hypothesis-gate.yml |
+| 통합 흐름 및 구현 상태 | editorial-v3/SYSTEM_ARCHITECTURE.md |
 | 비회기 보완소스 시험안(미편입) | district-council-pilot/OFF_SESSION_SOURCE_PLAN.md |
 | 브리핑 핵심 지침 | briefing-v3.0-draft/SKILL.md |
 | 시장 우선 발견 | briefing-v3.0-draft/MARKET_FIRST_DISCOVERY.md |

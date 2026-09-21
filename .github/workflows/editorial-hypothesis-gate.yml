@@ -1,0 +1,43 @@
+name: Validate editorial hypothesis gate
+
+on:
+  pull_request:
+    paths:
+      - "interest-signal-pilot/**"
+      - "app-ui-v1/**"
+      - "editorial-v3/**"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+      - ".github/workflows/editorial-hypothesis-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Python syntax
+        run: python -m py_compile interest-signal-pilot/build_review_queue.py app-ui-v1/build_ui_data.py editorial-v3/validate_candidate_contract.py
+      - name: Validate discovery system
+        run: python agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Rebuild from tracked signal snapshot
+        run: |
+          python interest-signal-pilot/build_review_queue.py
+          python app-ui-v1/build_ui_data.py
+          python editorial-v3/validate_candidate_contract.py
+      - name: Check title-only signal boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          queue = json.loads(Path("interest-signal-pilot/output/review_queue_latest.json").read_text(encoding="utf-8"))
+          brief = json.loads(Path("app-ui-v1/data/latest.json").read_text(encoding="utf-8"))["editorialBrief"]
+          assert queue["items"], "tracked snapshot has no review signals"
+          assert all(item["source_context_status"] == "TITLE_ONLY" for item in queue["items"])
+          assert all("structural_question" not in item for item in queue["items"])
+          assert brief["candidates"] == [], "title-only signals were promoted"
+          assert brief["discovery_signals"], "reviewable signals disappeared"
+          PY
