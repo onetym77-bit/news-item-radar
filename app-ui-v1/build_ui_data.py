@@ -1,5 +1,6 @@
 import csv
 import json
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,14 +45,37 @@ try:
 except (FileNotFoundError, UnicodeError):
     history = []
 
-pending = summary.get("generated", 0) - summary.get("labeled", 0)
+pending_items = []
+try:
+    with (ROOT / "source-scout-v1" / "HUMAN_REVIEW_QUEUE.csv").open(encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            status = row.get("editor_judgment") or "PENDING"
+            pending_items.append([
+                row.get("context_subject") or row.get("candidate_id", "제목 미상"),
+                f'{row.get("source_name", "미상")} · {row.get("first_seen", "")}~{row.get("last_seen", "")}',
+                row.get("question", "") or row.get("central_question", ""),
+                row.get("url", ""),
+                status,
+                row.get("evidence_values", ""),
+                row.get("central_question", ""),
+                row.get("citizen_stake", ""),
+                row.get("verification_axes", ""),
+            ])
+except (FileNotFoundError, UnicodeError):
+    pending_items = []
+
+source_counts = Counter(item[1].split(" · ", 1)[0] for item in pending_items)
+source_performance = [[name, str(count), "판정 대기"] for name, count in sorted(source_counts.items())]
+
 data = {
     "lastRun": manifest.get("generated_at_kst", "미확인"),
     "dataMode": "실제 산출물",
-    "metrics": [["등록 소스", str(len(sources))], ["사람 판정 대기", str(max(0, pending))], ["접속·수집 상태", "확인 필요"], ["브리핑 연결", "가능" if manifest.get("publishable") else "보류"]],
+    "metrics": [["등록 소스", str(len(sources))], ["사람 판정 대기", str(len(pending_items))], ["접속·수집 상태", "확인 필요"], ["브리핑 연결", "가능" if manifest.get("publishable") else "보류"]],
     "sources": sources,
     "cards": cards,
+    "pending": pending_items,
     "history": history,
+    "sourcePerformance": source_performance,
     "queue": [["사람 판정", f'{summary.get("labeled", 0)}/{summary.get("generated", 0)}건 완료'], ["브리핑", "공개 가능" if manifest.get("publishable") else "검토 필요"], ["데이터 신선도", "정상" if not manifest.get("stale_at_generation") else "오래됨"]],
 }
 OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
