@@ -22,6 +22,10 @@ class NewsContextTests(unittest.TestCase):
             "강서구 재개발 갈등 조정 회의 개최",
         ))
 
+    def test_rejects_private_fetch_target(self):
+        self.assertIsNone(context.safe_public_url("http://127.0.0.1/private"))
+        self.assertIsNone(context.safe_public_url("https://localhost/private"))
+
     def test_extract_body_uses_article_not_navigation(self):
         body = "시민이 실제로 겪은 일을 기사에 적었습니다. " * 20
         document = "<nav>관계없는 메뉴</nav><article><h1>제목</h1><p>" + body + "</p></article>"
