@@ -78,6 +78,7 @@
 | 읽기 전용 운영 화면 | app-ui-v1/index.html, app-ui-v1/styles.css, app-ui-v1/app.js |
 | 검색·뉴스 관심 신호 수집(탐색용) | interest-signal-pilot/collect_interest_signals.py |
 | 검색 제목 사람 검토 큐(자동 후보 승격 금지) | interest-signal-pilot/build_review_queue.py |
+| 뉴스 원문 본문 한정 대조·내용 판정(최대 6회 모델 호출, 자동 후보 승격 금지) | interest-signal-pilot/analyze_news_context.py |
 | 관심 신호 예약·수동 실행 | .github/workflows/collect-interest-signals.yml |
 | 화면 데이터 생성·품질 게이트 | app-ui-v1/build_ui_data.py, editorial-v3/validate_candidate_contract.py |
 | 화면 데이터 예약·수동 실행 | .github/workflows/app-ui-data.yml |
