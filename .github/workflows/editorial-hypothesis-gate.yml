@@ -19,7 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check Python syntax
-        run: python -m py_compile interest-signal-pilot/build_review_queue.py app-ui-v1/build_ui_data.py editorial-v3/validate_candidate_contract.py
+        run: python -m py_compile interest-signal-pilot/build_review_queue.py interest-signal-pilot/analyze_news_context.py interest-signal-pilot/test_analyze_news_context.py app-ui-v1/build_ui_data.py editorial-v3/validate_candidate_contract.py
+      - name: Test publisher-body review boundary
+        run: python -m unittest discover -s interest-signal-pilot -p "test_*.py" -v
       - name: Validate discovery system
         run: python agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
       - name: Rebuild from tracked signal snapshot
