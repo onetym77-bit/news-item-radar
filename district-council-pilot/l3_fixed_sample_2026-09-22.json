@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "basis_run_id": 35684778835,
+  "basis_date_kst": "2026-09-22",
+  "selection": "non-provisional body with matched meeting date and identity",
+  "public_release_date": null,
+  "documents": [
+    {
+      "source_id": "gwanak",
+      "source_name": "관악구",
+      "document_url": "https://www.ga21c.seoul.kr/viewer/minutes.do?uid=6334",
+      "meeting_date": "2026-08-18",
+      "body_sha256": "64fbcb3c578ef39bdea15748e7d0b3c62dd4a19a654c6c0db0f3c6c71b637609"
+    },
+    {
+      "source_id": "junggu",
+      "source_name": "중구",
+      "document_url": "https://council.junggu.seoul.kr/record/main?uid=6441",
+      "meeting_date": "2026-09-14",
+      "body_sha256": "cd03959ebe1fb88aab7f657a0895584b5e48d6ca6d81d689813a7a87971e4678"
+    },
+    {
+      "source_id": "yongsan",
+      "source_name": "용산구",
+      "document_url": "https://www.yscl.go.kr/viewer/minutes.do?uid=30364",
+      "meeting_date": "2026-07-14",
+      "body_sha256": "c4e09fd98f34820a4660664c2fbb388886ee41e56310861971485cae95bfee87"
+    },
+    {
+      "source_id": "gangbuk",
+      "source_name": "강북구",
+      "document_url": "https://council.gangbuk.go.kr/viewer/minutes.do?uid=8842",
+      "meeting_date": "2026-09-14",
+      "body_sha256": "18237b496cbd87e0014bfb87605d1201232e79ea8182e7d5d2c58818ecf5acfe"
+    },
+    {
+      "source_id": "yangcheon",
+      "source_name": "양천구",
+      "document_url": "https://www.ycc.go.kr/record/main?uid=8686&code=C050&view=full_view",
+      "meeting_date": "2026-08-25",
+      "body_sha256": "7902651e3758b10fbcfb9d9245422a0d26cbc02a812603613ff64eb5d9c8d668"
+    },
+    {
+      "source_id": "gwangjin",
+      "source_name": "광진구",
+      "document_url": "https://council.gwangjin.go.kr/record/main/contents?uid=6747",
+      "meeting_date": "2026-08-21",
+      "body_sha256": "4da7cb266f0c2201ca3f2a0f14e2c0e0dbfbfde7a88887600a41f6f4070b6903"
+    },
+    {
+      "source_id": "jungnang",
+      "source_name": "중랑구",
+      "document_url": "https://council.jungnang.go.kr/viewer/minutes.do?uid=6700",
+      "meeting_date": "2026-09-09",
+      "body_sha256": "85d449ef0bc91d6410929fee7bcf86ae3564f4548ab9703ede6edfaa4d2d81f3"
+    }
+  ]
+}
