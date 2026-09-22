@@ -148,7 +148,8 @@ def collect(sample, sources, *, model, api_key="", offline=False, fetcher=fetch_
     output = {"schema": 1, "sample_basis_run_id": sample["basis_run_id"],
               "sampled_at_kst": datetime.now(KST).isoformat(timespec="seconds"),
               "mode": "CONTEXT_ONLY" if offline else "SEMANTIC_SHADOW",
-              "source_count": 7, "results": [], "question_output": "VERIFICATION_ONLY",
+              "source_count": 7, "results": [],
+              "question_output": "NONE" if offline else "VERIFICATION_ONLY",
               "briefing_output": "NONE", "automatic_ledger_write": False}
     if not offline and not api_key:
         raise ValueError("OPENAI_API_KEY required for semantic shadow")
@@ -198,7 +199,7 @@ def render(output):
         lines.extend(["", f"## {row['source_name']} · 검증 질문",
                       f"- 원문: {row['document_url']}",
                       f"- 발언 앵커: {card['anchor_quote']}",
-                      f"- 관찰된 발언: {card['observed_issue']}",
+                      f"- 발언 내용에 대한 해석(미검증): {card['observed_issue']}",
                       f"- 시민의 이해관계(확인 필요): {card['citizen_stake_to_check']}",
                       f"- 취재 가설: {card['editorial_hypothesis']}",
                       f"- 가를 질문: {card['test_question']}",
