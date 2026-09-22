@@ -124,7 +124,7 @@ class L3ContextTests(unittest.TestCase):
                                      "missing_piece": "실제 서비스를 이용한 주민의 경험과 비용 자료가 필요하다.",
                                      "decisive_test": "이용자 납부 내역과 실제 선택 변화가 있는지 확인한다.",
                                      "reason": "검증 질문은 성립하지만 현재는 시민 생활 변화가 약하다."}
-                                    for item in inputs]}))
+                                    for item in inputs]})
         self.assertEqual(output["review_count"], 7)
         self.assertEqual(output["pursue_count"], 0)
         self.assertEqual(output["desk_status"], "COMPLETE")
