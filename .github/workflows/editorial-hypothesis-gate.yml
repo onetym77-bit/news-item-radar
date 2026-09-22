@@ -21,6 +21,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check Python syntax
         run: python -m py_compile interest-signal-pilot/build_review_queue.py interest-signal-pilot/analyze_news_context.py interest-signal-pilot/test_analyze_news_context.py app-ui-v1/build_ui_data.py editorial-v3/validate_candidate_contract.py
+      - name: Check UI JavaScript syntax
+        run: node --check app-ui-v1/app.js
       - name: Test publisher-body review boundary
         run: python -m unittest discover -s interest-signal-pilot -p "test_*.py" -v
       - name: Validate discovery system
