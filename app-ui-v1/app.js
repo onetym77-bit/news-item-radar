@@ -64,6 +64,10 @@ function renderDiscoveryItem(item) {
     INCIDENT: "사건 보도", POLICY_ANNOUNCEMENT: "정책 발표",
     PROMOTION: "홍보성 보도", OPINION: "주장·의견", OTHER: "기타"
   };
+  const claimLabels = {
+    OBSERVED_EVENT: "기사에 기록된 사건", ATTRIBUTED_CLAIM: "인용된 주장",
+    ANNOUNCEMENT: "발표 내용", UNCLEAR: "사실 성격 미확인"
+  };
   const badge = assessed ? "본문 판정 · 사실 미검증" : "본문 확인 전";
   const failureLabels = {
     NO_TITLE_MATCH: "동일 기사 원문 주소 미확인",
@@ -75,7 +79,7 @@ function renderDiscoveryItem(item) {
   const pendingReason = failureLabels[item.context_failure] || "본문 접근·판정 미완료";
   return `<article class="item-card">
     <div class="item-head"><h3>${esc(item.headline || "제목 미상")}</h3><span class="status-badge">${badge}</span></div>
-    <p class="item-meta">${esc(item.source || "출처 미상")}${assessed ? " · " + esc(typeLabels[item.document_type] || "유형 확인 필요") : ""}</p>
+    <p class="item-meta">${esc(item.source || "출처 미상")}${assessed ? " · " + esc(typeLabels[item.document_type] || "유형 확인 필요") + " · " + esc(claimLabels[item.claim_type] || "사실 성격 미확인") : ""}</p>
     ${assessed
       ? `<p class="item-question"><strong>기사 내용</strong> ${esc(item.what_happened || "요약 확인 필요")}</p>
          ${item.citizen_relevance ? `<p class="item-question"><strong>시민 관련성</strong> ${esc(item.citizen_relevance)}</p>` : ""}
