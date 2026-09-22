@@ -266,12 +266,15 @@ def validated_assessment(value: dict, body: str) -> dict:
         raise ValueError("weak_question")
     if value["document_type"] == "PROMOTION":
         question = ""
+    worth = value["question_worth"]
+    if worth == "HIGH" and not question:
+        worth = "LOW" if value["document_type"] == "PROMOTION" else "UNCLEAR"
     return {
         "document_type": value["document_type"],
         "claim_type": value["claim_type"],
         "what_happened": tidy(value["what_happened"])[:240],
         "citizen_relevance": tidy(value["citizen_relevance"])[:200],
-        "question_worth": value["question_worth"] if question else "UNCLEAR",
+        "question_worth": worth,
         "editorial_question": question,
         "missing_check": tidy(value["missing_check"])[:200],
         "counterpossibility": tidy(value["counterpossibility"])[:200],
