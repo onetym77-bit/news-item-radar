@@ -162,6 +162,32 @@
         "listing_candidate_count": 3,
         "listing_error_code": null
       }
+    },
+    {
+      "run_date_kst": "2026-09-22",
+      "run_id": "35696394159",
+      "listing_status": "SUCCESS",
+      "listing_diagnostics": {
+        "listing_pages_attempted": 2,
+        "listing_pages_successful": 2,
+        "listing_errors": [],
+        "eligible_listing_records": 18
+      },
+      "selected_ids": [
+        "575050",
+        "575046",
+        "575039"
+      ],
+      "diagnostics": {
+        "detail_requested": 3,
+        "pdf_found": 3,
+        "pdf_extracted": 3,
+        "ready_questions": 0,
+        "held_questions": 3,
+        "raw_reports_persisted": 0,
+        "listing_candidate_count": 3,
+        "listing_error_code": null
+      }
     }
   ],
   "records": [
@@ -957,6 +983,180 @@
         "finding_selection_version": "CONCRETE_FINDING_V3",
         "evidence_anchor": "UNRESOLVED",
         "freshness_days": 213,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "575050",
+      "first_seen_kst": "2026-09-22",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "575050",
+        "title": "서울시평생교육진흥원 종합감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/575050?listPage=2",
+        "published_at": "2026-02-13",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/02/698d5da148d364.24377403.pdf",
+        "attachment_sha256": "e3cb21cd15c08a0bf6870d8c7f0d9113b5e71c48183c00b2dc471134656384b1",
+        "report_text_sha256": "ea481b9c15e07da920b9b3dd8c19a9cf2d078cfd680f906b5db7930cd9fb2194",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": true,
+        "documented_issue_in_table": true,
+        "dominant_domain_evidence_count": 1,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": 24,
+        "disposition_terms": [
+          "시정",
+          "주의",
+          "개선",
+          "통보"
+        ],
+        "disposition_counts": {
+          "시정": 2,
+          "주의": 10,
+          "통보": 12
+        },
+        "risk_domains": [
+          "GOVERNANCE_CONTROL"
+        ],
+        "risk_domain_counts": {
+          "GOVERNANCE_CONTROL": 2
+        },
+        "selected_finding_title": "서울 리테크 사업 운영·관리 개선 필요 서울시평생교육진흥원 통보",
+        "review_finding_titles": [
+          "서울 리테크 사업 운영·관리 개선 필요 서울시평생교육진흥원 통보",
+          "연구사업 운영 과정 개선 필요 서울시평생교육진흥원 주의, 통보",
+          "시민대학 캠퍼스 운영·관리 체계 개선 필요 서울시평생교육진흥원, 주의, 통보 市 평생교육국"
+        ],
+        "finding_candidate_count": 3,
+        "finding_selection_score": 1,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 221,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "구체 지적은 확인했지만 기획 질문 생성 기준에 미달",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "575046",
+      "first_seen_kst": "2026-09-22",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "575046",
+        "title": "서울시50플러스재단 종합감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/575046?listPage=2",
+        "published_at": "2026-02-13",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/02/698d5c888cc183.62318453.pdf",
+        "attachment_sha256": "acdaa6dd38538da3ebb09aa00b5bf9c450290362e37e3df499188874b00b5399",
+        "report_text_sha256": "483d1000c948bfe87afc076cef84004d5a9e407b8fe0b836a884b23e85942d4e",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": true,
+        "documented_issue_in_table": true,
+        "dominant_domain_evidence_count": 1,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": 19,
+        "disposition_terms": [
+          "주의",
+          "개선",
+          "통보"
+        ],
+        "disposition_counts": {
+          "주의": 2,
+          "통보": 9,
+          "개선": 50
+        },
+        "risk_domains": [
+          "GOVERNANCE_CONTROL",
+          "PROCUREMENT_CONTRACT"
+        ],
+        "risk_domain_counts": {
+          "PROCUREMENT_CONTRACT": 2,
+          "GOVERNANCE_CONTROL": 2
+        },
+        "selected_finding_title": "대 특화 직업전환 훈련 성과관리 운영 미흡 50플러스재단 통보",
+        "review_finding_titles": [
+          "대 특화 직업전환 훈련 성과관리 운영 미흡 50플러스재단 통보",
+          "디지털 직무역량 강화 강사 운영 미흡 50플러스재단 통보",
+          "물품관리 소홀 및 체계적 개선 50플러스재단 통보",
+          "입찰참가자격 제한기준 미준수 50플러스재단 주의 - 2"
+        ],
+        "finding_candidate_count": 4,
+        "finding_selection_score": 1,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 221,
+        "why_now": "RECENT_REPORT_SAMPLE",
+        "question_status": "HOLD",
+        "hold_reason": "구체 지적은 확인했지만 기획 질문 생성 기준에 미달",
+        "verification_question": null,
+        "source_frame": null,
+        "editorial_addition": null,
+        "public_interest_to_verify": null,
+        "competing_hypotheses": [],
+        "discriminating_test": null,
+        "minimum_test_timebox": null,
+        "discard_condition": null
+      },
+      "challenge_flags": [
+        "SOURCE_EVIDENCE_HELD"
+      ]
+    },
+    {
+      "source_record_id": "575039",
+      "first_seen_kst": "2026-09-22",
+      "cohort": "HISTORICAL_BACKFILL",
+      "card": {
+        "source_record_id": "575039",
+        "title": "도로사업소 기관운영 감사 결과",
+        "detail_url": "https://news.seoul.go.kr/gov/archives/575039?listPage=2",
+        "published_at": "2026-02-13",
+        "attachment_url": "https://news.seoul.go.kr/gov/files/2026/02/698d5a9ba0ef25.58748319.pdf",
+        "attachment_sha256": "6b6f2367d947d49cd96bad6b8985906bd5aa2866323aa942448b3853ac84f2fd",
+        "report_text_sha256": "cda0a8f4a968bb76a6839f11298c9d7e0b683761e8a7040dbe6466e06d5d3361",
+        "pdf_pages_sampled": 24,
+        "raw_report_text_persisted": false,
+        "summary_table_confirmed": false,
+        "documented_issue_in_table": false,
+        "dominant_domain_evidence_count": 0,
+        "critical_issue_term_confirmed": false,
+        "official_finding_count": null,
+        "disposition_terms": [],
+        "disposition_counts": {},
+        "risk_domains": [],
+        "risk_domain_counts": {},
+        "selected_finding_title": null,
+        "review_finding_titles": [],
+        "finding_candidate_count": 0,
+        "finding_selection_score": 0,
+        "finding_selection_version": "CONCRETE_FINDING_V3",
+        "evidence_anchor": "UNRESOLVED",
+        "freshness_days": 221,
         "why_now": "RECENT_REPORT_SAMPLE",
         "question_status": "HOLD",
         "hold_reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
