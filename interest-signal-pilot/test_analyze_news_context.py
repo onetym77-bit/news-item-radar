@@ -54,7 +54,7 @@ class NewsContextTests(unittest.TestCase):
         }
         assessed = context.validated_assessment(value, body)
         self.assertEqual(assessed["editorial_question"], "")
-        self.assertEqual(assessed["question_worth"], "UNCLEAR")
+        self.assertEqual(assessed["question_worth"], "LOW")
 
     def test_unavailable_body_stays_unassessed(self):
         queue = {"items": [{
