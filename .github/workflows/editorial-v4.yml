@@ -1,0 +1,50 @@
+name: Build editorial review v4
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Collect interest signals"]
+    types: [completed]
+  pull_request:
+    paths:
+      - "editorial-v4/**"
+      - ".github/workflows/editorial-v4.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: editorial-v4-main
+  cancel-in-progress: false
+
+jobs:
+  review:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      PYTHONUTF8: "1"
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
+      - name: Validate pipeline and source policy
+        run: |
+          python -X utf8 -m unittest discover -s editorial-v4 -p "test_*.py" -v
+          python agent-system-v1/validate_discovery_system.py
+      - name: Dry-run input mapping on pull requests
+        if: ${{ github.event_name == 'pull_request' }}
+        run: python -X utf8 editorial-v4/pipeline.py --dry-run
+      - name: Generate review questions
+        if: ${{ github.event_name != 'pull_request' }}
+        run: python -X utf8 editorial-v4/pipeline.py --model gpt-5.6-luna
+      - name: Commit derived review only
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add editorial-v4/output/latest.json
+          git diff --cached --quiet || git commit -m "Update editorial v4 review"
+          git pull --rebase origin main
+          git push origin HEAD:main
