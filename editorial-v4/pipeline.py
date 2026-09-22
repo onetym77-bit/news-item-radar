@@ -76,7 +76,7 @@ REVIEW_INSTRUCTIONS = """당신은 첫 번째 편집자와 독립적으로 제�
 제목·주제·시민 질문·덜 당연한 질문이 같은 말을 반복하거나 '시민에게 문제가 있나'를 변주하면 HOLD.
 6~7분 리포트를 만들 인물/현장 장면과 맞서는 설명, 이를 가를 구체적인 첫 취재가 없으면 HOLD.
 반대로 새 사업이라 기존 통계가 없거나 의원 발언 한 건뿐이어도 질문 자체가 구체적이고 검증 경로가 있으면 KEEP 가능하다.
-시민 피해, 사업 실패, 예산 소멸, 이미 보도된 각도의 독창성을 입력만으로 확정하지 마라.
+시민 피해, 사업 실패, 예산 소멸, 이미 보도된 각도의 독창성을 입력만으로 확정하지 마라. run_date_kst 이후의 사건 서술을 이미 일어난 사실로 취급하지 마라.
 editorial_risk는 가장 강한 오판 위험, decisive_test는 그 위험과 가설을 가를 첫 검증, reason은 판정 이유를 쓴다.
 좋은 후보가 하나도 없으면 전부 HOLD하라. 2~3건을 채우지 마라."""
 
@@ -243,12 +243,14 @@ def call_structured(model, api_key, instructions, data, schema, name):
 def model_assess(records, leads, model, api_key):
     prior = [{"title": x.get("title"), "question": x.get("editorial_question")} for x in leads]
     feedback = read("editorial-v4/decisions.json", [])[-12:]
-    data = {"records": records, "previously_selected": prior, "editor_feedback": feedback}
+    data = {"run_date_kst": datetime.now(timezone(timedelta(hours=9))).date().isoformat(),
+            "records": records, "previously_selected": prior, "editor_feedback": feedback}
     return call_structured(model, api_key, INSTRUCTIONS, data, SCHEMA, "editorial_v4")
 
 def model_review(records, proposals, model, api_key):
     by_id = {r["id"]: r for r in records}
-    data = {"proposals": [{"proposal": p, "original_input": by_id[p["id"]]}
+    data = {"run_date_kst": datetime.now(timezone(timedelta(hours=9))).date().isoformat(),
+            "proposals": [{"proposal": p, "original_input": by_id[p["id"]]}
                            for p in proposals]}
     return call_structured(model, api_key, REVIEW_INSTRUCTIONS, data, REVIEW_SCHEMA, "editorial_v4_review")
 
