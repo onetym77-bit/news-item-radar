@@ -79,8 +79,12 @@ def titles_match(left: str, right: str) -> bool:
 
 
 def safe_public_url(value: str) -> str | None:
-    parsed = urllib.parse.urlsplit(value)
-    if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password or parsed.port not in {None, 80, 443}:
+    try:
+        parsed = urllib.parse.urlsplit(value)
+        valid_port = parsed.port in {None, 80, 443}
+    except ValueError:
+        return None
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password or not valid_port:
         return None
     host = parsed.hostname.lower()
     if host == "localhost" or host.endswith(".local"):
