@@ -14,12 +14,15 @@ jobs:
     env:
       NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
       NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - name: Collect public interest signals
         run: python interest-signal-pilot/collect_interest_signals.py
       - name: Build human review queue
         run: python interest-signal-pilot/build_review_queue.py
+      - name: Assess matched publisher bodies (up to six paid model calls)
+        run: python interest-signal-pilot/analyze_news_context.py --max-items 12 --max-model-calls 6
       - name: Commit derived signal snapshot
         run: |
           git config user.name "github-actions[bot]"
