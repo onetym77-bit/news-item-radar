@@ -80,7 +80,7 @@ class L3ContextTests(unittest.TestCase):
             def __init__(self, source):
                 self.logs = [{"status": 200}]
             def get(self, url):
-                return object()
+                return type('PageFixture', (), {'title': ['2026-09-14']})()
         old_client, old_transcript = module.Client, module.transcript
         try:
             module.Client = FakeClient
