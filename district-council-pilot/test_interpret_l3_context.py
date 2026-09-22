@@ -116,11 +116,68 @@ class L3ContextTests(unittest.TestCase):
                    "request_status": 200}
         output = module.collect(sample(), sources(), model="test", api_key="dummy",
                                 fetcher=lambda row, source: context,
-                                assessor=lambda body, row, model, key: answer(phrase))
+                                assessor=lambda body, row, model, key: answer(phrase),
+                                desk_assessor=lambda inputs, model, key: {"reviews": [
+                                    {"source_id": item["source_id"], "verdict": "LOW_PRIORITY",
+                                     "citizen_path": "주민의 직접 부담 경로는 아직 확인되지 않았다.",
+                                     "broadcast_value": "현장과 당사자 장면이 아직 부족해 방송 구성은 약하다.",
+                                     "missing_piece": "실제 서비스를 이용한 주민의 경험과 비용 자료가 필요하다.",
+                                     "decisive_test": "이용자 납부 내역과 실제 선택 변화가 있는지 확인한다.",
+                                     "reason": "검증 질문은 성립하지만 현재는 시민 생활 변화가 약하다."}
+                                    for item in inputs]}))
         self.assertEqual(output["review_count"], 7)
+        self.assertEqual(output["pursue_count"], 0)
+        self.assertEqual(output["desk_status"], "COMPLETE")
+        self.assertEqual(output["results"][0]["editorial_review"]["verdict"], "LOW_PRIORITY")
         self.assertEqual(output["briefing_output"], "NONE")
         self.assertFalse(output["automatic_ledger_write"])
         self.assertNotIn("신청하려면", str(output["results"][0].get("body", "")))
+
+    def test_hold_grounded_cue_preserves_next_check(self):
+        phrase = "공공 셔틀버스의 운영비가 삭감되어 노선 조정이 필요한지 살펴봐야 합니다."
+        a = answer(phrase)
+        a["verdict"] = "HOLD"
+        a["first_check"] = "노선별 운행 계획과 실제 감차 여부를 시청 자료로 확인한다."
+        status, cue = module.validate_assessment(a, "○ 의원 " + phrase, ["의원 " + phrase])
+        self.assertEqual(status, "HOLD")
+        self.assertEqual(cue["anchor_quote"], phrase)
+        self.assertIn("운행 계획", cue["first_check"])
+        self.assertNotIn("broadcast_path", cue)
+
+    def test_desk_rejects_missing_or_duplicate_source(self):
+        review = {"source_id": "0", "verdict": "PURSUE",
+                  "citizen_path": "실제 버스 이용자의 대체 수단이 줄어들 가능성이 있다.",
+                  "broadcast_value": "버스 정류장과 이용자 선택을 화면에 담을 수 있다.",
+                  "missing_piece": "운행 감축 계획과 실제 이용자 수가 확인되지 않았다.",
+                  "decisive_test": "예산 조정 전후의 시간표와 운행 횟수를 대조한다.",
+                  "reason": "시민 이동권의 갈림길을 검증할 수 있다."}
+        with self.assertRaisesRegex(ValueError, "IDs mismatch"):
+            module.validate_desk_response({"reviews": [review, review]}, ["0", "1"])
+        with self.assertRaisesRegex(ValueError, "field mismatch"):
+            module.validate_desk_response({"reviews": [{**review, "unknown": "x"}]}, ["0"])
+
+    def test_desk_failure_does_not_promote_verification_card(self):
+        phrase = "신청하려면 현장에서 본인 부담금을 내야 한다고 들었습니다."
+        context = {"status": "BODY_READ", "body": "○ 의원 김가람 " + phrase,
+                   "parts": ["의원 김가람 " + phrase], "current_sha256": "a" * 64,
+                   "title_date": "2026-09-14", "request_status": 200}
+        output = module.collect(sample(), sources(), model="test", api_key="dummy",
+                                fetcher=lambda row, source: context,
+                                assessor=lambda body, row, model, key: answer(phrase),
+                                desk_assessor=lambda *args: {"reviews": []})
+        self.assertEqual(output["desk_status"], "ERROR")
+        self.assertEqual(output["pursue_count"], 0)
+        self.assertTrue(all("editorial_review" not in row for row in output["results"]))
+        self.assertIn("방송 가치 평가에 실패했다", module.render(output))
+
+    def test_offline_does_not_run_desk(self):
+        context = {"status": "BODY_READ", "body": "본문", "parts": ["본문"],
+                   "current_sha256": "a" * 64, "title_date": "2026-09-14",
+                   "request_status": 200}
+        output = module.collect(sample(), sources(), model="test", offline=True,
+                                fetcher=lambda row, source: context,
+                                desk_assessor=lambda *args: self.fail("desk must not run offline"))
+        self.assertEqual(output["desk_status"], "NOT_RUN")
 
 
 if __name__ == "__main__":
