@@ -1,0 +1,58 @@
+name: Sample 25 district council bodies L2
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "district-council-pilot/collect_body_l2.py"
+      - "district-council-pilot/test_collect_body_l2.py"
+      - "district-council-pilot/collect_pilot.py"
+      - ".github/workflows/district-council-body-l2.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: district-body-l2-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test body sampling and source adapters
+        run: python -X utf8 -m unittest discover -s district-council-pilot -p 'test_*.py' -v
+      - name: Validate discovery policy
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Read one recent official body per council
+        run: python -X utf8 district-council-pilot/collect_body_l2.py
+      - name: Check bounded derived output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("district-council-pilot/output/body-l2/sample_latest.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+          assert data["schema"] == 1 and data["source_count"] == len(data["results"]) == 25
+          assert data["question_output"] == data["briefing_output"] == "NONE"
+          assert data["automatic_ledger_write"] is False
+          for row in data["results"]:
+              assert "passage" not in row and "review_windows" not in row
+              assert row["public_release_date"] is None
+          PY
+      - name: Preserve L2 sample for seven days only
+        uses: actions/upload-artifact@v7
+        with:
+          name: district-body-l2-${{ github.run_id }}
+          path: |
+            district-council-pilot/output/body-l2/sample_latest.json
+            district-council-pilot/output/body-l2/SUMMARY.md
+          if-no-files-found: error
+          retention-days: 7
