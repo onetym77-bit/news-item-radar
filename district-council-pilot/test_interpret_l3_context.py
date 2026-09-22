@@ -74,6 +74,40 @@ class L3ContextTests(unittest.TestCase):
         self.assertTrue(all(row["body_changed"] for row in output["results"]))
         self.assertNotIn(phrase, str(output))
 
+    def test_changed_fixed_body_skips_semantic_call(self):
+        row = sample()["documents"][0]
+        class FakeClient:
+            def __init__(self, source):
+                self.logs = [{"status": 200}]
+            def get(self, url):
+                return object()
+        old_client, old_transcript = module.Client, module.transcript
+        try:
+            module.Client = FakeClient
+            module.transcript = lambda page: ("○ 의원 김가람 새 본문 내용입니다. " * 20, ["의원 김가람 새 본문 내용입니다. " * 20])
+            context = module.fetch_context(row, sources()[0])
+        finally:
+            module.Client, module.transcript = old_client, old_transcript
+        self.assertEqual(context["status"], "BODY_CHANGED")
+        result = module.collect(sample(), sources(), model="test", api_key="dummy",
+                                fetcher=lambda row, source: context,
+                                assessor=lambda *args: self.fail("changed body must not reach model"))
+        self.assertTrue(all(item["semantic_status"] == "NOT_RUN" for item in result["results"]))
+
+    def test_hold_reason_is_retained_without_card(self):
+        phrase = "신청하려면 현장에서 본인 부담금을 내야 한다고 들었습니다."
+        context = {"status": "BODY_READ", "body": "○ 의원 김가람 " + phrase,
+                   "parts": ["의원 김가람 " + phrase], "current_sha256": "a" * 64,
+                   "title_date": "2026-09-14", "request_status": 200}
+        a = {key: "" for key in module.SCHEMA["required"]}
+        a["verdict"], a["reason"] = "HOLD", "발언은 있지만 실제 부담 대상과 의사결정 맥락이 드러나지 않는다."
+        result = module.collect(sample(), sources(), model="test", api_key="dummy",
+                                fetcher=lambda row, source: context,
+                                assessor=lambda *args: a)
+        self.assertEqual(result["review_count"], 0)
+        self.assertIn("부담 대상", result["results"][0]["semantic_reason"])
+        self.assertNotIn("verification_card", result["results"][0])
+
     def test_review_card_stays_verification_only(self):
         phrase = "신청하려면 현장에서 본인 부담금을 내야 한다고 들었습니다."
         context = {"status": "BODY_READ", "body": "○ 의원 김가람 " + phrase,
