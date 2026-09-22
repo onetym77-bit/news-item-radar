@@ -134,6 +134,7 @@ def source_inputs():
         {"source": "유튜브", "reason": "검색 전략 상태만 저장; 개별 영상 내용·맥락 미수집"},
         {"source": "지역 커뮤니티·제보", "reason": "접근 가능한 공개 본문/제보 접수 경로 미연결"},
         {"source": "검색 관심도", "reason": "관심 추이는 보조 신호; 사안 본문 없이 단독 아이템화 금지"},
+        {"source": "단체장 SNS", "reason": "계정 주소 확인 단계; 개별 게시물 본문 미연결"},
     ])
     # Keep the input bounded and diversified even when one source dominates.
     buckets = {}
@@ -172,9 +173,10 @@ def excluded(record, leads, reviewed):
 
 def model_assess(records, leads, model, api_key):
     prior = [{"title": x.get("title"), "question": x.get("editorial_question")} for x in leads]
+    feedback = read("editorial-v4/decisions.json", [])[-12:]
     payload = {"model": model, "store": False, "max_output_tokens": 6500,
                "input": [{"role": "system", "content": INSTRUCTIONS},
-                         {"role": "user", "content": json.dumps({"records": records, "previously_selected": prior}, ensure_ascii=False)}],
+                         {"role": "user", "content": json.dumps({"records": records, "previously_selected": prior, "editor_feedback": feedback}, ensure_ascii=False)}],
                "text": {"format": {"type": "json_schema", "name": "editorial_v4", "strict": True, "schema": SCHEMA}}}
     request = urllib.request.Request(
         OPENAI, data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
