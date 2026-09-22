@@ -35,8 +35,13 @@ def main() -> int:
         seen_ids.add(signal_id)
         if not item.get("headline") or not item.get("evidence"):
             errors.append(f"signal_{index}_missing_source_anchor")
-        if item.get("source_context_status") != "TITLE_ONLY":
+        context = item.get("source_context_status")
+        if context not in {"TITLE_ONLY", "BODY_UNAVAILABLE", "BODY_READ"}:
             errors.append(f"signal_{index}_context_mislabeled")
+        if context == "BODY_READ" and not any(e.get("type") == "publisher_article" for e in item.get("evidence", [])):
+            errors.append(f"signal_{index}_missing_publisher_anchor")
+        if context != "BODY_READ" and item.get("editorial_question"):
+            errors.append(f"signal_{index}_question_without_body")
         if item.get("problem_status") != "UNASSESSED":
             errors.append(f"signal_{index}_problem_assumed")
         if item.get("structural_question") or item.get("title_options"):

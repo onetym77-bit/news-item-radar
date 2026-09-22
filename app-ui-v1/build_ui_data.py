@@ -155,27 +155,41 @@ for source_name in sorted(source_counts):
     })
 
 def signal_priority(item):
-    """Order review work; this score never promotes a signal to a story."""
-    headline = item.get("headline") or item.get("seed_event", "")
-    concrete = ("철거", "폐쇄", "사망", "부상", "고발", "기소", "체납", "미지급")
-    return (item.get("screening_priority") == "높음", sum(word in headline for word in concrete))
+    """Prioritize assessed, specific signals without promoting them to final stories."""
+    assessment = item.get("content_assessment") or {}
+    return (
+        item.get("source_context_status") == "BODY_READ",
+        assessment.get("question_worth") == "HIGH",
+        assessment.get("document_type") == "INCIDENT",
+    )
 
 
 ranked_interest = sorted(interest_queue.get("items", []), key=signal_priority, reverse=True)
 discovery_signals = []
 seen_queries = set()
 for item in ranked_interest:
+    assessment = item.get("content_assessment") or {}
+    if assessment.get("document_type") == "PROMOTION" or assessment.get("question_worth") == "LOW":
+        continue
     query = item.get("source_query", "")
     if query in seen_queries:
         continue
     seen_queries.add(query)
     discovery_signals.append({
         "review_id": item.get("review_id", ""),
-        "headline": item.get("headline") or item.get("source_headline") or item.get("seed_event", "제목 미상"),
+        "headline": item.get("headline") or item.get("source_headline") or "제목 미상",
         "source": item.get("source_name", "검색 관심도·뉴스 확산"),
         "observed_signal": item.get("observed_signal", "검색 결과에 기사 제목이 표시됨"),
         "source_context_status": item.get("source_context_status", "TITLE_ONLY"),
+        "context_failure": item.get("context_failure", ""),
         "problem_status": item.get("problem_status", "UNASSESSED"),
+        "document_type": assessment.get("document_type", ""),
+        "claim_type": assessment.get("claim_type", ""),
+        "what_happened": assessment.get("what_happened", ""),
+        "citizen_relevance": assessment.get("citizen_relevance", ""),
+        "editorial_question": assessment.get("editorial_question", ""),
+        "question_worth": assessment.get("question_worth", ""),
+        "assessment_reason": assessment.get("reason", ""),
         "first_check": item.get("first_check", "기사 본문 확인"),
         "counterpossibility": item.get("counterpossibility", ""),
         "evidence": item.get("evidence", []),
@@ -193,7 +207,7 @@ ui_editorial_brief = {
     "candidates": [],
     "discovery_count": len(discovery_signals),
     "discovery_signals": discovery_signals,
-    "queue_status": "본문 검토 전 탐색 신호" if discovery_signals else "탐색 신호 없음",
+    "queue_status": "본문 판정 포함 탐색 신호" if any(x["source_context_status"] == "BODY_READ" for x in discovery_signals) else ("본문 검토 전 탐색 신호" if discovery_signals else "탐색 신호 없음"),
 }
 
 data = {
