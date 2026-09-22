@@ -157,9 +157,12 @@ function renderV4(data = {}) {
       <p class="item-question"><strong>선정 이유</strong> ${esc(item.why_now)}</p>
       <p class="item-question"><strong>시민 질문</strong> ${esc(item.citizen_question)}</p>
       <p class="item-question"><strong>뜻밖의 질문</strong> ${esc(item.uncommon_question)}</p>
-      <p class="item-question"><strong>첫 확인</strong> ${esc(item.first_check)}</p>
-      <p class="item-question"><strong>다른 설명</strong> ${esc(item.counterhypothesis)}</p>
-      <p class="item-question"><strong>방송 장면</strong> ${esc(item.scene_path)}</p>
+      <p class="item-question"><strong>가를 첫 취재</strong> ${esc(item.decisive_test || item.first_check)}</p>
+      <details><summary>반론·제작 경로</summary>
+        <p class="item-question"><strong>다른 설명</strong> ${esc(item.counterhypothesis)}</p>
+        ${item.editorial_risk ? `<p class="item-question"><strong>오판 위험</strong> ${esc(item.editorial_risk)}</p>` : ""}
+        <p class="item-question"><strong>방송 장면</strong> ${esc(item.scene_path)}</p>
+      </details>
       <p class="item-meta">원문 단서: ${esc(item.anchor_quote)} · ${esc(item.claim_status)}</p>
       <div class="item-actions">
         ${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noreferrer">원문 확인 ↗</a>` : ""}
@@ -168,7 +171,7 @@ function renderV4(data = {}) {
       </div>
     </article>`).join("") : '<p class="empty">이번 회차에 검토 기준을 통과한 새 기획 질문이 없습니다. 수량을 맞추기 위해 채우지 않습니다.</p>';
   if (gaps) {
-    const holds = (data.holds || []).slice(0, 6).map(x => `<p><strong>${esc(x.source)}</strong> · ${esc(x.headline)} — ${esc(x.reason)}</p>`);
+    const holds = (data.holds || []).filter(x => x.verdict !== "SKIP").slice(0, 6).map(x => `<p><strong>${esc(x.source)}</strong> · ${esc(x.headline)} — ${esc(x.reason)}</p>`);
     const missing = (data.source_gaps || []).map(x => `<p><strong>${esc(x.source)}</strong> · ${esc(x.reason)}</p>`);
     gaps.innerHTML = [...holds, ...missing].join("") || '<p>보류 기록이 없습니다.</p>';
   }
