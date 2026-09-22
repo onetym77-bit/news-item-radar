@@ -47,15 +47,22 @@ jobs:
           from pathlib import Path
           path = Path("district-council-pilot/output/l3-context/sample_latest.json")
           data = json.loads(path.read_text(encoding="utf-8"))
-          assert data["schema"] == 1 and data["source_count"] == len(data["results"]) == 7
+          assert data["schema"] == 2 and data["source_count"] == len(data["results"]) == 7
+          assert data["desk_status"] == ("NOT_RUN" if data["mode"] == "CONTEXT_ONLY" else ("COMPLETE" if data["review_count"] else "NOT_NEEDED"))
           assert data["briefing_output"] == "NONE" and data["automatic_ledger_write"] is False
           for row in data["results"]:
               assert "body" not in row and "parts" not in row
               assert row["public_release_date"] is None
+              assert "evidence_context" not in row
               if "verification_card" in row:
                   assert row["semantic_status"] == "REVIEW"
+                  if data["mode"] != "CONTEXT_ONLY":
+                      assert row["editorial_review"]["verdict"] in {"PURSUE", "VERIFY_FIRST", "LOW_PRIORITY"}
+              if "held_cue" in row:
+                  assert row["semantic_status"] == "HOLD"
           PY
       - name: Upload bounded L3 shadow report
+        if: ${{ always() }}
         uses: actions/upload-artifact@v7
         with:
           name: district-l3-context-${{ github.run_id }}
