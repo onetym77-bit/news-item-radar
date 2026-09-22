@@ -134,7 +134,7 @@ class ArticleParser(HTMLParser):
         attrs = dict(attrs)
         if tag in {"script", "style", "nav", "footer", "header", "aside"}:
             self.skip += 1
-        if self.current is not None:
+        if self.current is not None and tag not in {"br", "hr", "img", "meta", "link", "input", "source"}:
             self.depth += 1
         elif tag == "article" or re.search(
             r"(article[-_]?body|article[-_]?content|news[-_]?body|news[-_]?content|dic_area|view[-_]?content)",
@@ -142,6 +142,9 @@ class ArticleParser(HTMLParser):
         ):
             self.current = []
             self.depth = 1
+
+    def handle_startendtag(self, tag, attrs):
+        pass
 
     def handle_endtag(self, tag):
         if tag in {"script", "style", "nav", "footer", "header", "aside"} and self.skip:
