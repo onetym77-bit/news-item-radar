@@ -135,6 +135,8 @@ def source_inputs():
         {"source": "지역 커뮤니티·제보", "reason": "접근 가능한 공개 본문/제보 접수 경로 미연결"},
         {"source": "검색 관심도", "reason": "관심 추이는 보조 신호; 사안 본문 없이 단독 아이템화 금지"},
         {"source": "단체장 SNS", "reason": "계정 주소 확인 단계; 개별 게시물 본문 미연결"},
+        {"source": "시민제안·응답소", "reason": "제안·민원 문장 시험 단계; 직접 경험 및 현재성 확인 전"},
+        {"source": "건설알림이", "reason": "일정 변화 관측 단계; 실제 공사 범위·시민 영향 문맥 미연결"},
     ])
     # Keep the input bounded and diversified even when one source dominates.
     buckets = {}
