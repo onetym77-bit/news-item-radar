@@ -99,6 +99,233 @@
     ],
     "queue_status": "본문 판정 포함 탐색 신호"
   },
+  "sourceExploration": {
+    "schema": 1,
+    "sources": [
+      {
+        "source_id": "news_interest",
+        "source": "뉴스·검색 관심",
+        "stage": "본문 탐색",
+        "status": "수집됨",
+        "collected_at": "2026-09-22T00:21:38.243275+00:00",
+        "observed": 30,
+        "review_count": 6,
+        "reason": "기사 본문 판정은 사실 검증이나 최종 편집 승인이 아닙니다.",
+        "url": ""
+      },
+      {
+        "source_id": "eungdapso",
+        "source": "서울시 응답소 공개민원",
+        "stage": "일일 원자료",
+        "status": "수집됨",
+        "collected_at": "2026-09-22T09:20:31+09:00",
+        "observed": 3,
+        "review_count": 0,
+        "reason": "읽은 항목 3건, 원자료 적격 0건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
+        "url": "https://eungdapso.seoul.go.kr/main.do"
+      },
+      {
+        "source_id": "council_minutes",
+        "source": "서울시의회 회의록",
+        "stage": "일일 원자료",
+        "status": "수집됨",
+        "collected_at": "2026-09-22T09:20:31+09:00",
+        "observed": 82,
+        "review_count": 9,
+        "reason": "읽은 항목 82건, 원자료 적격 9건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
+        "url": "https://ms.smc.seoul.kr/kr/assembly/main.do"
+      },
+      {
+        "source_id": "seoul_open_data",
+        "source": "서울 열린데이터 신규 데이터셋",
+        "stage": "후속 검증 자료",
+        "status": "수집됨",
+        "collected_at": "2026-09-22T09:20:31+09:00",
+        "observed": 8,
+        "review_count": 0,
+        "reason": "읽은 항목 8건, 원자료 적격 0건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
+        "url": "https://data.seoul.go.kr/datasetRanking/new.do"
+      },
+      {
+        "source_id": "seoul_bigdata",
+        "source": "서울 빅데이터캠퍼스 갱신 데이터",
+        "stage": "후속 검증 자료",
+        "status": "수집됨",
+        "collected_at": "2026-09-22T09:20:31+09:00",
+        "observed": 17,
+        "review_count": 0,
+        "reason": "읽은 항목 17건, 원자료 적격 0건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
+        "url": "https://bigdata.seoul.go.kr/main.do"
+      },
+      {
+        "source_id": "seoul_research",
+        "source": "서울연구원 정책·연구 자료",
+        "stage": "일일 원자료",
+        "status": "수집됨",
+        "collected_at": "2026-09-22T09:20:31+09:00",
+        "observed": 6,
+        "review_count": 0,
+        "reason": "읽은 항목 6건, 원자료 적격 0건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
+        "url": "https://www.si.re.kr/bbs/list.do?key=2024100154"
+      },
+      {
+        "source_id": "labor_arrears",
+        "source": "고용노동부 임금체불 통계",
+        "stage": "일일 원자료",
+        "status": "수집됨",
+        "collected_at": "2026-09-22T09:20:31+09:00",
+        "observed": 8,
+        "review_count": 1,
+        "reason": "읽은 항목 8건, 원자료 적격 1건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
+        "url": "https://labor.moel.go.kr/arrstat/sttcStusList.do"
+      },
+      {
+        "source_id": "consumer_agency",
+        "source": "한국소비자원 피해·분쟁 자료",
+        "stage": "일일 원자료",
+        "status": "수집 실패",
+        "collected_at": "2026-09-22T09:20:31+09:00",
+        "observed": null,
+        "review_count": null,
+        "reason": "접속 또는 검증에 실패했습니다. 항목 0건으로 해석하지 않습니다.",
+        "url": "https://www.kca.go.kr/home/main.do"
+      },
+      {
+        "source_id": "district_councils",
+        "source": "25개 자치구의회 회의록",
+        "stage": "목록 감시 · 본문 미평가",
+        "status": "저장된 관측",
+        "collected_at": "2026-09-20T10:37:25+09:00",
+        "observed": 25,
+        "review_count": 0,
+        "reason": "공식 목록 첫 화면만 비교했습니다. 새 주소 1건, 접속·수집 미확인 4곳. 회의록 본문과 기획 질문은 만들지 않았습니다.",
+        "url": ""
+      },
+      {
+        "source_id": "seoul_audit_results",
+        "source": "서울시 감사 결과",
+        "stage": "L4 그림자 평가 · 운영 미승인",
+        "status": "그림자 검토",
+        "collected_at": "2026-09-21",
+        "observed": 3,
+        "review_count": 0,
+        "reason": "이번 표본의 질문 준비 0건, 보류 3건. 그림자 평가 결과는 최종 후보에 자동 편입하지 않습니다.",
+        "url": ""
+      },
+      {
+        "source_id": "youtube_interest",
+        "source": "유튜브 시민 관심",
+        "stage": "검색 전략 시험 · 개별 영상 미편입",
+        "status": "검색 시험",
+        "collected_at": "2026-09-22T00:16:15.605741+09:00",
+        "observed": 72,
+        "review_count": 0,
+        "reason": "검색 전략 72개 중 활성 22개, 재검토 22개, 일시중지 28개. 누적 검색 적격 수는 기사 후보 수가 아닙니다.",
+        "url": ""
+      },
+      {
+        "source_id": "community_social",
+        "source": "지역 SNS·커뮤니티",
+        "stage": "게시물 소스 발굴",
+        "status": "연결 보류",
+        "collected_at": "저장된 실행 없음",
+        "observed": null,
+        "review_count": null,
+        "reason": "검증된 공개 지역 페이지의 게시물 자동 수집은 아직 없습니다.",
+        "url": ""
+      }
+    ],
+    "clues": [
+      {
+        "source_id": "council_minutes",
+        "source": "서울시의회 회의록",
+        "title": "서울 전세사기 피해 인정·지원",
+        "date": "2026-09-11",
+        "url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
+        "status": "편집 검토 · 사실 미확인",
+        "reason": "사안·서울 범위·영향 대상과 구체 문제·손실 표현은 확인됐고 수치 기준기간만 미확인 · 직접 영향 표현: 피해",
+        "excerpt": "서울 전세사기 피해 인정·지원 — 여러분, 전세사기라는 단어 이제는 너무 많이 들어 익숙해지셨습니까? 1만 1,664가구, 공식적으로 전세사기 피해를 인정받은 서울의 피해가구 수입니다. 약 1조 9,860억 원, 해당 가구들의 임차보증금 피해액입니다. 단순 계산으로도 가구당 평균 약 1억 7,000만 원에 달합니다. 물론 정부와 서울시 그리고 우리 서울시의…",
+        "next_step": "사안의 가치와 수치 기준기간을 원문에서 확인"
+      },
+      {
+        "source_id": "council_minutes",
+        "source": "서울시의회 회의록",
+        "title": "시의회 발언 · 사안명 확인 필요",
+        "date": "2026-09-11",
+        "url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
+        "status": "편집 검토 · 사실 미확인",
+        "reason": "사안·서울 범위·영향 대상과 구체 문제·손실 표현은 확인됐고 수치 기준기간만 미확인 · 직접 영향 표현: 불편, 어려움, 위축",
+        "excerpt": "오늘 저는 13년째 이어지고 있는 국회대로 지하차도 및 상부공원화 사업에 대해 말씀드리고자 이 자리에 섰습니다. 국회대로 사업은 2013년 시작됐습니다. 당초 2025년 준공 예정이었지만 2028년으로 미뤄졌고 다시 2032년까지 연장됐습니다. 총사업비도 5,612억 원에서 8,504억 원으로 약 2,900억 원 늘었습니 — 사업 지연에는 설계 변경과 지장…",
+        "next_step": "사안의 가치와 수치 기준기간을 원문에서 확인"
+      },
+      {
+        "source_id": "council_minutes",
+        "source": "서울시의회 회의록",
+        "title": "서울 자치구 수어통역센터 재정·서비스",
+        "date": "2026-09-11",
+        "url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
+        "status": "편집 검토 · 사실 미확인",
+        "reason": "사안·서울 범위·영향 대상과 구체 문제·손실 표현은 확인됐고 수치 기준기간만 미확인 · 직접 영향 표현: 어려움, 제약, 한계",
+        "excerpt": "서울 자치구 수어통역센터 재정·서비스 — 일반 복지시설은 서비스 제공으로 발생한 수입을 사업수입으로 편성하고 이용자에게 제공하는 사업비로 편성 지출할 수 있습니다. 그러나 수어통역센터는 자체수입이 발생해도 목적사업으로 재투자하는 데 제약이 있습니다. 현장의 어려움은 더 큽니다. 25개 자치구별 수어통역센터에 지원되는 복지 사업비는 800만 원 수준입니다.…",
+        "next_step": "사안의 가치와 수치 기준기간을 원문에서 확인"
+      },
+      {
+        "source_id": "council_minutes",
+        "source": "서울시의회 회의록",
+        "title": "시의회 발언 · 사안명 확인 필요",
+        "date": "2026-09-11",
+        "url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
+        "status": "편집 검토 · 사실 미확인",
+        "reason": "사안·서울 범위·영향 대상과 구체 문제·손실 표현은 확인됐고 수치 기준기간만 미확인 · 직접 영향 표현: 문을 닫, 내몰, 쫓겨",
+        "excerpt": "그 결과 위기 10대 여성 지원 시설 4개 중 3개소가 문을 닫았고 청소년들은 다시 거리로 내몰렸습니다. 그리고 머물던 집에서 쫓겨나 거리에 내몰린 위기 여성 청소년들에게 서울시는 새로운 센터를 소개하였습니다. 그 센터의 이름은 바로 온라인 성착취 안심ON센터입니다. 일시 보호와 의료 지원 기능도 있고 이름에 온라인이란 — 그 결과 위기 10대 여성 지원…",
+        "next_step": "사안의 가치와 수치 기준기간을 원문에서 확인"
+      },
+      {
+        "source_id": "council_minutes",
+        "source": "서울시의회 회의록",
+        "title": "시의회 발언 · 사안명 확인 필요",
+        "date": "2026-09-11",
+        "url": "https://ms.smc.seoul.kr/record/recordView.do?key=d8e7aa36b74aa3bbc361edb002380f358e5d97c991b01c74963bcc47c9d9dcd0b42d8ee71ebea9b4",
+        "status": "편집 검토 · 사실 미확인",
+        "reason": "사안·서울 범위·영향 대상과 구체 문제·손실 표현은 확인됐고 수치 기준기간만 미확인 · 직접 영향 표현: 어려움, 부담",
+        "excerpt": "우리가 알아야 할 것은 더 구체적입니다. 이미 AI를 쓰는 청년은 얼마나 되는지 무료서비스로 충분한 사람과 유료 기능이 꼭 필요한 사람은 얼마나 되고 각각 누구인지 비용이 부담돼서 이용 못 하는 것인지 활용방법을 몰라서 접근하지 못하는 것인지 구분해야 합니다. 구독료 지원을 원하는지 실무교육이나 프로젝트 지도를 원하는지 — 서울시는 사전 연구들이 존재한다고…",
+        "next_step": "사안의 가치와 수치 기준기간을 원문에서 확인"
+      },
+      {
+        "source_id": "seoul_audit_results",
+        "source": "서울시 감사 결과",
+        "title": "부설주차장 운영 및 진출입로 보행자 안전 개선 필요 통 보 이행완료 시민",
+        "date": "2026-02-20",
+        "url": "https://news.seoul.go.kr/gov/archives/575100?listPage=2",
+        "status": "본문 검토 보류",
+        "reason": "구체 지적은 확인했지만 기획 질문 생성 기준에 미달",
+        "excerpt": "",
+        "next_step": "PDF의 개별 지적 확인"
+      },
+      {
+        "source_id": "seoul_audit_results",
+        "source": "서울시 감사 결과",
+        "title": "생활밀착형 공원 조성 등 재배정사업 운영실태 특정감사 결과",
+        "date": "2026-02-20",
+        "url": "https://news.seoul.go.kr/gov/archives/575097?listPage=2",
+        "status": "본문 검토 보류",
+        "reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "excerpt": "",
+        "next_step": "PDF의 개별 지적 확인"
+      },
+      {
+        "source_id": "seoul_audit_results",
+        "source": "서울시 감사 결과",
+        "title": "국민권익위원회 제도개선 권고 이행실태 감사 결과",
+        "date": "2026-02-20",
+        "url": "https://news.seoul.go.kr/gov/archives/575094?listPage=2",
+        "status": "본문 검토 보류",
+        "reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
+        "excerpt": "",
+        "next_step": "PDF의 개별 지적 확인"
+      }
+    ]
+  },
   "metrics": [
     [
       "검토 대상 소스",
