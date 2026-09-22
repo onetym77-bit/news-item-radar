@@ -23,6 +23,8 @@ on:
       - "Build daily item briefing"
       - "Watch 25 district council list windows"
       - "Evaluate Seoul audit questions (L4 shadow)"
+      - "Build editorial review v4"
+      - "Review editorial v4 proposal"
     types: [completed]
 
 permissions:
