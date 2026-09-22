@@ -4,6 +4,8 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from source_exploration import build_source_exploration
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "app-ui-v1" / "data" / "latest.json"
 
@@ -210,10 +212,13 @@ ui_editorial_brief = {
     "queue_status": "본문 판정 포함 탐색 신호" if any(x["source_context_status"] == "BODY_READ" for x in discovery_signals) else ("본문 검토 전 탐색 신호" if discovery_signals else "탐색 신호 없음"),
 }
 
+source_exploration = build_source_exploration(ROOT, interest_queue)
+
 data = {
     "lastRun": display_kst(interest_queue.get("generated_at_utc")) if interest_queue.get("generated_at_utc") else manifest.get("generated_at_kst", "미확인"),
     "dataMode": "실제 산출물",
     "editorialBrief": ui_editorial_brief,
+    "sourceExploration": source_exploration,
     "metrics": [
         ["검토 대상 소스", str(len(sources))],
         ["사람 판정 대기", str(len(pending_items))],

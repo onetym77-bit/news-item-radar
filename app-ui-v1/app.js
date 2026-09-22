@@ -7,7 +7,8 @@ const sampleData = {
   pending: [],
   pendingGroups: [],
   history: [],
-  editorialBrief: { candidates: [] }
+  editorialBrief: { candidates: [] },
+  sourceExploration: { sources: [], clues: [] }
 };
 
 const esc = (value = "") => String(value).replace(/[&<>"']/g, char => ({
@@ -90,6 +91,38 @@ function renderDiscoveryItem(item) {
     ${evidence.url ? `<div class="item-actions"><a href="${esc(evidence.url)}" target="_blank" rel="noreferrer">원문 확인 ↗</a></div>` : ""}
   </article>`;
 }
+function renderSourceExploration(exploration = {}) {
+  const sources = exploration.sources || [];
+  const clues = exploration.clues || [];
+  if (!sources.length) return '<p class="empty">저장된 소스 탐색 현황이 없습니다.</p>';
+  const safeLink = url => /^https?:\/\//i.test(url || "")
+    ? `<a href="${esc(url)}" target="_blank" rel="noreferrer">원문 확인 ↗</a>` : "";
+  return sources.map(source => {
+    const related = clues.filter(item => item.source_id === source.source_id);
+    const observed = source.observed === null || source.observed === undefined
+      ? "수집 건수 미확인" : `읽은 항목 ${esc(source.observed)}건`;
+    return `<details class="exploration-source">
+      <summary>
+        <span><strong>${esc(source.source)}</strong><small>${esc(source.stage)} · ${esc(source.collected_at)} · ${observed}</small></span>
+        <span class="status-badge">${esc(source.status)}</span>
+      </summary>
+      <div class="exploration-body">
+        <p>${esc(source.reason)}</p>
+        ${safeLink(source.url)}
+        ${related.length ? `<div class="exploration-clues"><h3>저장된 검토·보류 단서 ${related.length}건</h3>
+          ${related.map(item => `<article class="exploration-clue">
+            <div class="item-head"><h4>${esc(item.title || "사안명 미확인")}</h4><span class="status-badge">${esc(item.status)}</span></div>
+            <p class="item-meta">${esc(item.date || "문서일 미확인")}</p>
+            ${item.excerpt ? `<p>${esc(item.excerpt)}</p>` : ""}
+            <p><strong>이 단계에 머문 이유</strong> ${esc(item.reason)}</p>
+            <p><strong>다음 확인</strong> ${esc(item.next_step)}</p>
+            ${safeLink(item.url)}
+          </article>`).join("")}</div>` : ""}
+      </div>
+    </details>`;
+  }).join("");
+}
+
 function renderEditorialItem(item) {
   const evidence = (item.evidence || [])[0] || {};
   const list = (values = []) => values.length
@@ -115,6 +148,8 @@ function renderEditorialItem(item) {
 function render(data) {
   document.getElementById("lastRun").textContent = data.lastRun || "미확인";
   document.getElementById("dataMode").textContent = data.dataMode;
+  const sourceExplorationNode = document.getElementById("sourceExploration");
+  if (sourceExplorationNode) sourceExplorationNode.innerHTML = renderSourceExploration(data.sourceExploration);
   const briefNode = document.getElementById("editorialBrief");
   if (briefNode) {
     const candidates = (data.editorialBrief && data.editorialBrief.candidates) || [];
