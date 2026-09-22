@@ -2,6 +2,10 @@ name: Build app UI data
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "app-ui-v1/**"
+      - ".github/workflows/app-ui-data.yml"
   schedule:
     - cron: "15 3 * * *"
   workflow_run:
@@ -9,6 +13,8 @@ on:
       - "Collect source signals"
       - "Collect interest signals"
       - "Build daily item briefing"
+      - "Watch 25 district council list windows"
+      - "Evaluate Seoul audit questions (L4 shadow)"
     types: [completed]
 
 permissions:
@@ -26,6 +32,9 @@ jobs:
       - name: Checkout main outputs
         uses: actions/checkout@v4
 
+      - name: Test cross-source exploration contract
+        run: python -X utf8 -m unittest discover -s app-ui-v1 -p "test_*.py" -v
+
       - name: Build normalized UI data
         run: python app-ui-v1/build_ui_data.py
 
@@ -33,6 +42,7 @@ jobs:
         run: python editorial-v3/validate_candidate_contract.py
 
       - name: Commit changed UI data
+        if: ${{ github.event_name != 'pull_request' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
