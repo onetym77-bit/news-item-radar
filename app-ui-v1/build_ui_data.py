@@ -214,10 +214,23 @@ ui_editorial_brief = {
 
 source_exploration = build_source_exploration(ROOT, interest_queue)
 
+v4_output = load("editorial-v4/output/latest.json", {})
+v4_decisions = load("editorial-v4/decisions.json", [])
+v4_decided = {str(item.get("id")) for item in v4_decisions if item.get("decision") in {"COMPLETE", "DISCARD", "HOLD"}}
+v4_review = {
+    "status": v4_output.get("status", "미실행"),
+    "generated_at_utc": v4_output.get("generated_at_utc"),
+    "proposals": [item for item in v4_output.get("proposals", []) if str(item.get("id")) not in v4_decided],
+    "holds": v4_output.get("holds", []),
+    "source_gaps": v4_output.get("source_gaps", []),
+    "decisions": v4_decisions[-10:],
+}
+
 data = {
     "lastRun": display_kst(interest_queue.get("generated_at_utc")) if interest_queue.get("generated_at_utc") else manifest.get("generated_at_kst", "미확인"),
     "dataMode": "실제 산출물",
     "editorialBrief": ui_editorial_brief,
+    "editorialV4": v4_review,
     "sourceExploration": source_exploration,
     "metrics": [
         ["검토 대상 소스", str(len(sources))],
@@ -225,7 +238,7 @@ data = {
         ["문맥 보강 필요", str(len(quarantine))],
         ["탐색 큐", "연결됨" if interest_queue.get("generated_at_utc") else "미수집"],
         ["검증할 신호", str(len(discovery_signals))],
-        ["편집 후보", str(len(ui_editorial_brief["candidates"]))],
+        ["기획 질문 검토안", str(len(v4_review["proposals"]))],
     ],
     "sources": sources,
     "cards": cards,
