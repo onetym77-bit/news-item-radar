@@ -118,6 +118,10 @@ def main():
     (args.output / "sample_latest.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (args.output / "SUMMARY.md").write_text(render(payload), encoding="utf-8")
+    for row in payload["results"]:
+        print("SOURCE " + json.dumps({key: row[key] for key in (
+            "source_name", "status", "diagnosis", "meeting_date",
+            "body_characters", "speech_turns")}, ensure_ascii=False))
     print(json.dumps({"source_count": 25, "status_counts": payload["status_counts"],
                       "question_output": "NONE"}, ensure_ascii=False))
     return 0
