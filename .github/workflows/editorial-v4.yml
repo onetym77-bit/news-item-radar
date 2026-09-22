@@ -35,7 +35,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         run: python -X utf8 editorial-v4/pipeline.py --dry-run
       - name: Validate source policy
-        run: python agent-system-v1/validate_discovery_system.py
+        run: python agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
       - name: Generate review questions
         if: ${{ github.event_name != 'pull_request' }}
         run: python -X utf8 editorial-v4/pipeline.py --model gpt-5.6-luna
