@@ -13,6 +13,7 @@ import ipaddress
 import json
 import os
 import re
+import socket
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -94,6 +95,12 @@ def safe_public_url(value: str) -> str | None:
             return None
     except ValueError:
         pass
+    try:
+        addresses = {result[4][0] for result in socket.getaddrinfo(host, None)}
+        if not addresses or any(not ipaddress.ip_address(address).is_global for address in addresses):
+            return None
+    except (OSError, ValueError):
+        return None
     return urllib.parse.urlunsplit(("https", parsed.netloc, parsed.path, parsed.query, ""))
 
 
