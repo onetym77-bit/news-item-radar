@@ -162,7 +162,7 @@ def excluded(record, leads, reviewed):
             continue
         # Same meeting URL holds many speeches; an anchor or issue match is required.
         anchor = key(lead.get("anchor_text"))
-        material = key(record["evidence_text"] + " " + record["headline"] + " " + record["context"])
+        material = key(record["evidence_text"] + " " + record["headline"] + " " + record.get("context", ""))
         if anchor and anchor in material:
             return "기존 취재 착수 사안"
         title_terms = [x for x in re.findall(r"[가-힣]{3,}", lead.get("title", "")) if len(x) >= 4]
