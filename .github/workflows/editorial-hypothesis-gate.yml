@@ -8,6 +8,7 @@ on:
       - "editorial-v3/**"
       - "agent-system-v1/SYSTEM_MANIFEST.md"
       - ".github/workflows/editorial-hypothesis-gate.yml"
+      - ".github/workflows/collect-interest-signals.yml"
   workflow_dispatch:
 
 permissions:
