@@ -99,6 +99,14 @@
     ],
     "queue_status": "본문 판정 포함 탐색 신호"
   },
+  "editorialV4": {
+    "status": "미실행",
+    "generated_at_utc": null,
+    "proposals": [],
+    "holds": [],
+    "source_gaps": [],
+    "decisions": []
+  },
   "sourceExploration": {
     "schema": 1,
     "sources": [
@@ -348,7 +356,7 @@
       "3"
     ],
     [
-      "편집 후보",
+      "기획 질문 검토안",
       "0"
     ]
   ],
