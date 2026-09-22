@@ -1,0 +1,66 @@
+name: Review fixed district-minute context L3 shadow
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "district-council-pilot/interpret_l3_context.py"
+      - "district-council-pilot/test_interpret_l3_context.py"
+      - "district-council-pilot/l3_fixed_sample_2026-09-22.json"
+      - ".github/workflows/district-council-l3-context.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: district-l3-context-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    env:
+      PYTHONUTF8: "1"
+      OPENAI_API_KEY: ${{ github.event_name == 'workflow_dispatch' && secrets.OPENAI_API_KEY || '' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test district source and semantic guards
+        run: python -X utf8 -m unittest discover -s district-council-pilot -p 'test_*.py' -v
+      - name: Validate discovery policy
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Read locked original documents without model on PR
+        if: ${{ github.event_name == 'pull_request' }}
+        run: python -X utf8 district-council-pilot/interpret_l3_context.py --offline
+      - name: Semantically review locked original documents
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: python -X utf8 district-council-pilot/interpret_l3_context.py --model gpt-5.6-luna
+      - name: Check verification-only derived output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("district-council-pilot/output/l3-context/sample_latest.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+          assert data["schema"] == 1 and data["source_count"] == len(data["results"]) == 7
+          assert data["briefing_output"] == "NONE" and data["automatic_ledger_write"] is False
+          for row in data["results"]:
+              assert "body" not in row and "parts" not in row
+              assert row["public_release_date"] is None
+              if "verification_card" in row:
+                  assert row["semantic_status"] == "REVIEW"
+          PY
+      - name: Upload bounded L3 shadow report
+        uses: actions/upload-artifact@v7
+        with:
+          name: district-l3-context-${{ github.run_id }}
+          path: |
+            district-council-pilot/output/l3-context/sample_latest.json
+            district-council-pilot/output/l3-context/SUMMARY.md
+          if-no-files-found: error
+          retention-days: 7
