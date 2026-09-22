@@ -1,10 +1,10 @@
 {
-  "lastRun": "2026-09-22T08:40+09:00",
+  "lastRun": "2026-09-22T09:02+09:00",
   "dataMode": "실제 산출물",
   "editorialBrief": {
     "schema": 4,
     "input": "interest-signal-pilot/review_queue_latest.json",
-    "generated_at_utc": "2026-09-21T23:40:39.966715+00:00",
+    "generated_at_utc": "2026-09-22T00:02:25.123784+00:00",
     "count": 0,
     "candidates": [],
     "discovery_count": 3,
