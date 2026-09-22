@@ -2,6 +2,14 @@ name: Build app UI data
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "app-ui-v1/*.py"
+      - "app-ui-v1/index.html"
+      - "app-ui-v1/app.js"
+      - "app-ui-v1/styles.css"
+      - ".github/workflows/app-ui-data.yml"
   pull_request:
     paths:
       - "app-ui-v1/**"
