@@ -83,12 +83,15 @@ def fetch_context(row, source):
         return {"status": "BODY_UNAVAILABLE", "body": "", "parts": [], "current_sha256": "",
                 "title_date": day(norm(" ".join(page.title))), "request_status": client.logs[-1]["status"]}
     title_date = day(norm(" ".join(page.title)))
+    current_sha256 = hashlib.sha256(body.encode("utf-8")).hexdigest()
     if title_date and title_date != row["meeting_date"]:
         status = "DATE_CONFLICT"
+    elif current_sha256 != row["body_sha256"]:
+        status = "BODY_CHANGED"
     else:
         status = "BODY_READ"
     return {"status": status, "body": body, "parts": parts,
-            "current_sha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
+            "current_sha256": current_sha256,
             "title_date": title_date, "request_status": client.logs[-1]["status"]}
 
 
@@ -176,6 +179,8 @@ def collect(sample, sources, *, model, api_key="", offline=False, fetcher=fetch_
                     answer, context["body"], context["parts"])
                 if card:
                     item["verification_card"] = card
+                else:
+                    item["semantic_reason"] = compact(answer.get("reason"))[:400]
         except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
             item["context_status"] = item.get("context_status", "UNKNOWN_COLLECTION")
             item["semantic_status"] = "ERROR"
@@ -193,6 +198,9 @@ def render(output):
     for row in output["results"]:
         lines.append(f"| {row['source_name']} | {row['meeting_date']} | {row.get('context_status', '-')} | {row.get('semantic_status', '-')} |")
     for row in output["results"]:
+        if row.get("semantic_reason"):
+            lines.extend(["", f"## {row['source_name']} · {row['semantic_status']}",
+                          f"- 보류·제외 이유: {row['semantic_reason']}"])
         card = row.get("verification_card")
         if not card:
             continue
