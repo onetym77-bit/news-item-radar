@@ -29,13 +29,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
-      - name: Validate pipeline and source policy
-        run: |
-          python -X utf8 -m unittest discover -s editorial-v4 -p "test_*.py" -v
-          python agent-system-v1/validate_discovery_system.py
+      - name: Validate pipeline
+        run: python -X utf8 -m unittest discover -s editorial-v4 -p "test_*.py" -v
       - name: Dry-run input mapping on pull requests
         if: ${{ github.event_name == 'pull_request' }}
         run: python -X utf8 editorial-v4/pipeline.py --dry-run
+      - name: Validate source policy
+        run: python agent-system-v1/validate_discovery_system.py
       - name: Generate review questions
         if: ${{ github.event_name != 'pull_request' }}
         run: python -X utf8 editorial-v4/pipeline.py --model gpt-5.6-luna
