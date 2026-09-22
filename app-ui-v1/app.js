@@ -157,9 +157,12 @@ function renderV4(data = {}) {
       <p class="item-question"><strong>선정 이유</strong> ${esc(item.why_now)}</p>
       <p class="item-question"><strong>시민 질문</strong> ${esc(item.citizen_question)}</p>
       <p class="item-question"><strong>뜻밖의 질문</strong> ${esc(item.uncommon_question)}</p>
-      <p class="item-question"><strong>첫 확인</strong> ${esc(item.first_check)}</p>
-      <p class="item-question"><strong>다른 설명</strong> ${esc(item.counterhypothesis)}</p>
-      <p class="item-question"><strong>방송 장면</strong> ${esc(item.scene_path)}</p>
+      <p class="item-question"><strong>가를 첫 취재</strong> ${esc(item.decisive_test || item.first_check)}</p>
+      <details><summary>반론·제작 경로</summary>
+        <p class="item-question"><strong>다른 설명</strong> ${esc(item.counterhypothesis)}</p>
+        ${item.editorial_risk ? `<p class="item-question"><strong>오판 위험</strong> ${esc(item.editorial_risk)}</p>` : ""}
+        <p class="item-question"><strong>방송 장면</strong> ${esc(item.scene_path)}</p>
+      </details>
       <p class="item-meta">원문 단서: ${esc(item.anchor_quote)} · ${esc(item.claim_status)}</p>
       <div class="item-actions">
         ${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noreferrer">원문 확인 ↗</a>` : ""}
