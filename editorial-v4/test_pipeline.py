@@ -59,6 +59,45 @@ class PipelineTests(unittest.TestCase):
     def test_reviewed_id_is_skipped(self):
         self.assertEqual(module.excluded(BASE, [], {"one"}), "사람 판정 완료·보류")
 
+    def test_recent_eligible_input_precedes_old_and_reviewed(self):
+        rows = [
+            {**BASE, "id": "old", "date": "2026-08-01"},
+            {**BASE, "id": "reviewed", "date": "2026-09-21"},
+            {**BASE, "id": "new", "date": "2026-09-20"},
+        ]
+        eligible = [row for row in rows if not module.excluded(row, [], {"reviewed"})]
+        self.assertEqual([row["id"] for row in module.prioritize_inputs(eligible)], ["new", "old"])
+
+    def test_future_document_date_is_not_current_evidence(self):
+        from datetime import date
+        self.assertTrue(module.future_dated({**BASE, "date": "2026-09-23"}, date(2026, 9, 22)))
+        self.assertFalse(module.future_dated({**BASE, "date": "2026-09-22"}, date(2026, 9, 22)))
+        self.assertFalse(module.future_dated({**BASE, "date": ""}, date(2026, 9, 22)))
+
+    def test_independent_review_can_hold_without_filler(self):
+        proposal = {**GOOD, "source": BASE["source"]}
+        review = {"reviews": [{"id": "one", "verdict": "HOLD",
+                              "editorial_risk": "문제의 존재를 확인하지 못했다",
+                              "decisive_test": "실제 이용자를 먼저 찾아 확인한다",
+                              "reason": "발언을 되풀이할 뿐 새로운 취재 질문이 없다"}]}
+        kept, held = module.apply_second_review([proposal], review)
+        self.assertEqual(kept, [])
+        self.assertEqual(held[0]["verdict"], "HOLD")
+
+    def test_independent_review_preserves_provisional_status(self):
+        proposal = {**GOOD, "source": BASE["source"]}
+        review = {"reviews": [{"id": "one", "verdict": "KEEP",
+                              "editorial_risk": "사업 설명이 실제 이용 경로와 다를 수 있다",
+                              "decisive_test": "두 경로 이용자와 접수 기준을 대조한다",
+                              "reason": "선택의 차이를 취재할 수 있지만 사실은 미확인이다"}]}
+        kept, held = module.apply_second_review([proposal], review)
+        self.assertEqual(held, [])
+        self.assertEqual(kept[0]["coverage_status"], "기존 보도 각도 별도 대조 필요")
+
+    def test_independent_review_requires_exact_ids(self):
+        with self.assertRaisesRegex(ValueError, "ID 불일치"):
+            module.apply_second_review([{**GOOD, "source": BASE["source"]}], {"reviews": []})
+
     def test_sources_require_body_or_context(self):
         old_root = module.ROOT
         with tempfile.TemporaryDirectory() as folder:
@@ -82,7 +121,7 @@ class PipelineTests(unittest.TestCase):
             try:
                 module.ROOT = root
                 records, gaps = module.source_inputs()
-                self.assertEqual({x["family"] for x in records}, {"뉴스·시민 관심", "서울시의회"})
+                self.assertEqual({x["family"] for x in records}, {"뉴스", "서울시의회"})
                 self.assertTrue(any(x["source"] == "25개 자치구의회" for x in gaps))
             finally:
                 module.ROOT = old_root
