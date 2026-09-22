@@ -169,7 +169,7 @@ discovery_signals = []
 seen_queries = set()
 for item in ranked_interest:
     assessment = item.get("content_assessment") or {}
-    if assessment.get("document_type") == "PROMOTION":
+    if assessment.get("document_type") == "PROMOTION" or assessment.get("question_worth") == "LOW":
         continue
     query = item.get("source_query", "")
     if query in seen_queries:
