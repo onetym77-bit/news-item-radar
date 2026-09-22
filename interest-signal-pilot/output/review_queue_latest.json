@@ -1,14 +1,14 @@
 {
   "schema": 4,
-  "generated_at_utc": "2026-09-21T23:40:39.966715+00:00",
-  "source_snapshot": "2026-09-21T23:40:39.906104+00:00",
+  "generated_at_utc": "2026-09-22T00:02:25.123784+00:00",
+  "source_snapshot": "2026-09-22T00:02:25.062882+00:00",
   "candidate_ready": false,
   "review_count": 30,
   "items": [
     {
-      "review_id": "CBMikgFBVV95cUxNb0tzakxV",
-      "headline": "금천 “통합나래봇에 물어봐”… ‘AI 민원상담 챗봇’ 확대",
-      "source_headline": "금천 “통합나래봇에 물어봐”… ‘AI 민원상담 챗봇’ 확대 - 서울신문",
+      "review_id": "CBMibEFVX3lxTFBMd1RGRFNs",
+      "headline": "금천구, ‘AI 민원상담 챗봇’ 확대 운영",
+      "source_headline": "금천구, ‘AI 민원상담 챗봇’ 확대 운영 - seoulilbo.com",
       "source_query": "서울 민원",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -24,8 +24,8 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNb0tzakxVWnl4aF8zM0V1M0QxZVVjekR6NEoyd2VjbzRWYlQwOWttZ2lPUEl0Mi00b0NVekN1dHVhZWk3TUd2RVdUeGVOb2I2bVV1VHZXUVQ4ZHVXbW14MlpQLVVZaTg5RGluTFN5M2dEekk4OEE0ZzJsbzNvbzcyWV9EdjNhMC1idHVYZjJ6cjBYdw?oc=5",
-          "published_at": "Mon, 21 Sep 2026 15:35:21 GMT"
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBMd1RGRFNsOFhTNnVRZUZYNG42QkpKMElIWkk2Sk0wdF9HNXRabkktVnFrTTlCS0xXT1VRYlR2M3E1LTBYWkJzZzZybDEtMHY1ZVhZODRIbzB6TGdNREVsVTVOX3ZnMkE1V2Y1R9IBb0FVX3lxTFBPVl95Q2tyRjRfU1owbXpXWGQ0UnZjc3M3TjRHbm5IczZ3R2lEamNvbUtXTHdkWkpiMEx6QVdfa08tbUMyVF9GdjVYTjluMUIxRGlnQVc2V0ZJOTRJNk5UUHQ1bE9xT0R6ekJtWGpPYw?oc=5",
+          "published_at": "Mon, 21 Sep 2026 21:43:15 GMT"
         }
       ]
     },
@@ -78,9 +78,9 @@
       ]
     },
     {
-      "review_id": "CBMieEFVX3lxTE5jRTQ3T3kw",
-      "headline": "서울교통공사 안내표지 개선사업, 적극행정 최우수 선정",
-      "source_headline": "서울교통공사 안내표지 개선사업, 적극행정 최우수 선정 - newsis.com",
+      "review_id": "CBMiaEFVX3lxTE9CY2VvNWRx",
+      "headline": "시내버스 파업, 서울 교통 대란 예고... 대체 교통수단 총동원",
+      "source_headline": "시내버스 파업, 서울 교통 대란 예고... 대체 교통수단 총동원 - 공감신문",
       "source_query": "서울 교통 불편",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -91,20 +91,20 @@
       "promotion_status": "HOLD",
       "status": "DISCOVERY_ONLY",
       "needs_human_review": true,
-      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
       "screening_priority": "보통",
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE5jRTQ3T3kwcWhVMGNxVzZMOTJVd0lod20zeFhXOTR2aHRma25RNUp4ZDhRWS1LdkJIMlZaWDlJOXgzUTZvSUFmU1dsWU5GWi1BTE5NVnN6LThLVHV4bGRnZ0lmcHlubTdaRUJZWVROc1NYMlVOSjFYcNIBeEFVX3lxTE5jRTQ3T3kwcWhVMGNxVzZMOTJVd0lod20zeFhXOTR2aHRma25RNUp4ZDhRWS1LdkJIMlZaWDlJOXgzUTZvSUFmU1dsWU5GWi1BTE5NVnN6LThLVHV4bGRnZ0lmcHlubTdaRUJZWVROc1NYMlVOSjFYcA?oc=5",
-          "published_at": "Wed, 16 Sep 2026 06:28:54 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9CY2VvNWRxdTRFa1NxTEctWGJWc2MtdjZUOVJ4R210QjlaUjF4cW0zbmlhRmtYbVNmUk01ZmJSRms5aFNyLVpCNUhjcjBjUTZ3a3FiVW1LeUxRTVNxak5TV3FzNzFOREJl?oc=5",
+          "published_at": "Tue, 15 Sep 2026 22:09:14 GMT"
         }
       ]
     },
     {
       "review_id": "CBMibkFVX3lxTE1MRG1qMlla",
       "headline": "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원",
-      "source_headline": "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원 - 아시아투데이",
+      "source_headline": "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원 - asiatoday.co.kr",
       "source_query": "서울 복지 공백",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -128,7 +128,7 @@
     {
       "review_id": "CBMib0FVX3lxTE1kVENCNGtp",
       "headline": "서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야”",
-      "source_headline": "서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야” - 투데이신문",
+      "source_headline": "서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야” - ntoday.co.kr",
       "source_query": "서울 주거 피해",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -176,7 +176,7 @@
     {
       "review_id": "CBMiYEFVX3lxTE03U3o1dlpJ",
       "headline": "서울시 \"구역지정 권한 자치구 이양, 난개발·투기 초래\"(종합)",
-      "source_headline": "서울시 \"구역지정 권한 자치구 이양, 난개발·투기 초래\"(종합) - newsis.com",
+      "source_headline": "서울시 \"구역지정 권한 자치구 이양, 난개발·투기 초래\"(종합) - 뉴시스",
       "source_query": "서울 자치구 논란",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -198,9 +198,9 @@
       ]
     },
     {
-      "review_id": "CBMibkFVX3lxTFBtUUtuTDJJ",
-      "headline": "강남구, 'AI 민원 해결사' 서비스 운영 시작",
-      "source_headline": "강남구, 'AI 민원 해결사' 서비스 운영 시작 - gukjenews.com",
+      "review_id": "CBMikgFBVV95cUxNb0tzakxV",
+      "headline": "금천 “통합나래봇에 물어봐”… ‘AI 민원상담 챗봇’ 확대",
+      "source_headline": "금천 “통합나래봇에 물어봐”… ‘AI 민원상담 챗봇’ 확대 - seoul.co.kr",
       "source_query": "서울 민원",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -216,8 +216,8 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBtUUtuTDJJTFdJNi14X29NY21NZDdDNDBLSFpySXhXU1Q3U25INjdZelNIWFhTRjNXSU5ndUo4X1NrQTZBSnNiTXRKbk9JV3JBLWE1bkxJQ0phZlBHakFPTmtmUllzZnlNSE9mWGRB?oc=5",
-          "published_at": "Mon, 21 Sep 2026 13:42:32 GMT"
+          "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNb0tzakxVWnl4aF8zM0V1M0QxZVVjekR6NEoyd2VjbzRWYlQwOWttZ2lPUEl0Mi00b0NVekN1dHVhZWk3TUd2RVdUeGVOb2I2bVV1VHZXUVQ4ZHVXbW14MlpQLVVZaTg5RGluTFN5M2dEekk4OEE0ZzJsbzNvbzcyWV9EdjNhMC1idHVYZjJ6cjBYdw?oc=5",
+          "published_at": "Mon, 21 Sep 2026 15:35:21 GMT"
         }
       ]
     },
@@ -270,9 +270,9 @@
       ]
     },
     {
-      "review_id": "CBMiaEFVX3lxTE9CY2VvNWRx",
-      "headline": "시내버스 파업, 서울 교통 대란 예고... 대체 교통수단 총동원",
-      "source_headline": "시내버스 파업, 서울 교통 대란 예고... 대체 교통수단 총동원 - 공감신문",
+      "review_id": "CBMiakFVX3lxTE1SM0VyTno0",
+      "headline": "서울시의회 김정애 의원, 501번·5516번 버스 노선 조정 이끌어내, 교통 불편 해소",
+      "source_headline": "서울시의회 김정애 의원, 501번·5516번 버스 노선 조정 이끌어내, 교통 불편 해소 - 관악신문",
       "source_query": "서울 교통 불편",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -288,8 +288,8 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9CY2VvNWRxdTRFa1NxTEctWGJWc2MtdjZUOVJ4R210QjlaUjF4cW0zbmlhRmtYbVNmUk01ZmJSRms5aFNyLVpCNUhjcjBjUTZ3a3FiVW1LeUxRTVNxak5TV3FzNzFOREJl?oc=5",
-          "published_at": "Tue, 15 Sep 2026 22:09:14 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1SM0VyTno0NGJBaFJfWmtCbHlPRVpNV1hpZDkwZmUtdTY5YTBDS01LdmRXU01ITDRzN0hRODNzZEd6RmpiMWxxdnBFVVFXTV9aUjB3dkxCV3AzZkI1cTZRYzZJSmY2djdhb1E?oc=5",
+          "published_at": "Tue, 15 Sep 2026 03:04:23 GMT"
         }
       ]
     },
@@ -390,9 +390,9 @@
       ]
     },
     {
-      "review_id": "CBMickFVX3lxTE5mQVhBQkly",
-      "headline": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영",
-      "source_headline": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영 - 웹이코노미",
+      "review_id": "CBMibkFVX3lxTFBtUUtuTDJJ",
+      "headline": "강남구, 'AI 민원 해결사' 서비스 운영 시작",
+      "source_headline": "강남구, 'AI 민원 해결사' 서비스 운영 시작 - gukjenews.com",
       "source_query": "서울 민원",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -408,8 +408,8 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5mQVhBQklyWUFBWll6WENMZHZSWU15SzVDSmlGeVpycVlIRzRtanJoVnYwd1FEZkpWdy1ybXBMU0pvaVRESU9JTVUxaXVicFRmemg2R1VieWhYcHl1a0ZOSFp4dUxhd2tLMDktUWNCVVlFdw?oc=5",
-          "published_at": "Mon, 21 Sep 2026 03:01:55 GMT"
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBtUUtuTDJJTFdJNi14X29NY21NZDdDNDBLSFpySXhXU1Q3U25INjdZelNIWFhTRjNXSU5ndUo4X1NrQTZBSnNiTXRKbk9JV3JBLWE1bkxJQ0phZlBHakFPTmtmUllzZnlNSE9mWGRB?oc=5",
+          "published_at": "Mon, 21 Sep 2026 13:42:32 GMT"
         }
       ]
     },
@@ -462,9 +462,9 @@
       ]
     },
     {
-      "review_id": "CBMiakFVX3lxTE1SM0VyTno0",
-      "headline": "서울시의회 김정애 의원, 501번·5516번 버스 노선 조정 이끌어내, 교통 불편 해소",
-      "source_headline": "서울시의회 김정애 의원, 501번·5516번 버스 노선 조정 이끌어내, 교통 불편 해소 - 관악신문",
+      "review_id": "CBMia0FVX3lxTE14WTBfLVZ1",
+      "headline": "이재식 서울시의원, “따릉이, 언덕길 이용 불편 개선해야”",
+      "source_headline": "이재식 서울시의원, “따릉이, 언덕길 이용 불편 개선해야” - seoulilbo.com",
       "source_query": "서울 교통 불편",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -480,15 +480,15 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1SM0VyTno0NGJBaFJfWmtCbHlPRVpNV1hpZDkwZmUtdTY5YTBDS01LdmRXU01ITDRzN0hRODNzZEd6RmpiMWxxdnBFVVFXTV9aUjB3dkxCV3AzZkI1cTZRYzZJSmY2djdhb1E?oc=5",
-          "published_at": "Tue, 15 Sep 2026 03:04:23 GMT"
+          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE14WTBfLVZ1SGtoSmJKVGRBbVNZQlhwWTVBdUhIZ3otckREam1WdEsxaU9rRUJEX2phclg5bGI3Q2xRazh0SGVCVDZ4QXQwMUt3SjJkNnlIeEZqLTZLV01nVDlZV0EtRmZzOW1B0gFvQVVfeXFMUEVQemZPaHItYXBfTG5lRFMzeGlxcmViZGhERXREMGZrMUY2MnJYaGM2OUc4VWNLY0ctenRHem56dkpJWHVfZFY1Q1I0d1c0X2FHTjhkRVlzNTc3Y1psNWdEMUY1MUJ1ajV1c0djOUZz?oc=5",
+          "published_at": "Thu, 10 Sep 2026 17:07:04 GMT"
         }
       ]
     },
     {
       "review_id": "CBMibkFVX3lxTE9DOUVpZVVl",
       "headline": "[인터뷰] 정진우 서울시 복지실장 “장애인 생활체육 인프라 확충할 것”",
-      "source_headline": "[인터뷰] 정진우 서울시 복지실장 “장애인 생활체육 인프라 확충할 것” - 아시아투데이",
+      "source_headline": "[인터뷰] 정진우 서울시 복지실장 “장애인 생활체육 인프라 확충할 것” - asiatoday.co.kr",
       "source_query": "서울 복지 공백",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -512,7 +512,7 @@
     {
       "review_id": "CBMiY0FVX3lxTE43cGw1Wmww",
       "headline": "서울시, 공용부분에만 제공하던 전세사기피해주택 수리비를 이제 집 내부까지 확대해 지원",
-      "source_headline": "서울시, 공용부분에만 제공하던 전세사기피해주택 수리비를 이제 집 내부까지 확대해 지원 - ecofocus.co.kr",
+      "source_headline": "서울시, 공용부분에만 제공하던 전세사기피해주택 수리비를 이제 집 내부까지 확대해 지원 - 환경포커스",
       "source_query": "서울 주거 피해",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -582,9 +582,9 @@
       ]
     },
     {
-      "review_id": "CBMibkFVX3lxTE1jbVlzWmk5",
-      "headline": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영",
-      "source_headline": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영 - gukjenews.com",
+      "review_id": "CBMickFVX3lxTE5mQVhBQkly",
+      "headline": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영",
+      "source_headline": "\"급한 서류 발급도 문제없어요\"…강동구, 추석 연휴에도 무인민원발급기 운영 - 웹이코노미",
       "source_query": "서울 민원",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -600,8 +600,8 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1jbVlzWmk5RF9fdEZBOTRxN3EwR3Zndm5JVDZubUNYQWVuLU0ybDNYVXBidkNGMGppYm5ZMnhFelVSYlVzVjdOdGpDSGZBdllYcHByVGg1LTJvSmw3bWYwbTVoZ2ZzV1BNS0hCNE5n?oc=5",
-          "published_at": "Mon, 21 Sep 2026 02:52:35 GMT"
+          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5mQVhBQklyWUFBWll6WENMZHZSWU15SzVDSmlGeVpycVlIRzRtanJoVnYwd1FEZkpWdy1ybXBMU0pvaVRESU9JTVUxaXVicFRmemg2R1VieWhYcHl1a0ZOSFp4dUxhd2tLMDktUWNCVVlFdw?oc=5",
+          "published_at": "Mon, 21 Sep 2026 03:01:55 GMT"
         }
       ]
     },
@@ -654,9 +654,9 @@
       ]
     },
     {
-      "review_id": "CBMia0FVX3lxTE14WTBfLVZ1",
-      "headline": "이재식 서울시의원, “따릉이, 언덕길 이용 불편 개선해야”",
-      "source_headline": "이재식 서울시의원, “따릉이, 언덕길 이용 불편 개선해야” - 서울일보",
+      "review_id": "CBMigAFBVV95cUxQZE54ejlp",
+      "headline": "정상회의 열리는 16일 서울 도심 교통통제…“대중교통 이용하세요”",
+      "source_headline": "정상회의 열리는 16일 서울 도심 교통통제…“대중교통 이용하세요” - edaily.co.kr",
       "source_query": "서울 교통 불편",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -672,8 +672,8 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE14WTBfLVZ1SGtoSmJKVGRBbVNZQlhwWTVBdUhIZ3otckREam1WdEsxaU9rRUJEX2phclg5bGI3Q2xRazh0SGVCVDZ4QXQwMUt3SjJkNnlIeEZqLTZLV01nVDlZV0EtRmZzOW1B0gFvQVVfeXFMUEVQemZPaHItYXBfTG5lRFMzeGlxcmViZGhERXREMGZrMUY2MnJYaGM2OUc4VWNLY0ctenRHem56dkpJWHVfZFY1Q1I0d1c0X2FHTjhkRVlzNTc3Y1psNWdEMUY1MUJ1ajV1c0djOUZz?oc=5",
-          "published_at": "Thu, 10 Sep 2026 17:07:04 GMT"
+          "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQZE54ejlpM3lhTnFNYnhyZ1dGTEoyMmQzdldGZjNaZWFpbDNpd2ZWaVNpRktNNnM4NVZMQm51OXJDd3NWVzQyM3NOVC1BdGFRUG5EOHpxQ2Ftclk0cDF6c25lYkJ6a3dTMVNkSVBHNkVFQmwzYnhWclBDaFpLR2RhNQ?oc=5",
+          "published_at": "Tue, 08 Sep 2026 07:00:00 GMT"
         }
       ]
     },
