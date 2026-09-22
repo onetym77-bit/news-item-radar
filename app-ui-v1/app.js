@@ -65,6 +65,14 @@ function renderDiscoveryItem(item) {
     PROMOTION: "홍보성 보도", OPINION: "주장·의견", OTHER: "기타"
   };
   const badge = assessed ? "본문 판정 · 사실 미검증" : "본문 확인 전";
+  const failureLabels = {
+    NO_TITLE_MATCH: "동일 기사 원문 주소 미확인",
+    BODY_TOO_SHORT: "기사 본문 추출 부족",
+    NOT_HTML: "본문 형식 미지원",
+    MODEL_NOT_RUN: "내용 판정 미실행",
+    NAVER_CREDENTIALS_MISSING: "뉴스 검색 연결 필요"
+  };
+  const pendingReason = failureLabels[item.context_failure] || "본문 접근·판정 미완료";
   return `<article class="item-card">
     <div class="item-head"><h3>${esc(item.headline || "제목 미상")}</h3><span class="status-badge">${badge}</span></div>
     <p class="item-meta">${esc(item.source || "출처 미상")}${assessed ? " · " + esc(typeLabels[item.document_type] || "유형 확인 필요") : ""}</p>
@@ -74,7 +82,7 @@ function renderDiscoveryItem(item) {
          ${item.editorial_question ? `<p class="item-question"><strong>검토할 질문</strong> ${esc(item.editorial_question)}</p>` : ""}
          <p class="item-question"><strong>먼저 확인</strong> ${esc(item.first_check || "기사의 주장과 사실 구분")}</p>
          ${item.counterpossibility ? `<p class="item-question"><strong>다른 가능성</strong> ${esc(item.counterpossibility)}</p>` : ""}`
-      : `<p class="item-question">${esc(item.observed_signal || "검색 결과에서 제목을 확인했습니다.")} 본문을 확인하지 못해 내용 판단을 보류합니다.</p>`}
+      : `<p class="item-question">${esc(item.observed_signal || "검색 결과에서 제목을 확인했습니다.")} 본문을 확인하지 못해 내용 판단을 보류합니다. <strong>사유</strong> ${esc(pendingReason)}</p>`}
     ${evidence.url ? `<div class="item-actions"><a href="${esc(evidence.url)}" target="_blank" rel="noreferrer">원문 확인 ↗</a></div>` : ""}
   </article>`;
 }
