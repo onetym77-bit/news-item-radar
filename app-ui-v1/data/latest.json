@@ -327,10 +327,10 @@
         "source": "서울시 감사 결과",
         "stage": "L4 그림자 평가 · 운영 미승인",
         "status": "그림자 검토",
-        "collected_at": "2026-09-22",
-        "observed": 3,
+        "collected_at": "2026-09-23",
+        "observed": 0,
         "review_count": 0,
-        "reason": "이번 표본의 질문 준비 0건, 보류 3건. 그림자 평가 결과는 최종 후보에 자동 편입하지 않습니다.",
+        "reason": "이번 표본의 질문 준비 0건, 보류 0건. 그림자 평가 결과는 최종 후보에 자동 편입하지 않습니다.",
         "url": ""
       },
       {
@@ -411,39 +411,6 @@
         "reason": "사안·서울 범위·영향 대상과 구체 문제·손실 표현은 확인됐고 수치 기준기간만 미확인 · 직접 영향 표현: 어려움, 부담",
         "excerpt": "우리가 알아야 할 것은 더 구체적입니다. 이미 AI를 쓰는 청년은 얼마나 되는지 무료서비스로 충분한 사람과 유료 기능이 꼭 필요한 사람은 얼마나 되고 각각 누구인지 비용이 부담돼서 이용 못 하는 것인지 활용방법을 몰라서 접근하지 못하는 것인지 구분해야 합니다. 구독료 지원을 원하는지 실무교육이나 프로젝트 지도를 원하는지 — 서울시는 사전 연구들이 존재한다고…",
         "next_step": "사안의 가치와 수치 기준기간을 원문에서 확인"
-      },
-      {
-        "source_id": "seoul_audit_results",
-        "source": "서울시 감사 결과",
-        "title": "서울 리테크 사업 운영·관리 개선 필요 서울시평생교육진흥원 통보",
-        "date": "2026-02-13",
-        "url": "https://news.seoul.go.kr/gov/archives/575050?listPage=2",
-        "status": "본문 검토 보류",
-        "reason": "구체 지적은 확인했지만 기획 질문 생성 기준에 미달",
-        "excerpt": "",
-        "next_step": "PDF의 개별 지적 확인"
-      },
-      {
-        "source_id": "seoul_audit_results",
-        "source": "서울시 감사 결과",
-        "title": "대 특화 직업전환 훈련 성과관리 운영 미흡 50플러스재단 통보",
-        "date": "2026-02-13",
-        "url": "https://news.seoul.go.kr/gov/archives/575046?listPage=2",
-        "status": "본문 검토 보류",
-        "reason": "구체 지적은 확인했지만 기획 질문 생성 기준에 미달",
-        "excerpt": "",
-        "next_step": "PDF의 개별 지적 확인"
-      },
-      {
-        "source_id": "seoul_audit_results",
-        "source": "서울시 감사 결과",
-        "title": "도로사업소 기관운영 감사 결과",
-        "date": "2026-02-13",
-        "url": "https://news.seoul.go.kr/gov/archives/575039?listPage=2",
-        "status": "본문 검토 보류",
-        "reason": "감사 지적 일람표 또는 개별 지적을 확인하지 못함",
-        "excerpt": "",
-        "next_step": "PDF의 개별 지적 확인"
       }
     ]
   },
