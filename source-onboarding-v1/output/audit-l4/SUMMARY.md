@@ -2,7 +2,7 @@
 
 **현재 판단:** AWAITING_HUMAN_REVIEW — 사람의 최종 판단 전입니다.
 
-이번 실행: 새 문서 3건 · 질문 초안 0건 · 보류 3건
+이번 실행: 새 문서 0건 · 질문 초안 0건 · 보류 0건
 
 ## 이번에 볼 질문
 
@@ -10,9 +10,7 @@
 
 ## 이번에 보류한 문서
 
-- [서울시평생교육진흥원 종합감사 결과](https://news.seoul.go.kr/gov/archives/575050?listPage=2): 지적은 확인했지만 기획 질문 기준 미달
-- [서울시50플러스재단 종합감사 결과](https://news.seoul.go.kr/gov/archives/575046?listPage=2): 지적은 확인했지만 기획 질문 기준 미달
-- [도로사업소 기관운영 감사 결과](https://news.seoul.go.kr/gov/archives/575039?listPage=2): 감사 지적 목록 확인 실패
+- 없음
 
 ## 이전 문서의 사람 판정
 
