@@ -1,45 +1,45 @@
 {
-  "lastRun": "2026-09-22T09:21+09:00",
+  "lastRun": "2026-09-23T10:42+09:00",
   "dataMode": "실제 산출물",
   "editorialBrief": {
     "schema": 4,
     "input": "interest-signal-pilot/review_queue_latest.json",
-    "generated_at_utc": "2026-09-22T00:21:38.243275+00:00",
+    "generated_at_utc": "2026-09-23T01:42:27.237313+00:00",
     "count": 0,
     "candidates": [],
     "discovery_count": 3,
     "discovery_signals": [
       {
-        "review_id": "CBMiZEFVX3lxTE45a0U4M2hJ",
-        "headline": "\"조심하세요\" 서울시민안전보험 사칭 피싱사이트 떴다",
+        "review_id": "CBMiaEFVX3lxTE9CY2VvNWRx",
+        "headline": "시내버스 파업, 서울 교통 대란 예고... 대체 교통수단 총동원",
         "source": "검색 관심도·뉴스 확산",
         "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
         "source_context_status": "BODY_READ",
         "context_failure": "",
         "problem_status": "UNASSESSED",
         "document_type": "INCIDENT",
-        "claim_type": "OBSERVED_EVENT",
-        "what_happened": "서울시민안전보험 가입·상담을 사칭해 이름·생년월일·연락처 입력을 유도한 피싱 사이트가 시민 민원으로 확인됐다. 현재까지 파악된 관련 민원은 1건이며, 서울시는 추가 피해와 유사 사이트 운영 여부를 확인 중이라고 밝혔다.",
-        "citizen_relevance": "시민안전보험은 자동가입 제도이므로 가입이나 상담을 이유로 개인정보를 요구하는 사이트를 피해야 한다는 구체적인 주의사항이 있다. 이미 정보를 입력한 시민은 후속 전화·문자나 추가 개인정보·금전 요구에 노출될 수 있어 신고와 대응 방법이 중요하다.",
-        "editorial_question": "현재까지 확인된 민원 1건 외에 개인정보를 입력한 시민과 추가 피해가 더 있는지, 신고된 피싱 사이트의 차단은 완료됐는지 서울시는 어떻게 확인하고 있는가?",
+        "claim_type": "ATTRIBUTED_CLAIM",
+        "what_happened": "서울 시내버스 노사가 통상임금 산정 기준과 임금 인상안을 두고 합의하지 못했고, 기사에 따르면 16일 새벽부터 운행을 중단하기로 했다. 서울시는 이에 대비해 대체 교통수단과 지하철 증편을 포함한 비상수송대책을 발표했다.",
+        "citizen_relevance": "파업이 실제로 시작되면 서울 시내버스 이용자의 출퇴근과 이동 선택에 직접 영향을 줄 수 있으며, 대체 수단의 규모와 운행 범위가 시민들의 대응에 중요하다.",
+        "editorial_question": "파업이 예정대로 시작될 경우, 서울시는 첫차부터 노선별로 어떤 대체 수단을 어느 규모와 시간대에 투입하며, 버스 이용자는 어떻게 확인할 수 있는가?",
         "question_worth": "HIGH",
-        "assessment_reason": "시민 민원을 통해 피싱 사이트가 확인됐다는 구체적 사건과 개인정보 입력 유도 방식이 제시돼 있어 단순한 기관 홍보나 예방 목표에 그치지 않는다. 다만 실제 개인정보 유출·금전 피해 규모는 아직 확인되지 않았으므로, 피해 범위와 차단 조치를 후속 취재하는 질문의 가치가 높다.",
-        "first_check": "실제 개인정보 입력자 수와 추가 피해 여부, 유사 사이트의 추가 운영 여부, 한국인터넷진흥원에 요청한 긴급 차단의 진행·완료 상황이 확인되지 않았다.",
-        "counterpossibility": "현재까지 관련 민원이 1건에 그친 만큼 실제 피해가 제한적이거나 해당 사례가 개별적인 시도일 가능성도 있다.",
+        "assessment_reason": "단순한 기관 발표가 아니라 노사 협상 결렬과 운행 중단 예고라는 구체적 사건이 있고, 시민이 실제 이동 수단을 선택해야 하는 상황과 비상대책의 실효성을 물을 수 있어 6~7분 방송 취재 가치가 높다.",
+        "first_check": "노사 협상이 최종적으로 타결됐는지, 실제 운행 중단이 시작됐는지, 비상수송대책의 노선·차량·운영시간이 구체적으로 확정됐는지 확인할 필요가 있다.",
+        "counterpossibility": "추가 협상으로 파업이 철회되거나, 파업이 시작되더라도 일부 노선 운행 또는 대체 수단 투입으로 예상된 교통 혼란의 범위가 달라질 수 있다.",
         "evidence": [
           {
             "type": "news_search_result",
-            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE45a0U4M2hJTlZNVVgwWEdVbkZaNU9LZjlITkxsYlRuVUlkWGZVUl9EQ1ppWURsVllTTTg3bUU4WmlJMGt5b3U3X0xuYnl1YmNQdUowdEZDZ1ExTUVsTVZiUzE5Y3I?oc=5",
-            "published_at": "Tue, 22 Sep 2026 00:09:08 GMT"
+            "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9CY2VvNWRxdTRFa1NxTEctWGJWc2MtdjZUOVJ4R210QjlaUjF4cW0zbmlhRmtYbVNmUk01ZmJSRms5aFNyLVpCNUhjcjBjUTZ3a3FiVW1LeUxRTVNxak5TV3FzNzFOREJl?oc=5",
+            "published_at": "Tue, 15 Sep 2026 22:09:14 GMT"
           },
           {
             "type": "publisher_article",
-            "url": "https://www.m-i.kr/news/articleView.html?idxno=1417177"
+            "url": "https://www.gokorea.kr/news/articleView.html?idxno=878546"
           }
         ]
       },
       {
-        "review_id": "CBMib0FVX3lxTE1kVENCNGtp",
+        "review_id": "CBMia0FVX3lxTE9PVW1uM1RW",
         "headline": "서울 전세사기 피해 1만1664가구…“주거 안전망 강화해야”",
         "source": "검색 관심도·뉴스 확산",
         "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
@@ -48,18 +48,18 @@
         "problem_status": "UNASSESSED",
         "document_type": "OTHER",
         "claim_type": "ATTRIBUTED_CLAIM",
-        "what_happened": "기사에 따르면 국토교통부 위원회에서 전세사기 피해자로 공식 인정된 서울 피해 가구가 1만1664가구, 임차보증금 피해액이 약 1조9860억원으로 집계됐다. 서울시의회 박희정 의원은 서울시의 피해주택 안전관리·유지보수 지원사업 실적이 9월 현재 2건, 310만원에 그쳤다며 지원 체계 보완을 촉구했다. 다만 피해주택의 관리 공백과 수도·전기 단절 사례 등은 의원의 설명과 주장으로 제시됐다.",
-        "citizen_relevance": "전세사기 피해 인정 이후에도 거주와 보증금 회수, 주택 관리 문제가 이어질 수 있으며, 피해자가 실제로 서울시 지원을 받을 수 있는지가 주거 안정과 직결된다.",
-        "editorial_question": "서울시의 피해주택 안전관리·유지보수 지원이 2건에 그친 구체적인 이유는 무엇이며, 피해자가 신청부터 지원받기까지 어떤 절차와 제약을 거치는가?",
+        "what_happened": "서울시의회 박희정 의원이 서울시 제출 자료를 근거로, 국토교통부에서 공식 인정한 서울 전세사기 피해 가구가 1만1664가구이고 임차보증금 피해액이 약 1조9860억원이라고 밝혔다. 이어 피해주택 안전관리·유지보수 지원사업의 집행 실적이 저조하다며 지원 제도 보완을 촉구했다. 피해자의 계속 거주, 수도·전기 단절 사례 등은 의원이 설명한 내용으로 제시됐다.",
+        "citizen_relevance": "전세사기 피해 인정 이후에도 주거 유지와 생활 기반 관리가 필요한 시민들이 실제 지원을 받을 수 있는지, 서울시 지원사업의 신청·집행 과정이 작동하는지가 직접적인 주거 안정 문제와 연결된다.",
+        "editorial_question": "서울시 전세사기 피해주택 안전관리·유지보수 지원사업의 실적이 2건에 그친 이유는 신청자가 적어서인지, 지원 요건·신청 절차·행정 집행에 문제가 있어서인지 확인하고, 피해 인정 가구가 실제로 어떤 지원을 받을 수 있는가?",
         "question_worth": "HIGH",
-        "assessment_reason": "피해 규모와 공식 인정 가구 수뿐 아니라 서울시 지원사업의 구체적인 집행 실적과 행정 책임을 둘러싼 쟁점이 제시돼 시민이 확인할 선택과 후속 질문이 있다. 다만 지원 실적과 비교 수치의 산출 기준, 실제 피해 사례의 규모는 추가 확인이 필요하다.",
-        "first_check": "서울시의 2건·310만원 실적이 어떤 기간과 대상, 신청 건수를 기준으로 산출됐는지, 지원을 받지 못한 신청 사례가 있는지 확인해야 한다. 경기도의 38건·1억4300만원과 비교할 때 사업 대상과 집행 기준이 같은지도 확인이 필요하다.",
-        "counterpossibility": "지원 실적이 낮은 이유가 행정 부실만이 아니라 사업 대상의 제한, 피해자의 신청 부족, 사업 초기 단계 등 다른 요인일 가능성도 있다. 수도·전기 단절과 계속 거주 사례 역시 실제 규모와 발생 경위를 별도로 확인해야 한다.",
+        "assessment_reason": "단순한 지원 발표가 아니라 공식 피해 규모, 구체적인 지원 실적, 피해 인정 뒤에도 남는 주거 관리 문제와 제도 개선 요구가 함께 제시됐다. 다만 핵심 수치와 피해 사례가 의원 발언과 서울시 제출 자료에 의존하고 있어 집행 원인과 실제 피해 규모를 확인하는 후속 취재가 필요하다.",
+        "first_check": "‘올해 9월 현재 2건·310만원’의 서울시 공식 집행 자료와 사업 시행 시점, 신청 건수·탈락 건수·지원 요건을 확인해야 한다. 서울의 9월 누계와 경기도 상반기 실적을 비교한 것이므로 기간과 사업 조건이 같은지도 점검할 필요가 있다. 수도·전기 단절 및 피해주택 계속 거주 사례가 실제 몇 가구인지도 별도로 확인해야 한다.",
+        "counterpossibility": "지원 실적이 낮은 원인이 행정 소극성만이 아니라 사업의 신규 도입, 제한적인 지원 대상, 피해자의 미신청 또는 다른 제도 이용 때문일 가능성도 있다. 따라서 실적 건수만으로 제도가 현장과 동떨어졌다고 단정할 수는 없다.",
         "evidence": [
           {
             "type": "news_search_result",
-            "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1kVENCNGtpaWhkSjZvVFNQTkV0Qnk3cHlPUS1BejhuRkdua2VzcE1GbFZTRWlMbzZMN2xCZGg3V0laQl9MaTBLcVphYl8ySm9RT25tWnEwTGtQcDlqZnZoN2J5ZkhmQ0hhTGFrYkNzRdIBb0FVX3lxTE1kVENCNGtpaWhkSjZvVFNQTkV0Qnk3cHlPUS1BejhuRkdua2VzcE1GbFZTRWlMbzZMN2xCZGg3V0laQl9MaTBLcVphYl8ySm9RT25tWnEwTGtQcDlqZnZoN2J5ZkhmQ0hhTGFrYkNzRQ?oc=5",
-            "published_at": "Mon, 14 Sep 2026 01:30:05 GMT"
+            "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9PVW1uM1RWczJSU3ZZdlN6czBZVTFrUWtfTFpaajFDbWtOZExJbHpaalN6T3pFaFZTbjV1eGVRbmkxam9lOGJ6UElhaEJ1T1BBNTFxamNZNkUtYkNuQnVHMlU4SHVDSWk1SGdF0gFvQVVfeXFMTWRUQ0I0a2lpaGRKNm9UU1BORXRCeTdweU9RLUF6OG5GR25rZXNwTUZsVlNFaUxvNkw3bEJkaDdXSVpCX0xpMEtxWmFiXzJKb1FPbm1acTBMa1BwOWpmdmg3YnlmSGZDSGFMYWtiQ3NF?oc=5",
+            "published_at": "Mon, 14 Sep 2026 01:25:31 GMT"
           },
           {
             "type": "publisher_article",
@@ -77,13 +77,13 @@
         "problem_status": "UNASSESSED",
         "document_type": "POLICY_ANNOUNCEMENT",
         "claim_type": "ATTRIBUTED_CLAIM",
-        "what_happened": "정부와 더불어민주당이 서울의 500세대 이하 재개발·재건축 구역지정 권한을 자치구에 넘기는 방향으로 제도 개선에 나서기로 했다는 내용이다. 서울시는 이에 대해 광역 도시계획 약화, 자치구별 기준 차이, 투기·난개발 가능성이 커질 수 있다고 반박했다. 시는 현재 500세대 이하 추진 사업 193개소 중 구역지정 단계가 31개소라고 설명하며, 병목의 주된 원인이 구역지정 권한에 있다는 주장도 부인했다.",
-        "citizen_relevance": "권한이 이양되면 재개발·재건축의 구역지정 기준과 처리 주체가 바뀌어 주민의 사업 추진 속도, 인접 지역과의 형평성, 개발 규모와 공공기여 기준에 영향을 줄 수 있다. 광역 단위의 통일성을 우선할지, 자치구의 신속한 판단과 지역 대응력을 높일지 선택이 필요한 사안이다.",
-        "editorial_question": "500세대 이하 구역지정 권한을 자치구에 넘길 경우, 서울시의 광역계획과 자치구의 신속성을 어떻게 조정하고 구별 기준 차이와 투기를 막을 안전장치를 누가 검증할 것인가?",
+        "what_happened": "더불어민주당과 정부가 서울의 500세대 이하 재개발·재건축 구역지정 권한을 자치구에 넘기는 방향으로 제도 개선을 추진하기로 하자, 서울시가 브리핑과 입장문을 통해 반대 입장을 밝혔다. 서울시는 자치구별 기준 차이로 광역도시계획의 정합성이 떨어지고 난개발·투기·형평성 논란이 생길 수 있다고 주장했다. 또 서울시가 행사하는 정비사업 관련 권한은 9개 중 2개뿐이며 처리 기간도 약 4개월에 불과하다고 설명했다.",
+        "citizen_relevance": "권한이 이양되면 소규모 재개발·재건축의 구역지정 기준과 처리 주체가 달라질 수 있어, 사업 속도와 주민 간 형평성, 개발 규모에 영향을 줄 수 있는 사안이다. 다만 기사에 제시된 난개발·투기·주민 갈등은 현재 발생한 사실이라기보다 서울시가 제시한 예상과 우려다.",
+        "editorial_question": "500세대 이하 구역지정 권한을 자치구에 넘길 경우 자치구별 기준 차이와 사업지 쪼개기를 막을 구체적인 기준·조정 장치는 무엇이며, 권한 이양으로 실제로 줄어드는 행정 절차는 무엇인가?",
         "question_worth": "HIGH",
-        "assessment_reason": "기사의 핵심은 실제 난개발이나 투기가 발생했다는 확인이 아니라, 권한 이양을 둘러싼 서울시의 예상 피해와 반박이다. 다만 재개발 권한의 배분이라는 정책 선택이 시민의 주거환경과 사업 이해관계에 직접 연결되고, 중앙·광역·기초단체 간 책임과 기준을 묻는 구체적 쟁점이 있어 질문 가치가 높다.",
-        "first_check": "권한 이양을 추진하는 정부·더불어민주당의 구체적인 제도 설계와 기대 효과, 자치구별 심사 기준의 통일 장치가 제시되지 않았다. 서울시가 언급한 사업 지연 사례와 193개 사업의 실제 처리 기간·지연 원인도 다른 주체의 자료와 대조할 필요가 있다.",
-        "counterpossibility": "권한 이양이 자치구의 지역 사정에 맞는 판단과 행정 분산을 가능하게 해 일부 사업의 처리 속도나 주민 대응력을 높일 가능성도 있다. 기준 차이와 투기 우려 역시 상위계획·심사 기준을 별도로 두면 완화될 수 있다.",
+        "assessment_reason": "기사의 핵심은 서울시가 추진 중인 권한 이양안에 대해 난개발과 투기 가능성을 제기한 기관의 반대 주장이다. 예측적 위험이 중심이고 실제 피해나 구조적 공백이 확인된 것은 아니지만, 서울시와 자치구 중 누가 어떤 기준으로 소규모 정비사업을 결정할지에 관한 시민의 선택과 이해관계가 분명해 후속 질문 가치가 높다.",
+        "first_check": "권한 이양을 추진하는 정부·여당과 자치구의 구체적인 제도안, 이양 대상 업무와 판단 기준, 서울시 주장에 대한 반론이 빠져 있다. 서울시가 언급한 193개 추진 사업과 31개 구역지정 단계 사업의 산출 근거 및 실제 처리 지연 사례도 확인이 필요하다.",
+        "counterpossibility": "권한을 자치구에 넘기면 서울시 심의를 거치는 절차가 줄어 소규모 사업의 구역지정이 빨라지거나, 지역별 여건과 주민 의견을 더 세밀하게 반영할 가능성도 있다. 기사에는 이런 정책 취지나 반대 논리가 담겨 있지 않다.",
         "evidence": [
           {
             "type": "news_search_result",
@@ -246,9 +246,9 @@
         "source": "뉴스·검색 관심",
         "stage": "본문 탐색",
         "status": "수집됨",
-        "collected_at": "2026-09-22T00:21:38.243275+00:00",
+        "collected_at": "2026-09-23T01:42:27.237313+00:00",
         "observed": 30,
-        "review_count": 6,
+        "review_count": 4,
         "reason": "기사 본문 판정은 사실 검증이나 최종 편집 승인이 아닙니다.",
         "url": ""
       },
