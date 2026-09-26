@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "last_collected_kst": "2026-09-25T16:43:10+09:00",
+  "last_collected_kst": "2026-09-26T16:36:21+09:00",
   "events": {
     "EXTENSION|1032026062399|22046|2": {
       "key": "EXTENSION|1032026062399|22046|2",
@@ -128,7 +128,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
       "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 경동엔지니어링 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.4점 벌점부과일 : 2026-08-20 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 15 등록일 : 2026-08-20 16 ",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "PENALTY|1112021020598|1221": {
       "key": "PENALTY|1112021020598|1221",
@@ -140,7 +140,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
       "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 태영건설 업 체 구 분 : 시공 점 검 종 류 : 자체조사 벌 점 번 호 : 8, 18 벌 점 : 0.716점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서와 다른 시공, 시공상세도면 작성의 소홀 조회수 : 22 등록일 : 2026-08-18 15 ",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "PENALTY|1112021020598|1222": {
       "key": "PENALTY|1112021020598|1222",
@@ -152,7 +152,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
       "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 호반산업 업 체 구 분 : 시공 점 검 종 류 : 자체조사 벌 점 번 호 : 8, 18 벌 점 : 0.548점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서와 다른 시공, 시공상세도면 작성의 소홀 조회수 : 22 등록일 : 2026-08-18 14 영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 삼안 업 체 구 분 : 감리 점 검 종 류 : 자체조",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "EXTENSION|6192026051598|22058|2": {
       "key": "EXTENSION|6192026051598|22058|2",
@@ -582,7 +582,7 @@
       "before_completion": "2026-09-19",
       "after_completion": "2026-10-08",
       "first_seen_kst": "2026-09-23T16:42:28+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "DESIGN|2012026022399|21984092|21984093": {
       "key": "DESIGN|2012026022399|21984092|21984093",
@@ -594,7 +594,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-23T16:42:28+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "DESIGN|4082025122571|21983628|21983629": {
       "key": "DESIGN|4082025122571|21983628|21983629",
@@ -606,7 +606,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-23T16:42:28+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "DESIGN|2012026042197|21984396|21984397": {
       "key": "DESIGN|2012026042197|21984396|21984397",
@@ -618,7 +618,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-23T16:42:28+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "DESIGN|1112024010362|21983656|21983657": {
       "key": "DESIGN|1112024010362|21983656|21983657",
@@ -630,7 +630,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-23T16:42:28+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "DESIGN|5502026072987|21984286|21984287": {
       "key": "DESIGN|5502026072987|21984286|21984287",
@@ -642,7 +642,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-23T16:42:28+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "EXTENSION|6232026043093|22108|1": {
       "key": "EXTENSION|6232026043093|22108|1",
@@ -656,7 +656,7 @@
       "before_completion": "2026-09-30",
       "after_completion": "2026-10-30",
       "first_seen_kst": "2026-09-25T16:43:10+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "EXTENSION|6162026071058|22094|1": {
       "key": "EXTENSION|6162026071058|22094|1",
@@ -670,7 +670,7 @@
       "before_completion": "2026-09-17",
       "after_completion": "2026-09-30",
       "first_seen_kst": "2026-09-25T16:43:10+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     },
     "EXTENSION|6092026061799|22107|1": {
       "key": "EXTENSION|6092026061799|22107|1",
@@ -684,7 +684,7 @@
       "before_completion": "2026-09-21",
       "after_completion": "2026-10-15",
       "first_seen_kst": "2026-09-25T16:43:10+09:00",
-      "last_seen_kst": "2026-09-25T16:43:10+09:00"
+      "last_seen_kst": "2026-09-26T16:36:21+09:00"
     }
   },
   "progress": {
@@ -697,7 +697,7 @@
       "gap_pp": 0.1,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-25T16:43:10+09:00"
+      "observed_at_kst": "2026-09-26T16:36:21+09:00"
     },
     "57eca32c8e203306": {
       "key": "57eca32c8e203306",
@@ -708,7 +708,7 @@
       "gap_pp": 0.1,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-25T16:43:10+09:00"
+      "observed_at_kst": "2026-09-26T16:36:21+09:00"
     },
     "2b009f5c7daf5f7a": {
       "key": "2b009f5c7daf5f7a",
@@ -719,7 +719,7 @@
       "gap_pp": 2.0,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-25T16:43:10+09:00"
+      "observed_at_kst": "2026-09-26T16:36:21+09:00"
     },
     "c335f452fa78b48c": {
       "key": "c335f452fa78b48c",
@@ -730,27 +730,23 @@
       "gap_pp": -1.1,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-25T16:43:10+09:00"
+      "observed_at_kst": "2026-09-26T16:36:21+09:00"
     },
     "ca05789869ab2a65": {
       "key": "ca05789869ab2a65",
       "title": "광화문 일대 대심도 빗물배수터널 건설공사",
       "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
-      "plan_percent": 11.6,
+      "plan_percent": 11.7,
       "actual_percent": 11.5,
-      "gap_pp": -0.1,
+      "gap_pp": -0.2,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-25T16:43:10+09:00"
+      "observed_at_kst": "2026-09-26T16:36:21+09:00"
     }
   },
   "last_run": {
     "first_baseline": false,
-    "new_record_keys": [
-      "EXTENSION|6232026043093|22108|1",
-      "EXTENSION|6162026071058|22094|1",
-      "EXTENSION|6092026061799|22107|1"
-    ],
+    "new_record_keys": [],
     "signals": [],
     "sample_counts": {
       "EXTENSION": 4,
