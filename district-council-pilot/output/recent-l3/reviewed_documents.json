@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "reviewed_documents": [
+    {
+      "key": "5d1c679ac82bf54691e85621",
+      "source_id": "dongdaemun",
+      "meeting_date": "2026-09-03",
+      "reviewed_at_kst": "2026-09-28T08:24:37+09:00"
+    },
+    {
+      "key": "b6360f83c80dc709a8ec9ef3",
+      "source_id": "gwanak",
+      "meeting_date": "2026-08-27",
+      "reviewed_at_kst": "2026-09-28T08:24:37+09:00"
+    }
+  ]
+}
