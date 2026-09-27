@@ -1,0 +1,152 @@
+name: Review recent district minutes L3 shadow
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_docs:
+        description: Maximum current verified documents to review
+        required: true
+        default: "5"
+        type: choice
+        options:
+          - "3"
+          - "5"
+  pull_request:
+    paths:
+      - "district-council-pilot/review_recent_minutes_l3.py"
+      - "district-council-pilot/test_review_recent_minutes_l3.py"
+      - "district-council-pilot/interpret_l3_context.py"
+      - "district-council-pilot/collect_body_l2.py"
+      - "district-council-pilot/watch_new_minutes.py"
+      - "district-council-pilot/RECENT_L3_RUNBOOK.md"
+      - ".github/workflows/district-council-recent-l3.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: district-recent-l3-\${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      PYTHONUTF8: "1"
+      OPENAI_API_KEY: \${{ github.event_name == 'workflow_dispatch' && secrets.OPENAI_API_KEY || '' }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test district source and recent L3 guards
+        run: python -X utf8 -m unittest discover -s district-council-pilot -p 'test_*.py' -v
+      - name: Validate discovery policy
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Build no-network contract output on PR
+        if: \${{ github.event_name == 'pull_request' }}
+        run: python -X utf8 district-council-pilot/review_recent_minutes_l3.py --offline --max-docs 0
+      - name: Review bounded recent documents
+        if: \${{ github.event_name == 'workflow_dispatch' }}
+        run: >-
+          python -X utf8 district-council-pilot/review_recent_minutes_l3.py
+          --model gpt-5.6-luna
+          --max-docs \${{ inputs.max_docs }}
+      - name: Check bounded shadow output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("district-council-pilot/output/recent-l3")
+          data = json.loads((root / "sample_latest.json").read_text(encoding="utf-8"))
+          history = json.loads((root / "reviewed_documents_next.json").read_text(encoding="utf-8"))
+          assert data["schema"] == 1 and data["source_count"] == 25
+          assert data["selected_count"] == len(data["results"]) <= 5
+          assert data["coverage"] == "MAX_FIVE_CURRENT_L2_VERIFIED_DOCUMENTS"
+          assert data["briefing_output"] == "NONE"
+          assert data["automatic_ledger_write"] is False
+          assert history["schema"] == 1
+          keys = [row["key"] for row in history["reviewed_documents"]]
+          assert len(keys) == len(set(keys)) <= 500
+          for row in data["results"]:
+              assert row["selection_reason"] in {
+                  "NEW_IN_VISIBLE_WINDOW", "LATEST_UNREVIEWED_BOOTSTRAP"}
+              assert "body" not in row and "parts" not in row
+              assert "evidence_context" not in row and "body_sha256" not in row
+              if "verification_card" in row:
+                  assert row["semantic_status"] == "REVIEW"
+                  if data["mode"] != "CONTEXT_ONLY":
+                      assert row["editorial_review"]["verdict"] in {
+                          "PURSUE", "VERIFY_FIRST", "LOW_PRIORITY"}
+              if "held_cue" in row:
+                  assert row["semantic_status"] == "HOLD"
+          PY
+      - name: Upload bounded recent L3 report
+        if: \${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: district-recent-l3-\${{ github.run_id }}
+          path: |
+            district-council-pilot/output/recent-l3/sample_latest.json
+            district-council-pilot/output/recent-l3/SUMMARY.md
+            district-council-pilot/output/recent-l3/reviewed_documents_next.json
+          if-no-files-found: warn
+          retention-days: 7
+
+  persist-history:
+    needs: review
+    if: \${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact reviewed main commit
+        uses: actions/checkout@v6
+        with:
+          ref: \${{ github.sha }}
+          fetch-depth: 1
+      - name: Download exact reviewed history
+        uses: actions/download-artifact@v8
+        with:
+          name: district-recent-l3-\${{ github.run_id }}
+          path: district-council-pilot/output/recent-l3-run
+      - name: Validate and place deduplication history
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+          source = Path("district-council-pilot/output/recent-l3-run/reviewed_documents_next.json")
+          value = json.loads(source.read_text(encoding="utf-8"))
+          assert value["schema"] == 1
+          rows = value["reviewed_documents"]
+          assert len(rows) <= 500
+          keys = [row["key"] for row in rows]
+          assert len(keys) == len(set(keys))
+          assert all(re.fullmatch(r"[0-9a-f]{24}", key) for key in keys)
+          target = Path("district-council-pilot/output/recent-l3/reviewed_documents.json")
+          target.parent.mkdir(parents=True, exist_ok=True)
+          target.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n",
+                            encoding="utf-8")
+          PY
+          git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+      - name: Persist document identity history only
+        shell: bash
+        run: |
+          git config user.name "news-item-radar-bot"
+          git config user.email "news-item-radar-bot@users.noreply.github.com"
+          git add -f district-council-pilot/output/recent-l3/reviewed_documents.json
+          git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+          if ! git diff --cached --quiet; then
+            git commit -m "Record reviewed district minutes for run $GITHUB_RUN_ID"
+            git push origin HEAD:main
+          fi
