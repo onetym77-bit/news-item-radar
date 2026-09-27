@@ -1,6 +1,6 @@
 # 서울 25개 구의회 얇은 관측
 
-관측 시각: 2026-09-26T10:58:05+09:00
+관측 시각: 2026-09-27T10:46:52+09:00
 
 공식 최근목록의 첫 화면만 비교합니다. 회의일은 게시일이 아닙니다.
 첫 관측은 신규로 세지 않으며 접속 실패는 자료 0건이 아닙니다.
@@ -22,11 +22,11 @@
 | 도봉구 | 6 | 6 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 은평구 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 서대문구 | 15 | 15 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 양천구 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 양천구 | - | 0 | - | UNKNOWN_COLLECTION |
 | 강서구 | 12 | 12 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 광진구 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 동대문구 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 중랑구 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 중랑구 | - | 0 | - | UNKNOWN_COLLECTION |
 | 구로구 | 20 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 금천구 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 영등포구 | 15 | 15 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
