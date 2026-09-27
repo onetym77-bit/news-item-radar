@@ -13,10 +13,11 @@ from pathlib import Path
 from collect_body_l2 import collect as collect_l2
 from collect_pilot import Client, KST, day, detail_from, norm, transcript
 from interpret_l3_context import (
+    assessment_reason,
     call_desk,
     call_model,
-    compact,
     desk_context,
+    semantic_status_label,
     validate_assessment,
     validate_desk_response,
 )
@@ -180,9 +181,9 @@ def review_plan(plan, sources, history, *, model, api_key="", offline=False,
                     })
                 elif item["semantic_status"] == "HOLD" and card:
                     item["held_cue"] = card
-                    item["semantic_reason"] = compact(answer.get("reason"))[:400]
                 else:
-                    item["semantic_reason"] = compact(answer.get("reason"))[:400]
+                    item["semantic_reason"] = assessment_reason(
+                        item["semantic_status"], answer, card)
                 if item["semantic_status"] in VALID_FINAL:
                     successful.append(row)
         except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
@@ -252,7 +253,8 @@ def render(payload):
         lines.append(
             f"| {row['source_name']} | {row['meeting_date']} | "
             f"{row['selection_reason']} | {row.get('context_status', '-')} | "
-            f"{row.get('semantic_status', '-')} | {labels.get(editorial, '미평가')} |")
+            f"{semantic_status_label(row.get('semantic_status'))} | "
+            f"{labels.get(editorial, '미평가')} |")
     if not payload["results"]:
         lines.extend(["", "이번 실행에서 조건을 충족한 미검토 문서가 없다. "
                       "이는 구의회에 아이템이 없다는 뜻이 아니다."])
@@ -269,7 +271,8 @@ def render(payload):
                 f"- 보류 이유: {cue['reason']}",
             ])
         elif row.get("semantic_reason"):
-            lines.extend(["", f"## {row['source_name']} · {row['semantic_status']}",
+            lines.extend(["", f"## {row['source_name']} · "
+                          f"{semantic_status_label(row['semantic_status'])}",
                           f"- 보류·제외 이유: {row['semantic_reason']}"])
         card = row.get("verification_card")
         if not card:

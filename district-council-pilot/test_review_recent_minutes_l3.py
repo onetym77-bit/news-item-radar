@@ -140,6 +140,33 @@ class RecentL3Tests(unittest.TestCase):
         self.assertIn("held_cue", payload["results"][0])
         self.assertEqual(len(next_history["reviewed_documents"]), 1)
 
+    def test_invalid_quote_drops_positive_reason_and_does_not_advance_history(self):
+        phrase = "돌봄 서비스의 반복된 잔액과 이용자 선택을 확인해야 합니다."
+        plan = [{
+            "key": module.record_key("https://example.org/minutes/invalid"),
+            "source_id": "2", "source_name": "구2",
+            "document_url": "https://example.org/minutes/invalid",
+            "meeting_date": "2026-09-25", "body_sha256": "a" * 64,
+            "selection_reason": "LATEST_UNREVIEWED_BOOTSTRAP",
+        }]
+        context = {"status": "BODY_READ", "body": "의원 김가람 " + phrase,
+                   "parts": ["의원 김가람 " + phrase], "request_status": 200}
+        answer = semantic_answer("본문에 없는 합성 인용문입니다")
+        answer["reason"] = "72명 대상의 큰 문제라 당장 취재할 가치가 충분하다."
+        payload, next_history = module.review_plan(
+            plan, sources(), history(), model="test", api_key="dummy",
+            fetcher=lambda row, source: context,
+            assessor=lambda *args: answer,
+            desk_assessor=lambda *args: self.fail("invalid quote must not reach desk"))
+        row = payload["results"][0]
+        self.assertEqual(row["semantic_status"], "INVALID_QUOTE")
+        self.assertIn("연속 문자열로 확인되지 않아", row["semantic_reason"])
+        self.assertNotIn("당장 취재", row["semantic_reason"])
+        report = module.render(payload)
+        self.assertIn("인용 검증 실패", report)
+        self.assertNotIn("당장 취재", report)
+        self.assertEqual(next_history["reviewed_documents"], [])
+
     def test_desk_error_does_not_advance_history(self):
         phrase = "우리 동네에서 보육시설이 줄어 이용자가 멀리 이동하고 있습니다."
         plan = [{

@@ -94,19 +94,39 @@ class L3ContextTests(unittest.TestCase):
                                 assessor=lambda *args: self.fail("changed body must not reach model"))
         self.assertTrue(all(item["semantic_status"] == "NOT_RUN" for item in result["results"]))
 
-    def test_hold_reason_is_retained_without_card(self):
+    def test_ungrounded_hold_does_not_retain_model_reason(self):
         phrase = "신청하려면 현장에서 본인 부담금을 내야 한다고 들었습니다."
         context = {"status": "BODY_READ", "body": "○ 의원 김가람 " + phrase,
                    "parts": ["의원 김가람 " + phrase], "current_sha256": "a" * 64,
                    "title_date": "2026-09-14", "request_status": 200}
         a = {key: "" for key in module.SCHEMA["required"]}
-        a["verdict"], a["reason"] = "HOLD", "발언은 있지만 실제 부담 대상과 의사결정 맥락이 드러나지 않는다."
+        a["verdict"], a["reason"] = "HOLD", "취재할 가치가 충분한 강한 사안이다."
         result = module.collect(sample(), sources(), model="test", api_key="dummy",
                                 fetcher=lambda row, source: context,
                                 assessor=lambda *args: a)
         self.assertEqual(result["review_count"], 0)
-        self.assertIn("부담 대상", result["results"][0]["semantic_reason"])
+        reason = result["results"][0]["semantic_reason"]
+        self.assertIn("검증 가능한 인용문", reason)
+        self.assertNotIn("취재할 가치", reason)
         self.assertNotIn("verification_card", result["results"][0])
+
+    def test_invalid_quote_uses_validator_reason_not_model_claim(self):
+        phrase = "신청하려면 현장에서 본인 부담금을 내야 한다고 들었습니다."
+        context = {"status": "BODY_READ", "body": "○ 의원 김가람 " + phrase,
+                   "parts": ["의원 김가람 " + phrase], "current_sha256": "a" * 64,
+                   "title_date": "2026-09-14", "request_status": 200}
+        a = answer("본문에 없는 합성 인용문입니다")
+        a["reason"] = "시민 피해와 예산 낭비가 커 당장 취재해야 한다."
+        result = module.collect(sample(), sources(), model="test", api_key="dummy",
+                                fetcher=lambda row, source: context,
+                                assessor=lambda *args: a)
+        row = result["results"][0]
+        self.assertEqual(row["semantic_status"], "INVALID_QUOTE")
+        self.assertIn("연속 문자열로 확인되지 않아", row["semantic_reason"])
+        self.assertNotIn("당장 취재", row["semantic_reason"])
+        report = module.render(result)
+        self.assertIn("인용 검증 실패", report)
+        self.assertNotIn("당장 취재", report)
 
     def test_review_card_stays_verification_only(self):
         phrase = "신청하려면 현장에서 본인 부담금을 내야 한다고 들었습니다."

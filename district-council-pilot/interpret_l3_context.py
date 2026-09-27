@@ -74,10 +74,43 @@ alternative_explanation은 주장이 틀리거나 과장됐을 가능성을 구�
 HOLD라도 실제 서비스·예산 결정 등 구체적인 단서가 있다면 anchor_quote, observed_issue, test_question, first_check, reason을 채워 다음 확인 조건을 남긴다. 단서가 없으면 NO_SIGNAL로 답한다.
 빈칸을 메우려고 추정하지 않는다. 충분한 문맥이 없으면 HOLD 또는 NO_SIGNAL로 답한다."""
 GENERIC = ("시민에게 어떤 영향", "시민들에게 어떤 영향", "시민에게 문제가", "시민들이 겪는 문제는")
+VALIDATION_FAILURE_REASONS = {
+    "INVALID_SCHEMA": "모델 응답 형식이 규격과 달라 내용을 신뢰할 수 없어 제외했다.",
+    "INVALID_VERDICT": "허용되지 않은 판정값이 반환돼 내용을 신뢰할 수 없어 제외했다.",
+    "INVALID_QUOTE": "제시된 발언 인용문이 회의록 본문에서 연속 문자열로 확인되지 않아 제외했다.",
+    "GENERIC_QUESTION": "이 사안의 구체적인 갈림길이 아니라 범용 질문에 머물러 제외했다.",
+    "INCOMPLETE_REASONING": "시민 이해관계·반대 설명·첫 확인·방송 구성 중 필수 근거가 부족해 제외했다.",
+    "QUOTE_TURN_UNRESOLVED": "인용문은 본문에 있으나 해당 발언 순서에서 확인되지 않아 제외했다.",
+}
+SEMANTIC_STATUS_LABELS = {
+    "REVIEW": "발언 신호",
+    "HOLD": "보류",
+    "NO_SIGNAL": "유효 단서 없음",
+    "INVALID_SCHEMA": "응답 형식 오류",
+    "INVALID_VERDICT": "판정값 오류",
+    "INVALID_QUOTE": "인용 검증 실패",
+    "GENERIC_QUESTION": "범용 질문",
+    "INCOMPLETE_REASONING": "판단 근거 불충분",
+    "QUOTE_TURN_UNRESOLVED": "발언 문맥 미확인",
+    "NOT_RUN": "미실행",
+    "ERROR": "실행 오류",
+}
 
 
 def compact(value):
     return " ".join(str(value or "").split())
+
+
+def assessment_reason(status, answer, card):
+    if status in VALIDATION_FAILURE_REASONS:
+        return VALIDATION_FAILURE_REASONS[status]
+    if status == "HOLD" and not card:
+        return "보류 판정은 반환됐지만 원문에서 검증 가능한 인용문과 다음 확인 조건을 확보하지 못했다."
+    return compact(answer.get("reason"))[:400]
+
+
+def semantic_status_label(status):
+    return SEMANTIC_STATUS_LABELS.get(status, status or "-")
 
 
 def validate_sample(sample, sources):
@@ -288,9 +321,9 @@ def collect(sample, sources, *, model, api_key="", offline=False, fetcher=fetch_
                     })
                 elif item["semantic_status"] == "HOLD" and card:
                     item["held_cue"] = card
-                    item["semantic_reason"] = compact(answer.get("reason"))[:400]
                 else:
-                    item["semantic_reason"] = compact(answer.get("reason"))[:400]
+                    item["semantic_reason"] = assessment_reason(
+                        item["semantic_status"], answer, card)
         except (OSError, ValueError, KeyError, TypeError, AttributeError) as exc:
             item["context_status"] = item.get("context_status", "UNKNOWN_COLLECTION")
             item["semantic_status"] = "ERROR"
@@ -336,7 +369,8 @@ def render(output):
         desk_text = desk_labels.get(desk, "미평가")
         lines.append(
             f"| {row['source_name']} | {row['meeting_date']} | "
-            f"{row.get('context_status', '-')} | {row.get('semantic_status', '-')} | "
+            f"{row.get('context_status', '-')} | "
+            f"{semantic_status_label(row.get('semantic_status'))} | "
             f"{desk_text} |")
     if output.get("desk_status") == "ERROR":
         lines.extend(["", "방송 가치 평가에 실패했다. 아래 발언 검증 단서를 방송 아이템으로 읽지 말 것.",
@@ -352,7 +386,8 @@ def render(output):
                           f"- 다음 확인: {cue['first_check']}",
                           f"- 보류 이유: {cue['reason']}"])
         elif row.get("semantic_reason"):
-            lines.extend(["", f"## {row['source_name']} · {row['semantic_status']}",
+            lines.extend(["", f"## {row['source_name']} · "
+                          f"{semantic_status_label(row['semantic_status'])}",
                           f"- 보류·제외 이유: {row['semantic_reason']}"])
         card = row.get("verification_card")
         if not card:
