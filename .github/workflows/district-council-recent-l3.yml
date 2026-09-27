@@ -26,7 +26,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: district-recent-l3-\${{ github.ref }}
+  group: district-recent-l3-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
     timeout-minutes: 35
     env:
       PYTHONUTF8: "1"
-      OPENAI_API_KEY: \${{ github.event_name == 'workflow_dispatch' && secrets.OPENAI_API_KEY || '' }}
+      OPENAI_API_KEY: ${{ github.event_name == 'workflow_dispatch' && secrets.OPENAI_API_KEY || '' }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -48,14 +48,14 @@ jobs:
       - name: Validate discovery policy
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
       - name: Build no-network contract output on PR
-        if: \${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' }}
         run: python -X utf8 district-council-pilot/review_recent_minutes_l3.py --offline --max-docs 0
       - name: Review bounded recent documents
-        if: \${{ github.event_name == 'workflow_dispatch' }}
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         run: >-
           python -X utf8 district-council-pilot/review_recent_minutes_l3.py
           --model gpt-5.6-luna
-          --max-docs \${{ inputs.max_docs }}
+          --max-docs ${{ inputs.max_docs }}
       - name: Check bounded shadow output
         run: |
           python - <<'PY'
@@ -86,10 +86,10 @@ jobs:
                   assert row["semantic_status"] == "HOLD"
           PY
       - name: Upload bounded recent L3 report
-        if: \${{ always() }}
+        if: ${{ always() }}
         uses: actions/upload-artifact@v7
         with:
-          name: district-recent-l3-\${{ github.run_id }}
+          name: district-recent-l3-${{ github.run_id }}
           path: |
             district-council-pilot/output/recent-l3/sample_latest.json
             district-council-pilot/output/recent-l3/SUMMARY.md
@@ -99,7 +99,7 @@ jobs:
 
   persist-history:
     needs: review
-    if: \${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -108,12 +108,12 @@ jobs:
       - name: Check out exact reviewed main commit
         uses: actions/checkout@v6
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           fetch-depth: 1
       - name: Download exact reviewed history
         uses: actions/download-artifact@v8
         with:
-          name: district-recent-l3-\${{ github.run_id }}
+          name: district-recent-l3-${{ github.run_id }}
           path: district-council-pilot/output/recent-l3-run
       - name: Validate and place deduplication history
         shell: bash
