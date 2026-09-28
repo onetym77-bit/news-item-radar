@@ -53,19 +53,19 @@ class HeadContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             specs = (
-                ("district-council-pilot/output/recent-l3", "district"),
-                ("citizen-proposal-pilot/output", "citizen"),
-                ("interest-radar-v2/output", "youtube"),
+                ("district-council-pilot/output/recent-l3", "editorial_review_queue.json", "editor_decisions.json", "district"),
+                ("citizen-proposal-pilot/output", "editorial_review_queue.json", "editor_decisions.json", "citizen"),
+                ("interest-radar-v2/output", "youtube_review_queue.json", "youtube_editor_decisions.json", "youtube"),
             )
-            for directory, item_id in specs:
+            for directory, queue_name, decision_name, item_id in specs:
                 path = root / directory
                 path.mkdir(parents=True)
-                (path / "editorial_review_queue.json").write_text(
+                (path / queue_name).write_text(
                     json.dumps({"schema": 1, "items": [{
                         "id": item_id, "title": item_id,
                         "family": "25개 자치구의회" if item_id == "district" else "",
                     }]}, ensure_ascii=False), encoding="utf-8")
-                (path / "editorial_review_decisions.json").write_text(
+                (path / decision_name).write_text(
                     json.dumps([{"id": item_id, "decision": "DISCARD"}]
                                if item_id == "citizen" else [], ensure_ascii=False),
                     encoding="utf-8")
