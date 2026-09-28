@@ -97,7 +97,7 @@ def stable_id(kind, url, text):
     return hashlib.sha256((kind + "|" + url + "|" + text[:160]).encode("utf-8")).hexdigest()[:16]
 
 
-HEAD_CONTRACT_VERSION = "1.1"
+HEAD_CONTRACT_VERSION = "1.2"
 SHADOW_QUEUE_SPECS = (
     ("25개 자치구의회", "district-council-pilot/output/recent-l3/editorial_review_queue.json",
      "district-council-pilot/output/recent-l3/editor_decisions.json"),
@@ -148,6 +148,7 @@ def load_shadow_review_queues():
     for family, queue_path, decision_path in SHADOW_QUEUE_SPECS:
         queue = read(queue_path, {})
         decided = decision_ids(read(decision_path, []))
+        decided.update(decision_ids(read("editorial-v4/decisions.json", [])))
         pending = []
         for raw in queue.get("items", []) if isinstance(queue, dict) else []:
             if not isinstance(raw, dict):
@@ -573,11 +574,17 @@ def call_structured(model, api_key, instructions, data, schema, name):
         raise ValueError("모델 응답 미완료")
     return json.loads("".join(parts))
 
-def model_assess(records, leads, model, api_key):
+def model_assess(records, leads, model, api_key, retry_reason=""):
     prior = [{"title": x.get("title"), "question": x.get("editorial_question")} for x in leads]
     feedback = read("editorial-v4/decisions.json", [])[-12:]
     data = {"run_date_kst": datetime.now(timezone(timedelta(hours=9))).date().isoformat(),
             "records": records, "previously_selected": prior, "editor_feedback": feedback}
+    if retry_reason:
+        data["contract_retry"] = {
+            "reason": retry_reason,
+            "required_ids": [record["id"] for record in records],
+            "instruction": "모든 required_ids를 중복 없이 정확히 한 번씩 평가하라.",
+        }
     return call_structured(model, api_key, INSTRUCTIONS, data, SCHEMA, "editorial_v4")
 
 def model_review(records, proposals, model, api_key):
@@ -615,11 +622,32 @@ def apply_second_review(proposals, result):
                          "reason": reason or "독립 검토에서 기획 경로 부족"})
     return kept, held
 
-def assess_result(records, result):
-    by_id = {r["id"]: r for r in records}
+def validate_assessment_ids(records, result):
+    """Require one and only one assessment for every selected input."""
     raw = result.get("assessments")
     if not isinstance(raw, list):
-        raise ValueError("평가 목록 누락")
+        raise ValueError("1차 평가 목록 누락")
+    expected = [record["id"] for record in records]
+    expected_set = set(expected)
+    returned = []
+    for assessment in raw:
+        if not isinstance(assessment, dict):
+            raise ValueError("1차 평가 항목 형식 오류")
+        item_id = compact(assessment.get("id"))
+        if item_id not in expected_set:
+            raise ValueError(f"1차 평가 알 수 없는 ID: {item_id or '빈값'}")
+        if item_id in returned:
+            raise ValueError(f"1차 평가 ID 중복: {item_id}")
+        returned.append(item_id)
+    missing = [item_id for item_id in expected if item_id not in returned]
+    if missing:
+        raise ValueError("1차 평가 ID 누락: " + ", ".join(missing))
+    return raw
+
+
+def assess_result(records, result):
+    by_id = {r["id"]: r for r in records}
+    raw = validate_assessment_ids(records, result)
     seen = set()
     proposals, holds = [], []
     generic = ("시민에게 어떤 영향", "실제로 문제가 있", "어떤 문제가 있", "확인할 수 있는가")
@@ -721,6 +749,7 @@ def run(model, dry_run=False, district_shadow=None, citizen_shadow=None,
               "source_inputs": len(raw_records), "validated_inputs": len(records),
               "model_inputs": len(selected_inputs),
               "unmodeled_inputs": len(eligible) - len(selected_inputs), "model_calls": 0,
+              "assessment_retries": 0,
               "proposals": [], "shadow_reviews": list(shadow_bundle["items"]), "holds": holds,
               "source_gaps": gaps, "shadow_queues": shadow_bundle["queues"],
               "cluster_audit": cluster_audit,
@@ -738,11 +767,20 @@ def run(model, dry_run=False, district_shadow=None, citizen_shadow=None,
             raise RuntimeError("OPENAI_API_KEY 미설정")
         response = model_assess(selected_inputs, leads, model, api_key)
         result["model_calls"] = 1
-        proposed, model_holds = assess_result(selected_inputs, response)
+        try:
+            proposed, model_holds = assess_result(selected_inputs, response)
+        except ValueError as first_error:
+            result["assessment_retries"] = 1
+            response = model_assess(
+                selected_inputs, leads, model, api_key,
+                retry_reason=str(first_error),
+            )
+            result["model_calls"] += 1
+            proposed, model_holds = assess_result(selected_inputs, response)
         result["holds"].extend(model_holds)
         if proposed:
             critique = model_review(selected_inputs, proposed, model, api_key)
-            result["model_calls"] = 2
+            result["model_calls"] += 1
             reviewed_proposals, critique_holds = apply_second_review(proposed, critique)
             production, generated_shadow = partition_reviewed_proposals(reviewed_proposals)
             result["proposals"] = production
@@ -802,4 +840,5 @@ if __name__ == "__main__":
                       "model_inputs": output["model_inputs"], "proposals": len(output["proposals"]),
                       "shadow_reviews": len(output["shadow_reviews"]),
                       "holds": len(output["holds"]),
+                      "assessment_retries": output["assessment_retries"],
                       "source_coverage": active_coverage}, ensure_ascii=False))
