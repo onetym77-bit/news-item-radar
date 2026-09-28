@@ -2,6 +2,7 @@ const sampleData = {
   lastRun: "미확인",
   dataMode: "데이터 확인 중",
   metrics: [],
+  editorialV4: { proposals: [], shadow_reviews: [], decisions: [] },
   sources: [],
   cards: [],
   pending: [],
@@ -26,6 +27,17 @@ async function loadData() {
   } catch {
     return sampleData;
   }
+}
+
+const HEAD_REVIEW_WORKFLOW = "https://github.com/onetym77-bit/news-item-radar/actions/workflows/review-editorial-v4.yml";
+
+function decisionTools(item, workflow = HEAD_REVIEW_WORKFLOW) {
+  const itemId = item && item.id ? String(item.id) : "";
+  if (!itemId) return "";
+  return `
+    <a class="decision-link" href="${workflow}" target="_blank" rel="noreferrer">판정 화면 열기 ↗</a>
+    <button type="button" class="copy-id" data-copy-id="${esc(itemId)}">판정 ID 복사</button>
+    <span class="item-meta">판정 ID: ${esc(itemId)}</span>`;
 }
 
 function groupBySource(items, sourceIndex = 1) {
@@ -169,8 +181,7 @@ function renderV4(data = {}) {
       <p class="item-meta">원문 단서: ${esc(item.anchor_quote)} · ${esc(item.claim_status)}</p>
       <div class="item-actions">
         ${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noreferrer">원문 확인 ↗</a>` : ""}
-        <a href="https://github.com/onetym77-bit/news-item-radar/actions/workflows/review-editorial-v4.yml" target="_blank" rel="noreferrer">검토 판정 ↗</a>
-        <span class="item-meta">판정 ID: ${esc(item.id)}</span>
+        ${decisionTools(item)}
       </div>
     </article>`).join("") : '<p class="empty">이번 회차에 검토 기준을 통과한 새 기획 질문이 없습니다. 수량을 맞추기 위해 채우지 않습니다.</p>';
   if (gaps) {
@@ -187,6 +198,32 @@ function renderV4(data = {}) {
       ...missing
     ].join("") || '<p>보류 기록이 없습니다.</p>';
   }}
+
+function renderHeadShadow(data = {}) {
+  const node = document.getElementById("editorialV4Shadow");
+  if (!node) return;
+  const items = data.shadow_reviews || [];
+  node.innerHTML = items.length ? items.map(item => `
+    <article class="item-card editorial-card">
+      <div class="item-head"><h3>${esc(item.title || item.issue_key || "사안명 미확인")}</h3><span class="status-badge">검증 전용 · 최종 후보 아님</span></div>
+      <p class="item-meta">${esc(item.source || "출처 미상")} · ${esc(item.date || "날짜 미상")}</p>
+      <p class="item-question"><strong>검토할 사안</strong> ${esc(item.subject || "")}</p>
+      <p class="item-question"><strong>왜 지금 보는가</strong> ${esc(item.why_now || "")}</p>
+      <p class="item-question"><strong>시민 질문</strong> ${esc(item.citizen_question || "")}</p>
+      <p class="item-question"><strong>덜 당연한 질문</strong> ${esc(item.uncommon_question || "")}</p>
+      <p class="item-question"><strong>가를 첫 취재</strong> ${esc(item.decisive_test || item.first_check || "")}</p>
+      <details><summary>반론·오판 위험·방송 장면</summary>
+        <p class="item-question"><strong>다른 설명</strong> ${esc(item.counterhypothesis || "")}</p>
+        <p class="item-question"><strong>오판 위험</strong> ${esc(item.editorial_risk || "")}</p>
+        <p class="item-question"><strong>방송 장면</strong> ${esc(item.scene_path || "")}</p>
+      </details>
+      <p class="item-meta">원문 단서: ${esc(item.anchor_quote || "")} · ${esc(item.claim_status || "미검증")}</p>
+      <div class="item-actions">
+        ${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noreferrer">원문 확인 ↗</a>` : ""}
+        ${decisionTools(item)}
+      </div>
+    </article>`).join("") : '<p class="empty">현재 사람 판정을 기다리는 감사·기타 통합 검증 카드가 없습니다.</p>';
+}
 
 function renderDistrictShadow(data = {}) {
   const node = document.getElementById("districtShadow");
@@ -214,8 +251,7 @@ function renderDistrictShadow(data = {}) {
       <p class="item-meta">원문 단서: ${esc(item.anchor_quote || "")} · ${esc(item.claim_status || "미검증")}</p>
       <div class="item-actions">
         ${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noreferrer">원문 확인 ↗</a>` : ""}
-        <a class="decision-link" href="https://github.com/onetym77-bit/news-item-radar/actions/workflows/review-district-shadow.yml" target="_blank" rel="noreferrer">검토 판정 ↗</a>
-        <span class="item-meta">판정 ID: ${esc(item.id)}</span>
+        ${decisionTools(item, "https://github.com/onetym77-bit/news-item-radar/actions/workflows/review-district-shadow.yml")}
       </div>
     </article>`).join("") : '<p class="empty">현재 사람 판정을 기다리는 구의회 검증 전용 카드가 없습니다.</p>';
   if (decisionNode) {
@@ -253,8 +289,7 @@ function renderCitizenShadow(data = {}) {
       <p class="item-meta">개인정보 제거 단서: ${esc(item.anchor_quote || "")} · ${esc(item.claim_status || "시민 진술·미검증")}</p>
       <div class="item-actions">
         ${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noreferrer">공식 원문 확인 ↗</a>` : ""}
-        <a class="decision-link" href="https://github.com/onetym77-bit/news-item-radar/actions/workflows/review-citizen-shadow.yml" target="_blank" rel="noreferrer">검토 판정 ↗</a>
-        <span class="item-meta">판정 ID: ${esc(item.id)}</span>
+        ${decisionTools(item, "https://github.com/onetym77-bit/news-item-radar/actions/workflows/review-citizen-shadow.yml")}
       </div>
     </article>`).join("") : '<p class="empty">현재 사람 판정을 기다리는 시민 신호 검증 전용 카드가 없습니다.</p>';
   if (decisionNode) {
@@ -291,8 +326,7 @@ function renderYoutubeShadow(data = {}) {
       <p class="item-meta">제목·설명 단서: ${esc(item.anchor_quote || "")} · ${esc(item.claim_status || "영상 서술·미검증")}</p>
       <div class="item-actions">
         ${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noreferrer">원영상 확인 ↗</a>` : ""}
-        <a class="decision-link" href="https://github.com/onetym77-bit/news-item-radar/actions/workflows/review-youtube-shadow.yml" target="_blank" rel="noreferrer">검토 판정 ↗</a>
-        <span class="item-meta">판정 ID: ${esc(item.id)}</span>
+        ${decisionTools(item, "https://github.com/onetym77-bit/news-item-radar/actions/workflows/review-youtube-shadow.yml")}
       </div>
     </article>`).join("") : '<p class="empty">현재 사람 판정을 기다리는 유튜브 신호 검증 전용 카드가 없습니다.</p>';
   if (decisionNode) {
@@ -305,6 +339,7 @@ function renderYoutubeShadow(data = {}) {
 
 function render(data) {
   renderV4(data.editorialV4);
+  renderHeadShadow(data.editorialV4);
   renderDistrictShadow(data.districtShadow);
   renderCitizenShadow(data.citizenShadow);
   renderYoutubeShadow(data.youtubeShadow);
@@ -389,5 +424,18 @@ function render(data) {
   statusFilter.addEventListener("change", update);
   update();
 }
+
+document.addEventListener("click", async event => {
+  const button = event.target.closest("[data-copy-id]");
+  if (!button) return;
+  const value = button.dataset.copyId || "";
+  try {
+    await navigator.clipboard.writeText(value);
+    button.textContent = "ID 복사됨";
+  } catch {
+    button.textContent = "복사 실패";
+  }
+  window.setTimeout(() => { button.textContent = "판정 ID 복사"; }, 1600);
+});
 
 loadData().then(render);
