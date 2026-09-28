@@ -226,11 +226,36 @@ v4_review = {
     "decisions": v4_decisions[-10:],
 }
 
+district_queue = load(
+    "district-council-pilot/output/recent-l3/editorial_review_queue.json",
+    {"schema": 1, "items": []},
+)
+district_decisions = load(
+    "district-council-pilot/output/recent-l3/editor_decisions.json",
+    [],
+)
+district_decided = {
+    str(item.get("id"))
+    for item in district_decisions
+    if item.get("decision") in {"PROMISING", "HOLD", "DISCARD"}
+}
+district_shadow = {
+    "status": "검증 전용·최종 후보 아님",
+    "generated_at_utc": district_queue.get("updated_at_utc"),
+    "source_run_id": district_queue.get("source_run_id"),
+    "items": [
+        item for item in district_queue.get("items", [])
+        if str(item.get("id")) not in district_decided
+    ],
+    "decisions": district_decisions[-10:],
+}
+
 data = {
     "lastRun": display_kst(interest_queue.get("generated_at_utc")) if interest_queue.get("generated_at_utc") else manifest.get("generated_at_kst", "미확인"),
     "dataMode": "실제 산출물",
     "editorialBrief": ui_editorial_brief,
     "editorialV4": v4_review,
+    "districtShadow": district_shadow,
     "sourceExploration": source_exploration,
     "metrics": [
         ["검토 대상 소스", str(len(sources))],
@@ -239,6 +264,7 @@ data = {
         ["탐색 큐", "연결됨" if interest_queue.get("generated_at_utc") else "미수집"],
         ["검증할 신호", str(len(discovery_signals))],
         ["기획 질문 검토안", str(len(v4_review["proposals"]))],
+        ["구의회 검증 전용", str(len(district_shadow["items"]))],
     ],
     "sources": sources,
     "cards": cards,
