@@ -578,8 +578,6 @@ def schema_with_exact_ids(base_schema, array_property, ids):
     """Bind structured output to this run's IDs before the model is called."""
     schema = json.loads(json.dumps(base_schema))
     rows = schema["properties"][array_property]
-    rows["minItems"] = len(ids)
-    rows["maxItems"] = len(ids)
     rows["items"]["properties"]["id"]["enum"] = list(ids)
     return schema
 
