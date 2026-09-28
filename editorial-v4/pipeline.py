@@ -788,7 +788,18 @@ if __name__ == "__main__":
         only_citizen=args.citizen_shadow_only,
         output_path=args.output,
     )
+    active_coverage = {
+        row["source"]: {
+            "input": row["input"],
+            "model_input": row["model_input"],
+            "pending_shadow": row["pending_shadow"],
+            "state": row["state"],
+        }
+        for row in output["source_coverage"]
+        if row["input"] or row["model_input"] or row["pending_shadow"]
+    }
     print(json.dumps({"status": output["status"], "source_inputs": output["source_inputs"],
                       "model_inputs": output["model_inputs"], "proposals": len(output["proposals"]),
                       "shadow_reviews": len(output["shadow_reviews"]),
-                      "holds": len(output["holds"])}, ensure_ascii=False))
+                      "holds": len(output["holds"]),
+                      "source_coverage": active_coverage}, ensure_ascii=False))
