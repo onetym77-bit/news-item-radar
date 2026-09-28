@@ -55,6 +55,26 @@ class CitizenProposalWatchTests(unittest.TestCase):
         self.assertEqual(result["already_processed_records"], 1)
         self.assertFalse(any("sn=101" in url for url in fetched))
 
+    def test_wider_scan_keeps_detail_fetch_bounded(self):
+        fetched = []
+
+        def fake_fetch(url):
+            fetched.append(url)
+            if url == LIST_URL:
+                return listing(), "list-hash"
+            if "sn=101" in url:
+                return "<p>방문 발급의 불편 저는 방문이 불편했습니다</p>", "a" * 64
+            self.fail("deferred proposal detail must not be fetched in this run")
+
+        result = observe(fake_fetch, limit=3, process_limit=1)
+        self.assertEqual([row["proposal_id"] for row in result["records"]], ["101"])
+        self.assertEqual(result["listed_records"], 3)
+        self.assertEqual(result["new_candidates_seen"], 3)
+        self.assertEqual(result["new_records"], 1)
+        self.assertEqual(result["deferred_new_records"], 2)
+        self.assertEqual(result["process_limit"], 1)
+        self.assertEqual(len(fetched), 2)
+
     def test_history_adds_only_id_digest_and_timestamp(self):
         history = {
             "schema": 1,
