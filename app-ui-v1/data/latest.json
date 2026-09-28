@@ -278,6 +278,12 @@
     ],
     "decisions": []
   },
+  "citizenShadow": {
+    "status": "시민 진술·사실 미확인·최종 후보 아님",
+    "generated_at_utc": null,
+    "items": [],
+    "decisions": []
+  },
   "sourceExploration": {
     "schema": 1,
     "sources": [
@@ -444,6 +450,10 @@
     [
       "구의회 검증 전용",
       "1"
+    ],
+    [
+      "시민 신호 검증 전용",
+      "0"
     ]
   ],
   "sources": [
