@@ -9,6 +9,7 @@ const sampleData = {
   history: [],
   editorialBrief: { candidates: [] },
   districtShadow: { items: [], decisions: [] },
+  citizenShadow: { items: [], decisions: [] },
   sourceExploration: { sources: [], clues: [] }
 };
 
@@ -216,9 +217,49 @@ function renderDistrictShadow(data = {}) {
   }
 }
 
+
+function renderCitizenShadow(data = {}) {
+  const node = document.getElementById("citizenShadow");
+  const decisionNode = document.getElementById("citizenShadowDecisions");
+  const items = data.items || [];
+  const decisionLabels = {
+    PROMISING: "검토 가치 있음",
+    HOLD: "보류",
+    DISCARD: "기각"
+  };
+  if (node) node.innerHTML = items.length ? items.map(item => `
+    <article class="item-card editorial-card citizen-shadow-card">
+      <div class="item-head"><h3>${esc(item.title || "시민 경험 신호")}</h3><span class="status-badge">시민 진술 · 미검증</span></div>
+      <p class="item-meta">${esc(item.source || "상상대로 서울 시민제안")} · ${esc(item.date || "게시일 확인 필요")}</p>
+      <p class="item-question"><strong>검토할 사안</strong> ${esc(item.subject || "")}</p>
+      <p class="item-question"><strong>왜 지금 보는가</strong> ${esc(item.why_now || "")}</p>
+      <p class="item-question"><strong>시민 질문</strong> ${esc(item.citizen_question || "")}</p>
+      <p class="item-question"><strong>덜 당연한 질문</strong> ${esc(item.uncommon_question || "")}</p>
+      <p class="item-question"><strong>가를 첫 취재</strong> ${esc(item.decisive_test || item.first_check || "")}</p>
+      <details><summary>반론·오판 위험·방송 장면</summary>
+        <p class="item-question"><strong>다른 설명</strong> ${esc(item.counterhypothesis || "")}</p>
+        <p class="item-question"><strong>오판 위험</strong> ${esc(item.editorial_risk || "")}</p>
+        <p class="item-question"><strong>방송 장면</strong> ${esc(item.scene_path || "")}</p>
+      </details>
+      <p class="item-meta">개인정보 제거 단서: ${esc(item.anchor_quote || "")} · ${esc(item.claim_status || "시민 진술·미검증")}</p>
+      <div class="item-actions">
+        ${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noreferrer">공식 원문 확인 ↗</a>` : ""}
+        <a class="decision-link" href="https://github.com/onetym77-bit/news-item-radar/actions/workflows/review-citizen-shadow.yml" target="_blank" rel="noreferrer">검토 판정 ↗</a>
+        <span class="item-meta">판정 ID: ${esc(item.id)}</span>
+      </div>
+    </article>`).join("") : '<p class="empty">현재 사람 판정을 기다리는 시민 신호 검증 전용 카드가 없습니다.</p>';
+  if (decisionNode) {
+    const decisions = data.decisions || [];
+    decisionNode.innerHTML = decisions.length ? decisions.slice().reverse().map(item =>
+      `<p><strong>${esc(item.title || "제목 미상")}</strong> · ${esc(decisionLabels[item.decision] || item.decision)}${item.note ? " — " + esc(item.note) : ""}</p>`
+    ).join("") : "<p>아직 사람 판정 이력이 없습니다.</p>";
+  }
+}
+
 function render(data) {
   renderV4(data.editorialV4);
   renderDistrictShadow(data.districtShadow);
+  renderCitizenShadow(data.citizenShadow);
   document.getElementById("lastRun").textContent = data.lastRun || "미확인";
   document.getElementById("dataMode").textContent = data.dataMode;
   const sourceExplorationNode = document.getElementById("sourceExploration");

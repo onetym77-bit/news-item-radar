@@ -10,10 +10,16 @@ on:
       - "app-ui-v1/app.js"
       - "app-ui-v1/styles.css"
       - ".github/workflows/app-ui-data.yml"
+      - "citizen-proposal-pilot/output/editorial_review_queue.json"
+      - "citizen-proposal-pilot/output/editor_decisions.json"
   pull_request:
     paths:
       - "app-ui-v1/**"
+      - "citizen-proposal-pilot/**"
       - ".github/workflows/app-ui-data.yml"
+      - ".github/workflows/citizen-proposal-shadow.yml"
+      - ".github/workflows/publish-citizen-shadow.yml"
+      - ".github/workflows/review-citizen-shadow.yml"
   schedule:
     - cron: "15 3 * * *"
   workflow_run:
@@ -27,6 +33,9 @@ on:
       - "Review editorial v4 proposal"
       - "Review recent district minutes L3 shadow"
       - "Review district council shadow proposal"
+      - "Review citizen proposal experience shadow"
+      - "Publish citizen signal shadow queue"
+      - "Review citizen signal shadow proposal"
     types: [completed]
 
 permissions:
