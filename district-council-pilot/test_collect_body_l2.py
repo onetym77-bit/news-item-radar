@@ -1,10 +1,11 @@
 import unittest
 from datetime import date
+from unittest.mock import patch
 
 import collect_body_l2 as module
 
 
-SOURCE = {"id": "sample", "name": "표본구의회"}
+SOURCE = {"id": "sample", "name": "표본구의회", "clik_assembly_id": "002002"}
 ROW = {
     "url": "https://example.org/meeting/1", "meeting_date": "2026-09-21",
     "body_ok": True, "body_characters": 2100, "speech_turns": 5,
@@ -49,6 +50,24 @@ class BodyL2Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "25 distinct"):
             module.collect([SOURCE], date(2026, 9, 22))
 
+    def test_api_is_primary_when_key_is_available(self):
+        api_result = {**RESULT, "transport": "CLIK_OPEN_API"}
+        with patch.object(module, "probe_source", return_value=api_result) as api_probe, \
+                patch.object(module, "run", side_effect=AssertionError("fallback must not run")):
+            row = module.safe_probe(SOURCE, date(2026, 9, 22), "secret-value")
+        api_probe.assert_called_once()
+        self.assertEqual(row["transport"], "CLIK_OPEN_API")
+        self.assertNotIn("secret-value", str(row))
+
+    def test_api_failure_uses_website_fallback_without_error_message(self):
+        with patch.object(module, "probe_source", side_effect=module.ClikAPIError("sensitive")), \
+                patch.object(module, "run", return_value=RESULT):
+            row = module.safe_probe(SOURCE, date(2026, 9, 22), "secret-value")
+        self.assertEqual(row["transport"], "COUNCIL_WEBSITE_FALLBACK")
+        self.assertEqual(row["api_fallback_reason"], "ClikAPIError")
+        self.assertNotIn("sensitive", str(row))
+
 
 if __name__ == "__main__":
     unittest.main()
+

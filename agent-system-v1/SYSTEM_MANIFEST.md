@@ -57,6 +57,7 @@
 | API 수집기(v2.3, 예약 호환 파일명 유지) | interest-radar-v2/collect_source_material_v2_1.py |
 | 유튜브 시민 신호 의미 검증 그림자(자동 후보 승격 금지) | interest-radar-v2/review_youtube_context.py, .github/workflows/editorial-v4.yml |
 | 자치구의회 25곳 연결 등록(수동 점검, 핵심소스 승인 전) | district-council-pilot/sources_25.json |
+| 자치구의회 공통 지방의정포털 API 어댑터·운영 기준 | district-council-pilot/clik_api.py, district-council-pilot/CLIK_API_RUNBOOK.md |
 | 자치구의회 연결 점검기 | district-council-pilot/collect_pilot.py |
 | 자치구의회 25곳 얇은 반복 관측 | district-council-pilot/watch_new_minutes.py |
 | 자치구의회 관측 예약·파생 상태 저장 | .github/workflows/district-council-watch.yml |
@@ -205,3 +206,4 @@
 - 1차 제안이 있을 때만 별도 모델 호출로 실제 문제 신호, 질문 차별성, 반대 설명, 결정적 검증과 6~7분 제작 경로를 독립 반론 검토한다. 최대 2회 호출이며 통과도 사실 확인·기사 승인이 아니다. 응답 ID가 불완전하면 안전하게 실패한다.
 - 모든 제안은 '취재 질문 검토·사실 미확인' 상태다. `review-editorial-v4.yml`에서 정확한 ID로 완료·기각·보류 판정을 기록한다. 다음 실행에서는 같은 ID 및 기존 편집자 선정 발언을 제외한다.
 - v4 결과는 기존 `editorial-v3` 최종 후보 계약과 별도 영역에 표시한다. 사람 판정이 곧 사실 확인이나 기사 승인이 되지는 않는다.
+

@@ -8,12 +8,12 @@ from __future__ import annotations
 
 import argparse
 import copy
-import hashlib
 import json
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import parse_qsl, urlencode, urlparse
 
+from clik_api import ClikAPIError, observation as clik_observation, record_key
 from collect_pilot import Client, discover_list, load_recent_tabs, select_rows
 
 BASE = Path(__file__).resolve().parent
@@ -36,13 +36,13 @@ def load_state(path):
     return state
 
 
-def record_key(url):
-    parsed = urlparse(url)
-    identity = parsed.path + "?" + urlencode(sorted(parse_qsl(parsed.query)))
-    return hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24]
-
-
-def observe(source, limit=WINDOW_LIMIT):
+def observe(source, limit=WINDOW_LIMIT, api_key=""):
+    api_fallback_reason = ""
+    if api_key and source.get("clik_assembly_id"):
+        try:
+            return clik_observation(source, api_key, limit)
+        except (ClikAPIError, OSError, ValueError, KeyError, TypeError) as exc:
+            api_fallback_reason = type(exc).__name__
     client = Client(source)
     listing_url = source["list_url"]
     page = client.get(listing_url)
@@ -63,23 +63,31 @@ def observe(source, limit=WINDOW_LIMIT):
             page = None
     if page is None:
         return {"id": source["id"], "name": source["name"],
-                "status": "UNKNOWN_COLLECTION", "listed": None, "records": []}
+                "status": "UNKNOWN_COLLECTION", "listed": None, "records": [],
+                "transport": "COUNCIL_WEBSITE_FALLBACK",
+                "api_fallback_reason": api_fallback_reason}
     rows, listed = select_rows(page, listing_url, source, limit)
     if not rows or any(not row["url"] for row in rows):
         return {"id": source["id"], "name": source["name"],
-                "status": "UNKNOWN_LIST_WINDOW", "listed": listed, "records": []}
+                "status": "UNKNOWN_LIST_WINDOW", "listed": listed, "records": [],
+                "transport": "COUNCIL_WEBSITE_FALLBACK",
+                "api_fallback_reason": api_fallback_reason}
     records = [{"key": record_key(row["url"]), "url": row["url"],
                 "meeting_date": row["meeting_date"]} for row in rows]
     return {"id": source["id"], "name": source["name"], "status": "OBSERVED",
-            "listed": listed, "records": records}
+            "listed": listed, "records": records,
+            "transport": "COUNCIL_WEBSITE_FALLBACK",
+            "api_fallback_reason": api_fallback_reason}
 
 
-def safe_observe(source):
+def safe_observe(source, api_key=""):
     try:
-        return observe(source)
+        return observe(source, api_key=api_key)
     except (ValueError, KeyError, TypeError, AttributeError):
         return {"id": source["id"], "name": source["name"],
-                "status": "UNKNOWN_LIST_WINDOW", "listed": None, "records": []}
+                "status": "UNKNOWN_LIST_WINDOW", "listed": None, "records": [],
+                "transport": "COUNCIL_WEBSITE_FALLBACK",
+                "api_fallback_reason": ""}
 
 
 def compare(previous, observations, collected_at):
@@ -93,10 +101,13 @@ def compare(previous, observations, collected_at):
     for item in observations:
         source_id = item["id"]
         prior = state["sources"].get(source_id)
+        transport = item.get("transport") or "COUNCIL_WEBSITE_FALLBACK"
         if item["status"] != "OBSERVED":
             run["results"].append({"id": source_id, "name": item["name"],
                 "status": item["status"], "listed": item["listed"],
-                "visible": 0, "new_count": None, "candidates": []})
+                "visible": 0, "new_count": None, "candidates": [],
+                "transport": transport,
+                "api_fallback_reason": item.get("api_fallback_reason", "")})
             continue
         records = item["records"]
         if not records or len(records) > WINDOW_LIMIT:
@@ -106,8 +117,14 @@ def compare(previous, observations, collected_at):
             raise ValueError("Duplicate or unresolved council record")
         old_seen = set(prior.get("seen_keys", [])) if prior else set()
         old_window = set(prior.get("window_keys", [])) if prior else set()
+        prior_transport = (prior or {}).get(
+            "transport", "COUNCIL_WEBSITE_FALLBACK")
+        route_changed = prior is not None and prior_transport != transport
         if prior is None:
             status = "BASELINE"
+            candidates = []
+        elif route_changed:
+            status = "BASELINE_ROUTE_CHANGED"
             candidates = []
         else:
             candidates = [row for row in records if row["key"] not in old_seen]
@@ -118,12 +135,15 @@ def compare(previous, observations, collected_at):
             "seen_keys": ordered_seen[:SEEN_LIMIT],
             "window_keys": keys,
             "last_successful_at_kst": collected_at,
+            "transport": transport,
         }
         run["results"].append({
             "id": source_id, "name": item["name"], "status": status,
             "listed": item["listed"], "visible": len(records),
-            "new_count": len(candidates) if prior is not None else None,
+            "new_count": len(candidates) if prior is not None and not route_changed else None,
             "candidates": candidates,
+            "transport": transport,
+            "api_fallback_reason": item.get("api_fallback_reason", ""),
         })
     state["last_run"] = run
     return state
@@ -136,15 +156,17 @@ def render(state):
         f"관측 시각: {run['collected_at_kst']}", "",
         "공식 최근목록의 첫 화면만 비교합니다. 회의일은 게시일이 아닙니다.",
         "첫 관측은 신규로 세지 않으며 접속 실패는 자료 0건이 아닙니다.",
+        "API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선으로만 저장합니다.",
         "이전 목록과 겹치지 않으면 POSSIBLE_GAP으로 표시합니다. 이 관측만으로 누락 없는 수집을 보장하지 않습니다.",
         "질문·브리핑·아이템 장부에는 연결하지 않습니다.", "",
-        "| 구 | 목록 확인 | 관측 | 확인 범위 내 신규 | 상태 |",
-        "|---|---:|---:|---:|---|",
+        "| 구 | 수집 경로 | 목록 확인 | 관측 | 확인 범위 내 신규 | 상태 |",
+        "|---|---|---:|---:|---:|---|",
     ]
     for item in run["results"]:
         count = "-" if item["new_count"] is None else str(item["new_count"])
         listed = "-" if item["listed"] is None else str(item["listed"])
-        lines.append(f"| {item['name']} | {listed} | {item['visible']} | {count} | {item['status']} |")
+        path = "지방의정포털 API" if item.get("transport") == "CLIK_OPEN_API" else "의회 홈페이지"
+        lines.append(f"| {item['name']} | {path} | {listed} | {item['visible']} | {count} | {item['status']} |")
     for item in run["results"]:
         if not item["candidates"]:
             continue
@@ -164,9 +186,10 @@ def main():
     if len(sources) != 25 or len({item["id"] for item in sources}) != 25:
         parser.error("Expected 25 distinct council sources")
     prior = load_state(args.state)
+    api_key = os.getenv("CLIK_API_KEY", "")
     from concurrent.futures import ThreadPoolExecutor
     with ThreadPoolExecutor(max_workers=4) as pool:
-        observed = list(pool.map(safe_observe, sources))
+        observed = list(pool.map(lambda source: safe_observe(source, api_key), sources))
     collected_at = datetime.now(KST).isoformat(timespec="seconds")
     state = compare(prior, observed, collected_at)
     args.output.mkdir(parents=True, exist_ok=True)
@@ -182,3 +205,4 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

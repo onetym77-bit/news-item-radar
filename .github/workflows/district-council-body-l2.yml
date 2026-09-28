@@ -5,6 +5,9 @@ on:
   pull_request:
     paths:
       - "district-council-pilot/collect_body_l2.py"
+      - "district-council-pilot/clik_api.py"
+      - "district-council-pilot/sources_25.json"
+      - "district-council-pilot/test_clik_api.py"
       - "district-council-pilot/test_collect_body_l2.py"
       - "district-council-pilot/collect_pilot.py"
       - ".github/workflows/district-council-body-l2.yml"
@@ -20,6 +23,8 @@ jobs:
   sample:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      CLIK_API_KEY: ${{ secrets.CLIK_API_KEY }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -56,3 +61,4 @@ jobs:
             district-council-pilot/output/body-l2/SUMMARY.md
           if-no-files-found: error
           retention-days: 7
+

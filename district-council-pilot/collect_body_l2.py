@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from pathlib import Path
 
+from clik_api import ClikAPIError, probe_source
 from collect_pilot import KST, run
 
 BASE = Path(__file__).resolve().parent
@@ -41,6 +43,7 @@ def summarize(source, result):
     return {
         "source_id": source["id"], "source_name": source["name"],
         "status": status, "diagnosis": row.get("diagnosis") or result.get("diagnosis") or "",
+        "document_id": row.get("document_id") or "",
         "document_url": row.get("url") or "", "meeting_date": row.get("meeting_date") or "",
         "public_release_date": None, "provisional": bool(row.get("provisional")),
         "body_observed": body_ok, "body_characters": row.get("body_characters") or 0,
@@ -50,29 +53,42 @@ def summarize(source, result):
         "identity_conflict": bool(row.get("identity_conflict")),
         "review_window_count": len(row.get("review_windows") or []),
         "request_count": len(result.get("requests") or []),
+        "transport": result.get("transport") or "COUNCIL_WEBSITE_FALLBACK",
+        "api_fallback_reason": result.get("api_fallback_reason") or "",
     }
 
 
-def safe_probe(source, as_of):
+def safe_probe(source, as_of, api_key=""):
+    api_fallback_reason = ""
     try:
-        return summarize(source, run(source, as_of, count=1))
+        if api_key and source.get("clik_assembly_id"):
+            try:
+                return summarize(source, probe_source(source, as_of, api_key))
+            except (ClikAPIError, OSError, ValueError, KeyError, TypeError) as exc:
+                api_fallback_reason = type(exc).__name__
+        result = run(source, as_of, count=1)
+        result["transport"] = "COUNCIL_WEBSITE_FALLBACK"
+        result["api_fallback_reason"] = api_fallback_reason
+        return summarize(source, result)
     except (ValueError, KeyError, TypeError, AttributeError, OSError) as exc:
         return {
             "source_id": source["id"], "source_name": source["name"],
             "status": "UNKNOWN_COLLECTION", "diagnosis": type(exc).__name__,
-            "document_url": "", "meeting_date": "", "public_release_date": None,
+            "document_id": "", "document_url": "", "meeting_date": "", "public_release_date": None,
             "provisional": False, "body_observed": False, "body_characters": 0,
             "speech_turns": 0, "body_sha256": "", "metadata_check": "UNVERIFIED",
             "date_crosschecked": False, "identity_conflict": False,
             "review_window_count": 0, "request_count": 0,
+            "transport": "COUNCIL_WEBSITE_FALLBACK",
+            "api_fallback_reason": api_fallback_reason,
         }
 
 
-def collect(sources, as_of):
+def collect(sources, as_of, api_key=""):
     if len(sources) != 25 or len({source["id"] for source in sources}) != 25:
         raise ValueError("Expected exactly 25 distinct district councils")
     with ThreadPoolExecutor(max_workers=4) as pool:
-        results = list(pool.map(lambda source: safe_probe(source, as_of), sources))
+        results = list(pool.map(lambda source: safe_probe(source, as_of, api_key), sources))
     counts = dict(sorted(Counter(row["status"] for row in results).items()))
     return {
         "schema": SCHEMA, "sampled_at_kst": datetime.now(KST).isoformat(timespec="seconds"),
@@ -92,12 +108,13 @@ def render(payload):
         "각 의회의 공식 최근목록 최상단 1건만 읽었다. 전체 회의록이나 발언을 대표하지 않는다.",
         "회의일은 공개일이 아니다. 접근 실패·본문 실패는 아이템 0건이 아니다.",
         "본문 원문·발언 발췌·개인정보는 저장하지 않는다. 질문·브리핑·장부에는 연결하지 않는다.",
-        "", "| 의회 | 본문·식별정보 | 회의일 | 발언 턴 | 상태 |",
-        "|---|---|---|---:|---|",
+        "", "| 의회 | 수집 경로 | 본문·식별정보 | 회의일 | 발언 턴 | 상태 |",
+        "|---|---|---|---|---:|---|",
     ]
     for row in payload["results"]:
         doc = f"[원문]({row['document_url']})" if row["document_url"] else "-"
-        lines.append(f"| {row['source_name']} | {doc} | {row['meeting_date'] or '-'} | "
+        path = "지방의정포털 API" if row.get("transport") == "CLIK_OPEN_API" else "의회 홈페이지"
+        lines.append(f"| {row['source_name']} | {path} | {doc} | {row['meeting_date'] or '-'} | "
                      f"{row['speech_turns']} | {row['status']} |")
     lines.extend(["", "## 상태별 건수", ""])
     for status, count in payload["status_counts"].items():
@@ -113,7 +130,7 @@ def main():
     parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
     sources = json.loads(args.sources.read_text(encoding="utf-8"))
-    payload = collect(sources, datetime.now(KST).date())
+    payload = collect(sources, datetime.now(KST).date(), os.getenv("CLIK_API_KEY", ""))
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "sample_latest.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -129,3 +146,4 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
