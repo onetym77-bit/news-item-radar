@@ -13,16 +13,26 @@ def record(proposal_id, decision, note):
     if decision not in {"COMPLETE", "DISCARD", "HOLD"}:
         raise ValueError("알 수 없는 판정")
     data = json.loads(OUTPUT.read_text(encoding="utf-8"))
-    proposals = {str(x["id"]): x for x in data.get("proposals", [])}
-    if proposal_id not in proposals:
-        raise ValueError("현재 검토안에 없는 ID")
+    items = {}
+    for record_type, rows in (
+        ("운영 후보", data.get("proposals", [])),
+        ("검증 전용", data.get("shadow_reviews", [])),
+    ):
+        for item in rows:
+            item_id = str(item.get("id", ""))
+            if item_id:
+                items[item_id] = (record_type, item)
+    if proposal_id not in items:
+        raise ValueError("현재 통합 검토안에 없는 ID")
     history = json.loads(DECISIONS.read_text(encoding="utf-8"))
     if any(str(x.get("id")) == proposal_id for x in history):
         raise ValueError("이미 판정한 ID")
-    item = proposals[proposal_id]
+    record_type, item = items[proposal_id]
     history.append({"id": proposal_id, "decision": decision, "note": note.strip()[:500],
-                    "title": item["title"], "issue_key": item["issue_key"],
-                    "source": item["source"], "url": item["url"],
+                    "record_type": record_type,
+                    "title": item.get("title") or item.get("issue_key") or "사안명 미확인",
+                    "issue_key": item.get("issue_key", ""),
+                    "source": item.get("source", "출처 미상"), "url": item.get("url", ""),
                     "decided_at_utc": datetime.now(timezone.utc).isoformat()})
     DECISIONS.write_text(json.dumps(history, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return history[-1]
