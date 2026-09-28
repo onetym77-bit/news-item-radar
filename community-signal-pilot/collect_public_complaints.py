@@ -359,7 +359,12 @@ def observe(fetcher=fetch, scan_limit: int = SCAN_LIMIT, detail_limit: int = DET
             "detail_failure_count": len(failures),
             "shadow_review_count": sum(row["review_status"] == "SHADOW_REVIEW" for row in records),
             "information_only_count": sum(row["review_status"] == "INFORMATION_ONLY" for row in records),
+            "hold_count": sum(row["review_status"] == "HOLD" for row in records),
             "context_unresolved_count": sum(row["review_status"] == "CONTEXT_UNRESOLVED" for row in records),
+            "explicit_question_answer_count": sum(
+                row["section_status"] in {"EXPLICIT_QUESTION_AND_ANSWER", "EXPLICIT_Q_AND_A"}
+                for row in records
+            ),
         },
         "records": records,
         "failures": failures,
