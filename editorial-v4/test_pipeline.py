@@ -311,7 +311,7 @@ class PipelineTests(unittest.TestCase):
                         "freshness_status": "STALE_CARRYOVER",
                         "url": "https://example.org/council/carry",
                         "source_date": "2026-09-11",
-                        "text": "서울의 새 지원 사업은 신청 경로에 따라 이용 순서와 대기 방식이 달라질 수 있다는 의원 발언입니다.",
+                        "text": "서울의 새 지원 사업은 신청 경로에 따라 이용 순서와 대기 방식이 달라질 수 있다는 의원 발언입니다. 같은 자격의 시민에게 다른 결과가 생기는지 확인해야 합니다.",
                         "context_subject": "새 지원 사업의 신청 경로",
                         "context_text": "같은 자격을 가진 시민도 신청 창구에 따라 처리 순서가 달라지는지 확인해야 합니다.",
                         "question": "접수 창구별 대기와 처리 결과가 실제로 다른가?",
