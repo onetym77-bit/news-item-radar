@@ -96,6 +96,154 @@ def stable_id(kind, url, text):
     return hashlib.sha256((kind + "|" + url + "|" + text[:160]).encode("utf-8")).hexdigest()[:16]
 
 
+HEAD_CONTRACT_VERSION = "1.0"
+SHADOW_QUEUE_SPECS = (
+    ("25개 자치구의회", "district-council-pilot/output/recent-l3/editorial_review_queue.json",
+     "district-council-pilot/output/recent-l3/editorial_review_decisions.json"),
+    ("시민제안", "citizen-proposal-pilot/output/editorial_review_queue.json",
+     "citizen-proposal-pilot/output/editorial_review_decisions.json"),
+    ("유튜브", "interest-radar-v2/output/youtube_review_queue.json",
+     "interest-radar-v2/output/youtube_review_decisions.json"),
+)
+EXPECTED_LANES = ("뉴스", "서울시의회", "서울시 감사", "25개 자치구의회",
+                  "시민제안", "유튜브", "지역 커뮤니티·제보", "검색 관심도")
+
+
+def decision_ids(document):
+    if isinstance(document, list):
+        rows = document
+    elif isinstance(document, dict):
+        rows = document.get("decisions") or document.get("items") or []
+    else:
+        rows = []
+    decided = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        decision = compact(row.get("decision") or row.get("verdict")).upper()
+        if decision not in {"PROMISING", "HOLD", "DISCARD", "COMPLETE", "REJECT"}:
+            continue
+        item_id = compact(row.get("id") or row.get("item_id") or row.get("source_record_id"))
+        if item_id:
+            decided.add(item_id)
+    return decided
+
+
+def load_shadow_review_queues():
+    """Load persisted, already-redacted shadow queues without promoting them."""
+    items, queues = [], []
+    for family, queue_path, decision_path in SHADOW_QUEUE_SPECS:
+        queue = read(queue_path, {})
+        decided = decision_ids(read(decision_path, []))
+        pending = []
+        for raw in queue.get("items", []) if isinstance(queue, dict) else []:
+            if not isinstance(raw, dict):
+                continue
+            item_id = compact(raw.get("id"))
+            if not item_id or item_id in decided:
+                continue
+            pending.append({
+                **raw,
+                "id": item_id,
+                "family": compact(raw.get("family")) or family,
+                "source_lane": family,
+                "status": "사람 판정 대기·최종 후보 아님",
+                "briefing_output": "NONE",
+                "production_eligible": False,
+            })
+        items.extend(pending)
+        queues.append({
+            "source": family,
+            "queue_path": queue_path,
+            "pending": len(pending),
+            "decided": len(decided),
+            "mode": "SHADOW_ONLY",
+        })
+    return {"items": items, "queues": queues, "pending": len(items)}
+
+
+def validate_source_records(records):
+    """Reject title-only or unanchored inputs before any model call."""
+    valid, holds = [], []
+    for record in records:
+        reason = ""
+        if not all(compact(record.get(field)) for field in ("id", "family", "source")):
+            reason = "통합 입력 식별자·출처 누락"
+        elif not compact(record.get("url")).startswith("https://"):
+            reason = "HTTPS 원문 경로 누락"
+        elif len(compact(record.get("evidence_text"))) < 15:
+            reason = "본문 근거 부족"
+        elif not any(len(compact(record.get(field))) >= 12
+                     for field in ("context", "citizen_relevance", "prior_question")):
+            reason = "제목 외 사건 문맥 부족"
+        if reason:
+            holds.append({"id": compact(record.get("id")), "source": compact(record.get("source")),
+                          "headline": compact(record.get("headline")), "reason": reason,
+                          "verdict": "INPUT_HOLD"})
+        else:
+            valid.append(record)
+    return valid, holds
+
+
+def cluster_source_records(records):
+    """Collapse only exact issue identities; never fuzzy-merge separate speeches."""
+    chosen, seen, holds = [], {}, []
+    for record in records:
+        issue = key(record.get("issue_hint"))
+        cluster_key = (record.get("family"), issue) if len(issue) >= 8 else ("id", record.get("id"))
+        if cluster_key not in seen:
+            seen[cluster_key] = record["id"]
+            chosen.append(record)
+            continue
+        holds.append({"id": record["id"], "source": record["source"],
+                      "headline": record.get("headline", ""),
+                      "reason": "동일 출처 계열의 정확히 같은 사안 입력 중복",
+                      "verdict": "CLUSTERED", "representative_id": seen[cluster_key]})
+    return chosen, holds, {"before": len(records), "after": len(chosen),
+                           "exact_duplicates": len(holds), "fuzzy_merge": False}
+
+
+def merge_shadow_reviews(persisted, generated):
+    merged, seen = [], set()
+    for item in list(persisted) + list(generated):
+        item_id = compact(item.get("id"))
+        if not item_id or item_id in seen:
+            continue
+        seen.add(item_id)
+        merged.append(item)
+    return merged
+
+
+def build_source_coverage(records, eligible, selected, proposals, shadow_bundle, gaps):
+    gap_map = {row.get("source"): row.get("reason") for row in gaps}
+    result = []
+    for lane in EXPECTED_LANES:
+        input_count = sum(1 for row in records if row.get("family") == lane)
+        eligible_count = sum(1 for row in eligible if row.get("family") == lane)
+        model_count = sum(1 for row in selected if row.get("family") == lane)
+        proposal_count = sum(1 for row in proposals if row.get("family") == lane)
+        shadow = next((row for row in shadow_bundle.get("queues", [])
+                       if row.get("source") == lane), {})
+        pending = int(shadow.get("pending") or 0)
+        if proposal_count:
+            state = "운영 후보 검토 대기"
+        elif pending:
+            state = "그림자 사람 판정 대기"
+        elif model_count:
+            state = "통합 판정 완료·선정 없음"
+        elif eligible_count:
+            state = "입력 상한 밖 대기"
+        elif input_count:
+            state = "입력 게이트 보류"
+        else:
+            state = "현재 검토 입력 없음"
+        result.append({"source": lane, "state": state, "input": input_count,
+                       "eligible": eligible_count, "model_input": model_count,
+                       "proposals": proposal_count, "pending_shadow": pending,
+                       "reason": gap_map.get(lane, "")})
+    return result
+
+
 def district_shadow_inputs(document):
     if not isinstance(document, dict) or document.get("schema") != 1:
         return []
@@ -281,7 +429,7 @@ def source_inputs(district_shadow=None, citizen_shadow=None,
         youtube_reason = "개별 영상 장부가 비었거나 아직 갱신되지 않음"
     gaps.extend([
         {"source": "유튜브", "reason": youtube_reason},
-        {"source": "지역 커뮤니티·제보", "reason": "접근 가능한 공개 본문/제보 접수 경로 미연결"},
+        {"source": "지역 커뮤니티·제보", "reason": "응답소 공개 민원사례는 L2 그림자 수집 연결; 그 밖의 공개 커뮤니티·직접 제보 본문은 미연결"},
         {"source": "시민 관심 신호", "reason": "뉴스 기사·검색량은 시민 직접 경험의 독립 근거가 아님"},
         {"source": "검색 관심도", "reason": "관심 추이는 보조 신호; 사안 본문 없이 단독 아이템화 금지"},
         {"source": "단체장 SNS", "reason": "계정 주소 확인 단계; 개별 게시물 본문 미연결"},
@@ -480,14 +628,18 @@ def partition_reviewed_proposals(proposals):
 
 def run(model, dry_run=False, district_shadow=None, citizen_shadow=None,
         only_district=False, only_citizen=False, output_path=None):
-    records, gaps = source_inputs(
+    raw_records, gaps = source_inputs(
         district_shadow=district_shadow,
         citizen_shadow=citizen_shadow,
         only_district=only_district,
         only_citizen=only_citizen,
     )
+    records, input_holds = validate_source_records(raw_records)
+    records, cluster_holds, cluster_audit = cluster_source_records(records)
+    shadow_bundle = ({"items": [], "queues": [], "pending": 0}
+                     if only_district or only_citizen else load_shadow_review_queues())
     leads, reviewed = known_leads(), reviewed_ids()
-    eligible, holds = [], []
+    eligible, holds = [], list(input_holds) + list(cluster_holds)
     for record in records:
         reason = "문서일이 실행일보다 미래" if future_dated(record) else excluded(record, leads, reviewed)
         if reason:
@@ -496,33 +648,48 @@ def run(model, dry_run=False, district_shadow=None, citizen_shadow=None,
         else:
             eligible.append(record)
     selected_inputs = prioritize_inputs(eligible)
-    result = {"schema": 1, "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+    result = {"schema": 2, "head_contract_version": HEAD_CONTRACT_VERSION,
+              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
               "status": "DRY_RUN" if dry_run else "NO_ELIGIBLE_INPUT",
-              "source_inputs": len(records), "model_inputs": len(selected_inputs),
+              "source_inputs": len(raw_records), "validated_inputs": len(records),
+              "model_inputs": len(selected_inputs),
               "unmodeled_inputs": len(eligible) - len(selected_inputs), "model_calls": 0,
-              "proposals": [], "shadow_reviews": [], "holds": holds,
-              "source_gaps": gaps,
-              "note": "기획 질문 검토안이며 사실 확인·기사 승인 아님. 0건 허용."}
+              "proposals": [], "shadow_reviews": list(shadow_bundle["items"]), "holds": holds,
+              "source_gaps": gaps, "shadow_queues": shadow_bundle["queues"],
+              "cluster_audit": cluster_audit,
+              "head_stages": [
+                  {"stage": "입력 계약", "result": "본문 근거·원문 경로·출처 확인"},
+                  {"stage": "정규화·군집", "result": "정확히 같은 사안만 병합"},
+                  {"stage": "기획 합성", "result": "출처별 균형 입력에서 0~3건"},
+                  {"stage": "독립 반론 검토", "result": "가설·반대 설명·첫 검증 재심"},
+                  {"stage": "사람 판정", "result": "운영 후보와 그림자 큐를 분리 제시"},
+              ],
+              "note": "기획 질문 검토안이며 사실 확인·기사 승인 아님. 0건 허용. 그림자 항목은 자동 승격하지 않음."}
     if selected_inputs and not dry_run:
         api_key = os.environ.get("OPENAI_API_KEY", "")
         if not api_key:
             raise RuntimeError("OPENAI_API_KEY 미설정")
         response = model_assess(selected_inputs, leads, model, api_key)
         result["model_calls"] = 1
-        result["proposals"], model_holds = assess_result(selected_inputs, response)
+        proposed, model_holds = assess_result(selected_inputs, response)
         result["holds"].extend(model_holds)
-        if result["proposals"]:
-            critique = model_review(selected_inputs, result["proposals"], model, api_key)
+        if proposed:
+            critique = model_review(selected_inputs, proposed, model, api_key)
             result["model_calls"] = 2
-            reviewed, critique_holds = apply_second_review(result["proposals"], critique)
-            result["proposals"], result["shadow_reviews"] = partition_reviewed_proposals(reviewed)
+            reviewed_proposals, critique_holds = apply_second_review(proposed, critique)
+            production, generated_shadow = partition_reviewed_proposals(reviewed_proposals)
+            result["proposals"] = production
+            result["shadow_reviews"] = merge_shadow_reviews(result["shadow_reviews"], generated_shadow)
             result["holds"].extend(critique_holds)
+    if not dry_run:
         if result["proposals"]:
             result["status"] = "REVIEW_READY"
         elif result["shadow_reviews"]:
             result["status"] = "SHADOW_REVIEW_READY"
-        else:
+        elif selected_inputs:
             result["status"] = "NO_QUALITY_PROPOSAL"
+    result["source_coverage"] = build_source_coverage(
+        raw_records, eligible, selected_inputs, result["proposals"], shadow_bundle, gaps)
     target = Path(output_path) if output_path else OUT
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
