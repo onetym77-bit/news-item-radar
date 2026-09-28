@@ -2,9 +2,8 @@ name: Build editorial review v4
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Collect interest signals"]
-    types: [completed]
+  schedule:
+    - cron: "10 0 * * 1,3"
   pull_request:
     paths:
       - "editorial-v4/**"
@@ -32,7 +31,6 @@ concurrency:
 
 jobs:
   review:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
@@ -40,8 +38,6 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
       - name: Validate pipeline
         run: python -X utf8 -m unittest discover -s editorial-v4 -p "test_*.py" -v
       - name: Validate YouTube semantic shadow
@@ -68,6 +64,14 @@ jobs:
       - name: Generate review questions
         if: ${{ github.event_name != 'pull_request' }}
         run: python -X utf8 editorial-v4/pipeline.py --model gpt-5.6-luna
+      - name: Upload integrated head audit
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: integrated-head-audit-${{ github.run_id }}
+          path: editorial-v4/output/latest.json
+          if-no-files-found: error
+          retention-days: 7
       - name: Upload YouTube semantic shadow
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
