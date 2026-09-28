@@ -12,14 +12,23 @@ on:
       - ".github/workflows/app-ui-data.yml"
       - "citizen-proposal-pilot/output/editorial_review_queue.json"
       - "citizen-proposal-pilot/output/editor_decisions.json"
+      - "interest-radar-v2/output/youtube_review_queue.json"
+      - "interest-radar-v2/output/youtube_editor_decisions.json"
   pull_request:
     paths:
       - "app-ui-v1/**"
       - "citizen-proposal-pilot/**"
+      - "interest-radar-v2/build_youtube_review_queue.py"
+      - "interest-radar-v2/publish_youtube_review_queue.py"
+      - "interest-radar-v2/record_youtube_shadow_decision.py"
+      - "interest-radar-v2/output/youtube_review_queue.json"
+      - "interest-radar-v2/output/youtube_editor_decisions.json"
       - ".github/workflows/app-ui-data.yml"
       - ".github/workflows/citizen-proposal-shadow.yml"
       - ".github/workflows/publish-citizen-shadow.yml"
       - ".github/workflows/review-citizen-shadow.yml"
+      - ".github/workflows/publish-youtube-shadow.yml"
+      - ".github/workflows/review-youtube-shadow.yml"
   schedule:
     - cron: "15 3 * * *"
   workflow_run:
@@ -36,6 +45,8 @@ on:
       - "Review citizen proposal experience shadow"
       - "Publish citizen signal shadow queue"
       - "Review citizen signal shadow proposal"
+      - "Publish YouTube signal shadow queue"
+      - "Review YouTube signal shadow proposal"
     types: [completed]
 
 permissions:

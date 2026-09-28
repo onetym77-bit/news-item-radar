@@ -9,11 +9,19 @@ on:
     paths:
       - "editorial-v4/**"
       - "interest-radar-v2/review_youtube_context.py"
+      - "interest-radar-v2/build_youtube_review_queue.py"
+      - "interest-radar-v2/publish_youtube_review_queue.py"
+      - "interest-radar-v2/record_youtube_shadow_decision.py"
+      - "interest-radar-v2/output/youtube_review_queue.json"
+      - "interest-radar-v2/output/youtube_editor_decisions.json"
       - "interest-radar-v2/test_review_youtube_context.py"
       - "interest-radar-v2/test_youtube_classification.py"
       - "interest-radar-v2/collect_source_material_v2_1.py"
       - "interest-radar-v2/config/editorial_lenses.json"
       - ".github/workflows/editorial-v4.yml"
+      - ".github/workflows/collect-interest-signals.yml"
+      - ".github/workflows/publish-youtube-shadow.yml"
+      - ".github/workflows/review-youtube-shadow.yml"
 
 permissions:
   contents: write
@@ -49,6 +57,14 @@ jobs:
       - name: Review YouTube citizen signals in shadow mode
         if: ${{ github.event_name != 'pull_request' }}
         run: python -X utf8 interest-radar-v2/review_youtube_context.py --model gpt-5.6-luna --output editorial-v4/output/youtube_shadow_latest.json
+      - name: Build bounded YouTube review queue candidate
+        if: ${{ github.event_name != 'pull_request' }}
+        run: >-
+          python -X utf8 interest-radar-v2/build_youtube_review_queue.py
+          --input editorial-v4/output/youtube_shadow_latest.json
+          --queue interest-radar-v2/output/youtube_review_queue.json
+          --decisions interest-radar-v2/output/youtube_editor_decisions.json
+          --output editorial-v4/output/youtube_review_queue_next.json
       - name: Generate review questions
         if: ${{ github.event_name != 'pull_request' }}
         run: python -X utf8 editorial-v4/pipeline.py --model gpt-5.6-luna
@@ -57,7 +73,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: youtube-semantic-shadow-${{ github.run_id }}
-          path: editorial-v4/output/youtube_shadow_latest.json
+          path: |
+            editorial-v4/output/youtube_shadow_latest.json
+            editorial-v4/output/youtube_review_queue_next.json
           if-no-files-found: ignore
           retention-days: 7
       - name: Commit derived review only

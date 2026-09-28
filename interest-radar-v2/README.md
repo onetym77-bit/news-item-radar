@@ -5,3 +5,11 @@
 유튜브 발견 v2.3은 행동·증거·장면·당사자 형식 네 검색 레인을 사용하고 표현별 건강도를 누적한다. 단일 시민·현장 단서는 `LEAD`, 독립 비언론 채널의 반복은 `CORROBORATED`로 분리한다. 어느 단계도 유튜브 단독으로 기사 후보에 승격시키지 않는다.
 
 현재 단계에서는 편집 렌즈와 제외 규칙을 새 기준으로 사용한다. 기존 `signal-radar-v1`의 고정 가설·자동 유망 판정은 데일리 기사 선별 기준으로 사용하지 않는다.
+
+## 월·수 운영 연결
+
+`Collect interest signals`는 뉴스 관심 신호보다 먼저 `collect_source_material_v2_1.py`를 실행한다. 이 단계가 개별 영상의 제목·설명·채널·게시 시각·원영상 주소를 `youtube_signal_ledger_v2_1.json`에 누적하고, 검색 표현 건강도와 API 사용량 상태도 함께 갱신한다.
+
+편집 v4는 누적 장부에서 독립 채널 반복·행동 신호·서울 연결을 갖춘 최대 3개 군집만 별도 의미 검증한다. `REVIEW` 판정을 받은 항목도 자동 후보가 아니다. 성공한 편집 v4 실행의 artifact를 `Publish YouTube signal shadow queue`에 정확한 실행 ID로 전달해야 공개 검증 큐에 들어간다.
+
+공개 큐에서는 원영상과 제목·설명 단서를 확인한 뒤 `Review YouTube signal shadow proposal`에 정확한 판정 ID를 넣어 `PROMISING`, `HOLD`, `DISCARD`를 기록한다. 이미 판정한 ID는 다시 대기 목록에 복원되지 않으며 어떤 판정도 브리핑이나 기획 후보로 자동 승격시키지 않는다.

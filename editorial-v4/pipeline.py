@@ -258,8 +258,29 @@ def source_inputs(district_shadow=None, citizen_shadow=None,
         ready += 1
     if not ready:
         gaps.append({"source": "서울시 감사", "reason": "최근 표본에 본문 근거를 확보한 검토 카드 없음"})
+    youtube = read("editorial-v4/output/youtube_shadow_latest.json", {})
+    youtube_reviews = int(youtube.get("review_count") or 0)
+    youtube_prefilter = int(youtube.get("prefilter_count") or 0)
+    youtube_records = int(youtube.get("record_count") or 0)
+    if youtube_reviews:
+        youtube_reason = (
+            f"개별 영상 {youtube_records}건 장부에서 의미 검증 REVIEW "
+            f"{youtube_reviews}건; 검증 전용 큐에서 사람 판정 대기"
+        )
+    elif youtube_prefilter:
+        youtube_reason = (
+            f"개별 영상 {youtube_records}건 장부에서 {youtube_prefilter}개 군집을 "
+            "검토했으나 반복 서울 시민 신호 REVIEW 없음"
+        )
+    elif youtube_records:
+        youtube_reason = (
+            f"개별 영상 {youtube_records}건 장부 연결; 독립 채널·행동 반복·서울 맥락을 "
+            "함께 갖춘 군집 없음"
+        )
+    else:
+        youtube_reason = "개별 영상 장부가 비었거나 아직 갱신되지 않음"
     gaps.extend([
-        {"source": "유튜브", "reason": "검색 전략 상태만 저장; 개별 영상 내용·맥락 미수집"},
+        {"source": "유튜브", "reason": youtube_reason},
         {"source": "지역 커뮤니티·제보", "reason": "접근 가능한 공개 본문/제보 접수 경로 미연결"},
         {"source": "시민 관심 신호", "reason": "뉴스 기사·검색량은 시민 직접 경험의 독립 근거가 아님"},
         {"source": "검색 관심도", "reason": "관심 추이는 보조 신호; 사안 본문 없이 단독 아이템화 금지"},
