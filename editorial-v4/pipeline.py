@@ -99,11 +99,11 @@ def stable_id(kind, url, text):
 HEAD_CONTRACT_VERSION = "1.0"
 SHADOW_QUEUE_SPECS = (
     ("25개 자치구의회", "district-council-pilot/output/recent-l3/editorial_review_queue.json",
-     "district-council-pilot/output/recent-l3/editorial_review_decisions.json"),
+     "district-council-pilot/output/recent-l3/editor_decisions.json"),
     ("시민제안", "citizen-proposal-pilot/output/editorial_review_queue.json",
-     "citizen-proposal-pilot/output/editorial_review_decisions.json"),
+     "citizen-proposal-pilot/output/editor_decisions.json"),
     ("유튜브", "interest-radar-v2/output/youtube_review_queue.json",
-     "interest-radar-v2/output/youtube_review_decisions.json"),
+     "interest-radar-v2/output/youtube_editor_decisions.json"),
 )
 EXPECTED_LANES = ("뉴스", "서울시의회", "서울시 감사", "25개 자치구의회",
                   "시민제안", "유튜브", "지역 커뮤니티·제보", "검색 관심도")
