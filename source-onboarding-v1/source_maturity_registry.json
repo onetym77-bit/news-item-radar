@@ -100,6 +100,23 @@
       "note": "집계 단위와 무결성 확인. 반복 관측 정밀도 미평가"
     },
     {
+      "source_id": "eungdapso_public_complaints",
+      "source_name": "응답소 공개 민원사례",
+      "official_url": "https://eungdapso.seoul.go.kr/exp/pub/complaint_pub_lis.do",
+      "maturity": "L2",
+      "candidate_role": "VOICE_DISCOVERY_CANDIDATE",
+      "implementation_path": "community-signal-pilot/collect_public_complaints.py",
+      "question_output": "NONE",
+      "briefing_output": "NONE",
+      "schedule": "MANUAL_PR",
+      "persistence": "DERIVED_ONLY",
+      "automatic_ledger_write": false,
+      "raw_personal_text_persisted": false,
+      "approved_for_production": false,
+      "evaluation": null,
+      "note": "시민이 공개를 선택한 민원사례의 목록 최대 20건과 상세 최대 5건만 표본화. 원문·개인정보는 저장하지 않고 시민 주장과 기관 답변의 파생 표지만 분리하며 질문·브리핑·장부에 자동 연결하지 않음"
+    },
+    {
       "source_id": "construction_watch",
       "source_name": "서울 건설알림이 변화 관측",
       "official_url": "https://cis.seoul.go.kr/TotalAlimi_new/CnrtList.action",
