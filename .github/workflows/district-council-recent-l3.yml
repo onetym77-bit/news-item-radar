@@ -121,7 +121,7 @@ jobs:
 
           path = Path("district-council-pilot/output/recent-l3/editorial_shadow_latest.json")
           data = json.loads(path.read_text(encoding="utf-8"))
-          assert data["schema"] == 1
+          assert data["schema"] == 2
           assert data["proposals"] == []
           assert data["model_calls"] <= 2
           assert data["source_inputs"] <= 5
