@@ -92,7 +92,7 @@ class HeadContractTests(unittest.TestCase):
         self.assertEqual(result["proposals"], [])
         self.assertEqual([item["id"] for item in result["shadow_reviews"]], ["district"])
         self.assertEqual(result["model_calls"], 0)
-        self.assertEqual(result["head_contract_version"], "1.0")
+        self.assertEqual(result["head_contract_version"], module.HEAD_CONTRACT_VERSION)
 
     def test_coverage_keeps_production_and_shadow_counts_separate(self):
         bundle = {"queues": [{"source": "25개 자치구의회", "pending": 2}]}
