@@ -6,6 +6,10 @@ from pathlib import Path
 import review_youtube_context as module
 
 
+def config():
+    return json.loads(module.CONFIG.read_text(encoding="utf-8"))
+
+
 def record(video_id, channel, archetype, *, seoul=False, signal=True,
            title="월세 부담 때문에 다른 동네로 이사했습니다", description=""):
     return {
@@ -78,7 +82,7 @@ class YoutubeSemanticShadowTests(unittest.TestCase):
         ]
         selected, excluded = module.select_clusters(rows, {}, 3)
         self.assertEqual(selected, [])
-        self.assertIn("서울 지역 단서 없음", excluded[0]["reason"])
+        self.assertIn("서울 사건 지역 단서 없음", excluded[0]["reason"])
 
     def test_ai_fiction_or_pending_rows_cannot_supply_repetition(self):
         rows = [
@@ -88,6 +92,25 @@ class YoutubeSemanticShadowTests(unittest.TestCase):
         ]
         selected, _ = module.select_clusters(rows, {}, 3)
         self.assertEqual(selected, [])
+
+    def test_cluster_specific_outcome_rejects_generic_rent_vlogs(self):
+        rows = [
+            record(
+                "a", "시민A", "당사자 가능성", seoul=True,
+                title="서울에서 월세 120만원 자취 브이로그", signal=False),
+            record(
+                "b", "시민B", "당사자 가능성",
+                title="월세 65만원 원룸 생활 브이로그", signal=False),
+            record(
+                "c", "설명C", "현장·운영자",
+                title="관리비가 올랐습니다", signal=True),
+            record(
+                "d", "설명D", "현장·운영자",
+                title="관리비를 못 받았습니다", signal=True),
+        ]
+        selected, excluded = module.select_clusters(rows, config(), 3)
+        self.assertEqual(selected, [])
+        self.assertIn("결과 행동 영상 2개 미만", excluded[0]["reason"])
 
     def test_validates_contiguous_anchor_and_keeps_shadow_boundary(self):
         selected, _ = module.select_clusters([
@@ -118,7 +141,7 @@ class YoutubeSemanticShadowTests(unittest.TestCase):
             root = Path(tmp)
             ledger, config, output = root / "ledger.json", root / "config.json", root / "out.json"
             ledger.write_text(json.dumps(rows, ensure_ascii=False), encoding="utf-8")
-            config.write_text("{}", encoding="utf-8")
+            config.write_text(module.CONFIG.read_text(encoding="utf-8"), encoding="utf-8")
             payload = module.run(ledger, config, output, "test", dry_run=True)
             self.assertEqual(payload["status"], "PREFILTER_ONLY")
             self.assertEqual(payload["model_calls"], 0)
