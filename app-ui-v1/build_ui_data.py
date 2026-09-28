@@ -250,12 +250,36 @@ district_shadow = {
     "decisions": district_decisions[-10:],
 }
 
+citizen_queue = load(
+    "citizen-proposal-pilot/output/editorial_review_queue.json",
+    {"schema": 1, "mode": "CITIZEN_SIGNAL_SHADOW", "items": []},
+)
+citizen_decisions = load(
+    "citizen-proposal-pilot/output/editor_decisions.json",
+    [],
+)
+citizen_decided = {
+    str(item.get("id"))
+    for item in citizen_decisions
+    if item.get("decision") in {"PROMISING", "HOLD", "DISCARD"}
+}
+citizen_shadow = {
+    "status": "시민 진술·사실 미확인·최종 후보 아님",
+    "generated_at_utc": citizen_queue.get("updated_at_utc"),
+    "items": [
+        item for item in citizen_queue.get("items", [])
+        if str(item.get("id")) not in citizen_decided
+    ],
+    "decisions": citizen_decisions[-10:],
+}
+
 data = {
     "lastRun": display_kst(interest_queue.get("generated_at_utc")) if interest_queue.get("generated_at_utc") else manifest.get("generated_at_kst", "미확인"),
     "dataMode": "실제 산출물",
     "editorialBrief": ui_editorial_brief,
     "editorialV4": v4_review,
     "districtShadow": district_shadow,
+    "citizenShadow": citizen_shadow,
     "sourceExploration": source_exploration,
     "metrics": [
         ["검토 대상 소스", str(len(sources))],
@@ -265,6 +289,7 @@ data = {
         ["검증할 신호", str(len(discovery_signals))],
         ["기획 질문 검토안", str(len(v4_review["proposals"]))],
         ["구의회 검증 전용", str(len(district_shadow["items"]))],
+        ["시민 신호 검증 전용", str(len(citizen_shadow["items"]))],
     ],
     "sources": sources,
     "cards": cards,
