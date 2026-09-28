@@ -638,6 +638,8 @@ def run(model, dry_run=False, district_shadow=None, citizen_shadow=None,
     records, cluster_holds, cluster_audit = cluster_source_records(records)
     shadow_bundle = ({"items": [], "queues": [], "pending": 0}
                      if only_district or only_citizen else load_shadow_review_queues())
+    pending_lanes = {row["source"] for row in shadow_bundle["queues"] if row.get("pending")}
+    gaps = [gap for gap in gaps if gap.get("source") not in pending_lanes]
     leads, reviewed = known_leads(), reviewed_ids()
     eligible, holds = [], list(input_holds) + list(cluster_holds)
     for record in records:
