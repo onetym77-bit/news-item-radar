@@ -21,6 +21,8 @@ on:
       - "district-council-pilot/sources_25.json"
       - "district-council-pilot/test_clik_api.py"
       - "district-council-pilot/test_review_recent_minutes_l3.py"
+      - "district-council-pilot/record_shadow_decision.py"
+      - "district-council-pilot/test_record_shadow_decision.py"
       - "district-council-pilot/interpret_l3_context.py"
       - "district-council-pilot/collect_body_l2.py"
       - "district-council-pilot/watch_new_minutes.py"
@@ -29,6 +31,7 @@ on:
       - "editorial-v4/test_pipeline.py"
       - "editorial-v3/SYSTEM_ARCHITECTURE.md"
       - ".github/workflows/district-council-recent-l3.yml"
+      - ".github/workflows/review-district-shadow.yml"
       - "agent-system-v1/SYSTEM_MANIFEST.md"
 
 permissions:
