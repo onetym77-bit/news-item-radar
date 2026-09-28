@@ -226,11 +226,56 @@ def matched(text: str, terms: tuple[str, ...]) -> list[str]:
     return [term for term in terms if term in text][:8]
 
 
-def derive_signals(text: str) -> dict:
-    citizen = matched(text, CITIZEN_MARKERS)
-    safety = matched(text, SAFETY_MARKERS)
-    access = matched(text, ACCESS_MARKERS)
-    official = matched(text, OFFICIAL_MARKERS)
+QUESTION_LABELS = ("민원 내용", "민원내용", "신청 내용", "신청내용", "질문 내용", "질문내용")
+ANSWER_LABELS = ("답변 내용", "답변내용", "처리 결과", "처리결과", "담당부서 답변")
+
+
+def _first_label(text: str, labels: tuple[str, ...], start: int = 0) -> tuple[int, str] | None:
+    positions = [(text.find(label, start), label) for label in labels if text.find(label, start) >= 0]
+    return min(positions, default=None, key=lambda row: row[0])
+
+
+def split_explicit_sections(text: str) -> dict:
+    """Separate citizen and agency text only when the page exposes boundaries.
+
+    An agency paraphrase such as '귀하의 민원내용은 ...' is not a citizen
+    section and must never produce citizen problem markers.
+    """
+    question = _first_label(text, QUESTION_LABELS)
+    answer = _first_label(text, ANSWER_LABELS)
+    if question and answer and question[0] < answer[0]:
+        citizen = text[question[0] + len(question[1]):answer[0]]
+        official = text[answer[0] + len(answer[1]):]
+        status = "EXPLICIT_QUESTION_AND_ANSWER"
+    elif answer:
+        citizen = ""
+        official = text[answer[0] + len(answer[1]):]
+        status = "ANSWER_ONLY"
+    else:
+        q_match = re.search(r"(?:^|\\s)Q(?:\\s|[:：])", text)
+        a_match = re.search(r"(?:^|\\s)A(?:\\s|[:：])", text)
+        if q_match and a_match and q_match.end() < a_match.start():
+            citizen = text[q_match.end():a_match.start()]
+            official = text[a_match.end():]
+            status = "EXPLICIT_Q_AND_A"
+        else:
+            citizen = ""
+            official = ""
+            status = "BOUNDARY_UNRESOLVED"
+    return {
+        "status": status,
+        "citizen_text": citizen[:12_000],
+        "official_text": official[:12_000],
+    }
+
+
+def derive_signals(citizen_text: str, official_text: str, section_status: str) -> dict:
+    citizen = matched(citizen_text, CITIZEN_MARKERS)
+    safety = matched(citizen_text, SAFETY_MARKERS)
+    access = matched(citizen_text, ACCESS_MARKERS)
+    official = matched(official_text, OFFICIAL_MARKERS)
+    citizen_available = bool(norm(citizen_text))
+    answer_available = bool(norm(official_text))
     if safety:
         signal_type = "SAFETY_OR_MAINTENANCE"
     elif access:
@@ -239,16 +284,22 @@ def derive_signals(text: str) -> dict:
         signal_type = "SERVICE_FRICTION"
     else:
         signal_type = "INFORMATION_QUERY_OR_UNRESOLVED"
-    if citizen and official:
+    if not citizen_available:
+        review_status = "CONTEXT_UNRESOLVED"
+        reason = "시민 작성 구간을 기관 답변과 분리하지 못해 문제 신호로 판정하지 않았습니다."
+    elif citizen and official:
         review_status = "SHADOW_REVIEW"
-        reason = "시민 문제 표현과 기관 답변의 제약·조치 표현이 함께 확인됐습니다."
+        reason = "분리된 시민 작성 구간의 문제 표현과 기관 답변 구간의 제약·조치 표현이 함께 확인됐습니다."
     elif citizen:
         review_status = "HOLD"
-        reason = "시민 문제 표현은 있으나 기관 답변에서 구조적 단서를 확인하지 못했습니다."
+        reason = "분리된 시민 작성 구간에 문제 표현은 있으나 기관 답변의 구조적 단서를 확인하지 못했습니다."
     else:
         review_status = "INFORMATION_ONLY"
-        reason = "단순 문의와 구조적 문제를 구분할 근거가 부족합니다."
+        reason = "분리된 시민 작성 구간에서 구조적 문제 표현을 확인하지 못했습니다."
     return {
+        "section_status": section_status,
+        "citizen_section_available": citizen_available,
+        "answer_section_available": answer_available,
         "signal_type": signal_type,
         "citizen_problem_markers": citizen,
         "official_response_markers": official,
@@ -272,7 +323,13 @@ def observe(fetcher=fetch, scan_limit: int = SCAN_LIMIT, detail_limit: int = DET
     for item in listed[:detail_limit]:
         try:
             detail_html, detail_sha = fetcher(item["source_url"])
-            signals = derive_signals(visible_detail(detail_html, item["title"]))
+            detail_text = visible_detail(detail_html, item["title"])
+            sections = split_explicit_sections(detail_text)
+            signals = derive_signals(
+                sections["citizen_text"],
+                sections["official_text"],
+                sections["status"],
+            )
             record = {key: value for key, value in item.items() if not key.startswith("_")}
             record.update(signals)
             record["detail_sha256"] = detail_sha
@@ -302,6 +359,7 @@ def observe(fetcher=fetch, scan_limit: int = SCAN_LIMIT, detail_limit: int = DET
             "detail_failure_count": len(failures),
             "shadow_review_count": sum(row["review_status"] == "SHADOW_REVIEW" for row in records),
             "information_only_count": sum(row["review_status"] == "INFORMATION_ONLY" for row in records),
+            "context_unresolved_count": sum(row["review_status"] == "CONTEXT_UNRESOLVED" for row in records),
         },
         "records": records,
         "failures": failures,
@@ -316,6 +374,7 @@ def render_markdown(document: dict) -> str:
         f"- 목록 확인: {document['diagnostics']['listed_count']}건",
         f"- 본문 표본 성공: {document['diagnostics']['detail_success_count']}건",
         f"- 그림자 검토 표시: {document['diagnostics']['shadow_review_count']}건",
+        f"- 시민·기관 구간 분리 실패: {document['diagnostics']['context_unresolved_count']}건",
         "",
         "> 시민 진술은 사실로 확정하지 않았고, 기관 답변도 독립 검증으로 세지 않습니다.",
         "> 민원·답변 원문과 개인정보는 저장하지 않았으며 이 결과는 기사 후보가 아닙니다.",
@@ -326,6 +385,7 @@ def render_markdown(document: dict) -> str:
             f"## {index}. {row['title']}",
             "",
             f"- 공개일: {row.get('published_date') or '확인 필요'}",
+            f"- 본문 구간: {row['section_status']}",
             f"- 신호 유형: {row['signal_type']}",
             f"- 검토 상태: {row['review_status']}",
             f"- 시민 문제 표지: {', '.join(row['citizen_problem_markers']) or '없음'}",
