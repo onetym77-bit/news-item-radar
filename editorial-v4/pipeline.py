@@ -95,9 +95,55 @@ def key(value):
 def stable_id(kind, url, text):
     return hashlib.sha256((kind + "|" + url + "|" + text[:160]).encode("utf-8")).hexdigest()[:16]
 
-def source_inputs():
+
+def district_shadow_inputs(document):
+    if not isinstance(document, dict) or document.get("schema") != 1:
+        return []
+    if document.get("mode") != "SEMANTIC_SHADOW" or document.get("source_count") != 25:
+        return []
     records = []
+    for item in document.get("results", []):
+        card = item.get("verification_card") or {}
+        desk = item.get("editorial_review") or {}
+        if item.get("semantic_status") != "REVIEW":
+            continue
+        if desk.get("verdict") not in {"PURSUE", "VERIFY_FIRST"}:
+            continue
+        excerpt = compact(card.get("anchor_quote"))
+        context = compact(card.get("observed_issue"))
+        if len(excerpt) < 15 or len(context) < 30:
+            continue
+        url = compact(item.get("document_url"))
+        source_name = compact(item.get("source_name")) or "자치구"
+        records.append({
+            "id": stable_id("district-shadow", url, excerpt),
+            "family": "25개 자치구의회",
+            "source": source_name + "의회 회의록",
+            "url": url,
+            "date": compact(item.get("meeting_date")),
+            "headline": compact(card.get("editorial_hypothesis"))[:130],
+            "evidence_text": excerpt,
+            "context": context[:1000],
+            "citizen_relevance": compact(card.get("citizen_stake_to_check"))[:500],
+            "prior_question": compact(card.get("test_question"))[:500],
+            "counterpossibility": compact(card.get("alternative_explanation"))[:500],
+            "claim_status": "구의회 발언·미검증",
+            "issue_hint": compact(card.get("editorial_hypothesis"))[:130],
+            "source_stage": "L3 그림자 검토",
+            "production_eligible": False,
+        })
+    return records
+
+
+def source_inputs(district_shadow=None, only_district=False):
+    district_records = district_shadow_inputs(district_shadow)
+    records = list(district_records)
     gaps = []
+    if not district_records:
+        gaps.append({"source": "25개 자치구의회",
+                     "reason": "검증 가능한 최근 L3 그림자 카드 없음"})
+    if only_district:
+        return records, gaps
     news = read("interest-signal-pilot/output/review_queue_latest.json", {})
     for item in news.get("items", []):
         a = item.get("content_assessment") or {}
@@ -158,7 +204,6 @@ def source_inputs():
     if not ready:
         gaps.append({"source": "서울시 감사", "reason": "최근 표본에 본문 근거를 확보한 검토 카드 없음"})
     gaps.extend([
-        {"source": "25개 자치구의회", "reason": "목록 감시 결과만 저장; 발언 본문·쟁점 추출 미연결"},
         {"source": "유튜브", "reason": "검색 전략 상태만 저장; 개별 영상 내용·맥락 미수집"},
         {"source": "지역 커뮤니티·제보", "reason": "접근 가능한 공개 본문/제보 접수 경로 미연결"},
         {"source": "시민 관심 신호", "reason": "뉴스 기사·검색량은 시민 직접 경험의 독립 근거가 아님"},
@@ -177,8 +222,8 @@ def prioritize_inputs(records):
     for rows in buckets.values():
         rows.sort(key=lambda row: compact(row.get("date"))[:10], reverse=True)
     output = []
-    families = ("뉴스", "서울시의회", "서울시 감사") + tuple(
-        family for family in buckets if family not in {"뉴스", "서울시의회", "서울시 감사"})
+    preferred = ("뉴스", "서울시의회", "서울시 감사", "25개 자치구의회")
+    families = preferred + tuple(family for family in buckets if family not in set(preferred))
     while len(output) < MAX_INPUTS and any(buckets.values()):
         for family in families:
             if buckets.get(family) and len(output) < MAX_INPUTS:
@@ -315,6 +360,8 @@ def assess_result(records, result):
                 proposals.append({**{k: compact(a.get(k)) for k in SCHEMA["properties"]["assessments"]["items"]["required"]},
                                   "source": source["source"], "family": source["family"], "url": source["url"],
                                   "date": source["date"], "claim_status": source["claim_status"],
+                                  "source_stage": source.get("source_stage", "운영 입력"),
+                                  "production_eligible": source.get("production_eligible", True),
                                   "status": "취재 질문 검토·사실 미확인"})
                 continue
         holds.append({"id": rid, "source": source["source"],
@@ -341,8 +388,24 @@ def assess_result(records, result):
         issue_seen.add(issue)
     return selected, holds
 
-def run(model, dry_run=False):
-    records, gaps = source_inputs()
+
+def partition_reviewed_proposals(proposals):
+    final, shadow = [], []
+    for proposal in proposals:
+        if proposal.get("production_eligible", True):
+            final.append(proposal)
+        else:
+            shadow.append({
+                **proposal,
+                "status": "검증 전용·최종 후보 아님",
+                "briefing_output": "NONE",
+            })
+    return final, shadow
+
+
+def run(model, dry_run=False, district_shadow=None, only_district=False,
+        output_path=None):
+    records, gaps = source_inputs(district_shadow, only_district)
     leads, reviewed = known_leads(), reviewed_ids()
     eligible, holds = [], []
     for record in records:
@@ -357,7 +420,8 @@ def run(model, dry_run=False):
               "status": "DRY_RUN" if dry_run else "NO_ELIGIBLE_INPUT",
               "source_inputs": len(records), "model_inputs": len(selected_inputs),
               "unmodeled_inputs": len(eligible) - len(selected_inputs), "model_calls": 0,
-              "proposals": [], "holds": holds, "source_gaps": gaps,
+              "proposals": [], "shadow_reviews": [], "holds": holds,
+              "source_gaps": gaps,
               "note": "기획 질문 검토안이며 사실 확인·기사 승인 아님. 0건 허용."}
     if selected_inputs and not dry_run:
         api_key = os.environ.get("OPENAI_API_KEY", "")
@@ -370,19 +434,34 @@ def run(model, dry_run=False):
         if result["proposals"]:
             critique = model_review(selected_inputs, result["proposals"], model, api_key)
             result["model_calls"] = 2
-            result["proposals"], critique_holds = apply_second_review(result["proposals"], critique)
+            reviewed, critique_holds = apply_second_review(result["proposals"], critique)
+            result["proposals"], result["shadow_reviews"] = partition_reviewed_proposals(reviewed)
             result["holds"].extend(critique_holds)
-        result["status"] = "REVIEW_READY" if result["proposals"] else "NO_QUALITY_PROPOSAL"
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        if result["proposals"]:
+            result["status"] = "REVIEW_READY"
+        elif result["shadow_reviews"]:
+            result["status"] = "SHADOW_REVIEW_READY"
+        else:
+            result["status"] = "NO_QUALITY_PROPOSAL"
+    target = Path(output_path) if output_path else OUT
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return result
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="gpt-5.6-luna")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--district-shadow", type=Path)
+    parser.add_argument("--district-shadow-only", action="store_true")
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    output = run(args.model, args.dry_run)
+    district_shadow = None
+    if args.district_shadow:
+        district_shadow = json.loads(args.district_shadow.read_text(encoding="utf-8"))
+    output = run(args.model, args.dry_run, district_shadow,
+                 args.district_shadow_only, args.output)
     print(json.dumps({"status": output["status"], "source_inputs": output["source_inputs"],
                       "model_inputs": output["model_inputs"], "proposals": len(output["proposals"]),
+                      "shadow_reviews": len(output["shadow_reviews"]),
                       "holds": len(output["holds"])}, ensure_ascii=False))
