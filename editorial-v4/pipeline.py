@@ -190,7 +190,7 @@ def cluster_source_records(records):
     chosen, seen, holds = [], {}, []
     for record in records:
         issue = key(record.get("issue_hint"))
-        cluster_key = (record.get("family"), issue) if len(issue) >= 8 else ("id", record.get("id"))
+        cluster_key = (record.get("family"), issue) if len(issue) >= 4 else ("id", record.get("id"))
         if cluster_key not in seen:
             seen[cluster_key] = record["id"]
             chosen.append(record)
