@@ -13,6 +13,8 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 from zoneinfo import ZoneInfo
 
 BASE = Path(__file__).resolve().parent
+HISTORY = BASE / "state" / "processed_ids.json"
+NEXT_HISTORY = BASE / "output" / "processed_ids_next.json"
 LIST_URL = "https://idea.seoul.go.kr/front/allSuggest/list.do?tab=cateAll"
 HOST = "idea.seoul.go.kr"
 LIMIT = 5
@@ -218,6 +220,64 @@ def context_candidates(title: str, text: str) -> dict:
 def matched_terms(text: str, terms: tuple[str, ...]) -> list[str]:
     return [term.strip() for term in terms if term in text]
 
+def empty_history() -> dict:
+    return {"schema": 1, "processed": []}
+
+def validate_history(document: dict) -> dict:
+    if not isinstance(document, dict) or document.get("schema") != 1:
+        raise ValueError("unsupported citizen proposal history")
+    rows = document.get("processed")
+    if not isinstance(rows, list):
+        raise ValueError("citizen proposal history rows missing")
+    seen = set()
+    for row in rows:
+        if not isinstance(row, dict) or set(row) - {
+            "proposal_id", "first_processed_at_kst", "detail_sha256"
+        }:
+            raise ValueError("invalid citizen proposal history row")
+        proposal_id = str(row.get("proposal_id", ""))
+        if not proposal_id.isdigit() or proposal_id in seen:
+            raise ValueError("invalid or duplicate citizen proposal history id")
+        if not isinstance(row.get("first_processed_at_kst"), str):
+            raise ValueError("citizen proposal history timestamp missing")
+        digest = row.get("detail_sha256")
+        if digest is not None and (
+            not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)
+        ):
+            raise ValueError("invalid citizen proposal history digest")
+        seen.add(proposal_id)
+    return document
+
+def load_history(path: Path = HISTORY) -> dict:
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return empty_history()
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError("cannot read citizen proposal history") from exc
+    return validate_history(document)
+
+def processed_proposal_ids(history: dict) -> set[str]:
+    validate_history(history)
+    return {str(row["proposal_id"]) for row in history["processed"]}
+
+def advance_history(history: dict, records: list[dict], observed_at_kst: str) -> dict:
+    validate_history(history)
+    rows = [dict(row) for row in history["processed"]]
+    seen = {str(row["proposal_id"]) for row in rows}
+    for record in records:
+        proposal_id = str(record.get("proposal_id", ""))
+        if not proposal_id.isdigit() or proposal_id in seen:
+            continue
+        rows.append({
+            "proposal_id": proposal_id,
+            "first_processed_at_kst": observed_at_kst,
+            "detail_sha256": record.get("detail_sha256"),
+        })
+        seen.add(proposal_id)
+    rows.sort(key=lambda row: int(row["proposal_id"]), reverse=True)
+    return validate_history({"schema": 1, "processed": rows[:2000]})
+
 def classify_text(text: str) -> dict:
     hearsay = matched_terms(text, HEARSAY)
     first = matched_terms(text, FIRST_PERSON)
@@ -281,9 +341,13 @@ def relevant_detail_text(html: str, title: str) -> str | None:
             detail = detail[:end]
     return detail
 
-def observe(fetcher=fetch, limit: int = LIMIT) -> dict:
+def observe(fetcher=fetch, limit: int = LIMIT, history: dict | None = None) -> dict:
     list_html, list_hash = fetcher(LIST_URL)
-    proposals = parse_list(list_html, limit)
+    listed = parse_list(list_html, limit)
+    if history is None:
+        history = empty_history()
+    processed_ids = processed_proposal_ids(history)
+    proposals = [row for row in listed if row["proposal_id"] not in processed_ids]
     rows = []
     for proposal in proposals:
         detail_html, detail_hash = fetcher(proposal["source_url"])
@@ -309,11 +373,16 @@ def observe(fetcher=fetch, limit: int = LIMIT) -> dict:
             "context_candidates": context,
             **classified,
         })
+    observed_at_kst = datetime.now(ZoneInfo("Asia/Seoul")).isoformat(timespec="seconds")
     return {
         "schema": 2,
-        "observed_at_kst": datetime.now(ZoneInfo("Asia/Seoul")).isoformat(timespec="seconds"),
+        "observed_at_kst": observed_at_kst,
         "source_url": LIST_URL,
-        "coverage": f"FIRST_{len(rows)}_UNIQUE_PROPOSALS",
+        "coverage": f"TOP_{len(listed)}_UNIQUE_PROPOSALS_NEW_{len(rows)}",
+        "listed_records": len(listed),
+        "new_records": len(rows),
+        "already_processed_records": len(listed) - len(rows),
+        "history_records_before_run": len(history["processed"]),
         "list_sha256": list_hash,
         "records": rows,
         "privacy": {
@@ -336,7 +405,8 @@ def render(result: dict) -> str:
     lines = [
         "# 상상대로 서울 시민제안 원문 분류 시험", "",
         f"- 관측: {result['observed_at_kst']}",
-        f"- 범위: 공식 목록 상단의 고유 제안 {len(result['records'])}건",
+        f"- 범위: 공식 목록 상단 {result.get('listed_records', len(result['records']))}건 중 신규 {len(result['records'])}건",
+        f"- 반복 제외: 이전 처리 ID {result.get('already_processed_records', 0)}건",
         "- 판정 경계: 문장 형식 분류만 수행. 사실 확인·질문 품질 평가·기사 판정은 하지 않음.",
         "- 저장 경계: 작성자명·연락처·원문 전체·원문 HTML을 저장하지 않음.", "",
     ]
@@ -369,13 +439,19 @@ def render(result: dict) -> str:
     return "\n".join(lines)
 
 def main() -> int:
-    result = observe()
+    history = load_history()
+    result = observe(history=history)
+    next_history = advance_history(history, result["records"], result["observed_at_kst"])
     output = BASE / "output"
     output.mkdir(exist_ok=True)
     (output / "observation_latest.json").write_text(
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     (output / "review_queue_latest.md").write_text(render(result), encoding="utf-8")
+    NEXT_HISTORY.write_text(
+        json.dumps(next_history, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     print(render(result))
     return 0
 

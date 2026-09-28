@@ -95,5 +95,59 @@ jobs:
             citizen-proposal-pilot/output/observation_latest.json
             citizen-proposal-pilot/output/review_queue_latest.md
             citizen-proposal-pilot/output/editorial_shadow_latest.json
+            citizen-proposal-pilot/output/processed_ids_next.json
           if-no-files-found: error
           retention-days: 7
+
+  persist-history:
+    if: github.event_name != 'pull_request'
+    needs: review
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out current main for the bounded state commit
+        uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Download this successful run's state candidate
+        uses: actions/download-artifact@v8
+        with:
+          name: citizen-proposal-shadow-${{ github.run_id }}
+          path: citizen-history
+      - name: Validate state-only contract
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+          path = Path("citizen-history/processed_ids_next.json")
+          document = json.loads(path.read_text(encoding="utf-8"))
+          assert document.get("schema") == 1
+          rows = document.get("processed")
+          assert isinstance(rows, list) and len(rows) <= 2000
+          ids = set()
+          for row in rows:
+              assert set(row) == {"proposal_id", "first_processed_at_kst", "detail_sha256"}
+              proposal_id = str(row["proposal_id"])
+              assert proposal_id.isdigit() and proposal_id not in ids
+              assert isinstance(row["first_processed_at_kst"], str)
+              digest = row["detail_sha256"]
+              assert digest is None or re.fullmatch(r"[0-9a-f]{64}", digest)
+              ids.add(proposal_id)
+          PY
+      - name: Commit processed IDs only
+        run: |
+          cp citizen-history/processed_ids_next.json citizen-proposal-pilot/state/processed_ids.json
+          git add citizen-proposal-pilot/state/processed_ids.json
+          if git diff --cached --quiet; then
+            echo "No new proposal IDs to record."
+            exit 0
+          fi
+          test "$(git diff --cached --name-only)" = "citizen-proposal-pilot/state/processed_ids.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Record processed citizen proposal IDs"
+          git pull --rebase origin main
+          git push origin HEAD:main
