@@ -17,7 +17,9 @@ HISTORY = BASE / "state" / "processed_ids.json"
 NEXT_HISTORY = BASE / "output" / "processed_ids_next.json"
 LIST_URL = "https://idea.seoul.go.kr/front/allSuggest/list.do?tab=cateAll"
 HOST = "idea.seoul.go.kr"
-LIMIT = 5
+SCAN_LIMIT = 25
+PROCESS_LIMIT = 5
+LIMIT = SCAN_LIMIT
 USER_AGENT = "NewsItemRadarCitizenProposalPilot/1.0"
 
 def norm(value: str) -> str:
@@ -341,13 +343,23 @@ def relevant_detail_text(html: str, title: str) -> str | None:
             detail = detail[:end]
     return detail
 
-def observe(fetcher=fetch, limit: int = LIMIT, history: dict | None = None) -> dict:
+def observe(
+    fetcher=fetch,
+    limit: int = LIMIT,
+    process_limit: int = PROCESS_LIMIT,
+    history: dict | None = None,
+) -> dict:
+    if limit < 1 or process_limit < 1:
+        raise ValueError("scan and process limits must be positive")
     list_html, list_hash = fetcher(LIST_URL)
     listed = parse_list(list_html, limit)
     if history is None:
         history = empty_history()
     processed_ids = processed_proposal_ids(history)
-    proposals = [row for row in listed if row["proposal_id"] not in processed_ids]
+    new_candidates = [
+        row for row in listed if row["proposal_id"] not in processed_ids
+    ]
+    proposals = new_candidates[:process_limit]
     rows = []
     for proposal in proposals:
         detail_html, detail_hash = fetcher(proposal["source_url"])
@@ -378,10 +390,16 @@ def observe(fetcher=fetch, limit: int = LIMIT, history: dict | None = None) -> d
         "schema": 2,
         "observed_at_kst": observed_at_kst,
         "source_url": LIST_URL,
-        "coverage": f"TOP_{len(listed)}_UNIQUE_PROPOSALS_NEW_{len(rows)}",
+        "coverage": (
+            f"TOP_{len(listed)}_UNIQUE_PROPOSALS_"
+            f"NEW_SEEN_{len(new_candidates)}_PROCESSED_{len(rows)}"
+        ),
         "listed_records": len(listed),
+        "new_candidates_seen": len(new_candidates),
         "new_records": len(rows),
-        "already_processed_records": len(listed) - len(rows),
+        "deferred_new_records": len(new_candidates) - len(rows),
+        "process_limit": process_limit,
+        "already_processed_records": len(listed) - len(new_candidates),
         "history_records_before_run": len(history["processed"]),
         "list_sha256": list_hash,
         "records": rows,
@@ -405,7 +423,14 @@ def render(result: dict) -> str:
     lines = [
         "# 상상대로 서울 시민제안 원문 분류 시험", "",
         f"- 관측: {result['observed_at_kst']}",
-        f"- 범위: 공식 목록 상단 {result.get('listed_records', len(result['records']))}건 중 신규 {len(result['records'])}건",
+        (
+            f"- 범위: 공식 목록 상단 "
+            f"{result.get('listed_records', len(result['records']))}건 탐색, "
+            f"신규 {result.get('new_candidates_seen', len(result['records']))}건 중 "
+            f"본문 검토 {len(result['records'])}건"
+        ),
+        f"- 실행당 본문 검토 한도: {result.get('process_limit', len(result['records']))}건",
+        f"- 다음 실행으로 이월된 신규 항목: {result.get('deferred_new_records', 0)}건",
         f"- 반복 제외: 이전 처리 ID {result.get('already_processed_records', 0)}건",
         "- 판정 경계: 문장 형식 분류만 수행. 사실 확인·질문 품질 평가·기사 판정은 하지 않음.",
         "- 저장 경계: 작성자명·연락처·원문 전체·원문 HTML을 저장하지 않음.", "",
