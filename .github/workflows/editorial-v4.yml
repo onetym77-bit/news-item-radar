@@ -8,6 +8,9 @@ on:
   pull_request:
     paths:
       - "editorial-v4/**"
+      - "interest-radar-v2/review_youtube_context.py"
+      - "interest-radar-v2/test_review_youtube_context.py"
+      - "interest-radar-v2/config/editorial_lenses.json"
       - ".github/workflows/editorial-v4.yml"
 
 permissions:
@@ -31,14 +34,30 @@ jobs:
           ref: ${{ github.event_name == 'workflow_run' && 'main' || github.ref }}
       - name: Validate pipeline
         run: python -X utf8 -m unittest discover -s editorial-v4 -p "test_*.py" -v
+      - name: Validate YouTube semantic shadow
+        run: python -X utf8 -m unittest discover -s interest-radar-v2 -p "test_review_youtube_context.py" -v
       - name: Dry-run input mapping on pull requests
         if: ${{ github.event_name == 'pull_request' }}
         run: python -X utf8 editorial-v4/pipeline.py --dry-run
+      - name: Dry-run YouTube semantic prefilter on pull requests
+        if: ${{ github.event_name == 'pull_request' }}
+        run: python -X utf8 interest-radar-v2/review_youtube_context.py --dry-run --output editorial-v4/output/youtube_shadow_latest.json
       - name: Validate source policy
         run: python agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Review YouTube citizen signals in shadow mode
+        if: ${{ github.event_name != 'pull_request' }}
+        run: python -X utf8 interest-radar-v2/review_youtube_context.py --model gpt-5.6-luna --output editorial-v4/output/youtube_shadow_latest.json
       - name: Generate review questions
         if: ${{ github.event_name != 'pull_request' }}
         run: python -X utf8 editorial-v4/pipeline.py --model gpt-5.6-luna
+      - name: Upload YouTube semantic shadow
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: youtube-semantic-shadow-${{ github.run_id }}
+          path: editorial-v4/output/youtube_shadow_latest.json
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Commit derived review only
         if: ${{ github.event_name != 'pull_request' }}
         run: |
@@ -48,3 +67,4 @@ jobs:
           git diff --cached --quiet || git commit -m "Update editorial v4 review"
           git pull --rebase origin main
           git push origin HEAD:main
+
