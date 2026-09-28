@@ -97,7 +97,7 @@ def stable_id(kind, url, text):
     return hashlib.sha256((kind + "|" + url + "|" + text[:160]).encode("utf-8")).hexdigest()[:16]
 
 
-HEAD_CONTRACT_VERSION = "1.2"
+HEAD_CONTRACT_VERSION = "1.3"
 SHADOW_QUEUE_SPECS = (
     ("25개 자치구의회", "district-council-pilot/output/recent-l3/editorial_review_queue.json",
      "district-council-pilot/output/recent-l3/editor_decisions.json"),
@@ -574,25 +574,39 @@ def call_structured(model, api_key, instructions, data, schema, name):
         raise ValueError("모델 응답 미완료")
     return json.loads("".join(parts))
 
+def schema_with_exact_ids(base_schema, array_property, ids):
+    """Bind structured output to this run's IDs before the model is called."""
+    schema = json.loads(json.dumps(base_schema))
+    rows = schema["properties"][array_property]
+    rows["items"]["properties"]["id"]["enum"] = list(ids)
+    return schema
+
+
 def model_assess(records, leads, model, api_key, retry_reason=""):
+    required_ids = [record["id"] for record in records]
     prior = [{"title": x.get("title"), "question": x.get("editorial_question")} for x in leads]
     feedback = read("editorial-v4/decisions.json", [])[-12:]
     data = {"run_date_kst": datetime.now(timezone(timedelta(hours=9))).date().isoformat(),
+            "required_ids": required_ids,
             "records": records, "previously_selected": prior, "editor_feedback": feedback}
     if retry_reason:
         data["contract_retry"] = {
             "reason": retry_reason,
-            "required_ids": [record["id"] for record in records],
+            "required_ids": required_ids,
             "instruction": "모든 required_ids를 중복 없이 정확히 한 번씩 평가하라.",
         }
-    return call_structured(model, api_key, INSTRUCTIONS, data, SCHEMA, "editorial_v4")
+    schema = schema_with_exact_ids(SCHEMA, "assessments", required_ids)
+    return call_structured(model, api_key, INSTRUCTIONS, data, schema, "editorial_v4")
 
 def model_review(records, proposals, model, api_key):
     by_id = {r["id"]: r for r in records}
+    required_ids = [proposal["id"] for proposal in proposals]
     data = {"run_date_kst": datetime.now(timezone(timedelta(hours=9))).date().isoformat(),
+            "required_ids": required_ids,
             "proposals": [{"proposal": p, "original_input": by_id[p["id"]]}
                            for p in proposals]}
-    return call_structured(model, api_key, REVIEW_INSTRUCTIONS, data, REVIEW_SCHEMA, "editorial_v4_review")
+    schema = schema_with_exact_ids(REVIEW_SCHEMA, "reviews", required_ids)
+    return call_structured(model, api_key, REVIEW_INSTRUCTIONS, data, schema, "editorial_v4_review")
 
 def apply_second_review(proposals, result):
     raw = result.get("reviews")
