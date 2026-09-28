@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 240
     env:
-      GH_TOKEN: ${{ github.token }
+      GH_TOKEN: ${{ github.token }}
       PYTHONUTF8: "1"
     steps:
       - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
         id: cycle
         shell: bash
         run: |
-          echo "cycle_id=fresh-${{ github.run_id }-${{ github.run_attempt }" >> "$GITHUB_OUTPUT"
+          echo "cycle_id=fresh-${{ github.run_id }}-${{ github.run_attempt }}" >> "$GITHUB_OUTPUT"
           echo "started_at_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
 
       - name: Collect news and YouTube interest signals
@@ -62,20 +62,20 @@ jobs:
         run: >-
           python -X utf8 editorial-v4/dispatch_workflow.py
           --workflow publish-citizen-shadow.yml
-          --input run_id=${{ steps.citizen.outputs.run_id }
+          --input run_id=${{ steps.citizen.outputs.run_id }}
 
       - name: Run integrated editorial head with collection proof
         id: head
         shell: bash
         env:
-          CYCLE_ID: ${{ steps.cycle.outputs.cycle_id }
-          STARTED_AT: ${{ steps.cycle.outputs.started_at_utc }
-          INTEREST_RUN: ${{ steps.interest.outputs.run_id }
-          FEED_RUN: ${{ steps.feed.outputs.run_id }
-          AUDIT_RUN: ${{ steps.audit.outputs.run_id }
-          DISTRICT_RUN: ${{ steps.district.outputs.run_id }
-          CITIZEN_RUN: ${{ steps.citizen.outputs.run_id }
-          CITIZEN_PUBLISH_RUN: ${{ steps.citizen_publish.outputs.run_id }
+          CYCLE_ID: ${{ steps.cycle.outputs.cycle_id }}
+          STARTED_AT: ${{ steps.cycle.outputs.started_at_utc }}
+          INTEREST_RUN: ${{ steps.interest.outputs.run_id }}
+          FEED_RUN: ${{ steps.feed.outputs.run_id }}
+          AUDIT_RUN: ${{ steps.audit.outputs.run_id }}
+          DISTRICT_RUN: ${{ steps.district.outputs.run_id }}
+          CITIZEN_RUN: ${{ steps.citizen.outputs.run_id }}
+          CITIZEN_PUBLISH_RUN: ${{ steps.citizen_publish.outputs.run_id }}
         run: |
           runs_json="$(jq -nc             --argjson interest "$INTEREST_RUN"             --argjson feed "$FEED_RUN"             --argjson audit "$AUDIT_RUN"             --argjson district "$DISTRICT_RUN"             --argjson citizen "$CITIZEN_RUN"             --argjson citizen_publish "$CITIZEN_PUBLISH_RUN"             '[
               {source:"뉴스·유튜브 관심 신호", workflow:"collect-interest-signals.yml", run_id:$interest, conclusion:"success"},
@@ -92,7 +92,7 @@ jobs:
         run: >-
           python -X utf8 editorial-v4/dispatch_workflow.py
           --workflow publish-youtube-shadow.yml
-          --input run_id=${{ steps.head.outputs.run_id }
+          --input run_id=${{ steps.head.outputs.run_id }}
 
       - name: Rebuild final UI snapshot
         id: ui
@@ -104,13 +104,13 @@ jobs:
           {
             echo "## 최신 수집 통합 회차"
             echo ""
-            echo "- 회차: ${{ steps.cycle.outputs.cycle_id }"
-            echo "- 시작: ${{ steps.cycle.outputs.started_at_utc }"
-            echo "- 뉴스·유튜브 수집: [${{ steps.interest.outputs.run_id }](${{ steps.interest.outputs.run_url })"
-            echo "- 서울 원자료 피드: [${{ steps.feed.outputs.run_id }](${{ steps.feed.outputs.run_url })"
-            echo "- 감사: [${{ steps.audit.outputs.run_id }](${{ steps.audit.outputs.run_url })"
-            echo "- 자치구의회: [${{ steps.district.outputs.run_id }](${{ steps.district.outputs.run_url })"
-            echo "- 시민제안: [${{ steps.citizen.outputs.run_id }](${{ steps.citizen.outputs.run_url })"
-            echo "- 통합 헤드: [${{ steps.head.outputs.run_id }](${{ steps.head.outputs.run_url })"
-            echo "- 최종 UI: [${{ steps.ui.outputs.run_id }](${{ steps.ui.outputs.run_url })"
+            echo "- 회차: ${{ steps.cycle.outputs.cycle_id }}"
+            echo "- 시작: ${{ steps.cycle.outputs.started_at_utc }}"
+            echo "- 뉴스·유튜브 수집: [${{ steps.interest.outputs.run_id }}](${{ steps.interest.outputs.run_url }})"
+            echo "- 서울 원자료 피드: [${{ steps.feed.outputs.run_id }}](${{ steps.feed.outputs.run_url }})"
+            echo "- 감사: [${{ steps.audit.outputs.run_id }}](${{ steps.audit.outputs.run_url }})"
+            echo "- 자치구의회: [${{ steps.district.outputs.run_id }}](${{ steps.district.outputs.run_url }})"
+            echo "- 시민제안: [${{ steps.citizen.outputs.run_id }}](${{ steps.citizen.outputs.run_url }})"
+            echo "- 통합 헤드: [${{ steps.head.outputs.run_id }}](${{ steps.head.outputs.run_url }})"
+            echo "- 최종 UI: [${{ steps.ui.outputs.run_id }}](${{ steps.ui.outputs.run_url }})"
           } >> "$GITHUB_STEP_SUMMARY"
