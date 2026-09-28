@@ -1,0 +1,71 @@
+name: Publish YouTube signal shadow queue
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 성공한 Build editorial review v4 실행 번호
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: youtube-signal-state
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out current main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Validate source run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.run_id }}
+        run: |
+          test -n "$RUN_ID"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" --jq '.name')" = "Build editorial review v4"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" --jq '.conclusion')" = "success"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" --jq '.head_branch')" = "main"
+      - name: Download validated queue candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.run_id }}
+        run: >-
+          gh run download "$RUN_ID"
+          --repo "$GITHUB_REPOSITORY"
+          --name "youtube-semantic-shadow-$RUN_ID"
+          --dir youtube-shadow-artifact
+      - name: Merge candidate with current decisions
+        run: >-
+          python -X utf8 interest-radar-v2/publish_youtube_review_queue.py
+          --candidate youtube-shadow-artifact/youtube_review_queue_next.json
+          --current interest-radar-v2/output/youtube_review_queue.json
+          --decisions interest-radar-v2/output/youtube_editor_decisions.json
+          --output interest-radar-v2/output/youtube_review_queue_published.json
+      - name: Test YouTube queue and decision guards
+        run: python -X utf8 -m unittest discover -s interest-radar-v2 -p 'test_*youtube*.py' -v
+      - name: Commit approved queue only
+        run: |
+          cp interest-radar-v2/output/youtube_review_queue_published.json interest-radar-v2/output/youtube_review_queue.json
+          git add interest-radar-v2/output/youtube_review_queue.json
+          if git diff --cached --quiet; then
+            echo "No new YouTube signal card to publish."
+            exit 0
+          fi
+          test "$(git diff --cached --name-only)" = "interest-radar-v2/output/youtube_review_queue.json"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Publish approved YouTube signal review queue"
+          git pull --rebase origin main
+          git push origin HEAD:main
