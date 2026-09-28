@@ -174,9 +174,20 @@ def evidence_anchor(text: str, category: str, basis: dict) -> dict:
     if span is None or span[1] - span[0] > MAX_EXPERIENCE_SPAN:
         return {"status": "NOT_STORED_FOR_THIS_TYPE", "excerpt": None}
     start, end = span
-    excerpt = redact_anchor(text[max(0, start - 25):min(len(text), end + 25)])
+    left = max(0, start - 15)
+    right = min(len(text), end + 15)
+    preview = text[left:right]
+    if preview.rfind("[") > preview.rfind("]"):
+        closing = text.find("]", right, min(len(text), right + 21))
+        if closing >= 0:
+            right = closing + 1
+        else:
+            right = left + preview.rfind("[")
+    excerpt = redact_anchor(text[left:right])
     if len(excerpt) > 240:
         excerpt = excerpt[:237].rstrip() + "..."
+        if excerpt.rfind("[") > excerpt.rfind("]"):
+            excerpt = excerpt[:excerpt.rfind("[")].rstrip() + "..."
     return {
         "status": "CLASSIFICATION_SUPPORT_ONLY",
         "excerpt": excerpt,
