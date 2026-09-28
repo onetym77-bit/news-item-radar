@@ -297,5 +297,94 @@ class PipelineTests(unittest.TestCase):
                 module.ROOT = old_root
 
 
+    def test_council_stale_carryover_is_bounded_input(self):
+        old_root = module.ROOT
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "source-scout-v1/output").mkdir(parents=True)
+            (root / "source-onboarding-v1/output/audit-l4").mkdir(parents=True)
+            (root / "source-scout-v1/output/daily_feed_latest.json").write_text(
+                json.dumps({
+                    "editorial_triage": [],
+                    "stale_carryover": [{
+                        "source_id": "council_minutes",
+                        "freshness_status": "STALE_CARRYOVER",
+                        "url": "https://example.org/council/carry",
+                        "source_date": "2026-09-11",
+                        "text": "서울의 새 지원 사업은 신청 경로에 따라 이용 순서와 대기 방식이 달라질 수 있다는 의원 발언입니다.",
+                        "context_subject": "새 지원 사업의 신청 경로",
+                        "context_text": "같은 자격을 가진 시민도 신청 창구에 따라 처리 순서가 달라지는지 확인해야 합니다.",
+                        "question": "접수 창구별 대기와 처리 결과가 실제로 다른가?",
+                        "affected_group": "지원 신청 시민",
+                    }],
+                    "metrics": [{"id": "council_minutes", "stale_carryover": 1, "context_holds": 0}],
+                }, ensure_ascii=False), encoding="utf-8")
+            (root / "source-onboarding-v1/output/audit-l4/state_latest.json").write_text(
+                json.dumps({"runs": [], "records": []}), encoding="utf-8")
+            try:
+                module.ROOT = root
+                records, gaps = module.source_inputs()
+            finally:
+                module.ROOT = old_root
+        council = [row for row in records if row["family"] == "서울시의회"]
+        self.assertEqual(len(council), 1)
+        self.assertEqual(council[0]["source_stage"], "신선도 유예·미판정")
+        self.assertTrue(council[0]["production_eligible"])
+        self.assertFalse(any(gap["source"] == "서울시의회" for gap in gaps))
+
+    def test_audit_uses_only_human_verify_card_as_shadow_input(self):
+        old_root = module.ROOT
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "source-scout-v1/output").mkdir(parents=True)
+            audit_dir = root / "source-onboarding-v1/output/audit-l4"
+            audit_dir.mkdir(parents=True)
+            (root / "source-scout-v1/output/daily_feed_latest.json").write_text(
+                json.dumps({"editorial_triage": [], "stale_carryover": [], "metrics": []}),
+                encoding="utf-8")
+            def audit_row(record_id, title):
+                return {"source_record_id": record_id, "card": {
+                    "question_status": "READY_FOR_HUMAN_REVIEW",
+                    "source_frame": "공개 감사보고서에서 시민 서비스와 연결된 구체적인 절차 지적을 확인했습니다.",
+                    "detail_url": "https://example.org/audit/" + record_id,
+                    "published_at": "2026-09-15",
+                    "title": title,
+                    "editorial_addition": "감사 이후 실제 운영 변화와 반복 여부를 검증합니다.",
+                    "public_interest_to_verify": "시민이 이용하는 서비스 절차",
+                    "verification_question": "지적된 절차 공백이 실제 이용자의 선택을 제한했는가?",
+                    "competing_hypotheses": ["실제 공백이 있었다", "대체 절차가 작동했다"],
+                }}
+            (audit_dir / "state_latest.json").write_text(json.dumps({
+                "runs": [{"selected_ids": []}],
+                "records": [audit_row("verify", "검증 카드"),
+                            audit_row("start", "취재 착수 카드"),
+                            audit_row("reject", "기각 카드")],
+            }, ensure_ascii=False), encoding="utf-8")
+            (root / "source-onboarding-v1/audit_l4_reviews.csv").write_text(
+                "source_record_id,verdict\nverify,VERIFY\nstart,START_REPORTING\nreject,REJECT\n",
+                encoding="utf-8")
+            try:
+                module.ROOT = root
+                records, gaps = module.source_inputs()
+            finally:
+                module.ROOT = old_root
+        audits = [row for row in records if row["family"] == "서울시 감사"]
+        self.assertEqual(len(audits), 1)
+        self.assertEqual(audits[0]["headline"], "검증 카드")
+        self.assertEqual(audits[0]["source_stage"], "감사 L4 사람 검증 대기")
+        self.assertFalse(audits[0]["production_eligible"])
+        self.assertFalse(any(gap["source"] == "서울시 감사" for gap in gaps))
+
+    def test_source_coverage_counts_generated_audit_shadow(self):
+        audit = {**BASE, "id": "audit", "family": "서울시 감사",
+                 "source": "서울시 감사 결과", "production_eligible": False}
+        coverage = module.build_source_coverage(
+            [audit], [audit], [audit], [], {"queues": []}, [],
+            [{**audit, "status": "검증 전용·최종 후보 아님"}])
+        by_source = {row["source"]: row for row in coverage}
+        self.assertEqual(by_source["서울시 감사"]["pending_shadow"], 1)
+        self.assertEqual(by_source["서울시 감사"]["state"], "그림자 사람 판정 대기")
+
+
 if __name__ == "__main__":
     unittest.main()
