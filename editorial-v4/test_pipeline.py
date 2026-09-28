@@ -3,6 +3,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location("editorial_pipeline", Path(__file__).with_name("pipeline.py"))
 module = importlib.util.module_from_spec(spec)
@@ -97,6 +98,114 @@ class PipelineTests(unittest.TestCase):
     def test_independent_review_requires_exact_ids(self):
         with self.assertRaisesRegex(ValueError, "ID 불일치"):
             module.apply_second_review([{**GOOD, "source": BASE["source"]}], {"reviews": []})
+
+    def test_district_shadow_accepts_only_reviewed_l3_cards(self):
+        payload = {
+            "schema": 1, "mode": "SEMANTIC_SHADOW", "source_count": 25,
+            "results": [{
+                "source_name": "서초구",
+                "document_url": "https://example.org/district/1",
+                "meeting_date": "2026-09-14",
+                "semantic_status": "REVIEW",
+                "verification_card": {
+                    "anchor_quote": "장애인 활동지원 추가 지원 예산의 집행 잔액이 반복되고 있습니다.",
+                    "observed_issue": "추가 지원 예산이 편성됐지만 집행 잔액이 반복되는 원인을 확인해야 합니다.",
+                    "editorial_hypothesis": "활동지원 수요와 서비스 연결 사이에 공백이 있는가",
+                    "citizen_stake_to_check": "지원 대기와 실제 서비스 이용 가능성",
+                    "test_question": "잔액은 수요 부족인가 제공기관 연결 실패인가?",
+                    "alternative_explanation": "일시적인 신청 감소나 정산 시점 차이일 수 있다",
+                },
+                "editorial_review": {"verdict": "VERIFY_FIRST"},
+            }],
+        }
+        records, gaps = module.source_inputs(payload, only_district=True)
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]["family"], "25개 자치구의회")
+        self.assertEqual(records[0]["source"], "서초구의회 회의록")
+        self.assertEqual(records[0]["source_stage"], "L3 그림자 검토")
+        self.assertFalse(records[0]["production_eligible"])
+        self.assertFalse(any(x["source"] == "25개 자치구의회" for x in gaps))
+
+    def test_district_shadow_rejects_unreviewed_or_low_priority_cards(self):
+        base = {
+            "schema": 1, "mode": "SEMANTIC_SHADOW", "source_count": 25,
+            "results": [{
+                "source_name": "서초구",
+                "document_url": "https://example.org/district/1",
+                "meeting_date": "2026-09-14",
+                "semantic_status": "REVIEW",
+                "verification_card": {
+                    "anchor_quote": "장애인 활동지원 추가 지원 예산의 집행 잔액이 반복되고 있습니다.",
+                    "observed_issue": "추가 지원 예산이 편성됐지만 집행 잔액이 반복되는 원인을 확인해야 합니다.",
+                },
+                "editorial_review": {"verdict": "LOW_PRIORITY"},
+            }],
+        }
+        records, gaps = module.source_inputs(base, only_district=True)
+        self.assertEqual(records, [])
+        self.assertTrue(any(x["source"] == "25개 자치구의회" for x in gaps))
+        base["mode"] = "CONTEXT_ONLY"
+        base["results"][0]["editorial_review"]["verdict"] = "PURSUE"
+        records, _ = module.source_inputs(base, only_district=True)
+        self.assertEqual(records, [])
+
+    def test_district_shadow_never_becomes_final_proposal(self):
+        production = {**GOOD, "source": "서울시의회 회의록",
+                      "production_eligible": True}
+        district = {**GOOD, "id": "district", "source": "서초구의회 회의록",
+                    "family": "25개 자치구의회",
+                    "source_stage": "L3 그림자 검토",
+                    "production_eligible": False}
+        final, shadow = module.partition_reviewed_proposals([production, district])
+        self.assertEqual([x["id"] for x in final], ["one"])
+        self.assertEqual([x["id"] for x in shadow], ["district"])
+        self.assertEqual(shadow[0]["status"], "검증 전용·최종 후보 아님")
+        self.assertEqual(shadow[0]["briefing_output"], "NONE")
+        self.assertFalse(shadow[0]["production_eligible"])
+
+    def test_live_district_run_writes_shadow_only(self):
+        payload = {
+            "schema": 1, "mode": "SEMANTIC_SHADOW", "source_count": 25,
+            "results": [{
+                "source_name": "서초구",
+                "document_url": "https://example.org/district/live",
+                "meeting_date": "2026-09-14",
+                "semantic_status": "REVIEW",
+                "verification_card": {
+                    "anchor_quote": "장애인 활동지원 추가 지원 예산의 집행 잔액이 반복되고 있습니다.",
+                    "observed_issue": "추가 지원 예산이 편성됐지만 집행 잔액이 반복되는 원인을 확인해야 합니다.",
+                    "editorial_hypothesis": "활동지원 수요와 서비스 연결 사이에 공백이 있는가",
+                },
+                "editorial_review": {"verdict": "PURSUE"},
+            }],
+        }
+
+        def assess(records, *_):
+            return {"assessments": [{**GOOD, "id": records[0]["id"],
+                                     "anchor_quote": records[0]["evidence_text"]}]}
+
+        def review(_, proposals, *__):
+            return {"reviews": [{
+                "id": proposals[0]["id"], "verdict": "KEEP",
+                "editorial_risk": "예산 잔액이 서비스 공백과 무관한 정산 시점 차이일 수 있다",
+                "decisive_test": "집행 내역과 대기자·제공기관 연결 기록을 같은 기간으로 대조한다",
+                "reason": "사실을 확정하지 않고 두 설명을 가를 취재 경로가 구체적이다",
+            }]}
+
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / "shadow.json"
+            with patch.object(module, "known_leads", return_value=[]), \
+                    patch.object(module, "reviewed_ids", return_value=set()), \
+                    patch.object(module, "model_assess", side_effect=assess), \
+                    patch.object(module, "model_review", side_effect=review), \
+                    patch.dict(module.os.environ, {"OPENAI_API_KEY": "test"}):
+                result = module.run("test", district_shadow=payload,
+                                    only_district=True, output_path=output)
+        self.assertEqual(result["status"], "SHADOW_REVIEW_READY")
+        self.assertEqual(result["model_calls"], 2)
+        self.assertEqual(result["proposals"], [])
+        self.assertEqual(len(result["shadow_reviews"]), 1)
+        self.assertFalse(result["shadow_reviews"][0]["production_eligible"])
 
     def test_sources_require_body_or_context(self):
         old_root = module.ROOT
