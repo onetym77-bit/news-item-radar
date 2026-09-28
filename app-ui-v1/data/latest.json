@@ -229,6 +229,12 @@
     "items": [],
     "decisions": []
   },
+  "youtubeShadow": {
+    "status": "영상 제목·설명 서술·사실 미확인·최종 후보 아님",
+    "generated_at_utc": null,
+    "items": [],
+    "decisions": []
+  },
   "sourceExploration": {
     "schema": 1,
     "sources": [
@@ -398,6 +404,10 @@
     ],
     [
       "시민 신호 검증 전용",
+      "0"
+    ],
+    [
+      "유튜브 신호 검증 전용",
       "0"
     ]
   ],
