@@ -1,6 +1,7 @@
 import unittest
 
 from build_review_queue import build_queue, empty_queue, public_item
+from publish_review_queue import publish
 
 def shadow_item(**overrides):
     item = {
@@ -53,6 +54,15 @@ class CitizenReviewQueueTests(unittest.TestCase):
             {"shadow_reviews": [shadow_item()]},
             queue,
             [{"id": "0123456789abcdef", "decision": "HOLD"}],
+        )
+        self.assertEqual(result["items"], [])
+
+    def test_publisher_does_not_restore_decided_artifact_item(self):
+        candidate = build_queue({"shadow_reviews": [shadow_item()]}, empty_queue(), [])
+        result = publish(
+            candidate,
+            empty_queue(),
+            [{"id": "0123456789abcdef", "decision": "DISCARD"}],
         )
         self.assertEqual(result["items"], [])
 
