@@ -1,0 +1,57 @@
+name: Review district council shadow proposal
+
+on:
+  workflow_dispatch:
+    inputs:
+      proposal_id:
+        description: 구의회 검증 전용 카드에 표시된 판정 ID
+        required: true
+        type: string
+      decision:
+        description: PROMISING 검토 가치 있음 / HOLD 보류 / DISCARD 기각
+        required: true
+        type: choice
+        options: [PROMISING, HOLD, DISCARD]
+      note:
+        description: 판정 이유 (선택)
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: district-shadow-editor-decision
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test exact-ID decision guard
+        run: python -X utf8 -m unittest district-council-pilot/test_record_shadow_decision.py -v
+      - name: Record exact-ID decision
+        env:
+          PROPOSAL_ID: ${{ inputs.proposal_id }}
+          DECISION: ${{ inputs.decision }}
+          NOTE: ${{ inputs.note }}
+        run: >-
+          python -X utf8 district-council-pilot/record_shadow_decision.py
+          --id "$PROPOSAL_ID"
+          --decision "$DECISION"
+          --note "$NOTE"
+      - name: Commit editor decision only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add district-council-pilot/output/recent-l3/editor_decisions.json
+          git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
+          git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
+          git commit -m "Record district shadow editor decision"
+          git pull --rebase origin main
+          git push origin HEAD:main

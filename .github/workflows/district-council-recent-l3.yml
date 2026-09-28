@@ -21,6 +21,8 @@ on:
       - "district-council-pilot/sources_25.json"
       - "district-council-pilot/test_clik_api.py"
       - "district-council-pilot/test_review_recent_minutes_l3.py"
+      - "district-council-pilot/record_shadow_decision.py"
+      - "district-council-pilot/test_record_shadow_decision.py"
       - "district-council-pilot/interpret_l3_context.py"
       - "district-council-pilot/collect_body_l2.py"
       - "district-council-pilot/watch_new_minutes.py"
@@ -29,6 +31,7 @@ on:
       - "editorial-v4/test_pipeline.py"
       - "editorial-v3/SYSTEM_ARCHITECTURE.md"
       - ".github/workflows/district-council-recent-l3.yml"
+      - ".github/workflows/review-district-shadow.yml"
       - "agent-system-v1/SYSTEM_MANIFEST.md"
 
 permissions:
@@ -182,6 +185,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           python - <<'PY'
           import json
+          import os
           import re
           from pathlib import Path
           source = Path("district-council-pilot/output/recent-l3-run/reviewed_documents_next.json")
@@ -196,15 +200,57 @@ jobs:
           target.parent.mkdir(parents=True, exist_ok=True)
           target.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n",
                             encoding="utf-8")
+
+          shadow_path = Path("district-council-pilot/output/recent-l3-run/editorial_shadow_latest.json")
+          shadow = json.loads(shadow_path.read_text(encoding="utf-8"))
+          assert shadow["schema"] == 1
+          assert shadow["proposals"] == []
+          forbidden = {"body", "parts", "evidence_context", "body_sha256"}
+
+          def check(item):
+              if isinstance(item, dict):
+                  assert forbidden.isdisjoint(item)
+                  for child in item.values():
+                      check(child)
+              elif isinstance(item, list):
+                  for child in item:
+                      check(child)
+
+          queue_path = Path("district-council-pilot/output/recent-l3/editorial_review_queue.json")
+          if queue_path.is_file():
+              queue = json.loads(queue_path.read_text(encoding="utf-8"))
+          else:
+              queue = {"schema": 1, "updated_at_utc": None, "source_run_id": None, "items": []}
+          assert queue.get("schema") == 1 and isinstance(queue.get("items"), list)
+          known = {str(item["id"]) for item in queue["items"]}
+          added = False
+          for item in shadow.get("shadow_reviews", []):
+              check(item)
+              assert item["family"] == "25개 자치구의회"
+              assert item["production_eligible"] is False
+              assert item["briefing_output"] == "NONE"
+              if str(item["id"]) not in known:
+                  queue["items"].append(item)
+                  known.add(str(item["id"]))
+                  added = True
+          queue["items"] = queue["items"][-50:]
+          if added:
+              queue["updated_at_utc"] = shadow.get("generated_at_utc")
+              queue["source_run_id"] = os.environ["GITHUB_RUN_ID"]
+          queue_path.write_text(
+              json.dumps(queue, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
           PY
           git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv
           git diff --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
-      - name: Persist document identity history only
+      - name: Persist identity history and redacted editorial queue only
         shell: bash
         run: |
           git config user.name "news-item-radar-bot"
           git config user.email "news-item-radar-bot@users.noreply.github.com"
           git add -f district-council-pilot/output/recent-l3/reviewed_documents.json
+          git add -f district-council-pilot/output/recent-l3/editorial_review_queue.json
           git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
           git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
           if ! git diff --cached --quiet; then

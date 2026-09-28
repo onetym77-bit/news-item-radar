@@ -25,6 +25,8 @@ on:
       - "Evaluate Seoul audit questions (L4 shadow)"
       - "Build editorial review v4"
       - "Review editorial v4 proposal"
+      - "Review recent district minutes L3 shadow"
+      - "Review district council shadow proposal"
     types: [completed]
 
 permissions:
