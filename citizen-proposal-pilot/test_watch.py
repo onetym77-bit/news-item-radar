@@ -34,6 +34,17 @@ class CitizenProposalWatchTests(unittest.TestCase):
         self.assertEqual(card["claim_status"], "UNVERIFIED")
         self.assertEqual(card["article_gate"], "NOT_EVALUATED")
 
+    def test_far_apart_first_person_and_friction_is_not_direct_experience(self):
+        text = (
+            "제가 서울의 전통 축제를 제안합니다. "
+            + "전통문화 프로그램과 공연 구성을 설명합니다. " * 12
+            + "행사장 이동 동선을 개선하면 좋겠습니다."
+        )
+        card = classify_text(text)
+        self.assertEqual(card["statement_type"], "POLICY_IDEA")
+        anchor = evidence_anchor(text, "SELF_REPORTED_EXPERIENCE", card["matched_basis"])
+        self.assertIsNone(anchor["excerpt"])
+
     def test_hearsay_takes_priority_over_first_person(self):
         card = classify_text("제가 사무실에서 시행한다는 소문을 들었습니다. 불편합니다")
         self.assertEqual(card["statement_type"], "HEARSAY")
