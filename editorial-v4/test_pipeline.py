@@ -45,10 +45,62 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(len(proposals), 1)
         self.assertEqual(holds[0]["reason"], "같은 소스 계열 또는 사안 중복")
 
-    def test_missing_assessment_is_held(self):
-        proposals, holds = module.assess_result([BASE], {"assessments": []})
-        self.assertEqual(proposals, [])
-        self.assertEqual(holds[0]["reason"], "모델 평가 누락")
+    def test_missing_assessment_fails_contract(self):
+        with self.assertRaisesRegex(ValueError, "ID 누락"):
+            module.assess_result([BASE], {"assessments": []})
+
+    def test_duplicate_or_unknown_assessment_id_fails_contract(self):
+        with self.assertRaisesRegex(ValueError, "ID 중복"):
+            module.assess_result([BASE], {"assessments": [GOOD, GOOD]})
+        with self.assertRaisesRegex(ValueError, "알 수 없는 ID"):
+            module.assess_result([BASE], {"assessments": [{**GOOD, "id": "unknown"}]})
+
+    def test_run_retries_incomplete_assessment_once(self):
+        record = {
+            **BASE,
+            "context": "신규 사업의 신청 경로에 따라 시민의 실제 선택과 처리 순서가 달라지는지 확인합니다.",
+            "issue_hint": "새 사업의 접근성",
+        }
+        review = {"reviews": [{
+            "id": "one", "verdict": "KEEP",
+            "editorial_risk": "신청 경로 차이가 실제 이용 결과와 무관할 수 있다",
+            "decisive_test": "접수 기준과 실제 처리 기록을 같은 기간으로 대조한다",
+            "reason": "서로 다른 설명을 가를 자료와 현장 취재 경로가 구체적이다",
+        }]}
+        with tempfile.TemporaryDirectory() as folder, \
+                patch.object(module, "source_inputs", return_value=([record], [])), \
+                patch.object(module, "load_shadow_review_queues",
+                             return_value={"items": [], "queues": [], "pending": 0}), \
+                patch.object(module, "known_leads", return_value=[]), \
+                patch.object(module, "reviewed_ids", return_value=set()), \
+                patch.object(module, "model_assess",
+                             side_effect=[{"assessments": []}, {"assessments": [GOOD]}]) as assess, \
+                patch.object(module, "model_review", return_value=review), \
+                patch.dict(module.os.environ, {"OPENAI_API_KEY": "test"}):
+            result = module.run("test", output_path=Path(folder) / "latest.json")
+        self.assertEqual(assess.call_count, 2)
+        self.assertEqual(result["assessment_retries"], 1)
+        self.assertEqual(result["model_calls"], 3)
+        self.assertEqual(len(result["proposals"]), 1)
+
+    def test_run_fails_after_second_incomplete_assessment(self):
+        record = {
+            **BASE,
+            "context": "신규 사업의 신청 경로에 따라 시민의 실제 선택과 처리 순서가 달라지는지 확인합니다.",
+            "issue_hint": "새 사업의 접근성",
+        }
+        with tempfile.TemporaryDirectory() as folder, \
+                patch.object(module, "source_inputs", return_value=([record], [])), \
+                patch.object(module, "load_shadow_review_queues",
+                             return_value={"items": [], "queues": [], "pending": 0}), \
+                patch.object(module, "known_leads", return_value=[]), \
+                patch.object(module, "reviewed_ids", return_value=set()), \
+                patch.object(module, "model_assess",
+                             side_effect=[{"assessments": []}, {"assessments": []}]) as assess, \
+                patch.dict(module.os.environ, {"OPENAI_API_KEY": "test"}):
+            with self.assertRaisesRegex(ValueError, "ID 누락"):
+                module.run("test", output_path=Path(folder) / "latest.json")
+        self.assertEqual(assess.call_count, 2)
 
     def test_prior_lead_requires_anchor_not_only_shared_url(self):
         lead = {"source_url": BASE["url"], "title": "수어통역센터 재정",
