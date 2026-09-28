@@ -207,6 +207,67 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(len(result["shadow_reviews"]), 1)
         self.assertFalse(result["shadow_reviews"][0]["production_eligible"])
 
+    def test_citizen_shadow_accepts_only_redacted_direct_experience(self):
+        payload = {
+            "schema": 2,
+            "records": [{
+                "proposal_id": "17",
+                "title": "우리 동네 주민센터 방문 불편",
+                "posted_date": "2026-09-27",
+                "source_url": "https://idea.seoul.go.kr/front/freeSuggest/view.do?sn=17",
+                "statement_type": "SELF_REPORTED_EXPERIENCE",
+                "claim_status": "UNVERIFIED",
+                "evidence_anchor": {
+                    "status": "CLASSIFICATION_SUPPORT_ONLY",
+                    "excerpt": "저는 주민센터를 세 번 방문했지만 안내가 달라 다시 돌아와야 했고 시간이 많이 들었습니다.",
+                    "not_proof_of_event": True,
+                },
+                "context_candidates": {
+                    "place_terms_from_title": ["주민센터"],
+                    "time_terms_from_body": ["최근"],
+                },
+            }],
+        }
+        records, gaps = module.source_inputs(citizen_shadow=payload, only_citizen=True)
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]["family"], "시민제안")
+        self.assertEqual(records[0]["source_stage"], "시민제안 L3 그림자 검토")
+        self.assertFalse(records[0]["production_eligible"])
+        self.assertIn("주민센터", records[0]["context"])
+        self.assertEqual(gaps, [])
+
+    def test_citizen_shadow_rejects_idea_hearsay_and_unbounded_anchor(self):
+        base = {
+            "proposal_id": "17",
+            "title": "공원 시설 개선",
+            "posted_date": "2026-09-27",
+            "source_url": "https://idea.seoul.go.kr/front/freeSuggest/view.do?sn=17",
+            "claim_status": "UNVERIFIED",
+            "evidence_anchor": {
+                "status": "CLASSIFICATION_SUPPORT_ONLY",
+                "excerpt": "저는 공원을 이용하면서 반복되는 불편을 실제로 겪었다고 적었습니다.",
+                "not_proof_of_event": True,
+            },
+        }
+        payload = {"schema": 2, "records": [
+            {**base, "statement_type": "POLICY_IDEA"},
+            {**base, "proposal_id": "18", "statement_type": "HEARSAY"},
+            {**base, "proposal_id": "19", "statement_type": "SELF_REPORTED_EXPERIENCE",
+             "evidence_anchor": {**base["evidence_anchor"], "not_proof_of_event": False}},
+        ]}
+        records, gaps = module.source_inputs(citizen_shadow=payload, only_citizen=True)
+        self.assertEqual(records, [])
+        self.assertEqual(gaps[0]["source"], "시민제안")
+
+    def test_citizen_shadow_never_becomes_final_proposal(self):
+        citizen = {**GOOD, "id": "citizen", "source": "상상대로 서울 시민제안",
+                   "family": "시민제안", "source_stage": "시민제안 L3 그림자 검토",
+                   "production_eligible": False}
+        final, shadow = module.partition_reviewed_proposals([citizen])
+        self.assertEqual(final, [])
+        self.assertEqual([item["id"] for item in shadow], ["citizen"])
+        self.assertEqual(shadow[0]["briefing_output"], "NONE")
+
     def test_sources_require_body_or_context(self):
         old_root = module.ROOT
         with tempfile.TemporaryDirectory() as folder:
