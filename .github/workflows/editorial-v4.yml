@@ -40,6 +40,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate pipeline
         run: python -X utf8 -m unittest discover -s editorial-v4 -p "test_*.py" -v
+      - name: Validate fixed editorial quality regressions
+        run: python -X utf8 editorial-v4/evaluate_quality_regression.py
       - name: Validate YouTube semantic shadow
         run: python -X utf8 -m unittest discover -s interest-radar-v2 -p "test_*youtube*.py" -v
       - name: Dry-run input mapping on pull requests

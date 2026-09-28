@@ -1,14 +1,14 @@
-name: Review editorial v4 proposal
+name: Review editorial v4 card
 
 on:
   workflow_dispatch:
     inputs:
       proposal_id:
-        description: 검토안 카드에 표시된 ID
+        description: 운영 후보 또는 검증 전용 카드에 표시된 판정 ID
         required: true
         type: string
       decision:
-        description: COMPLETE 취재 검토 완료 / DISCARD 기각 / HOLD 보류
+        description: COMPLETE 검토 완료 / DISCARD 기각·목록 제외 / HOLD 보류
         required: true
         type: choice
         options: [COMPLETE, DISCARD, HOLD]
