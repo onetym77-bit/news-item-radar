@@ -51,7 +51,7 @@ jobs:
         run: >-
           python -X utf8 editorial-v4/dispatch_workflow.py
           --workflow district-council-recent-l3.yml
-          --input max_docs=25
+          --input max_docs=5
 
       - name: Collect citizen proposal signals
         id: citizen
