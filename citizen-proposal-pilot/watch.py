@@ -138,6 +138,7 @@ FRICTION = ("불편", "부담", "피해", "거절", "반려", "대기", "방문"
 IDEA = ("제안", "도입", "설치", "개선", "바랍니다", "해주세요", "필요합니다", "시행해")
 TIME_TERMS = ("오늘", "어제", "지난주", "지난달", "최근", "매일", "매주", "주말", "평일", "출근", "퇴근", "등교", "하교")
 PLACE_SUFFIXES = ("역", "공원", "대여소", "도서관", "주민센터", "구청", "시청", "잠수교", "고가도로")
+MAX_EXPERIENCE_SPAN = 180
 
 def redact_anchor(value: str) -> str:
     value = sanitize(value)
@@ -170,12 +171,23 @@ def evidence_anchor(text: str, category: str, basis: dict) -> dict:
         span = positions[0] if positions else None
     else:
         span = None
-    if span is None:
+    if span is None or span[1] - span[0] > MAX_EXPERIENCE_SPAN:
         return {"status": "NOT_STORED_FOR_THIS_TYPE", "excerpt": None}
     start, end = span
-    excerpt = redact_anchor(text[max(0, start - 70):min(len(text), end + 110)])
+    left = max(0, start - 15)
+    right = min(len(text), end + 15)
+    preview = text[left:right]
+    if preview.rfind("[") > preview.rfind("]"):
+        closing = text.find("]", right, min(len(text), right + 21))
+        if closing >= 0:
+            right = closing + 1
+        else:
+            right = left + preview.rfind("[")
+    excerpt = redact_anchor(text[left:right])
     if len(excerpt) > 240:
         excerpt = excerpt[:237].rstrip() + "..."
+        if excerpt.rfind("[") > excerpt.rfind("]"):
+            excerpt = excerpt[:excerpt.rfind("[")].rstrip() + "..."
     return {
         "status": "CLASSIFICATION_SUPPORT_ONLY",
         "excerpt": excerpt,
@@ -211,10 +223,15 @@ def classify_text(text: str) -> dict:
     first = matched_terms(text, FIRST_PERSON)
     friction = matched_terms(text, FRICTION)
     idea = matched_terms(text, IDEA)
+    experience_span = nearest_span(text, first, friction) if first and friction else None
+    direct_experience = (
+        experience_span is not None
+        and experience_span[1] - experience_span[0] <= MAX_EXPERIENCE_SPAN
+    )
     if hearsay:
         category = "HEARSAY"
         plan = "전언의 원출처와 공식 시행·공고 자료 존재 여부를 먼저 확인한다."
-    elif first and friction:
+    elif direct_experience:
         category = "SELF_REPORTED_EXPERIENCE"
         plan = "제안자가 진술한 발생 절차·장소·시점을 공식 안내와 대조하고, 같은 조건에서 반복되는지 별도 당사자·현장 자료로 확인한다."
     elif idea:
