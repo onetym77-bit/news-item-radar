@@ -230,6 +230,7 @@
       }
     ],
     "generated_at_utc": "2026-09-28T08:26:36.579316+00:00",
+    "assessment_retries": 0,
     "proposals": [
       {
         "id": "3849dbf9ac53135a",
@@ -259,6 +260,7 @@
         "coverage_status": "기존 보도 각도 별도 대조 필요"
       }
     ],
+    "shadow_reviews": [],
     "holds": [
       {
         "id": "ca61b0ada9c71cb5",
