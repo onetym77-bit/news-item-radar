@@ -98,6 +98,70 @@ class PipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "ID 불일치"):
             module.apply_second_review([{**GOOD, "source": BASE["source"]}], {"reviews": []})
 
+    def test_district_shadow_accepts_only_reviewed_l3_cards(self):
+        payload = {
+            "schema": 1, "mode": "SEMANTIC_SHADOW", "source_count": 25,
+            "results": [{
+                "source_name": "서초구",
+                "document_url": "https://example.org/district/1",
+                "meeting_date": "2026-09-14",
+                "semantic_status": "REVIEW",
+                "verification_card": {
+                    "anchor_quote": "장애인 활동지원 추가 지원 예산의 집행 잔액이 반복되고 있습니다.",
+                    "observed_issue": "추가 지원 예산이 편성됐지만 집행 잔액이 반복되는 원인을 확인해야 합니다.",
+                    "editorial_hypothesis": "활동지원 수요와 서비스 연결 사이에 공백이 있는가",
+                    "citizen_stake_to_check": "지원 대기와 실제 서비스 이용 가능성",
+                    "test_question": "잔액은 수요 부족인가 제공기관 연결 실패인가?",
+                    "alternative_explanation": "일시적인 신청 감소나 정산 시점 차이일 수 있다",
+                },
+                "editorial_review": {"verdict": "VERIFY_FIRST"},
+            }],
+        }
+        records, gaps = module.source_inputs(payload, only_district=True)
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]["family"], "25개 자치구의회")
+        self.assertEqual(records[0]["source"], "서초구의회 회의록")
+        self.assertEqual(records[0]["source_stage"], "L3 그림자 검토")
+        self.assertFalse(records[0]["production_eligible"])
+        self.assertFalse(any(x["source"] == "25개 자치구의회" for x in gaps))
+
+    def test_district_shadow_rejects_unreviewed_or_low_priority_cards(self):
+        base = {
+            "schema": 1, "mode": "SEMANTIC_SHADOW", "source_count": 25,
+            "results": [{
+                "source_name": "서초구",
+                "document_url": "https://example.org/district/1",
+                "meeting_date": "2026-09-14",
+                "semantic_status": "REVIEW",
+                "verification_card": {
+                    "anchor_quote": "장애인 활동지원 추가 지원 예산의 집행 잔액이 반복되고 있습니다.",
+                    "observed_issue": "추가 지원 예산이 편성됐지만 집행 잔액이 반복되는 원인을 확인해야 합니다.",
+                },
+                "editorial_review": {"verdict": "LOW_PRIORITY"},
+            }],
+        }
+        records, gaps = module.source_inputs(base, only_district=True)
+        self.assertEqual(records, [])
+        self.assertTrue(any(x["source"] == "25개 자치구의회" for x in gaps))
+        base["mode"] = "CONTEXT_ONLY"
+        base["results"][0]["editorial_review"]["verdict"] = "PURSUE"
+        records, _ = module.source_inputs(base, only_district=True)
+        self.assertEqual(records, [])
+
+    def test_district_shadow_never_becomes_final_proposal(self):
+        production = {**GOOD, "source": "서울시의회 회의록",
+                      "production_eligible": True}
+        district = {**GOOD, "id": "district", "source": "서초구의회 회의록",
+                    "family": "25개 자치구의회",
+                    "source_stage": "L3 그림자 검토",
+                    "production_eligible": False}
+        final, shadow = module.partition_reviewed_proposals([production, district])
+        self.assertEqual([x["id"] for x in final], ["one"])
+        self.assertEqual([x["id"] for x in shadow], ["district"])
+        self.assertEqual(shadow[0]["status"], "검증 전용·최종 후보 아님")
+        self.assertEqual(shadow[0]["briefing_output"], "NONE")
+        self.assertFalse(shadow[0]["production_eligible"])
+
     def test_sources_require_body_or_context(self):
         old_root = module.ROOT
         with tempfile.TemporaryDirectory() as folder:
