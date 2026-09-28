@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "as_of": "2026-09-28",
+  "purpose": "사용자 편집 피드백을 고정한 기계 품질 게이트 회귀 사례",
+  "cases": [
+    {
+      "id": "promotion-is-not-incident",
+      "description": "기관의 민원 처리 홍보를 시민 피해 사건으로 바꾸지 않는다",
+      "expected_result": "HOLD",
+      "record": {
+        "id": "promotion",
+        "family": "뉴스",
+        "source": "뉴스 본문 판정",
+        "headline": "민원 처리 우수기관 선정",
+        "url": "https://example.org/promotion",
+        "evidence_text": "기관은 올해 민원 처리 만족도가 높아졌다고 홍보했습니다.",
+        "context": "기관 성과 소개이며 미해결 피해 사례는 제시되지 않았습니다.",
+        "date": "2026-09-22",
+        "claim_status": "기사 서술·미검증",
+        "issue_hint": "민원 처리 우수기관 선정"
+      },
+      "assessment": {
+        "id": "promotion",
+        "verdict": "PROPOSE",
+        "issue_key": "시민 선택의 갈림길",
+        "title": "민원 만족도 뒤에 숨은 시민 피해는 무엇인가",
+        "subject": "같은 조건의 시민이 서로 다른 절차와 비용을 마주하는 사안",
+        "why_now": "새 결정과 집행 방식이 정해지기 전에 시민 선택의 차이를 확인할 시점이다",
+        "citizen_question": "이 홍보가 시민에게 어떤 영향을 미치는가?",
+        "uncommon_question": "정책의 수혜 규모보다 신청·배정 순서가 실제 이용 가능성을 먼저 가르는가?",
+        "first_check": "공식 신청 기준과 서로 다른 경로의 처리 기록을 같은 기간으로 대조한다",
+        "counterhypothesis": "안내 경로만 다를 뿐 실제 자격과 처리 결과는 동일할 수 있다",
+        "scene_path": "두 신청 현장과 이용 당사자, 담당 기관의 처리 기록을 나란히 취재한다",
+        "anchor_quote": "기관은 올해 민원 처리 만족도가 높아졌다고 홍보했습니다.",
+        "reason": "구체적인 선택과 반대 설명을 자료와 현장으로 가를 수 있다"
+      }
+    },
+    {
+      "id": "new-program-without-history",
+      "description": "새 사업은 기존 이용 통계가 없다는 이유만으로 폐기하지 않는다",
+      "expected_result": "PROPOSE",
+      "record": {
+        "id": "new-ai",
+        "family": "서울시의회",
+        "source": "서울시의회 회의록",
+        "headline": "청년 AI 활용 지원사업",
+        "url": "https://example.org/new-ai",
+        "evidence_text": "청년에게 무료 교육과 유료 도구 이용 지원 중 어떤 방식을 제공할지 검토하고 있습니다.",
+        "context": "신규 사업이어서 기존 참여자 통계는 없지만 지원 방식의 선택이 남아 있습니다.",
+        "date": "2026-09-22",
+        "claim_status": "의원 발언·미검증",
+        "issue_hint": "청년 AI 활용 지원사업"
+      },
+      "assessment": {
+        "id": "new-ai",
+        "verdict": "PROPOSE",
+        "issue_key": "청년 AI 지원 방식",
+        "title": "AI 구독료와 실무교육, 청년에게 먼저 필요한 지원은",
+        "subject": "신규 청년 AI 사업에서 현금성 도구 지원과 실무교육 중 무엇을 우선할지 정하는 선택",
+        "why_now": "새 결정과 집행 방식이 정해지기 전에 시민 선택의 차이를 확인할 시점이다",
+        "citizen_question": "무료 도구로 충분한 청년과 유료 기능이 필요한 청년을 어떤 기준으로 나눌 것인가?",
+        "uncommon_question": "접근 장벽은 구독료인가, 활용법과 프로젝트 경험 부족인가?",
+        "first_check": "사업 대상 기준과 지원 방식별 예산안, 사전 수요조사 문항을 확인한다",
+        "counterhypothesis": "안내 경로만 다를 뿐 실제 자격과 처리 결과는 동일할 수 있다",
+        "scene_path": "무료·유료 도구를 쓰는 청년과 교육 참여 희망자, 사업 담당자를 취재한다",
+        "anchor_quote": "청년에게 무료 교육과 유료 도구 이용 지원 중 어떤 방식을 제공할지 검토하고 있습니다.",
+        "reason": "구체적인 선택과 반대 설명을 자료와 현장으로 가를 수 있다"
+      }
+    },
+    {
+      "id": "local-facility-expansion",
+      "description": "한 지역 시설 갈등은 서울 전체 비교 질문으로 확장할 수 있다",
+      "expected_result": "PROPOSE",
+      "record": {
+        "id": "facility",
+        "family": "뉴스",
+        "source": "뉴스 본문 판정",
+        "headline": "지역 내 학교 건립 반대",
+        "url": "https://example.org/facility",
+        "evidence_text": "주민 일부가 새 학교 건립 위치와 교통 부담을 이유로 반대 의견을 냈습니다.",
+        "context": "한 지역의 갈등을 서울 전체 현상으로 확정하지 않고 유사 시설 입지와 대체 부지를 비교해야 합니다.",
+        "date": "2026-09-22",
+        "claim_status": "기사 서술·미검증",
+        "issue_hint": "지역 내 학교 건립 반대"
+      },
+      "assessment": {
+        "id": "facility",
+        "verdict": "PROPOSE",
+        "issue_key": "필수시설 입지 갈등",
+        "title": "필요한 학교인데 놓을 곳이 없다…서울의 입지 갈등",
+        "subject": "한 지역의 학교 건립 반대를 출발점으로 필수시설의 입지 기준과 부담 배분을 비교",
+        "why_now": "새 결정과 집행 방식이 정해지기 전에 시민 선택의 차이를 확인할 시점이다",
+        "citizen_question": "학교가 필요하다는 데 동의하면서도 해당 부지를 반대하는 이유는 교통·안전·자산가치 중 무엇인가?",
+        "uncommon_question": "반대가 거센 지역과 수용된 지역은 사전 협의·대체 부지·보상 방식에서 무엇이 달랐는가?",
+        "first_check": "서울의 유사 학교·복지시설 입지 사례와 반대 사유, 대체 부지 검토 문서를 비교한다",
+        "counterhypothesis": "시설 자체의 거부가 아니라 해당 부지의 교통·안전 설계가 해결되지 않은 갈등일 수 있다",
+        "scene_path": "갈등 부지와 수용된 비교 지역, 학부모·인근 주민·도시계획 전문가를 취재한다",
+        "anchor_quote": "주민 일부가 새 학교 건립 위치와 교통 부담을 이유로 반대 의견을 냈습니다.",
+        "reason": "구체적인 선택과 반대 설명을 자료와 현장으로 가를 수 있다"
+      }
+    },
+    {
+      "id": "budget-is-not-failure",
+      "description": "집행률 저조만으로 사업 실패를 확정하지 않는다",
+      "expected_result": "HOLD",
+      "record": {
+        "id": "budget",
+        "family": "뉴스",
+        "source": "뉴스 본문 판정",
+        "headline": "지원사업 예산 집행률 저조",
+        "url": "https://example.org/budget",
+        "evidence_text": "지원사업 예산의 일부가 회계연도 안에 집행되지 않았습니다.",
+        "context": "이월과 정산 시차, 사업 항목 변경 가능성을 함께 확인해야 합니다.",
+        "date": "2026-09-22",
+        "claim_status": "기사 서술·미검증",
+        "issue_hint": "지원사업 예산 집행률 저조"
+      },
+      "assessment": {
+        "id": "budget",
+        "verdict": "PROPOSE",
+        "issue_key": "지원사업 실패",
+        "title": "쓰지 못한 예산, 지원사업은 실패했나",
+        "subject": "같은 조건의 시민이 서로 다른 절차와 비용을 마주하는 사안",
+        "why_now": "새 결정과 집행 방식이 정해지기 전에 시민 선택의 차이를 확인할 시점이다",
+        "citizen_question": "같은 자격의 시민이 어느 창구를 택하느냐에 따라 기다리는 시간과 부담이 달라지는가?",
+        "uncommon_question": "정책의 수혜 규모보다 신청·배정 순서가 실제 이용 가능성을 먼저 가르는가?",
+        "first_check": "공식 신청 기준과 서로 다른 경로의 처리 기록을 같은 기간으로 대조한다",
+        "counterhypothesis": "이월 가능",
+        "scene_path": "두 신청 현장과 이용 당사자, 담당 기관의 처리 기록을 나란히 취재한다",
+        "anchor_quote": "지원사업 예산의 일부가 회계연도 안에 집행되지 않았습니다.",
+        "reason": "낮은 집행률은 사업 실패를 뜻한다"
+      }
+    },
+    {
+      "id": "future-event-is-not-current",
+      "description": "실행일 이후 사건을 이미 발생한 문제로 다루지 않는다",
+      "expected_result": "HOLD",
+      "as_of": "2026-09-28",
+      "future_date_check": true,
+      "record": {
+        "id": "future",
+        "family": "뉴스",
+        "source": "뉴스 본문 판정",
+        "headline": "다음 달 교통대책 발표 예정",
+        "url": "https://example.org/future",
+        "evidence_text": "서울시는 다음 달 새 교통대책을 발표할 예정이라고 밝혔습니다.",
+        "context": "아직 발표되지 않은 계획이며 현재 발생한 결과가 아닙니다.",
+        "date": "2026-10-03",
+        "claim_status": "기사 서술·미검증",
+        "issue_hint": "다음 달 교통대책 발표 예정"
+      },
+      "assessment": {
+        "id": "future",
+        "verdict": "PROPOSE",
+        "issue_key": "교통대책 결과",
+        "title": "새 교통대책이 시민 이동을 바꿨나",
+        "subject": "같은 조건의 시민이 서로 다른 절차와 비용을 마주하는 사안",
+        "why_now": "새 결정과 집행 방식이 정해지기 전에 시민 선택의 차이를 확인할 시점이다",
+        "citizen_question": "같은 자격의 시민이 어느 창구를 택하느냐에 따라 기다리는 시간과 부담이 달라지는가?",
+        "uncommon_question": "정책의 수혜 규모보다 신청·배정 순서가 실제 이용 가능성을 먼저 가르는가?",
+        "first_check": "공식 신청 기준과 서로 다른 경로의 처리 기록을 같은 기간으로 대조한다",
+        "counterhypothesis": "안내 경로만 다를 뿐 실제 자격과 처리 결과는 동일할 수 있다",
+        "scene_path": "두 신청 현장과 이용 당사자, 담당 기관의 처리 기록을 나란히 취재한다",
+        "anchor_quote": "서울시는 다음 달 새 교통대책을 발표할 예정이라고 밝혔습니다.",
+        "reason": "구체적인 선택과 반대 설명을 자료와 현장으로 가를 수 있다"
+      }
+    },
+    {
+      "id": "construction-keyword-context",
+      "description": "교통공사를 공사 지연 사업으로 오인하지 않는다",
+      "expected_result": "HOLD",
+      "record": {
+        "id": "construction-word",
+        "family": "뉴스",
+        "source": "뉴스 본문 판정",
+        "headline": "서울교통공사 서비스 안내",
+        "url": "https://example.org/construction-word",
+        "evidence_text": "서울교통공사는 역사 내 시민 안내 서비스를 확대한다고 밝혔습니다.",
+        "context": "여기서 공사는 기관명이며 건설 사업이나 공기 지연을 뜻하지 않습니다.",
+        "date": "2026-09-22",
+        "claim_status": "기사 서술·미검증",
+        "issue_hint": "서울교통공사 서비스 안내"
+      },
+      "assessment": {
+        "id": "construction-word",
+        "verdict": "PROPOSE",
+        "issue_key": "교통 공사 지연",
+        "title": "늦어진 교통 공사, 시민 불편은 커졌나",
+        "subject": "같은 조건의 시민이 서로 다른 절차와 비용을 마주하는 사안",
+        "why_now": "새 결정과 집행 방식이 정해지기 전에 시민 선택의 차이를 확인할 시점이다",
+        "citizen_question": "교통 공사가 시민에게 어떤 문제를 만들었는가?",
+        "uncommon_question": "정책의 수혜 규모보다 신청·배정 순서가 실제 이용 가능성을 먼저 가르는가?",
+        "first_check": "공식 신청 기준과 서로 다른 경로의 처리 기록을 같은 기간으로 대조한다",
+        "counterhypothesis": "안내 경로만 다를 뿐 실제 자격과 처리 결과는 동일할 수 있다",
+        "scene_path": "두 신청 현장과 이용 당사자, 담당 기관의 처리 기록을 나란히 취재한다",
+        "anchor_quote": "서울교통공사는 역사 내 시민 안내 서비스를 확대한다고 밝혔습니다.",
+        "reason": "구체적인 선택과 반대 설명을 자료와 현장으로 가를 수 있다"
+      }
+    }
+  ]
+}
