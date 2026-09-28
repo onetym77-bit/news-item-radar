@@ -55,6 +55,28 @@ class PipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "알 수 없는 ID"):
             module.assess_result([BASE], {"assessments": [{**GOOD, "id": "unknown"}]})
 
+    def test_model_calls_bind_exact_ids_in_structured_schema(self):
+        second = {**BASE, "id": "two", "url": "https://example.org/2"}
+        with patch.object(module, "call_structured", return_value={"assessments": []}) as call:
+            module.model_assess([BASE, second], [], "test-model", "test-key")
+        data, schema = call.call_args.args[3], call.call_args.args[4]
+        self.assertEqual(data["required_ids"], ["one", "two"])
+        rows = schema["properties"]["assessments"]
+        self.assertEqual(rows["minItems"], 2)
+        self.assertEqual(rows["maxItems"], 2)
+        self.assertEqual(rows["items"]["properties"]["id"]["enum"], ["one", "two"])
+        self.assertNotIn("enum", module.SCHEMA["properties"]["assessments"]["items"]["properties"]["id"])
+
+        proposals = [GOOD, {**GOOD, "id": "two"}]
+        with patch.object(module, "call_structured", return_value={"reviews": []}) as call:
+            module.model_review([BASE, second], proposals, "test-model", "test-key")
+        data, schema = call.call_args.args[3], call.call_args.args[4]
+        self.assertEqual(data["required_ids"], ["one", "two"])
+        rows = schema["properties"]["reviews"]
+        self.assertEqual(rows["minItems"], 2)
+        self.assertEqual(rows["maxItems"], 2)
+        self.assertEqual(rows["items"]["properties"]["id"]["enum"], ["one", "two"])
+
     def test_run_retries_incomplete_assessment_once(self):
         record = {
             **BASE,
