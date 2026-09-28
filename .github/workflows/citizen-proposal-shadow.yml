@@ -112,7 +112,7 @@ jobs:
         with:
           ref: main
       - name: Download this successful run's state candidate
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: citizen-proposal-shadow-${{ github.run_id }}
           path: citizen-history
