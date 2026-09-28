@@ -101,6 +101,10 @@
   },
   "editorialV4": {
     "status": "REVIEW_READY",
+    "head_contract_version": null,
+    "source_coverage": [],
+    "shadow_queues": [],
+    "head_stages": [],
     "generated_at_utc": "2026-09-28T06:14:39.069619+00:00",
     "proposals": [
       {
@@ -404,6 +408,10 @@
     [
       "기획 질문 검토안",
       "1"
+    ],
+    [
+      "통합 헤드 연결 소스",
+      "0"
     ],
     [
       "구의회 검증 전용",
