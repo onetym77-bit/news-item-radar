@@ -1,0 +1,99 @@
+name: Review citizen proposal experience shadow
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: OpenAI model
+        required: false
+        default: gpt-5.6-luna
+        type: string
+  schedule:
+    - cron: "20 23 * * 0,2" # Mon/Wed 08:20 KST
+  pull_request:
+    paths:
+      - "citizen-proposal-pilot/**"
+      - "editorial-v4/**"
+      - ".github/workflows/citizen-proposal-shadow.yml"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: citizen-proposal-shadow-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Run citizen and editorial regression tests
+        run: |
+          python -X utf8 -m unittest discover -s citizen-proposal-pilot -p 'test_*.py' -v
+          python -X utf8 -m unittest editorial-v4/test_pipeline.py -v
+      - name: Validate discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Collect five bounded official proposals
+        run: python -X utf8 citizen-proposal-pilot/watch.py
+      - name: Validate citizen shadow contract without a model call
+        if: github.event_name == 'pull_request'
+        run: >-
+          python -X utf8 editorial-v4/pipeline.py
+          --dry-run
+          --citizen-shadow citizen-proposal-pilot/output/observation_latest.json
+          --citizen-shadow-only
+          --output citizen-proposal-pilot/output/editorial_shadow_latest.json
+      - name: Review direct-experience statements only
+        if: github.event_name != 'pull_request'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MODEL: ${{ inputs.model || 'gpt-5.6-luna' }}
+        run: >-
+          python -X utf8 editorial-v4/pipeline.py
+          --model "$MODEL"
+          --citizen-shadow citizen-proposal-pilot/output/observation_latest.json
+          --citizen-shadow-only
+          --output citizen-proposal-pilot/output/editorial_shadow_latest.json
+      - name: Check privacy and shadow-only boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          observation = json.loads(Path("citizen-proposal-pilot/output/observation_latest.json").read_text(encoding="utf-8"))
+          result = json.loads(Path("citizen-proposal-pilot/output/editorial_shadow_latest.json").read_text(encoding="utf-8"))
+          assert observation["privacy"]["author_name_stored"] is False
+          assert observation["privacy"]["contact_stored"] is False
+          assert observation["privacy"]["full_body_stored"] is False
+          assert result["proposals"] == []
+          for item in result.get("shadow_reviews", []):
+              assert item["family"] == "시민제안"
+              assert item["production_eligible"] is False
+              assert item["briefing_output"] == "NONE"
+          PY
+      - name: Publish bounded summary
+        if: always()
+        run: |
+          if [ -f citizen-proposal-pilot/output/review_queue_latest.md ]; then
+            cat citizen-proposal-pilot/output/review_queue_latest.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload seven-day shadow artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: citizen-proposal-shadow-${{ github.run_id }}
+          path: |
+            citizen-proposal-pilot/output/observation_latest.json
+            citizen-proposal-pilot/output/review_queue_latest.md
+            citizen-proposal-pilot/output/editorial_shadow_latest.json
+          if-no-files-found: error
+          retention-days: 7
