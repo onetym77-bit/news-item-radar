@@ -219,6 +219,10 @@ v4_decisions = load("editorial-v4/decisions.json", [])
 v4_decided = {str(item.get("id")) for item in v4_decisions if item.get("decision") in {"COMPLETE", "DISCARD", "HOLD"}}
 v4_review = {
     "status": v4_output.get("status", "미실행"),
+    "head_contract_version": v4_output.get("head_contract_version"),
+    "source_coverage": v4_output.get("source_coverage", []),
+    "shadow_queues": v4_output.get("shadow_queues", []),
+    "head_stages": v4_output.get("head_stages", []),
     "generated_at_utc": v4_output.get("generated_at_utc"),
     "proposals": [item for item in v4_output.get("proposals", []) if str(item.get("id")) not in v4_decided],
     "holds": v4_output.get("holds", []),
@@ -312,6 +316,7 @@ data = {
         ["탐색 큐", "연결됨" if interest_queue.get("generated_at_utc") else "미수집"],
         ["검증할 신호", str(len(discovery_signals))],
         ["기획 질문 검토안", str(len(v4_review["proposals"]))],
+        ["통합 헤드 연결 소스", str(sum(1 for row in v4_review.get("source_coverage", []) if row.get("input") or row.get("pending_shadow")))],
         ["구의회 검증 전용", str(len(district_shadow["items"]))],
         ["시민 신호 검증 전용", str(len(citizen_shadow["items"]))],
         ["유튜브 신호 검증 전용", str(len(youtube_shadow["items"]))],

@@ -174,11 +174,19 @@ function renderV4(data = {}) {
       </div>
     </article>`).join("") : '<p class="empty">이번 회차에 검토 기준을 통과한 새 기획 질문이 없습니다. 수량을 맞추기 위해 채우지 않습니다.</p>';
   if (gaps) {
+    const coverage = (data.source_coverage || []).map(x =>
+      `<p><strong>${esc(x.source)}</strong> · ${esc(x.state)} · 입력 ${esc(x.input || 0)} · 모델 ${esc(x.model_input || 0)} · 후보 ${esc(x.proposals || 0)} · 그림자 ${esc(x.pending_shadow || 0)}${x.reason ? " — " + esc(x.reason) : ""}</p>`
+    );
     const holds = (data.holds || []).filter(x => x.verdict !== "SKIP").slice(0, 6).map(x => `<p><strong>${esc(x.source)}</strong> · ${esc(x.headline)} — ${esc(x.reason)}</p>`);
-    const missing = (data.source_gaps || []).map(x => `<p><strong>${esc(x.source)}</strong> · ${esc(x.reason)}</p>`);
-    gaps.innerHTML = [...holds, ...missing].join("") || '<p>보류 기록이 없습니다.</p>';
-  }
-}
+    const missing = coverage.length ? [] : (data.source_gaps || []).map(x => `<p><strong>${esc(x.source)}</strong> · ${esc(x.reason)}</p>`);
+    gaps.innerHTML = [
+      ...(coverage.length ? ["<h3>통합 헤드 소스 상태</h3>"] : []),
+      ...coverage,
+      ...(holds.length ? ["<h3>이번 실행 보류</h3>"] : []),
+      ...holds,
+      ...missing
+    ].join("") || '<p>보류 기록이 없습니다.</p>';
+  }}
 
 function renderDistrictShadow(data = {}) {
   const node = document.getElementById("districtShadow");
