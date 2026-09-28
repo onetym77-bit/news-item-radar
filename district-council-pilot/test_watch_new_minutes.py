@@ -10,10 +10,11 @@ def row(number):
             "meeting_date": "2026-09-18", "label": f"제300회 본회의 {number}"}
 
 
-def observed(*numbers, status="OBSERVED"):
+def observed(*numbers, status="OBSERVED", transport="COUNCIL_WEBSITE_FALLBACK"):
     return {"id": "example", "name": "예시구", "status": status,
             "listed": len(numbers) if status == "OBSERVED" else None,
-            "records": [row(number) for number in numbers]}
+            "records": [row(number) for number in numbers],
+            "transport": transport, "api_fallback_reason": ""}
 
 
 class ThinWatchRegression(unittest.TestCase):
@@ -67,6 +68,29 @@ class ThinWatchRegression(unittest.TestCase):
         with self.assertRaises(ValueError):
             compare(empty_state(), [observed(3, 3)], "2026-09-18T09:00:00+09:00")
 
+    def test_transport_change_creates_baseline_not_false_new_records(self):
+        first = compare(empty_state(), [observed(3, 2, 1)], "2026-09-18T09:00:00+09:00")
+        second = compare(first, [observed(
+            30, 20, 10, transport="CLIK_OPEN_API")], "2026-09-19T09:00:00+09:00")
+        result = second["last_run"]["results"][0]
+        self.assertEqual(result["status"], "BASELINE_ROUTE_CHANGED")
+        self.assertIsNone(result["new_count"])
+        self.assertFalse(result["candidates"])
+
+    def test_newer_official_window_wins_over_stale_api(self):
+        portal = observed(1, transport="CLIK_OPEN_API")
+        portal["records"][0]["meeting_date"] = "2026-09-20"
+        official = observed(2)
+        official["records"][0]["meeting_date"] = "2026-09-22"
+        with patch("watch_new_minutes.clik_observation", return_value=portal), \
+                patch("watch_new_minutes.observe_website", return_value=official):
+            result = __import__("watch_new_minutes").observe(
+                {"id": "example", "name": "예시구", "clik_assembly_id": "002002"},
+                api_key="secret-value")
+        self.assertEqual(result["transport"], "COUNCIL_WEBSITE_FALLBACK")
+        self.assertEqual(result["api_fallback_reason"], "API_STALE")
+
 
 if __name__ == "__main__":
     unittest.main()
+

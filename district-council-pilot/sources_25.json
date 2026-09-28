@@ -2,6 +2,7 @@
   {
     "id": "gangnam",
     "name": "강남구",
+    "clik_assembly_id": "002002",
     "list_url": "https://www.gncouncil.go.kr/kr/minutes/late.do",
     "hosts": [
       "www.gncouncil.go.kr",
@@ -11,6 +12,7 @@
   {
     "id": "gwanak",
     "name": "관악구",
+    "clik_assembly_id": "002006",
     "list_url": "https://www.ga21c.seoul.kr/kr/minutes/late.do",
     "hosts": [
       "www.ga21c.seoul.kr",
@@ -21,6 +23,7 @@
   {
     "id": "nowon",
     "name": "노원구",
+    "clik_assembly_id": "002010",
     "list_url": "https://council.nowon.kr/kr/assembly/late.do",
     "hosts": [
       "council.nowon.kr"
@@ -29,6 +32,7 @@
   {
     "id": "mapo",
     "name": "마포구",
+    "clik_assembly_id": "002014",
     "list_url": "https://council.mapo.seoul.kr/kr/assembly/late.do",
     "hosts": [
       "council.mapo.seoul.kr",
@@ -38,6 +42,7 @@
   {
     "id": "seongdong",
     "name": "성동구",
+    "clik_assembly_id": "002017",
     "list_url": "https://sdcouncil.sd.go.kr/kr/assembly/late",
     "hosts": [
       "sdcouncil.sd.go.kr"
@@ -47,6 +52,7 @@
   {
     "id": "jongno",
     "name": "종로구",
+    "clik_assembly_id": "002024",
     "list_url": "https://bookcouncil.jongno.go.kr/kr/assembly/late.do?menuNo=400052",
     "hosts": [
       "bookcouncil.jongno.go.kr",
@@ -58,6 +64,7 @@
   {
     "id": "junggu",
     "name": "중구",
+    "clik_assembly_id": "002025",
     "list_url": "https://council.junggu.seoul.kr/kr/minutes/late",
     "hosts": [
       "council.junggu.seoul.kr"
@@ -68,6 +75,7 @@
   {
     "id": "yongsan",
     "name": "용산구",
+    "clik_assembly_id": "002022",
     "list_url": "https://www.yscl.go.kr/promote/minutes/late.do",
     "hosts": [
       "www.yscl.go.kr",
@@ -79,6 +87,7 @@
   {
     "id": "seongbuk",
     "name": "성북구",
+    "clik_assembly_id": "002018",
     "list_url": "https://www.sbc.go.kr/kr/assembly/late.do",
     "hosts": [
       "www.sbc.go.kr"
@@ -89,6 +98,7 @@
   {
     "id": "gangbuk",
     "name": "강북구",
+    "clik_assembly_id": "002004",
     "list_url": "https://council.gangbuk.go.kr/kr/minutes/search.do",
     "hosts": [
       "council.gangbuk.go.kr"
@@ -99,6 +109,7 @@
   {
     "id": "dobong",
     "name": "도봉구",
+    "clik_assembly_id": "002011",
     "list_url": "https://www.council-dobong.seoul.kr/meeting/confer/recent.do",
     "hosts": [
       "www.council-dobong.seoul.kr",
@@ -120,6 +131,7 @@
   {
     "id": "eunpyeong",
     "name": "은평구",
+    "clik_assembly_id": "002023",
     "list_url": "https://council.ep.go.kr/kr/minutes/late.do",
     "hosts": [
       "council.ep.go.kr"
@@ -130,6 +142,7 @@
   {
     "id": "seodaemun",
     "name": "서대문구",
+    "clik_assembly_id": "002015",
     "list_url": "https://ams.sdmcouncil.go.kr/assem/recent.do",
     "hosts": [
       "www.sdmcouncil.go.kr",
@@ -146,6 +159,7 @@
   {
     "id": "yangcheon",
     "name": "양천구",
+    "clik_assembly_id": "002020",
     "list_url": "https://www.ycc.go.kr/kr/assembly/late",
     "hosts": [
       "www.ycc.go.kr"
@@ -161,6 +175,7 @@
   {
     "id": "gangseo",
     "name": "강서구",
+    "clik_assembly_id": "002005",
     "list_url": "https://gsc.gangseo.seoul.kr/meeting/confer/recent.do",
     "hosts": [
       "gsc.gangseo.seoul.kr"
@@ -180,6 +195,7 @@
   {
     "id": "gwangjin",
     "name": "광진구",
+    "clik_assembly_id": "002007",
     "list_url": "https://council.gwangjin.go.kr/kr/assembly/late",
     "hosts": [
       "council.gwangjin.go.kr"
@@ -194,6 +210,7 @@
   {
     "id": "dongdaemun",
     "name": "동대문구",
+    "clik_assembly_id": "002012",
     "list_url": "https://council.ddm.go.kr/kr/minutes/late.do",
     "hosts": [
       "council.ddm.go.kr"
@@ -204,6 +221,7 @@
   {
     "id": "jungnang",
     "name": "중랑구",
+    "clik_assembly_id": "002026",
     "list_url": "https://council.jungnang.go.kr/kr/minutes/late.do",
     "hosts": [
       "council.jungnang.go.kr"
@@ -214,6 +232,7 @@
   {
     "id": "guro",
     "name": "구로구",
+    "clik_assembly_id": "002008",
     "list_url": "https://www.guroc.go.kr/meeting/confer/main.do",
     "hosts": [
       "www.guroc.go.kr",
@@ -235,6 +254,7 @@
   {
     "id": "geumcheon",
     "name": "금천구",
+    "clik_assembly_id": "002009",
     "list_url": "https://council.geumcheon.go.kr/council/kr/minutes/late.do",
     "hosts": [
       "council.geumcheon.go.kr"
@@ -248,6 +268,7 @@
   {
     "id": "yeongdeungpo",
     "name": "영등포구",
+    "clik_assembly_id": "002021",
     "list_url": "https://www.ydpc.go.kr/content/minutes/minutesLately.html",
     "hosts": [
       "www.ydpc.go.kr",
@@ -263,6 +284,7 @@
   {
     "id": "dongjak",
     "name": "동작구",
+    "clik_assembly_id": "002013",
     "list_url": "https://assembly.dongjak.go.kr/kr/minutes/late.do",
     "hosts": [
       "assembly.dongjak.go.kr"
@@ -273,6 +295,7 @@
   {
     "id": "seocho",
     "name": "서초구",
+    "clik_assembly_id": "002016",
     "list_url": "https://sdc.seoul.kr/kr/minutes/pages/late.do",
     "hosts": [
       "sdc.seoul.kr",
@@ -289,6 +312,7 @@
   {
     "id": "songpa",
     "name": "송파구",
+    "clik_assembly_id": "002019",
     "list_url": "https://council.songpa.go.kr/kr/assembly/late.do",
     "hosts": [
       "council.songpa.go.kr",
@@ -300,6 +324,7 @@
   {
     "id": "gangdong",
     "name": "강동구",
+    "clik_assembly_id": "002003",
     "list_url": "https://council.gangdong.go.kr/meeting/confer/recent.do",
     "hosts": [
       "council.gangdong.go.kr"
@@ -317,3 +342,4 @@
     ]
   }
 ]
+

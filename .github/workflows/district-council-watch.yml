@@ -9,11 +9,17 @@ on:
     branches: [main]
     paths:
       - "district-council-pilot/watch_new_minutes.py"
+      - "district-council-pilot/clik_api.py"
+      - "district-council-pilot/sources_25.json"
+      - "district-council-pilot/test_clik_api.py"
       - "district-council-pilot/test_watch_new_minutes.py"
       - ".github/workflows/district-council-watch.yml"
   pull_request:
     paths:
       - "district-council-pilot/watch_new_minutes.py"
+      - "district-council-pilot/clik_api.py"
+      - "district-council-pilot/sources_25.json"
+      - "district-council-pilot/test_clik_api.py"
       - "district-council-pilot/test_watch_new_minutes.py"
       - ".github/workflows/district-council-watch.yml"
 
@@ -47,6 +53,8 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
+    env:
+      CLIK_API_KEY: ${{ secrets.CLIK_API_KEY }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -118,3 +126,4 @@ jobs:
             git commit -m "Record bounded district windows for run $GITHUB_RUN_ID"
             git push origin HEAD:main
           fi
+

@@ -10,6 +10,7 @@ import re
 from datetime import date, datetime
 from pathlib import Path
 
+from clik_api import fetch_document_context
 from collect_body_l2 import collect as collect_l2
 from collect_pilot import Client, KST, day, detail_from, norm, transcript
 from interpret_l3_context import (
@@ -79,6 +80,7 @@ def select_plan(l2_payload, watch_state, history, fixed_sample, as_of, max_docs=
             "source_id": row["source_id"],
             "source_name": row["source_name"],
             "document_url": url,
+            "document_id": row.get("document_id") or "",
             "meeting_date": meeting_date,
             "body_sha256": row["body_sha256"],
             "selection_reason": (
@@ -95,6 +97,12 @@ def select_plan(l2_payload, watch_state, history, fixed_sample, as_of, max_docs=
 
 
 def fetch_document(row, source):
+    if row.get("document_id"):
+        api_key = os.getenv("CLIK_API_KEY", "")
+        if not api_key:
+            return {"status": "API_KEY_MISSING", "body": "", "parts": [],
+                    "request_status": 0}
+        return fetch_document_context(row, source, api_key)
     client = Client(source)
     outer = client.get(row["document_url"])
     if outer is None:
@@ -325,7 +333,8 @@ def main():
             {"source_id": source["id"], "source_name": source["name"],
              "status": "UNKNOWN_COLLECTION"} for source in sources]}
     else:
-        l2_payload = collect_l2(sources, as_of)
+        l2_payload = collect_l2(
+            sources, as_of, os.getenv("CLIK_API_KEY", ""))
     plan = select_plan(l2_payload, watch, history, fixed, as_of, args.max_docs)
     payload, history_next = review_plan(
         plan, sources, history, model=args.model,
@@ -351,3 +360,4 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
