@@ -217,6 +217,7 @@ source_exploration = build_source_exploration(ROOT, interest_queue)
 v4_output = load("editorial-v4/output/latest.json", {})
 v4_decisions = load("editorial-v4/decisions.json", [])
 v4_decided = {str(item.get("id")) for item in v4_decisions if item.get("decision") in {"COMPLETE", "DISCARD", "HOLD"}}
+source_specific_shadow_families = {"25개 자치구의회", "시민제안", "유튜브"}
 v4_review = {
     "status": v4_output.get("status", "미실행"),
     "head_contract_version": v4_output.get("head_contract_version"),
@@ -224,7 +225,16 @@ v4_review = {
     "shadow_queues": v4_output.get("shadow_queues", []),
     "head_stages": v4_output.get("head_stages", []),
     "generated_at_utc": v4_output.get("generated_at_utc"),
-    "proposals": [item for item in v4_output.get("proposals", []) if str(item.get("id")) not in v4_decided],
+    "assessment_retries": v4_output.get("assessment_retries", 0),
+    "proposals": [
+        item for item in v4_output.get("proposals", [])
+        if str(item.get("id")) not in v4_decided
+    ],
+    "shadow_reviews": [
+        item for item in v4_output.get("shadow_reviews", [])
+        if str(item.get("id")) not in v4_decided
+        and item.get("family") not in source_specific_shadow_families
+    ],
     "holds": v4_output.get("holds", []),
     "source_gaps": v4_output.get("source_gaps", []),
     "decisions": v4_decisions[-10:],
