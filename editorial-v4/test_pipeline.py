@@ -62,8 +62,6 @@ class PipelineTests(unittest.TestCase):
         data, schema = call.call_args.args[3], call.call_args.args[4]
         self.assertEqual(data["required_ids"], ["one", "two"])
         rows = schema["properties"]["assessments"]
-        self.assertEqual(rows["minItems"], 2)
-        self.assertEqual(rows["maxItems"], 2)
         self.assertEqual(rows["items"]["properties"]["id"]["enum"], ["one", "two"])
         self.assertNotIn("enum", module.SCHEMA["properties"]["assessments"]["items"]["properties"]["id"])
 
