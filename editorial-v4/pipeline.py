@@ -645,6 +645,30 @@ def validate_assessment_ids(records, result):
     return raw
 
 
+def source_context_conflict(source, assessment):
+    """Reject a proposal that asserts a meaning the supplied context explicitly denies."""
+    context = compact(source.get("context"))
+    proposal = " ".join(
+        compact(assessment.get(field))
+        for field in ("issue_key", "title", "subject", "why_now", "citizen_question",
+                      "uncommon_question", "reason")
+    )
+    if (
+        "기관명" in context
+        and "건설" in context
+        and ("뜻하지 않" in context or "의미하지 않" in context)
+        and any(term in proposal for term in ("공사 지연", "늦어진 공사", "건설 공사", "공기 지연"))
+    ):
+        return "기관명과 건설 사건의 문맥 충돌"
+    if (
+        "홍보" in context
+        and ("피해 사례는 제시되지 않" in context or "미해결 피해 사례는 없" in context)
+        and any(term in proposal for term in ("숨은 시민 피해", "미해결 피해", "피해 사건"))
+    ):
+        return "홍보를 확인되지 않은 피해 사건으로 오인"
+    return ""
+
+
 def assess_result(records, result):
     by_id = {r["id"]: r for r in records}
     raw = validate_assessment_ids(records, result)
@@ -659,12 +683,15 @@ def assess_result(records, result):
         source = by_id[rid]
         reason = ""
         if a.get("verdict") == "PROPOSE":
+            reason = source_context_conflict(source, a)
             quote = compact(a.get("anchor_quote"))
             title = compact(a.get("title"))
             q1 = compact(a.get("citizen_question"))
             q2 = compact(a.get("uncommon_question"))
             evidence = compact(source["evidence_text"])
-            if not quote or len(quote) < 15 or len(quote) > 100 or quote not in evidence:
+            if reason:
+                pass
+            elif not quote or len(quote) < 15 or len(quote) > 100 or quote not in evidence:
                 reason = "원문 인용 불일치"
             elif not 10 <= len(title) <= 80 or key(title) == key(source["headline"]):
                 reason = "제목이 원문 반복·불완전"
