@@ -90,6 +90,73 @@ def read(path, fallback):
 def compact(value):
     return " ".join(str(value or "").split())
 
+
+FRESH_CYCLE_WORKFLOWS = {
+    "collect-interest-signals.yml",
+    "daily-briefing.yml",
+    "source-onboarding-audit-l4-shadow.yml",
+    "district-council-recent-l3.yml",
+    "citizen-proposal-shadow.yml",
+    "publish-citizen-shadow.yml",
+}
+
+
+def collection_cycle_from_env():
+    """Return auditable upstream-run proof; reject partial fresh-cycle claims."""
+    cycle_id = compact(os.environ.get("EDITORIAL_COLLECTION_CYCLE_ID"))
+    started_at = compact(os.environ.get("EDITORIAL_COLLECTION_STARTED_AT_UTC"))
+    raw_runs = os.environ.get("EDITORIAL_COLLECTION_RUNS", "[]")
+    try:
+        runs = json.loads(raw_runs)
+    except json.JSONDecodeError as error:
+        raise RuntimeError("수집 회차 실행 목록 JSON 오류") from error
+    if not cycle_id:
+        return {
+            "mode": "STORED_SNAPSHOT",
+            "verified": False,
+            "cycle_id": "",
+            "started_at_utc": "",
+            "runs": [],
+            "note": "저장된 최신 스냅샷을 재평가한 실행입니다.",
+        }
+    if not started_at or not isinstance(runs, list) or not runs:
+        raise RuntimeError("최신 수집 회차 증빙 누락")
+    try:
+        datetime.fromisoformat(started_at.replace("Z", "+00:00"))
+    except ValueError as error:
+        raise RuntimeError("수집 회차 시작 시각 형식 오류") from error
+    normalized, workflows = [], set()
+    for row in runs:
+        if not isinstance(row, dict):
+            raise RuntimeError("수집 실행 증빙 형식 오류")
+        workflow = compact(row.get("workflow"))
+        conclusion = compact(row.get("conclusion"))
+        try:
+            run_id = int(row.get("run_id"))
+        except (TypeError, ValueError) as error:
+            raise RuntimeError("수집 실행 번호 오류") from error
+        if run_id <= 0 or conclusion != "success" or not workflow:
+            raise RuntimeError("성공하지 않은 수집 실행이 회차 증빙에 포함됨")
+        workflows.add(workflow)
+        normalized.append({
+            "source": compact(row.get("source")) or workflow,
+            "workflow": workflow,
+            "run_id": run_id,
+            "conclusion": conclusion,
+        })
+    missing = sorted(FRESH_CYCLE_WORKFLOWS - workflows)
+    if missing:
+        raise RuntimeError("최신 수집 회차 필수 실행 누락: " + ", ".join(missing))
+    return {
+        "mode": "FRESH_CYCLE",
+        "verified": True,
+        "cycle_id": cycle_id,
+        "started_at_utc": started_at,
+        "runs": normalized,
+        "note": "표시된 상위 수집 실행이 모두 성공한 뒤 통합 헤드를 실행했습니다.",
+    }
+
+
 def key(value):
     return re.sub(r"[^0-9a-z가-힣]", "", compact(value).lower())
 
@@ -97,7 +164,7 @@ def stable_id(kind, url, text):
     return hashlib.sha256((kind + "|" + url + "|" + text[:160]).encode("utf-8")).hexdigest()[:16]
 
 
-HEAD_CONTRACT_VERSION = "1.3"
+HEAD_CONTRACT_VERSION = "1.4"
 SHADOW_QUEUE_SPECS = (
     ("25개 자치구의회", "district-council-pilot/output/recent-l3/editorial_review_queue.json",
      "district-council-pilot/output/recent-l3/editor_decisions.json"),
@@ -784,8 +851,10 @@ def run(model, dry_run=False, district_shadow=None, citizen_shadow=None,
         else:
             eligible.append(record)
     selected_inputs = prioritize_inputs(eligible)
+    collection_cycle = collection_cycle_from_env()
     result = {"schema": 2, "head_contract_version": HEAD_CONTRACT_VERSION,
               "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "collection_cycle": collection_cycle,
               "status": "DRY_RUN" if dry_run else "NO_ELIGIBLE_INPUT",
               "source_inputs": len(raw_records), "validated_inputs": len(records),
               "model_inputs": len(selected_inputs),
@@ -877,7 +946,9 @@ if __name__ == "__main__":
         for row in output["source_coverage"]
         if row["input"] or row["model_input"] or row["pending_shadow"]
     }
-    print(json.dumps({"status": output["status"], "source_inputs": output["source_inputs"],
+    print(json.dumps({"status": output["status"],
+                      "input_mode": output["collection_cycle"]["mode"],
+                      "source_inputs": output["source_inputs"],
                       "model_inputs": output["model_inputs"], "proposals": len(output["proposals"]),
                       "shadow_reviews": len(output["shadow_reviews"]),
                       "holds": len(output["holds"]),
