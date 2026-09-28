@@ -19,6 +19,9 @@ on:
       - "district-council-pilot/collect_body_l2.py"
       - "district-council-pilot/watch_new_minutes.py"
       - "district-council-pilot/RECENT_L3_RUNBOOK.md"
+      - "editorial-v4/pipeline.py"
+      - "editorial-v4/test_pipeline.py"
+      - "editorial-v3/SYSTEM_ARCHITECTURE.md"
       - ".github/workflows/district-council-recent-l3.yml"
       - "agent-system-v1/SYSTEM_MANIFEST.md"
 
@@ -45,6 +48,8 @@ jobs:
           python-version: "3.12"
       - name: Test district source and recent L3 guards
         run: python -X utf8 -m unittest discover -s district-council-pilot -p 'test_*.py' -v
+      - name: Test editorial shadow boundary
+        run: python -X utf8 -m unittest discover -s editorial-v4 -p 'test_*.py' -v
       - name: Validate discovery policy
         run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
       - name: Build no-network contract output on PR
@@ -85,6 +90,54 @@ jobs:
               if "held_cue" in row:
                   assert row["semantic_status"] == "HOLD"
           PY
+      - name: Build no-cost editorial shadow bridge on PR
+        if: ${{ github.event_name == 'pull_request' }}
+        run: >-
+          python -X utf8 editorial-v4/pipeline.py
+          --dry-run
+          --district-shadow district-council-pilot/output/recent-l3/sample_latest.json
+          --district-shadow-only
+          --output district-council-pilot/output/recent-l3/editorial_shadow_latest.json
+      - name: Independently review district leads for artifact only
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: >-
+          python -X utf8 editorial-v4/pipeline.py
+          --model gpt-5.6-luna
+          --district-shadow district-council-pilot/output/recent-l3/sample_latest.json
+          --district-shadow-only
+          --output district-council-pilot/output/recent-l3/editorial_shadow_latest.json
+      - name: Check editorial shadow boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("district-council-pilot/output/recent-l3/editorial_shadow_latest.json")
+          data = json.loads(path.read_text(encoding="utf-8"))
+          assert data["schema"] == 1
+          assert data["proposals"] == []
+          assert data["model_calls"] <= 2
+          assert data["source_inputs"] <= 5
+          assert data["model_inputs"] <= 5
+          forbidden = {"body", "parts", "evidence_context", "body_sha256"}
+
+          def check(value):
+              if isinstance(value, dict):
+                  assert forbidden.isdisjoint(value)
+                  for child in value.values():
+                      check(child)
+              elif isinstance(value, list):
+                  for child in value:
+                      check(child)
+
+          check(data)
+          for row in data["shadow_reviews"]:
+              assert row["family"] == "25개 자치구의회"
+              assert row["source_stage"] == "L3 그림자 검토"
+              assert row["production_eligible"] is False
+              assert row["briefing_output"] == "NONE"
+              assert row["status"] == "검증 전용·최종 후보 아님"
+          PY
       - name: Upload bounded recent L3 report
         if: ${{ always() }}
         uses: actions/upload-artifact@v7
@@ -94,6 +147,7 @@ jobs:
             district-council-pilot/output/recent-l3/sample_latest.json
             district-council-pilot/output/recent-l3/SUMMARY.md
             district-council-pilot/output/recent-l3/reviewed_documents_next.json
+            district-council-pilot/output/recent-l3/editorial_shadow_latest.json
           if-no-files-found: warn
           retention-days: 7
 
