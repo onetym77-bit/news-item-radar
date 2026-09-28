@@ -135,15 +135,70 @@ def district_shadow_inputs(document):
     return records
 
 
-def source_inputs(district_shadow=None, only_district=False):
+def citizen_proposal_shadow_inputs(document):
+    """Accept only redacted first-person friction statements from the official proposal pilot."""
+    if not isinstance(document, dict) or document.get("schema") != 2:
+        return []
+    records = []
+    for item in document.get("records", []):
+        if item.get("statement_type") != "SELF_REPORTED_EXPERIENCE":
+            continue
+        if item.get("claim_status") != "UNVERIFIED":
+            continue
+        anchor = item.get("evidence_anchor") or {}
+        excerpt = compact(anchor.get("excerpt"))
+        if anchor.get("status") != "CLASSIFICATION_SUPPORT_ONLY":
+            continue
+        if anchor.get("not_proof_of_event") is not True or len(excerpt) < 30:
+            continue
+        url = compact(item.get("source_url"))
+        title = compact(item.get("title"))
+        if not url.startswith("https://idea.seoul.go.kr/") or not title:
+            continue
+        candidates = item.get("context_candidates") or {}
+        places = [compact(value) for value in candidates.get("place_terms_from_title", []) if compact(value)]
+        times = [compact(value) for value in candidates.get("time_terms_from_body", []) if compact(value)]
+        context_bits = []
+        if places:
+            context_bits.append("장소 후보: " + ", ".join(places[:4]))
+        if times:
+            context_bits.append("시간 후보: " + ", ".join(times[:4]))
+        records.append({
+            "id": stable_id("citizen-proposal-shadow", url, excerpt),
+            "family": "시민제안",
+            "source": "상상대로 서울 시민제안",
+            "url": url,
+            "date": compact(item.get("posted_date")),
+            "headline": title[:130],
+            "evidence_text": excerpt,
+            "context": " / ".join(context_bits)[:700],
+            "citizen_relevance": "제안자의 직접 경험 진술과 불편 표현이 함께 있으나 사실은 확인되지 않음",
+            "prior_question": "",
+            "counterpossibility": "개인 사례이거나 제도 안내의 오해일 수 있으며 동일 조건의 반복 여부를 확인해야 함",
+            "claim_status": "시민 제안자 진술·미검증",
+            "issue_hint": title[:130],
+            "source_stage": "시민제안 L3 그림자 검토",
+            "production_eligible": False,
+        })
+    return records
+
+
+def source_inputs(district_shadow=None, citizen_shadow=None,
+                  only_district=False, only_citizen=False):
     district_records = district_shadow_inputs(district_shadow)
-    records = list(district_records)
+    citizen_records = citizen_proposal_shadow_inputs(citizen_shadow)
+    records = list(district_records) + list(citizen_records)
     gaps = []
     if not district_records:
         gaps.append({"source": "25개 자치구의회",
                      "reason": "검증 가능한 최근 L3 그림자 카드 없음"})
+    if not citizen_records:
+        gaps.append({"source": "시민제안",
+                     "reason": "당사자 경험과 구체적 불편이 함께 있는 개인정보 제거 본문 단서 없음"})
     if only_district:
-        return records, gaps
+        return district_records, [gap for gap in gaps if gap["source"] == "25개 자치구의회"]
+    if only_citizen:
+        return citizen_records, [gap for gap in gaps if gap["source"] == "시민제안"]
     news = read("interest-signal-pilot/output/review_queue_latest.json", {})
     for item in news.get("items", []):
         a = item.get("content_assessment") or {}
@@ -209,7 +264,6 @@ def source_inputs(district_shadow=None, only_district=False):
         {"source": "시민 관심 신호", "reason": "뉴스 기사·검색량은 시민 직접 경험의 독립 근거가 아님"},
         {"source": "검색 관심도", "reason": "관심 추이는 보조 신호; 사안 본문 없이 단독 아이템화 금지"},
         {"source": "단체장 SNS", "reason": "계정 주소 확인 단계; 개별 게시물 본문 미연결"},
-        {"source": "시민제안·응답소", "reason": "제안·민원 문장 시험 단계; 직접 경험 및 현재성 확인 전"},
         {"source": "건설알림이", "reason": "일정 변화 관측 단계; 실제 공사 범위·시민 영향 문맥 미연결"},
     ])
     return records, gaps
@@ -222,7 +276,7 @@ def prioritize_inputs(records):
     for rows in buckets.values():
         rows.sort(key=lambda row: compact(row.get("date"))[:10], reverse=True)
     output = []
-    preferred = ("뉴스", "서울시의회", "서울시 감사", "25개 자치구의회")
+    preferred = ("뉴스", "시민제안", "서울시의회", "서울시 감사", "25개 자치구의회")
     families = preferred + tuple(family for family in buckets if family not in set(preferred))
     while len(output) < MAX_INPUTS and any(buckets.values()):
         for family in families:
@@ -403,9 +457,14 @@ def partition_reviewed_proposals(proposals):
     return final, shadow
 
 
-def run(model, dry_run=False, district_shadow=None, only_district=False,
-        output_path=None):
-    records, gaps = source_inputs(district_shadow, only_district)
+def run(model, dry_run=False, district_shadow=None, citizen_shadow=None,
+        only_district=False, only_citizen=False, output_path=None):
+    records, gaps = source_inputs(
+        district_shadow=district_shadow,
+        citizen_shadow=citizen_shadow,
+        only_district=only_district,
+        only_citizen=only_citizen,
+    )
     leads, reviewed = known_leads(), reviewed_ids()
     eligible, holds = [], []
     for record in records:
@@ -453,14 +512,26 @@ if __name__ == "__main__":
     parser.add_argument("--model", default="gpt-5.6-luna")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--district-shadow", type=Path)
+    parser.add_argument("--citizen-shadow", type=Path)
     parser.add_argument("--district-shadow-only", action="store_true")
+    parser.add_argument("--citizen-shadow-only", action="store_true")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     district_shadow = None
     if args.district_shadow:
         district_shadow = json.loads(args.district_shadow.read_text(encoding="utf-8"))
-    output = run(args.model, args.dry_run, district_shadow,
-                 args.district_shadow_only, args.output)
+    citizen_shadow = None
+    if args.citizen_shadow:
+        citizen_shadow = json.loads(args.citizen_shadow.read_text(encoding="utf-8"))
+    output = run(
+        args.model,
+        args.dry_run,
+        district_shadow=district_shadow,
+        citizen_shadow=citizen_shadow,
+        only_district=args.district_shadow_only,
+        only_citizen=args.citizen_shadow_only,
+        output_path=args.output,
+    )
     print(json.dumps({"status": output["status"], "source_inputs": output["source_inputs"],
                       "model_inputs": output["model_inputs"], "proposals": len(output["proposals"]),
                       "shadow_reviews": len(output["shadow_reviews"]),
