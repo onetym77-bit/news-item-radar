@@ -1,0 +1,44 @@
+name: Probe Eungdapso public complaint cases
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "community-signal-pilot/**"
+      - ".github/workflows/community-public-complaints.yml"
+      - "source-onboarding-v1/source_maturity_registry.json"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Check out without write credentials
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test parser and privacy gates
+        run: python -X utf8 -m unittest community-signal-pilot/test_collect_public_complaints.py -v
+      - name: Validate the discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py --allow-missing-source-reports
+      - name: Read only bounded public complaint samples
+        run: python -X utf8 community-signal-pilot/collect_public_complaints.py
+      - name: Upload derived L2 sample
+        uses: actions/upload-artifact@v7
+        with:
+          name: eungdapso-public-complaints-${{ github.run_id }}
+          path: |
+            community-signal-pilot/output/public_complaints_latest.json
+            community-signal-pilot/output/public_complaints_latest.md
+          if-no-files-found: error
+          retention-days: 7
