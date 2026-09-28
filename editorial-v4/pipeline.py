@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import os
@@ -96,7 +97,7 @@ def stable_id(kind, url, text):
     return hashlib.sha256((kind + "|" + url + "|" + text[:160]).encode("utf-8")).hexdigest()[:16]
 
 
-HEAD_CONTRACT_VERSION = "1.0"
+HEAD_CONTRACT_VERSION = "1.1"
 SHADOW_QUEUE_SPECS = (
     ("25개 자치구의회", "district-council-pilot/output/recent-l3/editorial_review_queue.json",
      "district-council-pilot/output/recent-l3/editor_decisions.json"),
@@ -107,6 +108,18 @@ SHADOW_QUEUE_SPECS = (
 )
 EXPECTED_LANES = ("뉴스", "서울시의회", "서울시 감사", "25개 자치구의회",
                   "시민제안", "유튜브", "지역 커뮤니티·제보", "검색 관심도")
+
+
+def audit_human_reviews():
+    """Read explicit audit-card decisions; automatic runs never invent these labels."""
+    path = ROOT / "source-onboarding-v1" / "audit_l4_reviews.csv"
+    try:
+        with path.open(encoding="utf-8-sig", newline="") as handle:
+            return {compact(row.get("source_record_id")): compact(row.get("verdict")).upper()
+                    for row in csv.DictReader(handle)
+                    if compact(row.get("source_record_id"))}
+    except OSError:
+        return {}
 
 
 def decision_ids(document):
@@ -214,7 +227,7 @@ def merge_shadow_reviews(persisted, generated):
     return merged
 
 
-def build_source_coverage(records, eligible, selected, proposals, shadow_bundle, gaps):
+def build_source_coverage(records, eligible, selected, proposals, shadow_bundle, gaps, shadow_reviews=None):
     gap_map = {row.get("source"): row.get("reason") for row in gaps}
     result = []
     for lane in EXPECTED_LANES:
@@ -224,7 +237,9 @@ def build_source_coverage(records, eligible, selected, proposals, shadow_bundle,
         proposal_count = sum(1 for row in proposals if row.get("family") == lane)
         shadow = next((row for row in shadow_bundle.get("queues", [])
                        if row.get("source") == lane), {})
-        pending = int(shadow.get("pending") or 0)
+        pending_ids = {compact(row.get("id")) for row in (shadow_reviews or [])
+                       if row.get("family") == lane and compact(row.get("id"))}
+        pending = max(int(shadow.get("pending") or 0), len(pending_ids))
         if proposal_count:
             state = "운영 후보 검토 대기"
         elif pending:
@@ -370,42 +385,92 @@ def source_inputs(district_shadow=None, citizen_shadow=None,
     if not any(x["family"] == "뉴스" for x in records):
         gaps.append({"source": "뉴스", "reason": "본문을 읽고 사건/질문 가치를 확인한 항목 없음"})
     feed = read("source-scout-v1/output/daily_feed_latest.json", {})
-    for item in feed.get("editorial_triage", []):
+    council_rows = []
+    for row in feed.get("editorial_triage", []):
+        council_rows.append((row, "신규 운영 입력"))
+    for row in feed.get("stale_carryover", []):
+        if row.get("freshness_status") == "STALE_CARRYOVER":
+            council_rows.append((row, "신선도 유예·미판정"))
+    council_seen = set()
+    for item, source_stage in council_rows:
         if item.get("source_id") != "council_minutes":
             continue
         excerpt = compact(item.get("text"))
         if len(excerpt) < 60:
             continue
         url = item.get("url") or ""
-        records.append({"id": stable_id("council", url, excerpt), "family": "서울시의회",
+        record_id = stable_id("council", url, excerpt)
+        if record_id in council_seen:
+            continue
+        council_seen.add(record_id)
+        records.append({"id": record_id, "family": "서울시의회",
                         "source": "서울시의회 회의록", "url": url,
-                        "date": compact(item.get("source_date")), "headline": compact(item.get("context_subject"))[:130],
-                        "evidence_text": excerpt[:1800], "context": compact(item.get("context_text"))[:1300],
-                        "citizen_relevance": "", "prior_question": "", "counterpossibility": "",
-                        "claim_status": "의원 발언·미검증", "issue_hint": compact(item.get("context_subject"))[:130]})
+                        "date": compact(item.get("source_date")), "headline": compact(
+                            item.get("context_subject") or item.get("display_fact"))[:130],
+                        "evidence_text": excerpt[:1800], "context": compact(
+                            item.get("context_text") or item.get("context_reason"))[:1300],
+                        "citizen_relevance": compact(item.get("affected_group"))[:500],
+                        "prior_question": compact(item.get("question"))[:500],
+                        "counterpossibility": "",
+                        "claim_status": "의원 발언·미검증", "issue_hint": compact(
+                            item.get("context_subject") or item.get("display_fact"))[:130],
+                        "source_stage": source_stage,
+                        "production_eligible": True})
+    if not any(x["family"] == "서울시의회" for x in records):
+        metric = next((row for row in feed.get("metrics", [])
+                       if row.get("id") == "council_minutes"), {})
+        stale_count = int(metric.get("stale_carryover") or 0)
+        context_holds = int(metric.get("context_holds") or 0)
+        gaps.append({"source": "서울시의회",
+                     "reason": f"신규 운영 입력 없음; 신선도 유예 {stale_count}건, 문맥 보류 {context_holds}건"})
     audit = read("source-onboarding-v1/output/audit-l4/state_latest.json", {})
     latest = audit.get("runs", [])[-1] if audit.get("runs") else {}
-    chosen = set(latest.get("selected_ids", []))
-    ready = 0
+    latest_chosen = set(latest.get("selected_ids", []))
+    human_reviews = audit_human_reviews()
+    audit_candidates = []
     for row in audit.get("records", []):
         card = row.get("card") or {}
-        if row.get("source_record_id") not in chosen or card.get("question_status") != "READY_FOR_HUMAN_REVIEW":
+        if card.get("question_status") != "READY_FOR_HUMAN_REVIEW":
             continue
+        record_id = compact(row.get("source_record_id"))
+        verdict = human_reviews.get(record_id, "")
+        if human_reviews:
+            if verdict != "VERIFY":
+                continue
+            source_stage = "감사 L4 사람 검증 대기"
+            production_eligible = False
+        else:
+            if record_id not in latest_chosen:
+                continue
+            source_stage = "감사 최신 실행 입력"
+            production_eligible = True
+        audit_candidates.append((row, card, source_stage, production_eligible))
+    audit_candidates.sort(key=lambda value: compact(value[1].get("published_at")), reverse=True)
+    ready = 0
+    for row, card, source_stage, production_eligible in audit_candidates[:3]:
         excerpt = compact(card.get("source_frame"))
         if len(excerpt) < 30:
             continue
         url = card.get("detail_url") or ""
         records.append({"id": stable_id("audit", url, excerpt), "family": "서울시 감사",
                         "source": "서울시 감사 결과", "url": url, "date": compact(card.get("published_at")),
-                        "headline": compact(card.get("title")), "evidence_text": excerpt,
+                        "headline": compact(card.get("selected_finding_title") or card.get("title")),
+                        "evidence_text": excerpt,
                         "context": compact(card.get("editorial_addition"))[:700],
                         "citizen_relevance": compact(card.get("public_interest_to_verify")),
                         "prior_question": compact(card.get("verification_question")),
                         "counterpossibility": compact(" / ".join(card.get("competing_hypotheses") or [])),
-                        "claim_status": "감사 요약·원문 재확인 필요", "issue_hint": compact(card.get("title"))})
+                        "claim_status": "감사 요약·원문 재확인 필요",
+                        "issue_hint": compact(card.get("selected_finding_title") or card.get("title")),
+                        "source_stage": source_stage,
+                        "production_eligible": production_eligible})
         ready += 1
     if not ready:
-        gaps.append({"source": "서울시 감사", "reason": "최근 표본에 본문 근거를 확보한 검토 카드 없음"})
+        if human_reviews:
+            reason = "사람 판정 VERIFY 상태의 미완료 감사 카드 없음"
+        else:
+            reason = "최근 실행 표본에 본문 근거를 확보한 검토 카드 없음"
+        gaps.append({"source": "서울시 감사", "reason": reason})
     youtube = read("editorial-v4/output/youtube_shadow_latest.json", {})
     youtube_reviews = int(youtube.get("review_count") or 0)
     youtube_prefilter = int(youtube.get("prefilter_count") or 0)
@@ -691,7 +756,8 @@ def run(model, dry_run=False, district_shadow=None, citizen_shadow=None,
         elif selected_inputs:
             result["status"] = "NO_QUALITY_PROPOSAL"
     result["source_coverage"] = build_source_coverage(
-        raw_records, eligible, selected_inputs, result["proposals"], shadow_bundle, gaps)
+        raw_records, eligible, selected_inputs, result["proposals"], shadow_bundle, gaps,
+        result["shadow_reviews"])
     target = Path(output_path) if output_path else OUT
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -722,7 +788,18 @@ if __name__ == "__main__":
         only_citizen=args.citizen_shadow_only,
         output_path=args.output,
     )
+    active_coverage = {
+        row["source"]: {
+            "input": row["input"],
+            "model_input": row["model_input"],
+            "pending_shadow": row["pending_shadow"],
+            "state": row["state"],
+        }
+        for row in output["source_coverage"]
+        if row["input"] or row["model_input"] or row["pending_shadow"]
+    }
     print(json.dumps({"status": output["status"], "source_inputs": output["source_inputs"],
                       "model_inputs": output["model_inputs"], "proposals": len(output["proposals"]),
                       "shadow_reviews": len(output["shadow_reviews"]),
-                      "holds": len(output["holds"])}, ensure_ascii=False))
+                      "holds": len(output["holds"]),
+                      "source_coverage": active_coverage}, ensure_ascii=False))
