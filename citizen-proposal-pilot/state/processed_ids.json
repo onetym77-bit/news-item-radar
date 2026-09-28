@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "processed": [
+    {
+      "proposal_id": "202897",
+      "first_processed_at_kst": "2026-09-28T13:26:54+09:00",
+      "detail_sha256": null
+    },
+    {
+      "proposal_id": "202896",
+      "first_processed_at_kst": "2026-09-28T13:26:54+09:00",
+      "detail_sha256": null
+    },
+    {
+      "proposal_id": "202895",
+      "first_processed_at_kst": "2026-09-28T13:26:54+09:00",
+      "detail_sha256": null
+    },
+    {
+      "proposal_id": "202894",
+      "first_processed_at_kst": "2026-09-28T13:26:54+09:00",
+      "detail_sha256": null
+    },
+    {
+      "proposal_id": "202893",
+      "first_processed_at_kst": "2026-09-28T13:26:54+09:00",
+      "detail_sha256": null
+    }
+  ]
+}
