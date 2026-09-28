@@ -2,8 +2,6 @@ name: Collect interest signals
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "30 23 * * 0,2"
 
 permissions:
   contents: write
