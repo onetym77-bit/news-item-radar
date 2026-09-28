@@ -64,6 +64,13 @@ jobs:
           --citizen-shadow citizen-proposal-pilot/output/observation_latest.json
           --citizen-shadow-only
           --output citizen-proposal-pilot/output/editorial_shadow_latest.json
+      - name: Build bounded citizen-signal review queue candidate
+        run: >-
+          python -X utf8 citizen-proposal-pilot/build_review_queue.py
+          --input citizen-proposal-pilot/output/editorial_shadow_latest.json
+          --queue citizen-proposal-pilot/output/editorial_review_queue.json
+          --decisions citizen-proposal-pilot/output/editor_decisions.json
+          --output citizen-proposal-pilot/output/editorial_review_queue_next.json
       - name: Check privacy and shadow-only boundary
         run: |
           python - <<'PY'
@@ -74,7 +81,13 @@ jobs:
           assert observation["privacy"]["author_name_stored"] is False
           assert observation["privacy"]["contact_stored"] is False
           assert observation["privacy"]["full_body_stored"] is False
+          queue = json.loads(Path("citizen-proposal-pilot/output/editorial_review_queue_next.json").read_text(encoding="utf-8"))
           assert result["proposals"] == []
+          assert queue["mode"] == "CITIZEN_SIGNAL_SHADOW"
+          for item in queue.get("items", []):
+              assert len(item["anchor_quote"]) <= 240
+              assert item["production_eligible"] is False
+              assert item["briefing_output"] == "NONE"
           for item in result.get("shadow_reviews", []):
               assert item["family"] == "시민제안"
               assert item["production_eligible"] is False
@@ -96,6 +109,7 @@ jobs:
             citizen-proposal-pilot/output/review_queue_latest.md
             citizen-proposal-pilot/output/editorial_shadow_latest.json
             citizen-proposal-pilot/output/processed_ids_next.json
+            citizen-proposal-pilot/output/editorial_review_queue_next.json
           if-no-files-found: error
           retention-days: 7
 
