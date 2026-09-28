@@ -15,7 +15,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from collect_source_material_v2_1 import build_clusters
+from collect_source_material_v2_1 import build_clusters, normalize_record, text_matches
 
 
 BASE = Path(__file__).resolve().parent
@@ -114,23 +114,41 @@ def select_clusters(records: list[dict], config: dict,
     if not 0 <= max_clusters <= MAX_CLUSTERS:
         raise ValueError("YouTube semantic cluster limit exceeded")
     selected, excluded = [], []
+    definitions = {
+        (row.get("agenda"), row.get("cluster")): row
+        for row in config.get("youtube_cluster_queries", [])
+    }
     for cluster in build_clusters(records, config):
         if cluster.get("readiness") != "CORROBORATED":
             continue
         rows = supporting_rows(cluster)
         direct = [row for row in rows if row.get("source_archetype") in DIRECT_TYPES]
-        scene = [row for row in rows if row.get("signal_markers")]
+        outcome_terms = definitions.get(
+            (cluster.get("agenda"), cluster.get("cluster")), {}).get("outcome_terms", [])
+        scene = [
+            row for row in rows
+            if (
+                text_matches(
+                    f"{row.get('title', '')} {row.get('description', '')}",
+                    outcome_terms,
+                )
+                if outcome_terms else row.get("signal_markers")
+            )
+        ]
         channels = {compact(row.get("channel")) for row in rows if compact(row.get("channel"))}
-        seoul_rows = [row for row in rows if row.get("seoul_place_terms")]
+        seoul_rows = [
+            row for row in scene
+            if row.get("seoul_event_terms", row.get("seoul_place_terms"))
+        ]
         reasons = []
         if len(channels) < 2:
             reasons.append("독립 비언론 채널 2개 미만")
         if len(scene) < 2:
-            reasons.append("행동·손실 표현 영상 2개 미만")
+            reasons.append("군집이 주장한 결과 행동 영상 2개 미만")
         if not direct:
             reasons.append("당사자·현장 영상 없음")
         if not seoul_rows:
-            reasons.append("검토 가능 영상 안에 서울 지역 단서 없음")
+            reasons.append("결과 행동 영상 안에 서울 사건 지역 단서 없음")
         cluster_id = stable_cluster_id(cluster["agenda"], cluster["cluster"])
         if reasons:
             excluded.append({
@@ -158,7 +176,8 @@ def select_clusters(records: list[dict], config: dict,
                 "published_at": compact(row.get("published_at")),
                 "url": compact(row.get("url")),
                 "source_archetype": compact(row.get("source_archetype")),
-                "seoul_place_terms": row.get("seoul_place_terms") or [],
+                "seoul_place_terms": row.get(
+                    "seoul_event_terms", row.get("seoul_place_terms")) or [],
                 "signal_markers": row.get("signal_markers") or [],
                 "first_person_markers": row.get("first_person_markers") or [],
                 "query_lanes": label_lanes(row),
@@ -315,8 +334,12 @@ def render(payload: dict) -> str:
 def run(ledger_path: Path, config_path: Path, output_path: Path,
         model: str, dry_run: bool = False, max_clusters: int = MAX_CLUSTERS,
         api_key: str = "") -> dict:
-    records = json.loads(ledger_path.read_text(encoding="utf-8"))
+    stored_records = json.loads(ledger_path.read_text(encoding="utf-8"))
     config = json.loads(config_path.read_text(encoding="utf-8"))
+    records = [
+        normalized for row in stored_records
+        if (normalized := normalize_record(dict(row), config)) is not None
+    ]
     selected, excluded = select_clusters(records, config, max_clusters)
     payload = {
         "schema": 1,

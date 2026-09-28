@@ -10,6 +10,8 @@ on:
       - "editorial-v4/**"
       - "interest-radar-v2/review_youtube_context.py"
       - "interest-radar-v2/test_review_youtube_context.py"
+      - "interest-radar-v2/test_youtube_classification.py"
+      - "interest-radar-v2/collect_source_material_v2_1.py"
       - "interest-radar-v2/config/editorial_lenses.json"
       - ".github/workflows/editorial-v4.yml"
 
@@ -35,7 +37,7 @@ jobs:
       - name: Validate pipeline
         run: python -X utf8 -m unittest discover -s editorial-v4 -p "test_*.py" -v
       - name: Validate YouTube semantic shadow
-        run: python -X utf8 -m unittest discover -s interest-radar-v2 -p "test_review_youtube_context.py" -v
+        run: python -X utf8 -m unittest discover -s interest-radar-v2 -p "test_*youtube*.py" -v
       - name: Dry-run input mapping on pull requests
         if: ${{ github.event_name == 'pull_request' }}
         run: python -X utf8 editorial-v4/pipeline.py --dry-run

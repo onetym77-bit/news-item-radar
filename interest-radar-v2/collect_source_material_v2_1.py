@@ -49,11 +49,32 @@ def text_matches(text: str, terms: list[str]) -> list[str]:
     return [term for term in terms if term.lower() in lowered]
 
 
+def content_without_promotion_footer(description: str, settings: dict) -> str:
+    """Discard contact/marketing footers before deciding where an event occurred."""
+    text = description or ""
+    positions = [
+        text.lower().find(marker.lower())
+        for marker in settings.get("promotion_footer_markers", [])
+        if marker and text.lower().find(marker.lower()) >= 0
+    ]
+    return text[:min(positions)] if positions else text
+
+
+def seoul_event_matches(title: str, description: str, config: dict) -> list[str]:
+    """Return Seoul terms in editorial content, excluding office/contact footers."""
+    settings = config["youtube_discovery"]
+    editorial_text = f"{title} {content_without_promotion_footer(description, settings)}"
+    return text_matches(editorial_text, config.get("youtube_seoul_place_terms", []))
+
+
 def classify_source(channel: str, title: str, description: str, settings: dict) -> str:
     visible = f"{channel} {title}"
     full_text = f"{visible} {description}"
     if text_matches(visible, settings.get("fiction_markers", [])):
         return "사연·재연"
+    explanation_hits = text_matches(full_text, settings.get("explanation_markers", []))
+    if len(set(explanation_hits)) >= 2:
+        return "생활정보·설명"
     if text_matches(full_text, settings["advice_markers"]):
         return "생활정보·설명"
     if text_matches(visible, settings["media_channel_markers"]):
@@ -77,10 +98,14 @@ def promote_direct_experience(
     first_person_visible = text_matches(visible, settings["first_person_markers"])
     experience_cues = ("브이로그", "일상", "후기", "직접", "겪은", "경험담")
     first_person_full = text_matches(f"{visible} {description}", settings["first_person_markers"])
+    direct_markers = text_matches(
+        f"{visible} {description}", settings.get("direct_experience_markers", []))
     source_lane = any(label.get("lane") == "SOURCE" for label in (query_labels or []))
-    if first_person_visible or (first_person_full and any(cue in visible for cue in experience_cues)):
+    if first_person_full and any(cue in visible for cue in experience_cues):
         return "당사자 가능성"
     if source_lane and any(cue in visible for cue in experience_cues):
+        return "당사자 가능성"
+    if direct_markers and (first_person_visible or first_person_full):
         return "당사자 가능성"
     return source_archetype
 
@@ -103,6 +128,8 @@ def normalize_record(record: dict, config: dict) -> dict | None:
     first_person = text_matches(haystack, settings["first_person_markers"])
     verification_markers = text_matches(haystack, settings["verification_markers"])
     seoul_place_terms = text_matches(haystack, config.get("youtube_seoul_place_terms", []))
+    seoul_event_terms = seoul_event_matches(
+        record.get("title", ""), record.get("description", ""), config)
     source_archetype = classify_source(
         record.get("channel", ""), record.get("title", ""), record.get("description", ""), settings
     )
@@ -116,6 +143,7 @@ def normalize_record(record: dict, config: dict) -> dict | None:
         "first_person_markers": first_person,
         "verification_markers": verification_markers,
         "seoul_place_terms": seoul_place_terms,
+        "seoul_event_terms": seoul_event_terms,
         "advice_markers": text_matches(haystack, settings["advice_markers"]),
     })
     return record
@@ -572,6 +600,7 @@ def collect_search_records(
             first_person = text_matches(haystack, settings["first_person_markers"])
             verification_markers = text_matches(haystack, settings["verification_markers"])
             seoul_place_terms = text_matches(haystack, config.get("youtube_seoul_place_terms", []))
+            seoul_event_terms = seoul_event_matches(title, description, config)
             source_archetype = classify_source(channel, title, description, settings)
             source_archetype = promote_direct_experience(source_archetype, channel, title, description, settings, matched_labels)
             qualified_type = source_archetype in {"당사자 가능성", "상담·지원", "현장·운영자"}
@@ -593,6 +622,7 @@ def collect_search_records(
                 "duration_seconds": duration,
                 "source_archetype": source_archetype,
                 "seoul_place_terms": seoul_place_terms,
+                "seoul_event_terms": seoul_event_terms,
                 "signal_markers": signal_markers,
                 "first_person_markers": first_person,
                 "verification_markers": verification_markers,
