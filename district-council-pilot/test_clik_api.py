@@ -65,6 +65,15 @@ class ClikApiTests(unittest.TestCase):
         self.assertEqual(observed["transport"], "CLIK_OPEN_API")
         self.assertNotIn("secret-value", str(observed))
 
+    def test_portal_staleness_requires_a_proven_later_official_meeting(self):
+        portal = [{"meeting_date": "2026-09-20"}]
+        newer = [{"meeting_date": "2026-09-22"}]
+        same = [{"meeting_date": "2026-09-20"}]
+        unknown = [{"meeting_date": ""}]
+        self.assertTrue(module.portal_is_stale(portal, newer))
+        self.assertFalse(module.portal_is_stale(portal, same))
+        self.assertFalse(module.portal_is_stale(portal, unknown))
+
 
 if __name__ == "__main__":
     unittest.main()

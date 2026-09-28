@@ -74,6 +74,15 @@ def record_key(url):
     return hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24]
 
 
+def portal_is_stale(portal_rows, official_rows):
+    """Return true only when an official council page proves a later meeting."""
+    portal_dates = [row.get("meeting_date", "") for row in portal_rows]
+    official_dates = [row.get("meeting_date", "") for row in official_rows]
+    portal_latest = max((value for value in portal_dates if value), default="")
+    official_latest = max((value for value in official_dates if value), default="")
+    return bool(portal_latest and official_latest and official_latest > portal_latest)
+
+
 def _meeting_date(value):
     text = str(value or "")
     if not re.fullmatch(r"20[0-9]{6}", text):

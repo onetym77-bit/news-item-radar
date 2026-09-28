@@ -52,12 +52,24 @@ class BodyL2Tests(unittest.TestCase):
 
     def test_api_is_primary_when_key_is_available(self):
         api_result = {**RESULT, "transport": "CLIK_OPEN_API"}
+        older_official = {**RESULT, "selected": [{**ROW, "meeting_date": "2026-09-20"}]}
         with patch.object(module, "probe_source", return_value=api_result) as api_probe, \
-                patch.object(module, "run", side_effect=AssertionError("fallback must not run")):
+                patch.object(module, "run", return_value=older_official):
             row = module.safe_probe(SOURCE, date(2026, 9, 22), "secret-value")
         api_probe.assert_called_once()
         self.assertEqual(row["transport"], "CLIK_OPEN_API")
         self.assertNotIn("secret-value", str(row))
+
+    def test_newer_official_page_wins_over_stale_api(self):
+        portal = {**RESULT, "selected": [{**ROW, "meeting_date": "2026-09-20"}],
+                  "transport": "CLIK_OPEN_API"}
+        official = {**RESULT, "selected": [{**ROW, "meeting_date": "2026-09-22"}]}
+        with patch.object(module, "probe_source", return_value=portal), \
+                patch.object(module, "run", return_value=official):
+            row = module.safe_probe(SOURCE, date(2026, 9, 22), "secret-value")
+        self.assertEqual(row["transport"], "COUNCIL_WEBSITE_FALLBACK")
+        self.assertEqual(row["api_fallback_reason"], "API_STALE")
+        self.assertEqual(row["meeting_date"], "2026-09-22")
 
     def test_api_failure_uses_website_fallback_without_error_message(self):
         with patch.object(module, "probe_source", side_effect=module.ClikAPIError("sensitive")), \

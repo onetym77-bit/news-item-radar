@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime
 from pathlib import Path
 
-from clik_api import ClikAPIError, probe_source
+from clik_api import ClikAPIError, portal_is_stale, probe_source
 from collect_pilot import KST, run
 
 BASE = Path(__file__).resolve().parent
@@ -61,14 +61,22 @@ def summarize(source, result):
 def safe_probe(source, as_of, api_key=""):
     api_fallback_reason = ""
     try:
+        portal_result = None
         if api_key and source.get("clik_assembly_id"):
             try:
-                return summarize(source, probe_source(source, as_of, api_key))
+                portal_result = probe_source(source, as_of, api_key)
             except (ClikAPIError, OSError, ValueError, KeyError, TypeError) as exc:
                 api_fallback_reason = type(exc).__name__
         result = run(source, as_of, count=1)
         result["transport"] = "COUNCIL_WEBSITE_FALLBACK"
         result["api_fallback_reason"] = api_fallback_reason
+        if portal_result is not None:
+            portal_rows = portal_result.get("selected") or []
+            official_rows = result.get("selected") or []
+            if portal_is_stale(portal_rows, official_rows):
+                result["api_fallback_reason"] = "API_STALE"
+            else:
+                return summarize(source, portal_result)
         return summarize(source, result)
     except (ValueError, KeyError, TypeError, AttributeError, OSError) as exc:
         return {

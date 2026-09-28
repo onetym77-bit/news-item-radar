@@ -13,7 +13,12 @@ import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from clik_api import ClikAPIError, observation as clik_observation, record_key
+from clik_api import (
+    ClikAPIError,
+    observation as clik_observation,
+    portal_is_stale,
+    record_key,
+)
 from collect_pilot import Client, discover_list, load_recent_tabs, select_rows
 
 BASE = Path(__file__).resolve().parent
@@ -36,13 +41,7 @@ def load_state(path):
     return state
 
 
-def observe(source, limit=WINDOW_LIMIT, api_key=""):
-    api_fallback_reason = ""
-    if api_key and source.get("clik_assembly_id"):
-        try:
-            return clik_observation(source, api_key, limit)
-        except (ClikAPIError, OSError, ValueError, KeyError, TypeError) as exc:
-            api_fallback_reason = type(exc).__name__
+def observe_website(source, limit=WINDOW_LIMIT, api_fallback_reason=""):
     client = Client(source)
     listing_url = source["list_url"]
     page = client.get(listing_url)
@@ -78,6 +77,24 @@ def observe(source, limit=WINDOW_LIMIT, api_key=""):
             "listed": listed, "records": records,
             "transport": "COUNCIL_WEBSITE_FALLBACK",
             "api_fallback_reason": api_fallback_reason}
+
+
+def observe(source, limit=WINDOW_LIMIT, api_key=""):
+    portal = None
+    api_fallback_reason = ""
+    if api_key and source.get("clik_assembly_id"):
+        try:
+            portal = clik_observation(source, api_key, limit)
+        except (ClikAPIError, OSError, ValueError, KeyError, TypeError) as exc:
+            api_fallback_reason = type(exc).__name__
+    official = observe_website(source, limit, api_fallback_reason)
+    if portal is None:
+        return official
+    if (official["status"] == "OBSERVED"
+            and portal_is_stale(portal["records"], official["records"])):
+        official["api_fallback_reason"] = "API_STALE"
+        return official
+    return portal
 
 
 def safe_observe(source, api_key=""):
