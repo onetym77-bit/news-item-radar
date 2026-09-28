@@ -85,7 +85,7 @@ class CitizenProposalWatchTests(unittest.TestCase):
         first = result["records"][0]
         self.assertEqual(len(result["records"]), 3)
         self.assertNotIn("01012345678", str(result))
-        self.assertIn("[PHONE]", first["evidence_anchor"]["excerpt"])
+        self.assertNotRegex(first["evidence_anchor"]["excerpt"], r"\[[A-Z]*$")
         self.assertLessEqual(len(first["evidence_anchor"]["excerpt"]), 240)
         self.assertNotIn("detail_text", first.keys())
         self.assertEqual(first["problem_evidence_status"], "NOT_ESTABLISHED")
