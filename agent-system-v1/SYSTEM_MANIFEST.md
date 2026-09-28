@@ -55,6 +55,7 @@
 | 7일 정밀도 평가 | source-scout-v1/evaluate_human_review.py |
 | 관심 신호 설정 | interest-radar-v2/config/editorial_lenses.json |
 | API 수집기(v2.3, 예약 호환 파일명 유지) | interest-radar-v2/collect_source_material_v2_1.py |
+| 유튜브 시민 신호 의미 검증 그림자(자동 후보 승격 금지) | interest-radar-v2/review_youtube_context.py, .github/workflows/editorial-v4.yml |
 | 자치구의회 25곳 연결 등록(수동 점검, 핵심소스 승인 전) | district-council-pilot/sources_25.json |
 | 자치구의회 연결 점검기 | district-council-pilot/collect_pilot.py |
 | 자치구의회 25곳 얇은 반복 관측 | district-council-pilot/watch_new_minutes.py |
