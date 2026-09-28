@@ -1,8 +1,9 @@
 import unittest
 
 from watch import (
-    LIST_URL, classify_text, context_candidates, evidence_anchor, observe,
-    parse_list, redact_anchor, relevant_detail_text, render, sanitize, title_position,
+    LIST_URL, advance_history, classify_text, context_candidates, evidence_anchor,
+    observe, parse_list, processed_proposal_ids, redact_anchor,
+    relevant_detail_text, render, sanitize, title_position, validate_history,
 )
 
 def listing():
@@ -27,6 +28,65 @@ class CitizenProposalWatchTests(unittest.TestCase):
     def test_no_proposals_is_access_failure_not_zero_findings(self):
         with self.assertRaisesRegex(ValueError, "no proposal"):
             parse_list("<p>시민제안 목록</p>")
+
+    def test_seen_ids_are_skipped_before_detail_fetch(self):
+        history = {
+            "schema": 1,
+            "processed": [{
+                "proposal_id": "101",
+                "first_processed_at_kst": "2026-09-28T13:26:54+09:00",
+                "detail_sha256": None,
+            }],
+        }
+        fetched = []
+        def fake_fetch(url):
+            fetched.append(url)
+            if url == LIST_URL:
+                return listing(), "list-hash"
+            if "sn=101" in url:
+                self.fail("processed proposal detail must not be fetched again")
+            if "sn=102" in url:
+                return "<p>양성화 소문 문의 시행한다는 소문을 들었습니다</p>", "b" * 64
+            return "<p>새 장비 설치 제안 새 장비를 설치해주세요</p>", "c" * 64
+        result = observe(fake_fetch, limit=3, history=history)
+        self.assertEqual([row["proposal_id"] for row in result["records"]], ["102", "103"])
+        self.assertEqual(result["listed_records"], 3)
+        self.assertEqual(result["new_records"], 2)
+        self.assertEqual(result["already_processed_records"], 1)
+        self.assertFalse(any("sn=101" in url for url in fetched))
+
+    def test_history_adds_only_id_digest_and_timestamp(self):
+        history = {
+            "schema": 1,
+            "processed": [{
+                "proposal_id": "101",
+                "first_processed_at_kst": "2026-09-28T13:26:54+09:00",
+                "detail_sha256": None,
+            }],
+        }
+        updated = advance_history(
+            history,
+            [{"proposal_id": "102", "detail_sha256": "a" * 64,
+              "title": "저장하면 안 되는 제목", "source_url": "https://example.test"}],
+            "2026-09-28T14:00:00+09:00",
+        )
+        self.assertEqual(processed_proposal_ids(updated), {"101", "102"})
+        row = next(item for item in updated["processed"] if item["proposal_id"] == "102")
+        self.assertEqual(
+            set(row),
+            {"proposal_id", "first_processed_at_kst", "detail_sha256"},
+        )
+        self.assertNotIn("저장하면 안 되는 제목", str(updated))
+
+    def test_invalid_history_fails_closed(self):
+        with self.assertRaisesRegex(ValueError, "duplicate"):
+            validate_history({
+                "schema": 1,
+                "processed": [
+                    {"proposal_id": "101", "first_processed_at_kst": "x", "detail_sha256": None},
+                    {"proposal_id": "101", "first_processed_at_kst": "y", "detail_sha256": None},
+                ],
+            })
 
     def test_experience_statement_is_still_unverified(self):
         card = classify_text("저는 회원증을 신청했지만 방문 때문에 시간이 부담됐습니다")
