@@ -432,7 +432,7 @@ class PipelineTests(unittest.TestCase):
             (root / "interest-signal-pilot/output/review_queue_latest.json").write_text(json.dumps(
                 {"items": [{"headline": "제목만", "source_context_status": "TITLE_ONLY"},
                            {"headline": "본문", "publisher_url": "https://example.org/news",
-                            "source_context_status": "BODY_READ",
+                            "source_context_status": "BODY_READ", "is_new": True,
                             "content_assessment": {"anchor_quote": "본문에서 확인한 연속 구절입니다",
                                                    "what_happened": "구체적인 사건 서술",
                                                    "question_worth": "HIGH"}}]}), encoding="utf-8")
@@ -451,7 +451,7 @@ class PipelineTests(unittest.TestCase):
                 module.ROOT = old_root
 
 
-    def test_council_stale_carryover_is_bounded_input(self):
+    def test_council_stale_carryover_is_excluded_from_fresh_input(self):
         old_root = module.ROOT
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
@@ -481,10 +481,9 @@ class PipelineTests(unittest.TestCase):
             finally:
                 module.ROOT = old_root
         council = [row for row in records if row["family"] == "서울시의회"]
-        self.assertEqual(len(council), 1)
-        self.assertEqual(council[0]["source_stage"], "신선도 유예·미판정")
-        self.assertTrue(council[0]["production_eligible"])
-        self.assertFalse(any(gap["source"] == "서울시의회" for gap in gaps))
+        self.assertEqual(council, [])
+        council_gap = next(gap for gap in gaps if gap["source"] == "서울시의회")
+        self.assertIn("오래된 이월 자료 1건은 재평가에서 제외", council_gap["reason"])
 
     def test_audit_uses_only_human_verify_card_as_shadow_input(self):
         old_root = module.ROOT
