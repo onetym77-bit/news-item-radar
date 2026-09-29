@@ -252,6 +252,6 @@ jobs:
           git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
           if ! git diff --cached --quiet; then
             git commit -m "Record reviewed district minutes for run $GITHUB_RUN_ID"
-            git push origin HEAD:main
+            bash .github/scripts/push-with-rebase.sh main
           fi
 

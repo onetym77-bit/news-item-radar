@@ -161,5 +161,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Record processed citizen proposal IDs"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          bash .github/scripts/push-with-rebase.sh main

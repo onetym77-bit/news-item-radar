@@ -152,10 +152,18 @@ class ProvenanceTests(unittest.TestCase):
             workflow.index("Upload the validated build package"),
             workflow.index("persist-main:"),
         )
+        push_helper_call = 'bash .github/scripts/push-with-rebase.sh'
         self.assertLess(
-            workflow.index('git push origin "HEAD:'),
+            workflow.index(push_helper_call),
             workflow.index("Upload the exact persisted result"),
         )
+        helper = (ROOT / ".github/scripts/push-with-rebase.sh").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('git fetch origin "$branch"', helper)
+        self.assertIn('git rebase "origin/$branch"', helper)
+        self.assertIn('git push origin "HEAD:$branch"', helper)
+        self.assertIn('for attempt in $(seq 1 "$max_attempts")', helper)
 
 
     def test_bundle_file_tamper_fails_verification(self):
