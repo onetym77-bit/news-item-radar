@@ -185,7 +185,7 @@ def stable_id(kind, url, text):
     return hashlib.sha256((kind + "|" + url + "|" + text[:160]).encode("utf-8")).hexdigest()[:16]
 
 
-HEAD_CONTRACT_VERSION = "1.5"
+HEAD_CONTRACT_VERSION = "1.6"
 SHADOW_QUEUE_SPECS = (
     ("25개 자치구의회", "district-council-pilot/output/recent-l3/editorial_review_queue.json",
      "district-council-pilot/output/recent-l3/editor_decisions.json"),
@@ -453,6 +453,8 @@ def source_inputs(district_shadow=None, citizen_shadow=None,
         return citizen_records, [gap for gap in gaps if gap["source"] == "시민제안"]
     news = read("interest-signal-pilot/output/review_queue_latest.json", {})
     for item in news.get("items", []):
+        if item.get("is_new") is not True:
+            continue
         a = item.get("content_assessment") or {}
         if item.get("source_context_status") != "BODY_READ":
             continue
@@ -476,10 +478,9 @@ def source_inputs(district_shadow=None, citizen_shadow=None,
     feed = read("source-scout-v1/output/daily_feed_latest.json", {})
     council_rows = []
     for row in feed.get("editorial_triage", []):
-        council_rows.append((row, "신규 운영 입력"))
-    for row in feed.get("stale_carryover", []):
         if row.get("freshness_status") == "STALE_CARRYOVER":
-            council_rows.append((row, "신선도 유예·미판정"))
+            continue
+        council_rows.append((row, "신규 운영 입력"))
     council_seen = set()
     for item, source_stage in council_rows:
         if item.get("source_id") != "council_minutes":
@@ -511,7 +512,7 @@ def source_inputs(district_shadow=None, citizen_shadow=None,
         stale_count = int(metric.get("stale_carryover") or 0)
         context_holds = int(metric.get("context_holds") or 0)
         gaps.append({"source": "서울시의회",
-                     "reason": f"신규 운영 입력 없음; 신선도 유예 {stale_count}건, 문맥 보류 {context_holds}건"})
+                     "reason": f"이번 회차 신규 운영 입력 없음; 오래된 이월 자료 {stale_count}건은 재평가에서 제외, 문맥 보류 {context_holds}건"})
     audit = read("source-onboarding-v1/output/audit-l4/state_latest.json", {})
     latest = audit.get("runs", [])[-1] if audit.get("runs") else {}
     latest_chosen = set(latest.get("selected_ids", []))
