@@ -16,16 +16,22 @@ def load_module(name, path):
 
 
 class NewsNoveltyTests(unittest.TestCase):
-    def test_collector_seeds_seen_keys_from_previous_snapshot(self):
+    def test_collector_migrates_overmarked_ledger_from_actual_review_queue(self):
         module = load_module("collect_interest_signals_test", "interest-signal-pilot/collect_interest_signals.py")
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             module.SEEN = root / "seen.json"
-            module.OUT = root / "latest.json"
-            module.OUT.write_text(json.dumps({
-                "news_signals": [{"title": "서울의 오래된 기사 - 매체"}]
+            module.QUEUE = root / "queue.json"
+            module.SEEN.write_text(json.dumps({
+                "schema": 1,
+                "items": [{"title": "검토하지 않은 기사"}],
             }, ensure_ascii=False), encoding="utf-8")
-            self.assertIn(module.title_key("서울의 오래된 기사 - 매체"), module.load_seen_keys())
+            module.QUEUE.write_text(json.dumps({
+                "items": [{"source_headline": "실제로 검토한 기사 - 매체"}],
+            }, ensure_ascii=False), encoding="utf-8")
+            seen = module.load_seen_keys()
+            self.assertIn(module.title_key("실제로 검토한 기사 - 매체"), seen)
+            self.assertNotIn(module.title_key("검토하지 않은 기사"), seen)
 
     def test_review_queue_contains_only_unseen_articles(self):
         module = load_module("build_review_queue_test", "interest-signal-pilot/build_review_queue.py")
@@ -33,6 +39,7 @@ class NewsNoveltyTests(unittest.TestCase):
             root = Path(folder)
             module.INPUT = root / "signals.json"
             module.OUTPUT = root / "queue.json"
+            module.SEEN = root / "seen.json"
             module.INPUT.write_text(json.dumps({
                 "generated_at_utc": "2026-09-29T00:00:00+00:00",
                 "quality_gate": {"seen_news_count": 1},
@@ -50,6 +57,10 @@ class NewsNoveltyTests(unittest.TestCase):
             self.assertEqual(result["review_count"], 1)
             self.assertEqual(result["items"][0]["headline"], "새 기사")
             self.assertTrue(result["items"][0]["is_new"])
+            ledger = json.loads(module.SEEN.read_text(encoding="utf-8"))
+            self.assertEqual(ledger["schema"], 2)
+            self.assertEqual(len(ledger["items"]), 1)
+            self.assertIn("새 기사", ledger["items"][0]["title"])
 
     def test_integrated_head_rejects_seen_news_and_stale_council_rows(self):
         module = load_module("editorial_pipeline_novelty_test", "editorial-v4/pipeline.py")
