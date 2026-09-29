@@ -57,9 +57,15 @@ REVIEW_SCHEMA = {
             "verdict": {"type": "string", "enum": ["KEEP", "HOLD"]},
             "editorial_risk": {"type": "string"},
             "decisive_test": {"type": "string"},
+            "local_broadcast_fit": {"type": "string", "enum": ["HIGH", "MEDIUM", "LOW"]},
+            "story_scale": {"type": "string", "enum": ["MULTI_SITE_PATTERN", "SEVERE_SINGLE_CASE", "ORDINARY_SINGLE_CASE"]},
+            "impact_stage": {"type": "string", "enum": ["REALIZED", "IMMINENT_BINDING", "SPECULATIVE"]},
+            "scale_check": {"type": "string"},
             "reason": {"type": "string"},
         },
-        "required": ["id", "verdict", "editorial_risk", "decisive_test", "reason"],
+        "required": ["id", "verdict", "editorial_risk", "decisive_test",
+                     "local_broadcast_fit", "story_scale", "impact_stage",
+                     "scale_check", "reason"],
     }}},
     "required": ["reviews"],
 }
@@ -708,14 +714,33 @@ def apply_second_review(proposals, result):
         risk = compact(review.get("editorial_risk"))
         decisive = compact(review.get("decisive_test"))
         reason = compact(review.get("reason"))
-        if review.get("verdict") == "KEEP" and min(map(len, (risk, decisive, reason))) >= 12:
+        local_fit = compact(review.get("local_broadcast_fit"))
+        story_scale = compact(review.get("story_scale"))
+        impact_stage = compact(review.get("impact_stage"))
+        scale_check = compact(review.get("scale_check"))
+        gate_reason = ""
+        if review.get("verdict") == "KEEP":
+            if local_fit != "HIGH":
+                gate_reason = "독립 검토: 지역방송 독자 취재 가능성 부족"
+            elif story_scale == "ORDINARY_SINGLE_CASE":
+                gate_reason = "독립 검토: 단일 사례의 중대성·구조적 확장 부족"
+            elif impact_stage == "SPECULATIVE":
+                gate_reason = "독립 검토: 시민 영향이 아직 가설 단계"
+            elif len(scale_check) < 12:
+                gate_reason = "독립 검토: 반복 범위·단일 사례 중대성 근거 부족"
+        if (review.get("verdict") == "KEEP" and not gate_reason
+                and min(map(len, (risk, decisive, reason))) >= 12):
             kept.append({**proposal, "editorial_risk": risk,
                          "decisive_test": decisive, "independent_review": reason,
+                         "review_local_broadcast_fit": local_fit,
+                         "review_story_scale": story_scale,
+                         "review_impact_stage": impact_stage,
+                         "review_scale_check": scale_check,
                          "coverage_status": "기존 보도 각도 별도 대조 필요"})
         else:
             held.append({"id": proposal["id"], "source": proposal["source"],
                          "headline": proposal["title"], "verdict": "HOLD",
-                         "reason": reason or "독립 검토에서 기획 경로 부족"})
+                         "reason": gate_reason or reason or "독립 검토에서 기획 경로 부족"})
     return kept, held
 
 def validate_assessment_ids(records, result):
