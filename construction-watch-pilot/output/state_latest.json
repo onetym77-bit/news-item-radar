@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "last_collected_kst": "2026-09-28T17:38:56+09:00",
+  "last_collected_kst": "2026-09-29T17:24:14+09:00",
   "events": {
     "EXTENSION|1032026062399|22046|2": {
       "key": "EXTENSION|1032026062399|22046|2",
@@ -128,7 +128,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
       "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 경동엔지니어링 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.4점 벌점부과일 : 2026-08-20 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 15 등록일 : 2026-08-20 16 ",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-28T17:38:56+09:00"
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
     },
     "PENALTY|1112021020598|1221": {
       "key": "PENALTY|1112021020598|1221",
@@ -140,7 +140,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
       "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 태영건설 업 체 구 분 : 시공 점 검 종 류 : 자체조사 벌 점 번 호 : 8, 18 벌 점 : 0.716점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서와 다른 시공, 시공상세도면 작성의 소홀 조회수 : 22 등록일 : 2026-08-18 15 ",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-28T17:38:56+09:00"
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
     },
     "PENALTY|1112021020598|1222": {
       "key": "PENALTY|1112021020598|1222",
@@ -152,7 +152,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
       "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 호반산업 업 체 구 분 : 시공 점 검 종 류 : 자체조사 벌 점 번 호 : 8, 18 벌 점 : 0.548점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서와 다른 시공, 시공상세도면 작성의 소홀 조회수 : 22 등록일 : 2026-08-18 14 영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 삼안 업 체 구 분 : 감리 점 검 종 류 : 자체조",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-28T17:38:56+09:00"
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
     },
     "EXTENSION|6192026051598|22058|2": {
       "key": "EXTENSION|6192026051598|22058|2",
@@ -698,7 +698,7 @@
       "before_completion": "2026-09-30",
       "after_completion": "2026-11-30",
       "first_seen_kst": "2026-09-28T17:38:56+09:00",
-      "last_seen_kst": "2026-09-28T17:38:56+09:00"
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
     },
     "EXTENSION|6232024060394|22113|3": {
       "key": "EXTENSION|6232024060394|22113|3",
@@ -752,7 +752,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-28T17:38:56+09:00",
-      "last_seen_kst": "2026-09-28T17:38:56+09:00"
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
     },
     "DESIGN|3502025042994|21986513|21986514": {
       "key": "DESIGN|3502025042994|21986513|21986514",
@@ -801,6 +801,96 @@
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-28T17:38:56+09:00",
       "last_seen_kst": "2026-09-28T17:38:56+09:00"
+    },
+    "EXTENSION|6062025032698|22116|2": {
+      "key": "EXTENSION|6062025032698|22116|2",
+      "category": "EXTENSION",
+      "pjt_cd": "6062025032698",
+      "record_key": "22116|2",
+      "title": "2025년 이면도로 및 뒷골목 도로정비공사(연간단가)",
+      "registration_date": "2026-09-29",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 61,
+      "before_completion": "2026-09-30",
+      "after_completion": "2026-11-30",
+      "first_seen_kst": "2026-09-29T17:24:14+09:00",
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+    },
+    "EXTENSION|6162026041695|22115|1": {
+      "key": "EXTENSION|6162026041695|22115|1",
+      "category": "EXTENSION",
+      "pjt_cd": "6162026041695",
+      "record_key": "22115|1",
+      "title": "초록마을로2길 42 ~ 화곡로 296 외 2개소 사각형거 보수공사",
+      "registration_date": "2026-09-29",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 92,
+      "before_completion": "2026-09-30",
+      "after_completion": "2026-12-31",
+      "first_seen_kst": "2026-09-29T17:24:14+09:00",
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+    },
+    "EXTENSION|1032026031998|22114|2": {
+      "key": "EXTENSION|1032026031998|22114|2",
+      "category": "EXTENSION",
+      "pjt_cd": "1032026031998",
+      "record_key": "22114|2",
+      "title": "낙산근린공원 노후시설물 정비사업",
+      "registration_date": "2026-09-29",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 4,
+      "before_completion": "2026-09-19",
+      "after_completion": "2026-09-23",
+      "first_seen_kst": "2026-09-29T17:24:14+09:00",
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+    },
+    "DESIGN|7182026040398|21989339|21989340": {
+      "key": "DESIGN|7182026040398|21989339|21989340",
+      "category": "DESIGN",
+      "pjt_cd": "7182026040398",
+      "record_key": "21989339|21989340",
+      "title": "2026년 중구 관내 상수도공사(장기계속단가계약)",
+      "registration_date": "2026-09-29",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-29T17:24:14+09:00",
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+    },
+    "DESIGN|1032026031998|21987689|21987690": {
+      "key": "DESIGN|1032026031998|21987689|21987690",
+      "category": "DESIGN",
+      "pjt_cd": "1032026031998",
+      "record_key": "21987689|21987690",
+      "title": "낙산근린공원 노후시설물 정비사업",
+      "registration_date": "2026-09-29",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-29T17:24:14+09:00",
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+    },
+    "DESIGN|1112024112298|21988259|21988260": {
+      "key": "DESIGN|1112024112298|21988259|21988260",
+      "category": "DESIGN",
+      "pjt_cd": "1112024112298",
+      "record_key": "21988259|21988260",
+      "title": "서울시립 김병주도서관 건립 소방공사(장기-1차)",
+      "registration_date": "2026-09-29",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-29T17:24:14+09:00",
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+    },
+    "DESIGN|6192026051597|21990092|21990093": {
+      "key": "DESIGN|6192026051597|21990092|21990093",
+      "category": "DESIGN",
+      "pjt_cd": "6192026051597",
+      "record_key": "21990092|21990093",
+      "title": "영등포종합사회복지관 내진보강 및 스프링클러설치 소방공사",
+      "registration_date": "2026-09-29",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-29T17:24:14+09:00",
+      "last_seen_kst": "2026-09-29T17:24:14+09:00"
     }
   },
   "progress": {
@@ -813,7 +903,7 @@
       "gap_pp": 0.1,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-28T17:38:56+09:00"
+      "observed_at_kst": "2026-09-29T17:24:14+09:00"
     },
     "57eca32c8e203306": {
       "key": "57eca32c8e203306",
@@ -824,29 +914,29 @@
       "gap_pp": 0.1,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-28T17:38:56+09:00"
+      "observed_at_kst": "2026-09-29T17:24:14+09:00"
     },
     "2b009f5c7daf5f7a": {
       "key": "2b009f5c7daf5f7a",
       "title": "강남역 일대 대심도 빗물배수터널 건설공사",
       "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
       "plan_percent": 5.4,
-      "actual_percent": 7.3,
-      "gap_pp": 1.9,
+      "actual_percent": 7.4,
+      "gap_pp": 2.0,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-28T17:38:56+09:00"
+      "observed_at_kst": "2026-09-29T17:24:14+09:00"
     },
     "c335f452fa78b48c": {
       "key": "c335f452fa78b48c",
       "title": "거여 119안전센터 건립공사",
       "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
-      "plan_percent": 18.4,
-      "actual_percent": 17.3,
+      "plan_percent": 18.6,
+      "actual_percent": 17.5,
       "gap_pp": -1.1,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-28T17:38:56+09:00"
+      "observed_at_kst": "2026-09-29T17:24:14+09:00"
     },
     "ca05789869ab2a65": {
       "key": "ca05789869ab2a65",
@@ -857,21 +947,19 @@
       "gap_pp": -0.3,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-28T17:38:56+09:00"
+      "observed_at_kst": "2026-09-29T17:24:14+09:00"
     }
   },
   "last_run": {
     "first_baseline": false,
     "new_record_keys": [
-      "EXTENSION|6232026030396|22110|2",
-      "EXTENSION|6232024060394|22113|3",
-      "EXTENSION|6062026033196|22112|1",
-      "EXTENSION|6162023040396|22109|9",
-      "DESIGN|6232026030396|21986395|21986396",
-      "DESIGN|3502025042994|21986513|21986514",
-      "DESIGN|6222025121296|21987110|21987111",
-      "DESIGN|6222025123098|21987060|21987061",
-      "DESIGN|6222025120999|21987095|21987096"
+      "EXTENSION|6062025032698|22116|2",
+      "EXTENSION|6162026041695|22115|1",
+      "EXTENSION|1032026031998|22114|2",
+      "DESIGN|7182026040398|21989339|21989340",
+      "DESIGN|1032026031998|21987689|21987690",
+      "DESIGN|1112024112298|21988259|21988260",
+      "DESIGN|6192026051597|21990092|21990093"
     ],
     "signals": [],
     "sample_counts": {
