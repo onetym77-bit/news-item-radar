@@ -38,6 +38,18 @@ class ClikApiTests(unittest.TestCase):
         }
         self.assertEqual({row["name"]: row["clik_assembly_id"] for row in sources}, expected)
 
+    def test_unwrap_accepts_documented_object_envelope(self):
+        payload = {"RESULT_CODE": "SUCCESS", "LIST": [], "TOTAL_COUNT": "0"}
+        self.assertIs(payload, module._unwrap(payload))
+
+    def test_unwrap_keeps_legacy_single_item_array(self):
+        payload = {"RESULT_CODE": "SUCCESS", "LIST": [], "TOTAL_COUNT": "0"}
+        self.assertIs(payload, module._unwrap([payload]))
+
+    def test_unwrap_object_error_keeps_code_without_secret(self):
+        with self.assertRaisesRegex(module.ClikAPIError, "ERROR07"):
+            module._unwrap({"RESULT_CODE": "ERROR07", "RESULT_MESSAGE": "bad query"})
+
     def test_list_is_bounded_deduplicated_and_uses_public_url(self):
         row = list_row()
         with patch.object(module, "fetch_payload", return_value=list_payload(row, row)) as fetch:

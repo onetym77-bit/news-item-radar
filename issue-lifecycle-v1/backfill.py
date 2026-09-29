@@ -51,19 +51,30 @@ anchor_quote는 원문 안의 연속 문자열 15~180자다. 검색어는 같은
 
 def discover(api_key, sources, start_date, end_date, per_query=5):
     found = {}
+    errors = []
+    successful_requests = 0
     for term in TERMS:
-        signature = {"search_keywords": [term]}
         for source in sources:
-            payload = pipeline.fetch_payload(
-                api_key,
-                displayType="list",
-                startCount=0,
-                listCount=per_query,
-                searchType="MINTS_HTML",
-                searchKeyword=term,
-                rasmblyId=source["clik_assembly_id"],
-                sort="WEIGHT/DESC",
-            )
+            try:
+                payload = pipeline.fetch_payload(
+                    api_key,
+                    displayType="list",
+                    startCount=0,
+                    listCount=per_query,
+                    searchType="MINTS_HTML",
+                    searchKeyword=term,
+                    rasmblyId=source["clik_assembly_id"],
+                    sort="WEIGHT/DESC",
+                )
+                successful_requests += 1
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                errors.append({
+                    "source_id": source["id"],
+                    "query_term": term,
+                    "operation": "historical_search",
+                    "error_type": type(exc).__name__,
+                })
+                continue
             for entry in payload.get("LIST") or []:
                 row = entry.get("ROW") if isinstance(entry, dict) else None
                 if not isinstance(row, dict):
@@ -87,10 +98,15 @@ def discover(api_key, sources, start_date, end_date, per_query=5):
                 })
                 if term not in item["matched_terms"]:
                     item["matched_terms"].append(term)
-    return sorted(
+    rows = sorted(
         found.values(),
         key=lambda row: (-len(row["matched_terms"]), -date.fromisoformat(row["meeting_date"]).toordinal()),
     )
+    return {
+        "rows": rows,
+        "errors": errors,
+        "successful_requests": successful_requests,
+    }
 
 
 def validate_extract(answer, body):
@@ -122,7 +138,10 @@ def run(*, api_key, openai_key, model, sources, as_of,
         lookback_months=18, minimum_age_months=9, max_docs=12, max_seeds=5):
     start_date = as_of - timedelta(days=lookback_months * 31)
     end_date = as_of - timedelta(days=minimum_age_months * 30)
-    candidates = discover(api_key, sources, start_date, end_date)
+    discovery = discover(api_key, sources, start_date, end_date)
+    if discovery["successful_requests"] == 0:
+        raise ValueError("All CLIK historical searches failed")
+    candidates = discovery["rows"]
     payload = {
         "schema": 1,
         "generated_at_kst": datetime.now(pipeline.KST).isoformat(timespec="seconds"),
@@ -134,7 +153,8 @@ def run(*, api_key, openai_key, model, sources, as_of,
         "reviewed_count": 0,
         "historical_seeds": [],
         "holds": [],
-        "errors": [],
+        "errors": discovery["errors"],
+        "successful_search_requests": discovery["successful_requests"],
         "automatic_unresolved_finding": False,
     }
     for candidate in candidates[:max_docs]:

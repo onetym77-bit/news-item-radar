@@ -31,9 +31,13 @@ class ClikAPIError(ValueError):
 
 
 def _unwrap(value):
-    if not isinstance(value, list) or len(value) != 1 or not isinstance(value[0], dict):
+    """Accept both documented object and legacy one-item-array envelopes."""
+    if isinstance(value, dict):
+        payload = value
+    elif isinstance(value, list) and len(value) == 1 and isinstance(value[0], dict):
+        payload = value[0]
+    else:
         raise ClikAPIError("Unexpected CLIK response envelope")
-    payload = value[0]
     if payload.get("RESULT_CODE") != "SUCCESS":
         code = str(payload.get("RESULT_CODE") or "UNKNOWN")
         raise ClikAPIError(f"CLIK API returned {code}")
