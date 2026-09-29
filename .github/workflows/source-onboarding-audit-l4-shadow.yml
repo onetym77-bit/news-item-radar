@@ -98,29 +98,30 @@ jobs:
           git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv
           git diff --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
           git diff --exit-code -- source-onboarding-v1/audit_l4_reviews.csv
-      - name: Persist exactly two derived files
+      - name: Persist only changed bounded derived files
         shell: bash
         run: |
           git config user.name "news-item-radar-bot"
           git config user.email "news-item-radar-bot@users.noreply.github.com"
           git add -f source-onboarding-v1/output/audit-l4/state_latest.json
           git add -f source-onboarding-v1/output/audit-l4/SUMMARY.md
-          test "$(git diff --cached --name-only | sort)" = "$(printf '%s\n' \
-            source-onboarding-v1/output/audit-l4/SUMMARY.md \
-            source-onboarding-v1/output/audit-l4/state_latest.json | sort)"
+          while IFS= read -r file; do
+            case "$file" in
+              source-onboarding-v1/output/audit-l4/SUMMARY.md|\
+              source-onboarding-v1/output/audit-l4/state_latest.json)
+                ;;
+              *)
+                echo "Unexpected staged path: $file" >&2
+                exit 1
+                ;;
+            esac
+          done < <(git diff --cached --name-only)
           git diff --cached --exit-code -- agent-system-v1/ITEM_LEDGER.csv
           git diff --cached --exit-code -- agent-system-v1/QUESTION_QUALITY_AUDIT.csv
           git diff --cached --exit-code -- source-onboarding-v1/audit_l4_reviews.csv
-          if ! git diff --cached --quiet; then
-            git commit -m "Record bounded Seoul audit shadow result for run $GITHUB_RUN_ID"
-            for attempt in 1 2 3; do
-              git fetch origin main:refs/remotes/origin/main --depth=50
-              git rebase origin/main
-              if git push origin HEAD:main; then
-                exit 0
-              fi
-              echo "main moved during push; retrying ($attempt/3)"
-            done
-            echo "main kept moving; refusing to overwrite it"
-            exit 1
+          if git diff --cached --quiet; then
+            echo "No changed audit shadow output to persist."
+            exit 0
           fi
+          git commit -m "Record bounded Seoul audit shadow result for run $GITHUB_RUN_ID"
+          bash .github/scripts/push-with-rebase.sh main
