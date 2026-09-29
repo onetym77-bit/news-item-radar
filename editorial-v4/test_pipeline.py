@@ -22,6 +22,10 @@ GOOD = {"id": "one", "verdict": "PROPOSE", "issue_key": "접근 방식",
         "first_check": "공식 접수 기준과 접수·탈락 사례를 나란히 확인한다",
         "counterhypothesis": "경로는 달라도 실제 이용 자격과 처리 속도는 같을 수 있다",
         "scene_path": "신청 현장, 담당자, 두 경로의 이용자를 취재한다",
+        "local_broadcast_fit": "HIGH",
+        "story_scale": "MULTI_SITE_PATTERN",
+        "impact_stage": "IMMINENT_BINDING",
+        "scale_basis": "여러 신청 경로와 대상 집단 사이의 이용 기회 차이를 비교할 수 있다",
         "anchor_quote": "이 사업을 새로 시작하면서 대상별 접근 방식이 달라졌습니다.",
         "reason": "신청 방식의 차이가 이용 기회를 바꿀 수 있는지 확인할 가치가 있다"}
 
@@ -37,6 +41,54 @@ class PipelineTests(unittest.TestCase):
         bad = {**GOOD, "citizen_question": "시민에게 어떤 영향이 있는가?"}
         proposals, _ = module.assess_result([BASE], {"assessments": [bad]})
         self.assertEqual(proposals, [])
+
+    def test_newsworthiness_gates_hold_access_scale_and_speculation_failures(self):
+        cases = [
+            (
+                "광역 기반시설 접근 한계",
+                {**GOOD, "local_broadcast_fit": "LOW",
+                 "story_scale": "SEVERE_SINGLE_CASE", "impact_stage": "REALIZED",
+                 "scale_basis": "안전 쟁점은 크지만 핵심 시설과 판정 자료 접근이 제한된다"},
+                "지역방송 독자 취재 가능성 부족",
+            ),
+            (
+                "평범한 단일 청사 지연",
+                {**GOOD, "story_scale": "ORDINARY_SINGLE_CASE",
+                 "impact_stage": "REALIZED",
+                 "scale_basis": "한 곳의 공공청사 공사가 늦어진 사례다"},
+                "단일 사례의 중대성·구조적 확장 부족",
+            ),
+            (
+                "효과가 불분명한 신규 사업",
+                {**GOOD, "story_scale": "MULTI_SITE_PATTERN",
+                 "impact_stage": "SPECULATIVE",
+                 "scale_basis": "서울 전역 대상 계획이지만 아직 시행 전이다"},
+                "시민 영향이 아직 가설 단계",
+            ),
+            (
+                "한 기관의 낮은 강도 기록 불일치",
+                {**GOOD, "story_scale": "ORDINARY_SINGLE_CASE",
+                 "impact_stage": "REALIZED",
+                 "scale_basis": "한 위탁기관의 복무와 차량 기록만 불일치한다"},
+                "단일 사례의 중대성·구조적 확장 부족",
+            ),
+        ]
+        for label, assessment, expected in cases:
+            with self.subTest(label=label):
+                proposals, holds = module.assess_result([BASE], {"assessments": [assessment]})
+                self.assertEqual(proposals, [])
+                self.assertEqual(holds[0]["reason"], expected)
+
+    def test_severe_single_case_without_existing_statistics_can_pass(self):
+        severe = {
+            **GOOD,
+            "story_scale": "SEVERE_SINGLE_CASE",
+            "impact_stage": "IMMINENT_BINDING",
+            "scale_basis": "취약계층의 거주 권리를 즉시 끊는 구속력 있는 폐쇄 결정이 임박했다",
+        }
+        proposals, holds = module.assess_result([BASE], {"assessments": [severe]})
+        self.assertEqual(len(proposals), 1)
+        self.assertEqual(holds, [])
 
     def test_single_source_and_issue_dedup(self):
         second = {**BASE, "id": "two", "url": "https://example.org/2"}
