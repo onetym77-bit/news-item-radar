@@ -48,6 +48,19 @@ class EditorialTriageTests(unittest.TestCase):
         self.assertIn("수치 기준기간만 미확인", reason)
         self.assertIn("불편", reason)
 
+    def test_stale_carryover_remains_human_review_only(self):
+        reason = collector.context_hold_editorial_triage_reason({
+            **self.row(), "freshness_status": "STALE_CARRYOVER"
+        })
+        self.assertIn("신선도 유예 자료", reason)
+        self.assertIn("수치 기준기간만 미확인", reason)
+        self.assertEqual(
+            collector.context_hold_editorial_triage_reason({
+                **self.row(), "freshness_status": "ARCHIVED_STALE"
+            }),
+            "",
+        )
+
     def test_missing_issue_or_seoul_scope_fails_closed(self):
         self.assertEqual(
             collector.context_hold_editorial_triage_reason({

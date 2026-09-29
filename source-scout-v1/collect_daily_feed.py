@@ -178,7 +178,10 @@ def context_hold_editorial_triage_reason(row: dict) -> str:
         return ""
     if row.get("context_status") != "HOLD":
         return ""
-    if row.get("precheck_status") != "PASS" or row.get("freshness_status") != "FRESH":
+    freshness_status = row.get("freshness_status")
+    if row.get("precheck_status") != "PASS":
+        return ""
+    if freshness_status not in {"FRESH", "STALE_CARRYOVER"}:
         return ""
     if not missing or not missing.issubset(EDITORIAL_TRIAGE_ALLOWED_MISSING):
         return ""
@@ -193,9 +196,13 @@ def context_hold_editorial_triage_reason(row: dict) -> str:
     matched = [term for term in EDITORIAL_TRIAGE_HARM_TERMS if term in required_text]
     if not matched:
         return ""
+    freshness_note = (
+        "신선도 유예 자료이며 " if freshness_status == "STALE_CARRYOVER" else ""
+    )
     return (
-        "사안·서울 범위·영향 대상과 구체 문제·손실 표현은 확인됐고 "
-        f"수치 기준기간만 미확인 · 직접 영향 표현: {', '.join(matched[:3])}"
+        freshness_note
+        + "사안·서울 범위·영향 대상과 구체 문제·손실 표현은 확인됐고 "
+        + f"수치 기준기간만 미확인 · 직접 영향 표현: {', '.join(matched[:3])}"
     )
 
 
