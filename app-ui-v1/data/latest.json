@@ -1,6 +1,6 @@
 {
-  "lastRun": "2026-09-28T15:13+09:00",
-  "dataMode": "실제 산출물",
+  "lastRun": "2026-09-29T08:31+09:00",
+  "dataMode": "저장 자료 재평가",
   "editorialBrief": {
     "schema": 4,
     "input": "interest-signal-pilot/review_queue_latest.json",
@@ -231,6 +231,12 @@
     ],
     "generated_at_utc": "2026-09-28T23:31:56.016421+00:00",
     "assessment_retries": 0,
+    "collection_cycle": {
+      "mode": "STORED_SNAPSHOT",
+      "verified": false,
+      "runs": [],
+      "note": "수집 회차 정보가 없는 이전 산출물입니다."
+    },
     "proposals": [
       {
         "id": "3849dbf9ac53135a",
@@ -554,6 +560,10 @@
     [
       "기획 질문 검토안",
       "1"
+    ],
+    [
+      "입력 회차",
+      "저장 자료"
     ],
     [
       "통합 헤드 연결 소스",
