@@ -8,7 +8,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "interest-signal-pilot" / "output" / "interest_signals_latest.json"
-QUERIES = ["서울 민원", "서울 건설 공사 지연", "서울 안전 사고", "서울 재개발 갈등", "서울 교통 불편", "서울 주거 피해", "서울 복지 공백", "서울 자치구 논란"]
+SEEN = ROOT / "interest-signal-pilot" / "output" / "seen_news.json"
+QUERIES = [
+    "서울 민원", "서울 건설 공사 지연", "서울 안전 사고", "서울 재개발 갈등",
+    "서울 교통 불편", "서울 주거 피해", "서울 복지 공백", "서울 자치구 논란",
+    "서울 폐쇄 중단 축소", "서울 대기 부족 사각지대", "서울 요금 부담 비용",
+    "서울 주민 반발 갈등", "서울 누락 미점검 미확인", "서울 감사 지적",
+    "서울 학교 안전 공백", "서울 돌봄 시설 부족",
+]
 SEOUL_AREAS = ["서울", "종로", "중구", "용산", "성동", "광진", "동대문", "중랑", "성북", "강북", "도봉", "노원", "은평", "서대문", "마포", "양천", "강서", "구로", "금천", "영등포", "동작", "관악", "서초", "강남", "송파", "강동"]
 SEOUL_NAME_ONLY = ("서울뉴스", "서울연구원", "서울본부", "서울자치신문", "서울뉴스통신")
 ROUTINE_TERMS = ("운영", "확대 운영", "제공", "개최", "안내", "홍보", "캠페인", "연휴", "발급기", "챗봇", "종합대책", "예방 총력", "시행…")
@@ -111,7 +118,28 @@ def diversify_news(rows: list[dict], limit: int = 120) -> list[dict]:
     return output
 
 
+def load_seen_keys() -> set[str]:
+    """Keep a persistent novelty ledger; seed it from the previous snapshot on first use."""
+    paths = [SEEN, OUT]
+    keys: set[str] = set()
+    for path in paths:
+        try:
+            document = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        rows = document.get("items", []) if path == SEEN else document.get("news_signals", [])
+        for row in rows:
+            value = clean(row.get("title") or row.get("title_key"))
+            normalized = title_key(value)
+            if normalized:
+                keys.add(normalized)
+        if keys:
+            break
+    return keys
+
+
 def main() -> int:
+    seen_before = load_seen_keys()
     raw_news, errors = [], []
     for query in QUERIES:
         try:
@@ -125,6 +153,12 @@ def main() -> int:
         if key and key not in unique:
             unique[key] = row
     news = list(unique.values())
+    new_count = 0
+    for row in news:
+        row["title_key"] = title_key(row["title"])
+        row["is_new"] = row["title_key"] not in seen_before
+        if row["is_new"]:
+            new_count += 1
     trends, trend_error, trend_groups, trend_groups_without_data = fetch_naver_trends()
     if trend_error:
         errors.append({"channel": "naver_datalab", "error": trend_error})
@@ -140,13 +174,25 @@ def main() -> int:
     payload = {
         "schema": 5, "generated_at_utc": datetime.now(timezone.utc).isoformat(), "source_id": "search_news_interest", "source_name": "검색 관심도·뉴스 확산",
         "collection_mode": ["google_news_rss_keyword_probe", "naver_datalab_search_trend"], "queries": QUERIES,
-        "quality_gate": {"raw_news_count": len(raw_news), "seoul_relevant_count": len(relevant_news), "unique_news_count": len(news), "duplicate_or_irrelevant_count": len(raw_news) - len(news), "trend_groups": trend_groups, "trend_groups_without_data": trend_groups_without_data, "trend_data_points": len(trends), "candidate_ready": False, "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요"},
+        "quality_gate": {"raw_news_count": len(raw_news), "seoul_relevant_count": len(relevant_news), "unique_news_count": len(news), "new_news_count": new_count, "seen_news_count": len(news) - new_count, "duplicate_or_irrelevant_count": len(raw_news) - len(news), "trend_groups": trend_groups, "trend_groups_without_data": trend_groups_without_data, "trend_data_points": len(trends), "candidate_ready": False, "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요"},
         "news_count": len(news), "trend_count": len(trends), "news_signals": diversify_news(news), "trend_signals": trends[:500], "trend_summary": trend_summary, "errors": errors,
         "limitations": ["네이버 데이터랩 ratio는 절대 검색량이 아닌 상대 지수임", "검색·뉴스 반복은 시민 전체 의견이나 사실 확정이 아님", "동일·유사 제목은 묶었지만 기사 내용의 사실성은 검증하지 않음", "지역성은 기사 제목 기준의 1차 분류이며 최종 사실 확인이 아님", "후보 승격 전 서울시의회·구의회·감사·통계·현장 확인 필요"],
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"raw_news={len(raw_news)} relevant={len(relevant_news)} unique={len(news)} trends={len(trends)} errors={len(errors)}")
+    ledger = {
+        "schema": 1,
+        "updated_at_utc": payload["generated_at_utc"],
+        "items": [
+            {"title_key": key, "title": row.get("title", "")[:240], "last_seen_at_utc": payload["generated_at_utc"]}
+            for key, row in list({
+                **{key: {"title": key} for key in seen_before},
+                **{row["title_key"]: row for row in news if row.get("title_key")},
+            }.items())[-2000:]
+        ],
+    }
+    SEEN.write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"raw_news={len(raw_news)} relevant={len(relevant_news)} unique={len(news)} new={new_count} trends={len(trends)} errors={len(errors)}")
     return 0
 
 if __name__ == "__main__":

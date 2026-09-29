@@ -43,6 +43,7 @@ def make_item(row: dict) -> dict:
         "status": "DISCOVERY_ONLY",
         "needs_human_review": True,
         "screening_hint": row.get("editorial_reason", ""),
+        "is_new": row.get("is_new") is True,
         "screening_priority": "높음" if row.get("editorial_eligible") else "보통",
         "evidence": [{
             "type": "news_search_result",
@@ -54,7 +55,11 @@ def make_item(row: dict) -> dict:
 
 def main() -> int:
     payload = json.loads(INPUT.read_text(encoding="utf-8"))
-    rows = sorted(payload.get("news_signals", []), key=published_key, reverse=True)
+    rows = [
+        row for row in payload.get("news_signals", [])
+        if row.get("is_new") is True
+    ]
+    rows = sorted(rows, key=published_key, reverse=True)
     grouped: dict[str, list[dict]] = {}
     for row in rows:
         grouped.setdefault(row.get("query", "기타"), []).append(row)
@@ -79,8 +84,10 @@ def main() -> int:
         "source_snapshot": payload.get("generated_at_utc"),
         "candidate_ready": False,
         "review_count": len(queue),
+        "new_input_count": len(rows),
+        "seen_input_excluded": int(payload.get("quality_gate", {}).get("seen_news_count") or 0),
         "items": queue,
-        "policy": "제목 검색은 발견 신호다. 본문 맥락과 시민에게 의미 있는 구체적 질문을 확인하기 전에는 기획 후보로 승격하지 않는다. 신규 사업은 피해 통계가 없어도 질문 가치로 검토한다.",
+        "policy": "이번 수집 회차에 처음 발견된 제목만 검토한다. 본문 맥락과 시민에게 의미 있는 구체적 질문을 확인하기 전에는 기획 후보로 승격하지 않는다.",
     }
     OUTPUT.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"review_queue={len(queue)}")
