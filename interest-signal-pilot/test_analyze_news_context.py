@@ -32,7 +32,8 @@ class NewsContextTests(unittest.TestCase):
         self.assertIn("시민이 실제로", context.extract_body(document))
         self.assertNotIn("관계없는 메뉴", context.extract_body(document))
 
-    def test_bad_quote_is_rejected(self):
+    def test_bad_quote_is_replaced_with_grounded_excerpt(self):
+        body = "본문에는 실제 비용이 표시되어 있습니다. 시민들은 여러 차례 같은 비용을 부담했다고 설명했습니다."
         value = {
             "document_type": "INCIDENT", "claim_type": "OBSERVED_EVENT",
             "what_happened": "사건", "citizen_relevance": "주민",
@@ -40,8 +41,14 @@ class NewsContextTests(unittest.TestCase):
             "missing_check": "당사자 확인", "counterpossibility": "일시적 사례",
             "anchor_quote": "본문에 없는 근거 문장", "reason": "실제 비용",
         }
-        with self.assertRaisesRegex(ValueError, "ungrounded_quote"):
-            context.validated_assessment(value, "본문에는 실제 비용이 표시되어 있습니다.")
+        assessed = context.validated_assessment(value, body)
+        self.assertIn(assessed["anchor_quote"], body)
+        self.assertNotEqual(assessed["anchor_quote"], "본문에 없는 근거 문장")
+
+    def test_extract_body_falls_back_to_long_paragraphs(self):
+        paragraph = "공식 점검에서 반복 가능한 안전 절차 공백이 확인됐습니다. " * 12
+        document = "<html><body><div class='unknown-layout'><p>" + paragraph + "</p></div></body></html>"
+        self.assertGreaterEqual(len(context.extract_body(document)), context.MIN_BODY_CHARS)
 
     def test_promotion_cannot_emit_question(self):
         body = "구청은 지원센터를 새로 열겠다고 발표했습니다."
