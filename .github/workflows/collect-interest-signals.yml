@@ -27,12 +27,12 @@ jobs:
       - name: Build human review queue
         run: python interest-signal-pilot/build_review_queue.py
       - name: Assess matched publisher bodies (up to six paid model calls)
-        run: python interest-signal-pilot/analyze_news_context.py --max-items 12 --max-model-calls 6
+        run: python interest-signal-pilot/analyze_news_context.py --max-items 24 --max-model-calls 6
       - name: Commit derived signal snapshot
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add interest-signal-pilot/output/interest_signals_latest.json interest-signal-pilot/output/review_queue_latest.json
+          git add interest-signal-pilot/output/interest_signals_latest.json interest-signal-pilot/output/review_queue_latest.json interest-signal-pilot/output/seen_news.json
           git add interest-radar-v2/output/youtube_signal_ledger_v2_1.json
           git add interest-radar-v2/output/youtube_query_health_v2_3.json
           git add interest-radar-v2/output/youtube_api_usage_v2_3.json
