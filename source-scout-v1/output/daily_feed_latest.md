@@ -1,6 +1,6 @@
 # 역할 분리형 신규 소스 입력
 
-- 생성: 2026-09-29T14:28:26+09:00
+- 생성: 2026-09-29T14:41:31+09:00
 - 상태: 아래 발굴 단서는 모두 S0 이전이며 자동으로 아이템 장부에 들어가지 않음
 - 자동 점수: 수집 정렬용이며 편집 승인 점수가 아님
 - 오늘 카드: 원문 날짜가 소스 주기별 신선도 창 안에 있는 항목만 포함
@@ -9,7 +9,7 @@
 
 | 추출 | 사전통과 | 보류 | 제외 | 질문-근거 일치 | 자동 유효 | 편집 판정 카드 | 활동 기준선 | 제목 후보 | 스키마 후보 | 실제값 검증자료 |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| 161 | 136 | 19 | 6 | 10 | 10 | 0 | 0 | 3 | 1 | 0 |
+| 165 | 140 | 19 | 6 | 10 | 10 | 0 | 0 | 3 | 2 | 0 |
 
 - 신선도 게이트: 신선 유효 0건 · 오늘 카드 0건 · 서울 지역화 대기 0건 · 동일 원문 재등장 0건 · STALE 4건 · 보관 종료 32건 · 날짜 확인 대기 0건 · 문맥 확인 대기 8건
 
@@ -19,7 +19,7 @@
 - 이 수치는 원자료 기준이며 후보 상한·근접중복 선별 전입니다.
 - council_minutes: 유효 9건 · 새 원문 0건 · 기존 원문 0건 · 신선도 초과 3건 · 보관 종료 6건
 - labor_arrears: 유효 1건 · 새 원문 0건 · 기존 원문 0건 · 신선도 초과 1건 · 보관 종료 0건
-- 수집 실패:  — URLError: <urlopen error _ssl.c:993: The handshake operation timed out>
+- 수집 실패:  — URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>
 
 ## 오늘 판정이 필요한 카드
 
@@ -143,13 +143,14 @@
 ## 본문 근거 보완 대기
 
 - 민생과 안전에 무게를 실은 방향은 마땅하지만 법정 의무경비를 제외하면 실제로 사업에 투입할 수 있는 재원은 많지 않습니다. 이 한정된 예산이 한 푼도 헛되이 쓰이지 않도록 사업 하나하나 민생의 눈금으로 들여다보겠습니다. — 구체 문장 ([서울시의회 회의록](https://ms.smc.seoul.kr/record/recordView.do?key=f2d953e89d1655be3b48542da70e3a600efd928535914b3f06fc30c2c6e222a0b9c7a49ee19ade36))
+- O 분석(추출)기간 : 24년 1월~26년 6월말 (총 30개월) · O 대상 : 분석기간내 1개월이상 서울시에 거주한 사람 · O 집계기준 : 거주지행정동(HM_ADM) x 기준연월(BS_YR_MON) x 성별(SEX) x 연령대(AGE) 단위 집계 — 구체 문장 ([서울 열린데이터 신규 데이터셋](https://data.seoul.go.kr/dataList/OA-23094/F/1/datasetView.do))
 - 인구/가구 수도권 생활이동(수단) 데이터 서울시, KT가 함께 개발한 '수도권 생활이동(수단) 데이터'는 (1) 전국 내/외국인 대상으로 (2) 일별, 시간대별 (3) 항공, 기차, 고속버스, 광역버스, 일반버스, 지하철, 도보, 차량, 기타 총 9… — 구체 문장 ([서울 빅데이터캠퍼스 갱신 데이터](https://bigdata.seoul.go.kr/data/selectPageListSampleDataSet.do?r_id=P213))
 - 행정개선 우수사례 · 24시간 민원서비스 제공을 위한 AI 세무안내 챗봇 구축 · 금천구 — 구체 문장 ([서울시 응답소 공개민원](https://eungdapso.seoul.go.kr/main.do))
-- 서울시 불법주정차/전용차로 위반 단속 CCTV 위치정보 — 구체 문장 ([서울 열린데이터 신규 데이터셋](https://data.seoul.go.kr/dataList/OA-20471/S/1/datasetView.do))
-- 서울시 동대문구 불법주정차 위반 단속 CCTV 위치정보 — 구체 문장 ([서울 열린데이터 신규 데이터셋](https://data.seoul.go.kr/dataList/OA-20477/S/1/datasetView.do))
+- 서울시민_소득데이터(원천: 서울시민 개인신용 가명데이터) · O 분석(추출)기간 : 24년 1월~26년 6월말 (총 30개월) · O 대상 : 기간내 1개월이상 서울시에 거주한 사람 — 구체 문장 ([서울 열린데이터 신규 데이터셋](https://data.seoul.go.kr/dataList/OA-23093/F/1/datasetView.do))
 
 ## 데이터 구조 확인 · 실제 값 미수집
 
+- O 분석(추출)기간 : 24년 1월~26년 6월말 (총 30개월) · O 대상 : 분석기간내 1개월이상 서울시에 거주한 사람 · O 집계기준 : 거주지행정동(HM_ADM) x 기준연월(BS_YR_MON) x 성별(SEX) x 연령대(AGE) 단위 집계 — 분류·갱신 구조만 확인; 실제 데이터 행 수집 전 검증 자산 사용 금지 (자료일 2026-09-29 · FRESH) ([서울 열린데이터 신규 데이터셋](https://data.seoul.go.kr/dataList/OA-23094/F/1/datasetView.do))
 - 인구/가구 수도권 생활이동(수단) 데이터 서울시, KT가 함께 개발한 '수도권 생활이동(수단) 데이터'는 (1) 전국 내/외국인 대상으로 (2) 일별, 시간대별 (3) 항공, 기차, 고속버스, 광역버스, 일반버스, 지하철, 도보, 차량, 기타 총 9개의 '수단' 으로 (4) 수도권이… — 분류·갱신 구조만 확인; 실제 데이터 행 수집 전 검증 자산 사용 금지 (자료일 2026-09-29 · FRESH) ([서울 빅데이터캠퍼스 갱신 데이터](https://bigdata.seoul.go.kr/data/selectPageListSampleDataSet.do?r_id=P213))
 
 ## 데이터셋 후보 · 스키마·값 미확인
@@ -167,9 +168,9 @@
 | 소스 | 접속 | 상태 진단 | 요청/실패 | 추출 | 사전통과 | 질문일치 | 자동 유효 |
 |---|---:|---|---:|---:|---:|---:|---:|
 | 서울시 응답소 공개민원 | HTTP 200 | OK | 3/0 | 3 | 3 | 0 | 0 |
-| 서울시의회 회의록 | HTTP 200 | OK | 7/0 | 87 | 74 | 9 | 9 |
-| 서울 열린데이터 신규 데이터셋 | HTTP 200 | DEGRADED_NO_DATASET_TEXT | 7/0 | 40 | 33 | 0 | 0 |
+| 서울시의회 회의록 | HTTP 200 | OK | 9/2 | 87 | 74 | 9 | 9 |
+| 서울 열린데이터 신규 데이터셋 | HTTP 200 | DEGRADED_SCHEMA_ONLY | 7/0 | 44 | 37 | 0 | 0 |
 | 서울 빅데이터캠퍼스 갱신 데이터 | HTTP 200 | DEGRADED_SCHEMA_ONLY | 2/0 | 17 | 16 | 0 | 0 |
 | 서울연구원 정책·연구 자료 | HTTP 200 | OK | 1/0 | 6 | 3 | 0 | 0 |
 | 고용노동부 임금체불 통계 | HTTP 200 | OK | 1/0 | 8 | 7 | 1 | 1 |
-| 한국소비자원 피해·분쟁 자료 | URLError: <urlopen error _ssl.c:993: The handshake operation timed out> | FETCH_FAILED | 1/1 | 0 | 0 | 0 | 0 |
+| 한국소비자원 피해·분쟁 자료 | URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)> | FETCH_FAILED | 1/1 | 0 | 0 | 0 | 0 |
