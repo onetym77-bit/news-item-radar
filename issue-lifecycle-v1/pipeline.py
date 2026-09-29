@@ -98,6 +98,23 @@ def read_json(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def load_seed_payloads(paths):
+    """Load available seed snapshots and report optional inputs that are absent."""
+    payloads = []
+    loaded = []
+    missing = []
+    for value in paths:
+        path = Path(value)
+        if not path.is_file():
+            missing.append(str(path))
+            continue
+        payloads.append(read_json(path))
+        loaded.append(str(path))
+    if not payloads:
+        raise FileNotFoundError("No seed input files are available")
+    return payloads, loaded, missing
+
+
 def walk_dicts(value):
     if isinstance(value, dict):
         yield value
@@ -498,6 +515,13 @@ def render(payload):
                 f"  - 상태 근거: {match['status_basis']}",
                 f"  - 다음 확인: {match['next_check']}",
             ])
+    if payload.get("missing_seed_files"):
+        lines.extend([
+            "",
+            "- 입력 누락: "
+            + ", ".join(payload["missing_seed_files"])
+            + " — 다른 입력으로 실행했으며 0건으로 해석하지 않음",
+        ])
     if payload["errors"]:
         lines.extend(["", f"- 처리 오류: {len(payload['errors'])}건 — 0건으로 해석하지 않음"])
     return "\n".join(lines) + "\n"
@@ -519,8 +543,9 @@ def main():
     openai_key = os.getenv("OPENAI_API_KEY", "")
     if not clik_key or not openai_key:
         raise ValueError("CLIK_API_KEY and OPENAI_API_KEY are required")
+    seed_payloads, loaded_seed_files, missing_seed_files = load_seed_payloads(args.seed_file)
     payload = run(
-        [read_json(path) for path in args.seed_file],
+        seed_payloads,
         council_sources(args.sources),
         api_key=clik_key,
         openai_key=openai_key,
@@ -530,6 +555,8 @@ def main():
         max_seeds=args.max_seeds,
         max_comparisons=args.max_comparisons,
     )
+    payload["loaded_seed_files"] = loaded_seed_files
+    payload["missing_seed_files"] = missing_seed_files
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "latest.json").write_text(
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
