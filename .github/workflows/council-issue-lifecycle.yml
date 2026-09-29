@@ -51,12 +51,22 @@ jobs:
           python-version: "3.12"
       - name: Test lifecycle safety rules
         run: python -X utf8 -m unittest discover -s issue-lifecycle-v1 -p 'test_*.py' -v
+      - name: Backfill historical issue seeds
+        if: ${{ github.event_name != 'pull_request' }}
+        run: >-
+          python -X utf8 issue-lifecycle-v1/backfill.py
+          --lookback-months ${{ inputs.lookback_months }}
+          --minimum-age-months 9
+          --max-docs 12
+          --max-seeds 5
+          --model gpt-5.6-luna
       - name: Track prior and follow-up council evidence
         if: ${{ github.event_name != 'pull_request' }}
         run: >-
           python -X utf8 issue-lifecycle-v1/pipeline.py
           --seed-file source-scout-v1/output/daily_feed_latest.json
           --seed-file district-council-pilot/output/recent-l3/sample_latest.json
+          --seed-file issue-lifecycle-v1/output/historical_seeds_latest.json
           --lookback-months ${{ inputs.lookback_months }}
           --max-seeds ${{ inputs.max_seeds }}
           --max-comparisons 12
@@ -101,5 +111,7 @@ jobs:
           path: |
             issue-lifecycle-v1/output/latest.json
             issue-lifecycle-v1/output/SUMMARY.md
+            issue-lifecycle-v1/output/historical_seeds_latest.json
+            issue-lifecycle-v1/output/HISTORICAL_SEEDS.md
           if-no-files-found: warn
           retention-days: 7
