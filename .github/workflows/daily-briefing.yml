@@ -346,7 +346,7 @@ jobs:
             exit 0
           fi
           git commit -m "chore: update exact daily item briefing [skip ci]"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          bash .github/scripts/push-with-rebase.sh "${GITHUB_REF_NAME}"
 
       - name: Add the persisted result to run summary
         shell: bash
