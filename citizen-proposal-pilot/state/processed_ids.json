@@ -50,6 +50,16 @@
       "proposal_id": "202893",
       "first_processed_at_kst": "2026-09-28T13:26:54+09:00",
       "detail_sha256": null
+    },
+    {
+      "proposal_id": "202892",
+      "first_processed_at_kst": "2026-09-29T14:05:46+09:00",
+      "detail_sha256": "622d1f7c563828ac0c8d32f506ff7afb575c7e89bf746715a40708ea137a3f09"
+    },
+    {
+      "proposal_id": "202891",
+      "first_processed_at_kst": "2026-09-29T14:05:46+09:00",
+      "detail_sha256": "26925d1f0e056414673d4246a7cc733e350f1ff0de629b8779ead577ac05a4d2"
     }
   ]
 }
