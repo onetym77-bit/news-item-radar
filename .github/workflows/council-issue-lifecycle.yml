@@ -1,117 +1,129 @@
-name: Track recurring council issues
+name: Archive all Seoul council minutes
 
 on:
   workflow_dispatch:
     inputs:
       lookback_months:
-        description: 과거 회의록 탐색 범위
+        description: 최초 전량 아카이브 범위
         required: true
-        default: "18"
+        default: "36"
         type: choice
         options:
-          - "12"
-          - "18"
-      max_seeds:
-        description: 이번 실행에서 추적할 현재 의회 단서 수
+          - "24"
+          - "36"
+          - "60"
+      max_documents:
+        description: 이번 실행에서 원문을 새로 저장할 최대 문서 수
         required: true
-        default: "3"
+        default: "104"
         type: choice
         options:
-          - "1"
-          - "3"
-          - "5"
+          - "26"
+          - "52"
+          - "104"
+          - "208"
   pull_request:
     paths:
-      - "issue-lifecycle-v1/**"
+      - "council-archive-v1/**"
       - ".github/workflows/council-issue-lifecycle.yml"
       - "district-council-pilot/clik_api.py"
+      - "district-council-pilot/collect_pilot.py"
       - "district-council-pilot/sources_25.json"
 
 permissions:
   contents: read
 
 concurrency:
-  group: council-issue-lifecycle-${{ github.ref }}
+  group: council-minutes-archive-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  track:
+  archive:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 55
     env:
       PYTHONUTF8: "1"
       CLIK_API_KEY: ${{ github.event_name != 'pull_request' && secrets.CLIK_API_KEY || '' }}
-      OPENAI_API_KEY: ${{ github.event_name != 'pull_request' && secrets.OPENAI_API_KEY || '' }}
     steps:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Test lifecycle safety rules
-        run: python -X utf8 -m unittest discover -s issue-lifecycle-v1 -p 'test_*.py' -v
-      - name: Backfill historical issue seeds
+
+      - name: Test archive safety and resume rules
+        run: python -X utf8 -m unittest discover -s council-archive-v1 -p 'test_*.py' -v
+
+      - name: Restore archive and progress
+        if: ${{ github.event_name != 'pull_request' }}
+        id: archive-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .runtime/council-archive
+          key: council-minutes-archive-v1-${{ github.run_id }}
+          restore-keys: |
+            council-minutes-archive-v1-
+
+      - name: Check official council pages for fresher meetings
+        if: ${{ github.event_name != 'pull_request' }}
+        continue-on-error: true
+        run: >-
+          python -X utf8 district-council-pilot/collect_pilot.py
+          --sources district-council-pilot/sources_25.json
+          --per-source 1
+          --workers 3
+          --output .runtime/official-watch
+          --previous .runtime/council-archive/official_previous.json
+
+      - name: Archive council minutes without search keywords
         if: ${{ github.event_name != 'pull_request' }}
         run: >-
-          python -X utf8 issue-lifecycle-v1/backfill.py
+          python -X utf8 council-archive-v1/archive.py
           --lookback-months ${{ inputs.lookback_months }}
-          --minimum-age-months 9
-          --max-docs 12
-          --max-seeds 5
-          --model gpt-5.6-luna
-      - name: Track prior and follow-up council evidence
-        if: ${{ github.event_name != 'pull_request' }}
-        run: >-
-          python -X utf8 issue-lifecycle-v1/pipeline.py
-          --seed-file source-scout-v1/output/daily_feed_latest.json
-          --seed-file district-council-pilot/output/recent-l3/sample_latest.json
-          --seed-file issue-lifecycle-v1/output/historical_seeds_latest.json
-          --lookback-months ${{ inputs.lookback_months }}
-          --max-seeds ${{ inputs.max_seeds }}
-          --max-comparisons 12
-          --model gpt-5.6-luna
-      - name: Check redacted human-review output
+          --max-documents ${{ inputs.max_documents }}
+          --page-size 50
+          --official-observation .runtime/official-watch/pilot_latest.json
+
+      - name: Preserve latest official-page observation
+        if: ${{ github.event_name != 'pull_request' && hashFiles('.runtime/official-watch/pilot_latest.json') != '' }}
+        run: cp .runtime/official-watch/pilot_latest.json .runtime/council-archive/official_previous.json
+
+      - name: Save archive and progress
+        if: ${{ always() && github.event_name != 'pull_request' }}
+        uses: actions/cache/save@v4
+        with:
+          path: .runtime/council-archive
+          key: council-minutes-archive-v1-${{ github.run_id }}
+
+      - name: Check archive report boundaries
         if: ${{ github.event_name != 'pull_request' }}
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
 
-          root = Path("issue-lifecycle-v1/output")
-          data = json.loads((root / "latest.json").read_text(encoding="utf-8"))
+          data = json.loads(Path("council-archive-v1/output/status_latest.json").read_text(encoding="utf-8"))
           assert data["schema"] == 1
+          assert data["mode"] == "KEYWORD_FREE_FULL_MINUTES_ARCHIVE"
           assert data["source_count"] == 26
-          assert data["automatic_briefing_write"] is False
-          assert data["silence_is_unresolved"] is False
-          assert data["comparison_count"] <= data["comparison_limit"] <= 30
-          forbidden = {"body", "current_text", "api_key", "transcript"}
-
-          def check(value):
-              if isinstance(value, dict):
-                  assert forbidden.isdisjoint(value)
-                  for child in value.values():
-                      check(child)
-              elif isinstance(value, list):
-                  for child in value:
-                      check(child)
-
-          check(data)
-          for row in data["results"]:
-              assert row["editorial_boundary"]
-              for match in row["matches"]:
-                  assert match["document_url"].startswith("https://")
-                  assert match["anchor_quote"]
+          assert data["all_minutes_are_read_before_issue_selection"] is True
+          assert data["silence_is_not_resolution"] is True
+          assert 0 <= data["complete_source_count"] <= 26
+          forbidden = {"api_key", "CLIK_API_KEY", "searchKeyword"}
+          assert not forbidden.intersection(json.dumps(data, ensure_ascii=False))
           PY
-      - name: Upload lifecycle review
+
+      - name: Upload archive progress and new documents
         if: ${{ always() && github.event_name != 'pull_request' }}
         uses: actions/upload-artifact@v7
         with:
-          name: council-issue-lifecycle-${{ github.run_id }}
+          name: council-minutes-archive-${{ github.run_id }}
           path: |
-            issue-lifecycle-v1/output/latest.json
-            issue-lifecycle-v1/output/SUMMARY.md
-            issue-lifecycle-v1/output/historical_seeds_latest.json
-            issue-lifecycle-v1/output/HISTORICAL_SEEDS.md
+            council-archive-v1/output/status_latest.json
+            council-archive-v1/output/SUMMARY.md
+            council-archive-v1/output/new_documents.jsonl.gz
+            .runtime/official-watch/pilot_latest.json
           if-no-files-found: warn
           retention-days: 7
