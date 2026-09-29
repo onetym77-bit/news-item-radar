@@ -46,7 +46,7 @@ class NewsContextTests(unittest.TestCase):
         self.assertNotEqual(assessed["anchor_quote"], "본문에 없는 근거 문장")
 
     def test_extract_body_falls_back_to_long_paragraphs(self):
-        paragraph = "공식 점검에서 반복 가능한 안전 절차 공백이 확인됐습니다. " * 12
+        paragraph = "공식 점검에서 반복 가능한 안전 절차 공백이 확인됐습니다. " * 18
         document = "<html><body><div class='unknown-layout'><p>" + paragraph + "</p></div></body></html>"
         self.assertGreaterEqual(len(context.extract_body(document)), context.MIN_BODY_CHARS)
 
