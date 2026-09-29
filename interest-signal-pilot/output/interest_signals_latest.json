@@ -1,6 +1,6 @@
 {
   "schema": 5,
-  "generated_at_utc": "2026-09-29T05:25:56.447128+00:00",
+  "generated_at_utc": "2026-09-29T05:38:57.501100+00:00",
   "source_id": "search_news_interest",
   "source_name": "검색 관심도·뉴스 확산",
   "collection_mode": [
@@ -92,7 +92,7 @@
     {
       "query": "서울 교통 불편",
       "title": "서울시의회 김호진·이인화 의원, 서울 곳곳 교통 불편 해소 나선다 - 전국매일신문",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5LNTktUkVaZWhWdnZsLUtpZFJLcncyM3kwdV9heWY5WmR4MDdVa3czbk9pRXU3TzZXM24wZ0Q4UnBqTFpPSk16ek1GU1RrQ0pTaXpkNHRYM2c4V1FhcFRXZDhTZFhJN2FVMFZEaA?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9Cd1RpOFVUQWh4RHg1WmVWNmNtOHY4VXdtSFc4THJFbmRXMXVnal94azlRSTRVTFBPOWdNSmVMV2dyTXJtNWFpcmlDZ0xaUWZkM21hMFZnbFRMYlBickRWbG1XQjRUNXlBVnFJLWpR?oc=5",
       "published_at": "Tue, 29 Sep 2026 00:59:08 GMT",
       "summary": "서울시의회 김호진·이인화 의원, 서울 곳곳 교통 불편 해소 나선다 &nbsp;&nbsp; 전국매일신문",
       "seoul_relevant": true,
@@ -507,10 +507,10 @@
     },
     {
       "query": "서울 교통 불편",
-      "title": "사회·생활체육 기획/ 서울 마라톤 열풍에 도심은 몸살…교통 불편·참가비 상승·안전관리 논란 - 4차산업행정뉴스",
+      "title": "사회·생활체육 기획/ 서울 마라톤 열풍에 도심은 몸살…교통 불편·참가비 상승·안전관리 논란 - ijelder.com",
       "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE1DVHo0azZXNjJHSVZGMlREbHg4OHBPVk1NVm45NEZ2MUdFT0djeVZfZzZUd3F4YTZ0dFFRdTMtNEdGc2xpTEp6cjdYVEp4aDVBSWc?oc=5",
       "published_at": "Sat, 26 Sep 2026 19:01:00 GMT",
-      "summary": "사회·생활체육 기획/ 서울 마라톤 열풍에 도심은 몸살…교통 불편·참가비 상승·안전관리 논란 &nbsp;&nbsp; 4차산업행정뉴스",
+      "summary": "사회·생활체육 기획/ 서울 마라톤 열풍에 도심은 몸살…교통 불편·참가비 상승·안전관리 논란 &nbsp;&nbsp; ijelder.com",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -728,10 +728,10 @@
     },
     {
       "query": "서울 주거 피해",
-      "title": "서울광역청년센터, 서울 청년 주거 안전망 컨퍼런스 개최 - 포브스코리아",
+      "title": "서울광역청년센터, 서울 청년 주거 안전망 컨퍼런스 개최 - forbeskorea.co.kr",
       "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5hQ2V1WVlzRFJNWUktZHYtcDBHUUtZdEhLeXVYWjdMeklVdkdOa2pBVXdFYVJseF9DSVBVQ2h5Z2RkYm1JSGFWa1gwd09MZ25kbUFaeEhueDN3SWlPZi02dl9rajVuM3loc1ozTENVak9nQQ?oc=5",
       "published_at": "Wed, 19 Aug 2026 07:00:00 GMT",
-      "summary": "서울광역청년센터, 서울 청년 주거 안전망 컨퍼런스 개최 &nbsp;&nbsp; 포브스코리아",
+      "summary": "서울광역청년센터, 서울 청년 주거 안전망 컨퍼런스 개최 &nbsp;&nbsp; forbeskorea.co.kr",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": false,
@@ -884,10 +884,10 @@
     },
     {
       "query": "서울 건설 공사 지연",
-      "title": "인천시, 서울7호선 청라연장 지연 알고도 “선거 이후 보고” 은폐 - incheontoday.com",
+      "title": "인천시, 서울7호선 청라연장 지연 알고도 “선거 이후 보고” 은폐 - 인천투데이",
       "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5qbUJSLW8tVWhReThwSUgyZXVnSEh0ZEMzRVFDVkVDajZOUnZtaS16c2prWk85NTRsZmpBZE1WOERYR2xLelFFTjFiZlJaY1VRTFJqQklETGRUZkhOcVdFUkp6aWo0ZlVJOVoxOHo5bkw?oc=5",
       "published_at": "Mon, 22 Jun 2026 07:00:00 GMT",
-      "summary": "인천시, 서울7호선 청라연장 지연 알고도 “선거 이후 보고” 은폐 &nbsp;&nbsp; incheontoday.com",
+      "summary": "인천시, 서울7호선 청라연장 지연 알고도 “선거 이후 보고” 은폐 &nbsp;&nbsp; 인천투데이",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -1040,10 +1040,10 @@
     },
     {
       "query": "서울 주거 피해",
-      "title": "집주인 잠적해도 수리 가능… 서울시, 전세사기 피해주택 수선비 최대 500만원 지원 - 조선비즈 - Chosunbiz",
+      "title": "집주인 잠적해도 수리 가능… 서울시, 전세사기 피해주택 수선비 최대 500만원 지원 - 조선비즈 - biz.chosun.com",
       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNejBmb1h6aXFna1dhemFJazNtbW9lSjdIdGN2VGhNT1R1aWxtQzN5dHJlWU90UURaV3dVbjlxVDh3WmhjX29xRDB2OTlVZ0JrTHl6MWtPcE05c2ZtNXduVTE3M0s3SjZXT1NCTnNIaUc4Vy1JTHhmU0xac3hzSjZoUkhsMGlvMjRiMXJnc2RGQ0ZoQlFoRTRfRNIBrAFBVV95cUxPYkhvdmhuLThMN1NhTzFiNmdMVWwwYWtGNVh1X0FTd0tCZ2l3LWxuWW9SQ1BRdEJESXYwWnlfVTRxNmFDOUhyVXpoLXFOVS01clp0RXFPMjlkb3dYWFdpcE1mMFdoYS12X1l5aFZBYVgtbmFKekhRaEdmZzdkaVVGazdYOFo1UC1lMXN6Sm43RHVLVUxvZDRUYWV4cnplNURXOUROZ0l6M1hGZWZw?oc=5",
       "published_at": "Sun, 30 Aug 2026 07:00:00 GMT",
-      "summary": "집주인 잠적해도 수리 가능… 서울시, 전세사기 피해주택 수선비 최대 500만원 지원 - 조선비즈 &nbsp;&nbsp; Chosunbiz",
+      "summary": "집주인 잠적해도 수리 가능… 서울시, 전세사기 피해주택 수선비 최대 500만원 지원 - 조선비즈 &nbsp;&nbsp; biz.chosun.com",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
