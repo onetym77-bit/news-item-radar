@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from unittest.mock import patch
 from datetime import date
@@ -14,6 +15,23 @@ import pipeline
 
 
 class IssueLifecycleTests(unittest.TestCase):
+    def test_missing_optional_seed_is_reported_and_skipped(self):
+        with tempfile.TemporaryDirectory() as directory:
+            available = Path(directory) / "available.json"
+            missing = Path(directory) / "missing.json"
+            available.write_text('{"source": "available"}', encoding="utf-8")
+
+            payloads, loaded, absent = pipeline.load_seed_payloads([available, missing])
+
+        self.assertEqual([{"source": "available"}], payloads)
+        self.assertEqual([str(available)], loaded)
+        self.assertEqual([str(missing)], absent)
+
+    def test_all_seed_inputs_missing_is_an_error(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaises(FileNotFoundError):
+                pipeline.load_seed_payloads([Path(directory) / "missing.json"])
+
     def test_collects_city_and_district_signals(self):
         payloads = [{
             "stale_carryover": [{
