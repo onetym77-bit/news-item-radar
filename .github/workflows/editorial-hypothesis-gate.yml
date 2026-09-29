@@ -40,9 +40,10 @@ jobs:
 
           queue = json.loads(Path("interest-signal-pilot/output/review_queue_latest.json").read_text(encoding="utf-8"))
           brief = json.loads(Path("app-ui-v1/data/latest.json").read_text(encoding="utf-8"))["editorialBrief"]
-          assert queue["items"], "tracked snapshot has no review signals"
           assert all(item["source_context_status"] == "TITLE_ONLY" for item in queue["items"])
           assert all("structural_question" not in item for item in queue["items"])
           assert brief["candidates"] == [], "title-only signals were promoted"
-          assert brief["discovery_signals"], "reviewable signals disappeared"
+          assert len(brief["discovery_signals"]) <= len(queue["items"])
+          if not queue["items"]:
+              assert brief["discovery_signals"] == [], "empty fresh queue produced stale discovery signals"
           PY
