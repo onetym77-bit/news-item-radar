@@ -68,10 +68,32 @@ class HistoricalBackfillTests(unittest.TestCase):
             ]}
         sources = [{"id": "gangseo", "name": "강서구", "clik_assembly_id": "002005"}]
         with patch.object(pipeline, "fetch_payload", side_effect=fake_fetch):
-            rows = backfill.discover(
+            discovery = backfill.discover(
                 "secret", sources, date(2025, 3, 1), date(2025, 12, 31), per_query=5)
-        self.assertEqual(1, len(rows))
-        self.assertEqual("2025-09-10", rows[0]["meeting_date"])
+        self.assertEqual(1, len(discovery["rows"]))
+        self.assertEqual("2025-09-10", discovery["rows"][0]["meeting_date"])
+        self.assertEqual(len(backfill.TERMS), discovery["successful_requests"])
+        self.assertEqual([], discovery["errors"])
+
+    def test_one_bad_search_does_not_erase_other_sources(self):
+        calls = {"count": 0}
+
+        def partly_failing(_key, **params):
+            calls["count"] += 1
+            if params["rasmblyId"] == "002005":
+                raise ValueError("bad envelope")
+            return {"LIST": []}
+
+        sources = [
+            {"id": "gangseo", "name": "강서구", "clik_assembly_id": "002005"},
+            {"id": "guro", "name": "구로구", "clik_assembly_id": "002008"},
+        ]
+        with patch.object(pipeline, "fetch_payload", side_effect=partly_failing):
+            discovery = backfill.discover(
+                "secret", sources, date(2025, 3, 1), date(2025, 12, 31), per_query=5)
+        self.assertEqual(len(backfill.TERMS), discovery["successful_requests"])
+        self.assertEqual(len(backfill.TERMS), len(discovery["errors"]))
+        self.assertEqual([], discovery["rows"])
 
     def test_no_followup_cannot_become_unresolved(self):
         self.assertEqual(
