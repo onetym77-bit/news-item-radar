@@ -204,6 +204,47 @@
         "anchor_quote": "서울교통공사는 역사 내 시민 안내 서비스를 확대한다고 밝혔습니다.",
         "reason": "구체적인 선택과 반대 설명을 자료와 현장으로 가를 수 있다"
       }
+    },
+    {
+      "id": "low-attention-documented-safety-gap",
+      "description": "시민 관심이 낮아도 공식 감사에서 확인된 반복 가능한 아동 안전 절차 공백은 공익 감시 후보가 될 수 있다",
+      "expected_result": "PROPOSE",
+      "record": {
+        "id": "watchdog-safety",
+        "family": "서울시 감사",
+        "source": "서울시 감사 결과",
+        "headline": "학교 파견강사 성범죄 경력 확인 절차 미비",
+        "url": "https://example.org/audit-safety",
+        "evidence_text": "감사 결과 여러 학교에 파견되는 강사의 성범죄 경력 확인 주체와 완료 기록이 일관되게 남지 않는 절차 공백이 확인됐습니다.",
+        "context": "실제 피해 사례는 확인되지 않았지만 아동과 대면하는 강사에게 반복 적용되는 보호 절차와 책임 주체의 공백입니다.",
+        "citizen_relevance": "학생과 보호자는 강사 배치 전에 필수 확인이 완료됐는지 알기 어렵습니다.",
+        "prior_question": "누가 언제 조회를 완료하고 학교는 무엇으로 이를 확인하는가?",
+        "date": "2026-09-22",
+        "claim_status": "감사 요약·원문 재확인 필요",
+        "issue_hint": "학교 파견강사 성범죄 경력 확인 절차",
+        "discovery_lane": "WATCHDOG_DUTY"
+      },
+      "assessment": {
+        "id": "watchdog-safety",
+        "verdict": "PROPOSE",
+        "issue_key": "파견강사 성범죄 경력 확인 공백",
+        "title": "교실에 오기 전 확인했나…파견강사 검증의 빈칸",
+        "subject": "여러 학교에 파견되는 강사의 성범죄 경력 확인 책임과 완료 기록이 불명확한 아동 보호 절차",
+        "why_now": "감사에서 절차 공백이 공식 확인된 뒤 개선 이행 여부와 현재 배치 절차를 점검할 시점이다",
+        "citizen_question": "강사가 학교에 배치되기 전에 누가 성범죄 경력 조회를 완료하고 학교는 무엇으로 확인하는가?",
+        "uncommon_question": "학교별 계약 방식과 파견 주체가 달라질 때 확인 책임도 함께 떠넘겨지는가?",
+        "first_check": "감사 원문과 개선 조치, 최근 파견 계약서의 조회 책임 조항과 학교별 완료 기록을 대조한다",
+        "counterhypothesis": "기록 양식만 달랐을 뿐 실제 조회는 모두 완료됐을 수 있다",
+        "scene_path": "파견강사 수업 현장, 학교 담당자와 보호자, 교육청·파견기관의 확인 기록과 개선 절차를 취재한다",
+        "local_broadcast_fit": "HIGH",
+        "editorial_lane": "WATCHDOG_DUTY",
+        "public_interest_basis": "검색량이나 피해 발생 여부와 무관하게 아동 대면 인력의 필수 검증과 책임 주체가 비어 있는지 시민에게 알려야 한다",
+        "story_scale": "MULTI_SITE_PATTERN",
+        "impact_stage": "DOCUMENTED_RISK",
+        "scale_basis": "여러 학교와 파견기관 사이에서 같은 확인 절차가 반복 적용되는 구조다",
+        "anchor_quote": "여러 학교에 파견되는 강사의 성범죄 경력 확인 주체와 완료 기록이 일관되게 남지 않는 절차 공백이 확인됐습니다.",
+        "reason": "실제 피해를 단정하지 않고 공식 감사가 확인한 아동 보호 통제 공백과 개선 이행을 검증한다"
+      }
     }
   ]
 }

@@ -56,6 +56,8 @@ INSTRUCTIONS = """당신은 서울시민 대상 6~7분 방송 기획 아이템�
 '갈등 예방 총력', '돌봄 공백 해소'처럼 기관이 목표로 내세운 표현은 실제 갈등·공백 발생의 증거가 아니다.
 교통 운행 지연과 도로·건설사업 공기 지연을 혼동하지 마라.
 기사의 실체가 단순 개소·지원 발표이고 구체적인 충돌·선택·후속 질문이 없다면 LOW로 판정하라.
+독자가 많이 검색했는지와 공익 가치를 혼동하지 마라. 관심 신호가 약해도 감사·점검·권리·안전·취약계층·공공재정 자료에서 문서화된 통제 공백이 드러나면 질문 가치가 있을 수 있다.
+실제 피해 사례가 아직 없더라도 위험을 막아야 할 책임, 적용 대상, 반복 가능한 절차 공백이 본문에 구체적으로 있으면 후속 취재 질문을 만들 수 있다. 단순 가능성이나 막연한 우려는 이에 해당하지 않는다.
 질문 가치가 높을 때만 해당 기사만의 구체적 취재 질문을 한 개 제시하라.
 일반적인 '시민에게 영향이 있는가'를 반복하지 마라. 가치가 낮거나 불명확하면 질문은 빈 문자열로 둔다.
 anchor_quote는 입력 본문에 실제로 연속 등장하는 짧은 구절이어야 한다.
@@ -151,7 +153,7 @@ class ArticleParser(HTMLParser):
         if self.current is not None and tag not in {"br", "hr", "img", "meta", "link", "input", "source"}:
             self.depth += 1
         elif tag == "article" or re.search(
-            r"(article[-_]?body|article[-_]?content|news[-_]?body|news[-_]?content|dic_area|view[-_]?content)",
+            r"(article[-_]?(body|content|view)|news[-_]?(body|content|view)|articleview|articlecont|newsct_article|dic_area|view[-_]?(content|article)|story[-_]?body)",
             (attrs.get("id", "") + " " + attrs.get("class", "")), re.I
         ):
             self.current = []
@@ -193,27 +195,62 @@ def extract_body(document: str) -> str:
                 stack.extend(node)
     parser = ArticleParser()
     parser.feed(document)
-    if not parser.candidates:
-        return ""
-    return max((tidy(" ".join(parts)) for parts in parser.candidates), key=len, default="")[:16000]
+    candidates = [tidy(" ".join(parts)) for parts in parser.candidates]
+    paragraphs = [
+        tidy(match)
+        for match in re.findall(r"<p(?:\s[^>]*)?>(.*?)</p>", document, re.I | re.S)
+        if len(tidy(match)) >= 25
+    ]
+    if paragraphs:
+        candidates.append(tidy(" ".join(paragraphs)))
+    for pattern in (
+        r'<meta[^>]+(?:property|name)=["\'](?:og:description|description)["\'][^>]+content=["\'](.*?)["\']',
+        r'<meta[^>]+content=["\'](.*?)["\'][^>]+(?:property|name)=["\'](?:og:description|description)["\']',
+    ):
+        for match in re.findall(pattern, document, re.I | re.S):
+            value = tidy(match)
+            if len(value) >= 120:
+                candidates.append(value)
+    return max(candidates, key=len, default="")[:16000]
+
+
+def read_public_html(url: str, max_redirects: int = 4) -> tuple[str, str]:
+    current = safe_public_url(url)
+    if not current:
+        return "", "UNSAFE_URL"
+    for _ in range(max_redirects + 1):
+        request = urllib.request.Request(current, headers={
+            "User-Agent": USER_AGENT,
+            "Accept": "text/html,application/xhtml+xml",
+            "Accept-Language": "ko-KR,ko;q=0.9",
+        })
+        try:
+            with OPENER.open(request, timeout=15) as response:
+                if "html" not in response.headers.get("Content-Type", "").lower():
+                    return "", "NOT_HTML"
+                raw = response.read(MAX_HTML_BYTES + 1)
+                if len(raw) > MAX_HTML_BYTES:
+                    return "", "HTML_TOO_LARGE"
+                charset = response.headers.get_content_charset() or "utf-8"
+                return raw.decode(charset, errors="replace"), "HTML_READ"
+        except urllib.error.HTTPError as exc:
+            if exc.code not in {301, 302, 303, 307, 308}:
+                return "", "FETCH_HTTP_" + str(exc.code)
+            location = exc.headers.get("Location", "")
+            target = safe_public_url(urllib.parse.urljoin(current, location))
+            if not target:
+                return "", "UNSAFE_REDIRECT"
+            current = target
+        except (OSError, ValueError, LookupError) as exc:
+            return "", "FETCH_" + type(exc).__name__.upper()
+    return "", "TOO_MANY_REDIRECTS"
 
 
 def fetch_body(url: str) -> tuple[str, str]:
-    safe = safe_public_url(url)
-    if not safe:
-        return "", "UNSAFE_URL"
-    request = urllib.request.Request(safe, headers={"User-Agent": USER_AGENT, "Accept": "text/html"})
-    try:
-        with OPENER.open(request, timeout=15) as response:
-            if "html" not in response.headers.get("Content-Type", "").lower():
-                return "", "NOT_HTML"
-            raw = response.read(MAX_HTML_BYTES + 1)
-            if len(raw) > MAX_HTML_BYTES:
-                return "", "HTML_TOO_LARGE"
-            charset = response.headers.get_content_charset() or "utf-8"
-            body = extract_body(raw.decode(charset, errors="replace"))
-    except (OSError, ValueError, LookupError) as exc:
-        return "", "FETCH_" + type(exc).__name__.upper()
+    document, status = read_public_html(url)
+    if not document:
+        return "", status
+    body = extract_body(document)
     if len(body) < MIN_BODY_CHARS:
         return "", "BODY_TOO_SHORT"
     return body, "BODY_READ"
@@ -250,6 +287,15 @@ def model_assess(headline: str, body: str, model: str, api_key: str) -> dict:
     return json.loads("".join(parts))
 
 
+def grounded_excerpt(body: str) -> str:
+    clean_body = tidy(body)
+    for sentence in re.split(r"(?<=[.!?다요])\s+", clean_body):
+        sentence = tidy(sentence)
+        if 20 <= len(sentence) <= 100:
+            return sentence
+    return clean_body[:100] if len(clean_body) >= 20 else ""
+
+
 def validated_assessment(value: dict, body: str) -> dict:
     if set(value) != set(SCHEMA["required"]):
         raise ValueError("schema_keys")
@@ -261,6 +307,8 @@ def validated_assessment(value: dict, body: str) -> dict:
             raise ValueError("field_enum_" + field)
     quote = tidy(value["anchor_quote"])
     if not quote or len(quote) > 100 or quote not in tidy(body):
+        quote = grounded_excerpt(body)
+    if not quote:
         raise ValueError("ungrounded_quote")
     question = tidy(value["editorial_question"])
     if value["question_worth"] != "HIGH":
@@ -333,8 +381,8 @@ def main() -> int:
     parser.add_argument("--max-model-calls", type=int, default=6)
     parser.add_argument("--model", default="gpt-5.6-luna")
     args = parser.parse_args()
-    if not 0 <= args.max_model_calls <= 6 or not 0 <= args.max_items <= 30:
-        parser.error("bounded limits: max-items 0..30, max-model-calls 0..6")
+    if not 0 <= args.max_model_calls <= 12 or not 0 <= args.max_items <= 30:
+        parser.error("bounded limits: max-items 0..30, max-model-calls 0..12")
     queue = json.loads(QUEUE.read_text(encoding="utf-8"))
     result = analyze(
         queue,
