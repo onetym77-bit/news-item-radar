@@ -226,6 +226,12 @@ v4_review = {
     "head_stages": v4_output.get("head_stages", []),
     "generated_at_utc": v4_output.get("generated_at_utc"),
     "assessment_retries": v4_output.get("assessment_retries", 0),
+    "collection_cycle": v4_output.get("collection_cycle", {
+        "mode": "STORED_SNAPSHOT",
+        "verified": False,
+        "runs": [],
+        "note": "수집 회차 정보가 없는 이전 산출물입니다.",
+    }),
     "proposals": [
         item for item in v4_output.get("proposals", [])
         if str(item.get("id")) not in v4_decided
@@ -310,9 +316,12 @@ youtube_shadow = {
     "decisions": youtube_decisions[-10:],
 }
 
+collection_cycle = v4_review["collection_cycle"]
+fresh_cycle = collection_cycle.get("mode") == "FRESH_CYCLE" and collection_cycle.get("verified") is True
+
 data = {
-    "lastRun": display_kst(interest_queue.get("generated_at_utc")) if interest_queue.get("generated_at_utc") else manifest.get("generated_at_kst", "미확인"),
-    "dataMode": "실제 산출물",
+    "lastRun": display_kst(v4_output.get("generated_at_utc")) if v4_output.get("generated_at_utc") else (display_kst(interest_queue.get("generated_at_utc")) if interest_queue.get("generated_at_utc") else manifest.get("generated_at_kst", "미확인")),
+    "dataMode": "최신 수집 통합 회차" if fresh_cycle else "저장 자료 재평가",
     "editorialBrief": ui_editorial_brief,
     "editorialV4": v4_review,
     "districtShadow": district_shadow,
@@ -326,6 +335,7 @@ data = {
         ["탐색 큐", "연결됨" if interest_queue.get("generated_at_utc") else "미수집"],
         ["검증할 신호", str(len(discovery_signals))],
         ["기획 질문 검토안", str(len(v4_review["proposals"]))],
+        ["입력 회차", "최신 수집" if fresh_cycle else "저장 자료"],
         ["통합 헤드 연결 소스", str(sum(1 for row in v4_review.get("source_coverage", []) if row.get("input") or row.get("pending_shadow")))],
         ["구의회 검증 전용", str(len(district_shadow["items"]))],
         ["시민 신호 검증 전용", str(len(citizen_shadow["items"]))],

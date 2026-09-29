@@ -1,0 +1,116 @@
+name: Run fresh editorial review cycle
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1,3"
+      timezone: "Asia/Seoul"
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: editorial-v4-fresh-cycle
+  cancel-in-progress: false
+
+jobs:
+  collect-review-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate workflow dispatcher
+        run: python -X utf8 -m unittest editorial-v4/test_dispatch_workflow.py -v
+
+      - name: Start collection cycle
+        id: cycle
+        shell: bash
+        run: |
+          echo "cycle_id=fresh-${{ github.run_id }}-${{ github.run_attempt }}" >> "$GITHUB_OUTPUT"
+          echo "started_at_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
+      - name: Collect news and YouTube interest signals
+        id: interest
+        run: python -X utf8 editorial-v4/dispatch_workflow.py --workflow collect-interest-signals.yml
+
+      - name: Collect Seoul source feed
+        id: feed
+        run: python -X utf8 editorial-v4/dispatch_workflow.py --workflow daily-briefing.yml
+
+      - name: Collect Seoul audit review cards
+        id: audit
+        run: python -X utf8 editorial-v4/dispatch_workflow.py --workflow source-onboarding-audit-l4-shadow.yml
+
+      - name: Collect recent district council minutes
+        id: district
+        run: >-
+          python -X utf8 editorial-v4/dispatch_workflow.py
+          --workflow district-council-recent-l3.yml
+          --input max_docs=5
+
+      - name: Collect citizen proposal signals
+        id: citizen
+        run: python -X utf8 editorial-v4/dispatch_workflow.py --workflow citizen-proposal-shadow.yml
+
+      - name: Publish validated citizen proposal queue
+        id: citizen_publish
+        run: >-
+          python -X utf8 editorial-v4/dispatch_workflow.py
+          --workflow publish-citizen-shadow.yml
+          --input run_id=${{ steps.citizen.outputs.run_id }}
+
+      - name: Run integrated editorial head with collection proof
+        id: head
+        shell: bash
+        env:
+          CYCLE_ID: ${{ steps.cycle.outputs.cycle_id }}
+          STARTED_AT: ${{ steps.cycle.outputs.started_at_utc }}
+          INTEREST_RUN: ${{ steps.interest.outputs.run_id }}
+          FEED_RUN: ${{ steps.feed.outputs.run_id }}
+          AUDIT_RUN: ${{ steps.audit.outputs.run_id }}
+          DISTRICT_RUN: ${{ steps.district.outputs.run_id }}
+          CITIZEN_RUN: ${{ steps.citizen.outputs.run_id }}
+          CITIZEN_PUBLISH_RUN: ${{ steps.citizen_publish.outputs.run_id }}
+        run: |
+          runs_json="$(jq -nc             --argjson interest "$INTEREST_RUN"             --argjson feed "$FEED_RUN"             --argjson audit "$AUDIT_RUN"             --argjson district "$DISTRICT_RUN"             --argjson citizen "$CITIZEN_RUN"             --argjson citizen_publish "$CITIZEN_PUBLISH_RUN"             '[
+              {source:"뉴스·유튜브 관심 신호", workflow:"collect-interest-signals.yml", run_id:$interest, conclusion:"success"},
+              {source:"서울 원자료 피드", workflow:"daily-briefing.yml", run_id:$feed, conclusion:"success"},
+              {source:"서울시 감사", workflow:"source-onboarding-audit-l4-shadow.yml", run_id:$audit, conclusion:"success"},
+              {source:"25개 자치구의회", workflow:"district-council-recent-l3.yml", run_id:$district, conclusion:"success"},
+              {source:"시민제안", workflow:"citizen-proposal-shadow.yml", run_id:$citizen, conclusion:"success"},
+              {source:"시민제안 검토 큐", workflow:"publish-citizen-shadow.yml", run_id:$citizen_publish, conclusion:"success"}
+            ]')"
+          python -X utf8 editorial-v4/dispatch_workflow.py             --workflow editorial-v4.yml             --input "collection_cycle_id=$CYCLE_ID"             --input "collection_started_at_utc=$STARTED_AT"             --input "collection_runs=$runs_json"
+
+      - name: Publish fresh YouTube review queue
+        id: youtube_publish
+        run: >-
+          python -X utf8 editorial-v4/dispatch_workflow.py
+          --workflow publish-youtube-shadow.yml
+          --input run_id=${{ steps.head.outputs.run_id }}
+
+      - name: Rebuild final UI snapshot
+        id: ui
+        run: python -X utf8 editorial-v4/dispatch_workflow.py --workflow app-ui-data.yml
+
+      - name: Summarize fresh cycle
+        shell: bash
+        run: |
+          {
+            echo "## 최신 수집 통합 회차"
+            echo ""
+            echo "- 회차: ${{ steps.cycle.outputs.cycle_id }}"
+            echo "- 시작: ${{ steps.cycle.outputs.started_at_utc }}"
+            echo "- 뉴스·유튜브 수집: [${{ steps.interest.outputs.run_id }}](${{ steps.interest.outputs.run_url }})"
+            echo "- 서울 원자료 피드: [${{ steps.feed.outputs.run_id }}](${{ steps.feed.outputs.run_url }})"
+            echo "- 감사: [${{ steps.audit.outputs.run_id }}](${{ steps.audit.outputs.run_url }})"
+            echo "- 자치구의회: [${{ steps.district.outputs.run_id }}](${{ steps.district.outputs.run_url }})"
+            echo "- 시민제안: [${{ steps.citizen.outputs.run_id }}](${{ steps.citizen.outputs.run_url }})"
+            echo "- 통합 헤드: [${{ steps.head.outputs.run_id }}](${{ steps.head.outputs.run_url }})"
+            echo "- 최종 UI: [${{ steps.ui.outputs.run_id }}](${{ steps.ui.outputs.run_url }})"
+          } >> "$GITHUB_STEP_SUMMARY"

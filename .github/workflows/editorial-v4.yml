@@ -2,8 +2,19 @@ name: Build editorial review v4
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "10 0 * * 1,3"
+    inputs:
+      collection_cycle_id:
+        description: 최신 수집 통합 회차 식별자
+        required: false
+        type: string
+      collection_started_at_utc:
+        description: 수집 회차 시작 시각
+        required: false
+        type: string
+      collection_runs:
+        description: 상위 수집 실행 목록 JSON
+        required: false
+        type: string
   pull_request:
     paths:
       - "editorial-v4/**"
@@ -18,6 +29,9 @@ on:
       - "interest-radar-v2/collect_source_material_v2_1.py"
       - "interest-radar-v2/config/editorial_lenses.json"
       - ".github/workflows/editorial-v4.yml"
+      - ".github/workflows/editorial-v4-fresh-cycle.yml"
+      - "editorial-v4/dispatch_workflow.py"
+      - "editorial-v4/test_dispatch_workflow.py"
       - ".github/workflows/collect-interest-signals.yml"
       - ".github/workflows/publish-youtube-shadow.yml"
       - ".github/workflows/review-youtube-shadow.yml"
@@ -36,6 +50,9 @@ jobs:
     env:
       PYTHONUTF8: "1"
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      EDITORIAL_COLLECTION_CYCLE_ID: ${{ inputs.collection_cycle_id || '' }}
+      EDITORIAL_COLLECTION_STARTED_AT_UTC: ${{ inputs.collection_started_at_utc || '' }}
+      EDITORIAL_COLLECTION_RUNS: ${{ inputs.collection_runs || '[]' }}
     steps:
       - uses: actions/checkout@v4
       - name: Validate pipeline

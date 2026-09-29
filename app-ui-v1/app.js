@@ -185,12 +185,20 @@ function renderV4(data = {}) {
       </div>
     </article>`).join("") : '<p class="empty">이번 회차에 검토 기준을 통과한 새 기획 질문이 없습니다. 수량을 맞추기 위해 채우지 않습니다.</p>';
   if (gaps) {
+    const cycle = data.collection_cycle || {};
+    const cycleRuns = (cycle.runs || []).map(run =>
+      `<p><strong>${esc(run.source || run.workflow)}</strong> · 성공 · <a href="https://github.com/onetym77-bit/news-item-radar/actions/runs/${esc(run.run_id)}" target="_blank" rel="noreferrer">실행 ${esc(run.run_id)} ↗</a></p>`
+    );
+    const cycleBlock = cycle.mode === "FRESH_CYCLE" && cycle.verified
+      ? [`<h3>최신 수집 통합 회차 · ${esc(cycle.cycle_id)}</h3>`, `<p>${esc(cycle.note || "")}</p>`, ...cycleRuns]
+      : ["<h3>저장 자료 재평가</h3>", `<p>${esc(cycle.note || "이 실행에는 직전 수집 성공 증빙이 연결되지 않았습니다.")}</p>`];
     const coverage = (data.source_coverage || []).map(x =>
       `<p><strong>${esc(x.source)}</strong> · ${esc(x.state)} · 입력 ${esc(x.input || 0)} · 모델 ${esc(x.model_input || 0)} · 후보 ${esc(x.proposals || 0)} · 그림자 ${esc(x.pending_shadow || 0)}${x.reason ? " — " + esc(x.reason) : ""}</p>`
     );
     const holds = (data.holds || []).filter(x => x.verdict !== "SKIP").slice(0, 6).map(x => `<p><strong>${esc(x.source)}</strong> · ${esc(x.headline)} — ${esc(x.reason)}</p>`);
     const missing = coverage.length ? [] : (data.source_gaps || []).map(x => `<p><strong>${esc(x.source)}</strong> · ${esc(x.reason)}</p>`);
     gaps.innerHTML = [
+      ...cycleBlock,
       ...(coverage.length ? ["<h3>통합 헤드 소스 상태</h3>"] : []),
       ...coverage,
       ...(holds.length ? ["<h3>이번 실행 보류</h3>"] : []),
