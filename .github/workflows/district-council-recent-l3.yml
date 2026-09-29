@@ -200,7 +200,7 @@ jobs:
 
           shadow_path = Path("district-council-pilot/output/recent-l3-run/editorial_shadow_latest.json")
           shadow = json.loads(shadow_path.read_text(encoding="utf-8"))
-          assert shadow["schema"] == 1
+          assert shadow["schema"] == 2
           assert shadow["proposals"] == []
           forbidden = {"body", "parts", "evidence_context", "body_sha256"}
 
