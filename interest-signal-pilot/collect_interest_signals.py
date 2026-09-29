@@ -4,11 +4,13 @@ from __future__ import annotations
 import json, os, re, urllib.parse, urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "interest-signal-pilot" / "output" / "interest_signals_latest.json"
 SEEN = ROOT / "interest-signal-pilot" / "output" / "seen_news.json"
+QUEUE = ROOT / "interest-signal-pilot" / "output" / "review_queue_latest.json"
 QUERIES = [
     "서울 민원", "서울 건설 공사 지연", "서울 안전 사고", "서울 재개발 갈등",
     "서울 교통 불편", "서울 주거 피해", "서울 복지 공백", "서울 자치구 논란",
@@ -47,6 +49,16 @@ def title_key(value: str) -> str:
     value = re.sub(r"\[[^]]+\]|【[^】]+】|\([^)]*\)", " ", value)
     value = re.sub(r"[^0-9a-z가-힣]+", " ", value)
     return re.sub(r"\s+", " ", value).strip()
+
+def published_recent(value: str, days: int = 21) -> bool:
+    try:
+        published = parsedate_to_datetime(value)
+        if published.tzinfo is None:
+            published = published.replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError, OverflowError):
+        return False
+    return published >= datetime.now(timezone.utc) - timedelta(days=days)
+
 
 def seoul_relevance(title: str, summary: str) -> tuple[bool, str]:
     headline = re.split(r"\s[-|]\s", title, maxsplit=1)[0].strip()
@@ -136,22 +148,31 @@ def diversify_news(rows: list[dict], limit: int = 120) -> list[dict]:
 
 
 def load_seen_keys() -> set[str]:
-    """Keep a persistent novelty ledger; seed it from the previous snapshot on first use."""
-    paths = [SEEN, OUT]
+    """Use only actually queued titles as the durable novelty boundary.
+
+    Schema 1 over-marked every search result as seen, including articles that were
+    never reviewed. During migration, seed from the last review queue instead.
+    """
     keys: set[str] = set()
-    for path in paths:
-        try:
-            document = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError):
-            continue
-        rows = document.get("items", []) if path == SEEN else document.get("news_signals", [])
-        for row in rows:
-            value = clean(row.get("title") or row.get("title_key"))
-            normalized = title_key(value)
+    try:
+        document = json.loads(SEEN.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        document = {}
+    if document.get("schema") == 2:
+        for row in document.get("items", []):
+            normalized = title_key(clean(row.get("title") or row.get("title_key")))
             if normalized:
                 keys.add(normalized)
-        if keys:
-            break
+    if keys:
+        return keys
+    try:
+        queue = json.loads(QUEUE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        queue = {}
+    for row in queue.get("items", []):
+        normalized = title_key(clean(row.get("source_headline") or row.get("headline")))
+        if normalized:
+            keys.add(normalized)
     return keys
 
 
@@ -163,7 +184,10 @@ def main() -> int:
             raw_news.extend(fetch_news(query))
         except Exception as exc:
             errors.append({"channel": "google_news_rss", "query": query, "error": type(exc).__name__})
-    relevant_news = [row for row in raw_news if row["seoul_relevant"]]
+    relevant_news = [
+        row for row in raw_news
+        if row["seoul_relevant"] and published_recent(row.get("published_at", ""))
+    ]
     unique = {}
     for row in relevant_news:
         key = title_key(row["title"])
@@ -191,21 +215,19 @@ def main() -> int:
     payload = {
         "schema": 5, "generated_at_utc": datetime.now(timezone.utc).isoformat(), "source_id": "search_news_interest", "source_name": "검색 관심도·뉴스 확산",
         "collection_mode": ["google_news_rss_keyword_probe", "naver_datalab_search_trend"], "queries": QUERIES,
-        "quality_gate": {"raw_news_count": len(raw_news), "seoul_relevant_count": len(relevant_news), "unique_news_count": len(news), "new_news_count": new_count, "seen_news_count": len(news) - new_count, "duplicate_or_irrelevant_count": len(raw_news) - len(news), "trend_groups": trend_groups, "trend_groups_without_data": trend_groups_without_data, "trend_data_points": len(trends), "candidate_ready": False, "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요"},
+        "quality_gate": {"raw_news_count": len(raw_news), "seoul_relevant_count": len(relevant_news), "unique_news_count": len(news), "new_news_count": new_count, "seen_news_count": len(news) - new_count, "duplicate_irrelevant_or_outdated_count": len(raw_news) - len(news), "news_window_days": 21, "trend_groups": trend_groups, "trend_groups_without_data": trend_groups_without_data, "trend_data_points": len(trends), "candidate_ready": False, "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요"},
         "news_count": len(news), "trend_count": len(trends), "news_signals": diversify_news(news), "trend_signals": trends[:500], "trend_summary": trend_summary, "errors": errors,
         "limitations": ["네이버 데이터랩 ratio는 절대 검색량이 아닌 상대 지수임", "검색·뉴스 반복은 시민 전체 의견이나 사실 확정이 아님", "동일·유사 제목은 묶었지만 기사 내용의 사실성은 검증하지 않음", "지역성은 기사 제목 기준의 1차 분류이며 최종 사실 확인이 아님", "후보 승격 전 서울시의회·구의회·감사·통계·현장 확인 필요", "검색 관심이 낮아도 안전·권리·취약계층·공공책임의 문서화된 위험은 공익 감시 경로에서 별도 검토"],
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     ledger = {
-        "schema": 1,
+        "schema": 2,
         "updated_at_utc": payload["generated_at_utc"],
+        "policy": "실제 검토 큐에 들어간 기사만 소진 처리한다.",
         "items": [
-            {"title_key": key, "title": row.get("title", "")[:240], "last_seen_at_utc": payload["generated_at_utc"]}
-            for key, row in list({
-                **{key: {"title": key} for key in seen_before},
-                **{row["title_key"]: row for row in news if row.get("title_key")},
-            }.items())[-2000:]
+            {"title_key": key, "title": key, "queued_at_utc": payload["generated_at_utc"]}
+            for key in sorted(seen_before)[-2000:]
         ],
     }
     SEEN.write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
