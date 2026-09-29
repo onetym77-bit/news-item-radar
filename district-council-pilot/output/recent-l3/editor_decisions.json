@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "id": "51813e57e4eb2e65",
+    "decision": "DISCARD",
+    "note": "방이동 공공청사는 한 시설의 공사 지연·비용 증가 사례다. 현재 근거만으로 안전·권리·취약계층·큰 공공 손실에 해당하는 중대성이 없고, 다른 구로 반복되는 구조도 확인되지 않아 6~7분 기획 가치가 부족하다.",
+    "title": "두 배가 된 청사 사업비, 땅을 팔아야 다시 시작할 수 있나",
+    "issue_key": "방이동 공공청사 복합개발",
+    "source": "송파구의회 회의록",
+    "url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2894046235030411&collection=minutes",
+    "decided_at_utc": "2026-09-29T05:20:59.009Z"
+  },
+  {
+    "id": "5d68f9f117777d34",
+    "decision": "DISCARD",
+    "note": "한 위탁기관 기관장의 복무·차량 기록 불일치는 단독으로는 사안의 강도가 낮다. 25개 구 또는 여러 위탁기관에서 반복되거나 상당한 공금 손실·시민 서비스 침해가 확인될 때 구조적 기획 후보로 다시 검토한다.",
+    "title": "연가 날 움직인 업무차량, 복지 위탁기관의 기록은 맞물려 있나",
+    "issue_key": "위탁기관 기관장 복무·차량기록",
+    "source": "동작구의회 회의록",
+    "url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+    "decided_at_utc": "2026-09-29T05:20:59.009Z"
+  }
+]
