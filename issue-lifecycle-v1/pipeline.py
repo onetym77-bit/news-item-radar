@@ -255,20 +255,32 @@ def council_sources(path):
 
 
 def search_api(api_key, sources, signature, start_date, end_date, per_query=8):
-    """Search CLIK full text. Current official collectors remain the freshness fallback."""
+    """Search CLIK while preserving partial failures as explicit collection errors."""
     found = {}
+    errors = []
+    successful_requests = 0
     for keyword in signature["search_keywords"]:
         for source in sources:
-            payload = fetch_payload(
-                api_key,
-                displayType="list",
-                startCount=0,
-                listCount=per_query,
-                searchType="MINTS_HTML",
-                searchKeyword=keyword,
-                rasmblyId=source["clik_assembly_id"],
-                sort="WEIGHT/DESC",
-            )
+            try:
+                payload = fetch_payload(
+                    api_key,
+                    displayType="list",
+                    startCount=0,
+                    listCount=per_query,
+                    searchType="MINTS_HTML",
+                    searchKeyword=keyword,
+                    rasmblyId=source["clik_assembly_id"],
+                    sort="WEIGHT/DESC",
+                )
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                errors.append({
+                    "source_id": source["id"],
+                    "source_name": source["name"],
+                    "search_keyword": keyword,
+                    "error_type": type(exc).__name__,
+                })
+                continue
+            successful_requests += 1
             for entry in payload.get("LIST") or []:
                 row = entry.get("ROW") if isinstance(entry, dict) else None
                 if not isinstance(row, dict):
@@ -292,10 +304,16 @@ def search_api(api_key, sources, signature, start_date, end_date, per_query=8):
                 })
                 if keyword not in item["matched_keywords"]:
                     item["matched_keywords"].append(keyword)
-    return sorted(
-        found.values(),
-        key=lambda row: (-len(row["matched_keywords"]), row["meeting_date"], row["document_id"]),
-    )
+    return {
+        "rows": sorted(
+            found.values(),
+            key=lambda row: (
+                -len(row["matched_keywords"]), row["meeting_date"], row["document_id"]
+            ),
+        ),
+        "errors": errors,
+        "successful_requests": successful_requests,
+    }
 
 
 def fetch_candidate_body(api_key, candidate):
@@ -368,7 +386,12 @@ def run(seed_payloads, sources, *, api_key, openai_key, model,
                 model, openai_key, SIGNATURE_INSTRUCTIONS, seed,
                 SIGNATURE_SCHEMA, "council_issue_signature",
             ))
-            candidates = search_api(api_key, sources, signature, start_date, as_of)
+            discovery = search_api(api_key, sources, signature, start_date, as_of)
+            if discovery["successful_requests"] == 0:
+                raise ValueError("All CLIK follow-up searches failed")
+            candidates = discovery["rows"]
+            for error in discovery["errors"]:
+                output["errors"].append({"seed_id": seed["seed_id"], **error})
             matches = []
             for candidate in candidates:
                 if comparisons >= max_comparisons:
@@ -422,8 +445,10 @@ def run(seed_payloads, sources, *, api_key, openai_key, model,
                 )},
                 "signature": signature,
                 "searched_candidate_count": len(candidates),
+                "collection_error_count": len(discovery["errors"]),
                 "status": (
                     "EVIDENCE_FOUND" if matches else
+                    "COLLECTION_INCOMPLETE" if discovery["errors"] else
                     "NO_MATCHING_FOLLOWUP_OR_PRIOR_EVIDENCE"
                 ),
                 "matches": matches,
