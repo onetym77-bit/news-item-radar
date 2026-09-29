@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import sys
 import unittest
+from unittest.mock import patch
 from datetime import date
 from pathlib import Path
 
@@ -63,6 +64,28 @@ class IssueLifecycleTests(unittest.TestCase):
         }
         with self.assertRaises(ValueError):
             pipeline.validate_signature(value)
+
+    def test_search_continues_after_one_source_fails(self):
+        sources = [
+            {"id": "good", "name": "정상 의회", "clik_assembly_id": "002001"},
+            {"id": "bad", "name": "오류 의회", "clik_assembly_id": "002002"},
+        ]
+        signature = {"search_keywords": ["돌봄 공백", "지원 중단"]}
+
+        def fake_fetch(_api_key, **params):
+            if params["rasmblyId"] == "002002":
+                raise ValueError("unexpected envelope")
+            return {"LIST": []}
+
+        with patch.object(pipeline, "fetch_payload", side_effect=fake_fetch):
+            result = pipeline.search_api(
+                "secret", sources, signature, date(2025, 1, 1), date(2026, 9, 29)
+            )
+
+        self.assertEqual(2, result["successful_requests"])
+        self.assertEqual(2, len(result["errors"]))
+        self.assertEqual([], result["rows"])
+        self.assertEqual({"bad"}, {row["source_id"] for row in result["errors"]})
 
     def test_lifecycle_status_requires_elapsed_time(self):
         old = date(2025, 9, 1)
