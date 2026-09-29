@@ -13,6 +13,9 @@
 - 현재 단서:
   - 서울시의회 원자료 피드
   - 25개 자치구의회 L3 검토 결과
+- 과거 단서 보충:
+  - 9~18개월 전 회의록에서 반복 지적·미이행·장기 지연 등 구체적인 행정 의무가 있는 발언만 별도 씨앗으로 추출
+  - 현재 재지적이 없어도 후속 조치 여부를 다시 검색
 - 과거 검색: 국회도서관 지방의정포털 회의록 OpenAPI 본문 검색
 - 최신 자료 보완: 기존 서울시의회·자치구의회 공식 홈페이지 수집 경로
 
@@ -49,10 +52,12 @@ GitHub Actions의 **Track recurring council issues**를 수동 실행한다.
 - CLIK_API_KEY
 - OPENAI_API_KEY
 
-기본 실행은 현재 단서 최대 3건, 과거 18개월, 의미 비교 최대 12건이다. API는 검색 목록을 좁히는 데 먼저 쓰고, 비교할 문서만 본문을 읽는다. 키·본문 전문은 산출물에 저장하지 않는다.
+기본 실행은 현재 단서 2건과 과거 보충 단서 1건을 포함해 최대 3건, 과거 18개월, 의미 비교 최대 12건이다. 과거 보충 단계는 최대 12개 문서를 읽어 후속 추적 가치가 있는 씨앗을 최대 5건 만든다. API는 검색 목록을 좁히는 데 먼저 쓰고, 비교할 문서만 본문을 읽는다. 키·본문 전문은 산출물에 저장하지 않는다.
 
 산출물:
 
+- issue-lifecycle-v1/output/historical_seeds_latest.json
+- issue-lifecycle-v1/output/HISTORICAL_SEEDS.md
 - issue-lifecycle-v1/output/latest.json
 - issue-lifecycle-v1/output/SUMMARY.md
 
