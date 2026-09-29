@@ -129,9 +129,10 @@ def _joined_text(row):
     values = []
     for source in (row, card if isinstance(card, dict) else {}):
         for key in (
-            "context_subject", "observed_issue", "context_text", "display_fact",
-            "text", "anchor_quote", "editorial_hypothesis", "test_question",
-            "question_basis", "question", "first_check",
+            "context_subject", "observed_issue", "observed_problem", "context_text",
+            "display_fact", "text", "anchor_quote", "editorial_hypothesis",
+            "test_question", "question_basis", "question", "first_check",
+            "public_obligation", "promise_or_deadline",
         ):
             value = compact(source.get(key))
             if value and value not in values:
@@ -156,6 +157,7 @@ def collect_seed_records(payloads, max_seeds=3):
                 or "시의회" in source_name
                 or "구의회" in source_name
                 or has_card
+                or row.get("historical_seed") is True
             )
             if not council or not date_text or not url or len(text) < 80:
                 continue
@@ -172,9 +174,15 @@ def collect_seed_records(payloads, max_seeds=3):
                 "current_text": text,
                 "affected_group_hint": compact(row.get("affected_group")),
                 "subject_hint": compact(row.get("context_subject")),
+                "seed_kind": "HISTORICAL" if row.get("historical_seed") is True else "CURRENT",
             })
     records.sort(key=lambda row: (row["meeting_date"], len(row["current_text"])), reverse=True)
-    return records[:max_seeds]
+    historical = [row for row in records if row["seed_kind"] == "HISTORICAL"]
+    current = [row for row in records if row["seed_kind"] == "CURRENT"]
+    if not historical:
+        return current[:max_seeds]
+    historical_slots = min(len(historical), max(1, max_seeds // 2))
+    return historical[:historical_slots] + current[:max_seeds - historical_slots]
 
 
 def call_json(model, api_key, instructions, data, schema, name, max_tokens=1600):
