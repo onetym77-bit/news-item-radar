@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "id": "3849dbf9ac53135a",
+    "decision": "DISCARD",
+    "note": "GTX-A는 시민 관련성은 크지만 핵심 시설·안전 판정 자료·책임기관 접근이 제한돼 지역방송이 독자적인 6~7분 기획으로 검증하기 어렵다. 질문의 중요성과 실제 취재 가능성을 구분해야 한다.",
+    "record_type": "운영 후보",
+    "title": "삼성역 GTX-A, 어떤 검증을 통과해야 열차가 서나",
+    "issue_key": "GTX-A 삼성역 안전성 검증",
+    "source": "뉴스 본문 판정",
+    "url": "https://www.newsis.com/view/NISX20260923_0003802676",
+    "decided_at_utc": "2026-09-29T05:20:41.219Z"
+  },
+  {
+    "id": "ddbf62ba88e33f37",
+    "decision": "DISCARD",
+    "note": "청년 AI 지원은 아직 실체와 시행 결과가 형성되지 않아 예산 삭감·설계 논쟁이 시민에게 어떤 결과를 만드는지 불분명하다. 자료 부재 때문이 아니라 실제 영향과 구속력 있는 선택이 아직 성립하지 않은 단계다.",
+    "record_type": "운영 후보",
+    "title": "청년 AI 지원 50만 명, 수요조사보다 먼저 정해졌나",
+    "issue_key": "서울 청년 AI 지원사업",
+    "source": "서울시의회 회의록",
+    "url": "https://ms.smc.seoul.kr/record/recordView.do?key=620e8c7c9933a45552e62f9d1f4f899dda8d2a6bcf7b50662904f36421876a98481bde2a21d65434",
+    "decided_at_utc": "2026-09-29T05:20:41.219Z"
+  }
+]
