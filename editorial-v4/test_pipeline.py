@@ -135,6 +135,10 @@ class PipelineTests(unittest.TestCase):
             "id": "one", "verdict": "KEEP",
             "editorial_risk": "신청 경로 차이가 실제 이용 결과와 무관할 수 있다",
             "decisive_test": "접수 기준과 실제 처리 기록을 같은 기간으로 대조한다",
+            "local_broadcast_fit": "HIGH",
+            "story_scale": "MULTI_SITE_PATTERN",
+            "impact_stage": "REALIZED",
+            "scale_check": "여러 현장과 대상 집단에서 반복되는 시민 영향이 확인된다",
             "reason": "서로 다른 설명을 가를 자료와 현장 취재 경로가 구체적이다",
         }]}
         with tempfile.TemporaryDirectory() as folder, \
@@ -202,6 +206,10 @@ class PipelineTests(unittest.TestCase):
         review = {"reviews": [{"id": "one", "verdict": "HOLD",
                               "editorial_risk": "문제의 존재를 확인하지 못했다",
                               "decisive_test": "실제 이용자를 먼저 찾아 확인한다",
+                              "local_broadcast_fit": "HIGH",
+                              "story_scale": "MULTI_SITE_PATTERN",
+                              "impact_stage": "REALIZED",
+                              "scale_check": "여러 현장과 대상 집단에서 반복되는 시민 영향이 확인된다",
                               "reason": "발언을 되풀이할 뿐 새로운 취재 질문이 없다"}]}
         kept, held = module.apply_second_review([proposal], review)
         self.assertEqual(kept, [])
@@ -212,10 +220,30 @@ class PipelineTests(unittest.TestCase):
         review = {"reviews": [{"id": "one", "verdict": "KEEP",
                               "editorial_risk": "사업 설명이 실제 이용 경로와 다를 수 있다",
                               "decisive_test": "두 경로 이용자와 접수 기준을 대조한다",
+                              "local_broadcast_fit": "HIGH",
+                              "story_scale": "MULTI_SITE_PATTERN",
+                              "impact_stage": "REALIZED",
+                              "scale_check": "여러 현장과 대상 집단에서 반복되는 시민 영향이 확인된다",
                               "reason": "선택의 차이를 취재할 수 있지만 사실은 미확인이다"}]}
         kept, held = module.apply_second_review([proposal], review)
         self.assertEqual(held, [])
         self.assertEqual(kept[0]["coverage_status"], "기존 보도 각도 별도 대조 필요")
+
+    def test_independent_review_rechecks_newsworthiness_gates(self):
+        proposal = {**GOOD, "source": BASE["source"]}
+        review = {"reviews": [{
+            "id": "one", "verdict": "KEEP",
+            "editorial_risk": "핵심 시설과 판정 자료에 접근할 수 없어 기사 가설을 독자 검증하기 어렵다",
+            "decisive_test": "지역 취재진이 확보 가능한 현장과 문서의 범위를 먼저 확인한다",
+            "local_broadcast_fit": "LOW",
+            "story_scale": "SEVERE_SINGLE_CASE",
+            "impact_stage": "REALIZED",
+            "scale_check": "안전 쟁점은 크지만 핵심 시설과 판정 자료 접근이 제한된다",
+            "reason": "질문은 중요하지만 지역방송의 독자적 입증 경로가 부족하다",
+        }]}
+        kept, held = module.apply_second_review([proposal], review)
+        self.assertEqual(kept, [])
+        self.assertEqual(held[0]["reason"], "독립 검토: 지역방송 독자 취재 가능성 부족")
 
     def test_independent_review_requires_exact_ids(self):
         with self.assertRaisesRegex(ValueError, "ID 불일치"):
@@ -311,6 +339,10 @@ class PipelineTests(unittest.TestCase):
                 "id": proposals[0]["id"], "verdict": "KEEP",
                 "editorial_risk": "예산 잔액이 서비스 공백과 무관한 정산 시점 차이일 수 있다",
                 "decisive_test": "집행 내역과 대기자·제공기관 연결 기록을 같은 기간으로 대조한다",
+                "local_broadcast_fit": "HIGH",
+                "story_scale": "MULTI_SITE_PATTERN",
+                "impact_stage": "REALIZED",
+                "scale_check": "여러 현장과 대상 집단에서 반복되는 시민 영향이 확인된다",
                 "reason": "사실을 확정하지 않고 두 설명을 가를 취재 경로가 구체적이다",
             }]}
 
