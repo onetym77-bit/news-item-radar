@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import re
+import urllib.error
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -245,9 +246,8 @@ def call_model(model, api_key, metadata, passage):
     return json.loads("".join(texts))
 
 
-def call_group_model(model, api_key, rows):
-    candidate_ids = [row["candidate_id"] for row in rows]
-    schema = {
+def group_schema(candidate_ids):
+    return {
         "type": "object",
         "additionalProperties": False,
         "required": ["groups"],
@@ -255,7 +255,7 @@ def call_group_model(model, api_key, rows):
             "groups": {
                 "type": "array",
                 "minItems": 1,
-                "maxItems": len(rows),
+                "maxItems": len(candidate_ids),
                 "items": {
                     "type": "object",
                     "additionalProperties": False,
@@ -268,7 +268,7 @@ def call_group_model(model, api_key, rows):
                         "candidate_ids": {
                             "type": "array",
                             "minItems": 1,
-                            "uniqueItems": True,
+                            "maxItems": len(candidate_ids),
                             "items": {"type": "string", "enum": candidate_ids},
                         },
                         "reason": {"type": "string"},
@@ -277,6 +277,11 @@ def call_group_model(model, api_key, rows):
             }
         },
     }
+
+
+def call_group_model(model, api_key, rows):
+    candidate_ids = [row["candidate_id"] for row in rows]
+    schema = group_schema(candidate_ids)
     compact_rows = [
         {
             key: row[key]
@@ -317,8 +322,12 @@ def call_group_model(model, api_key, rows):
         },
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=150) as response:
-        answer = json.load(response)
+    try:
+        with urllib.request.urlopen(request, timeout=150) as response:
+            answer = json.load(response)
+    except urllib.error.HTTPError as exc:
+        detail = compact(exc.read().decode("utf-8", errors="replace"))
+        raise ValueError("Consolidation API rejected request: " + detail[:500]) from exc
     texts = [
         part.get("text", "")
         for item in answer.get("output", [])

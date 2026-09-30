@@ -151,6 +151,16 @@ class AnalyzeTests(unittest.TestCase):
 
         self.assertEqual(len(analyze.group_for_review([first, second])), 2)
 
+    def test_group_schema_uses_supported_array_constraints(self):
+        schema = analyze.group_schema(["alpha", "beta"])
+        serialized = json.dumps(schema)
+        self.assertNotIn("uniqueItems", serialized)
+        candidate_ids = (
+            schema["properties"]["groups"]["items"]["properties"]["candidate_ids"]
+        )
+        self.assertEqual(candidate_ids["minItems"], 1)
+        self.assertEqual(candidate_ids["maxItems"], 2)
+
     def test_semantic_consolidation_merges_same_problem_with_different_words(self):
         first = {
             "candidate_id": "alpha",
