@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "last_collected_kst": "2026-09-29T17:24:14+09:00",
+  "last_collected_kst": "2026-09-30T17:27:30+09:00",
   "events": {
     "EXTENSION|1032026062399|22046|2": {
       "key": "EXTENSION|1032026062399|22046|2",
@@ -138,9 +138,9 @@
       "title": "영동대로 지하공간 복합개발 3공구 건설공사(토목)",
       "registration_date": "2026-08-18",
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
-      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 태영건설 업 체 구 분 : 시공 점 검 종 류 : 자체조사 벌 점 번 호 : 8, 18 벌 점 : 0.716점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서와 다른 시공, 시공상세도면 작성의 소홀 조회수 : 22 등록일 : 2026-08-18 15 ",
+      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 태조엔지니어링 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.8점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 24 등록일 : 2026-08-18 14 영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 태영건설",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
     },
     "PENALTY|1112021020598|1222": {
       "key": "PENALTY|1112021020598|1222",
@@ -150,9 +150,9 @@
       "title": "영동대로 지하공간 복합개발 3공구 건설공사(토목)",
       "registration_date": "2026-08-18",
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PenaltyList.action",
-      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 호반산업 업 체 구 분 : 시공 점 검 종 류 : 자체조사 벌 점 번 호 : 8, 18 벌 점 : 0.548점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서와 다른 시공, 시공상세도면 작성의 소홀 조회수 : 22 등록일 : 2026-08-18 14 영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 삼안 업 체 구 분 : 감리 점 검 종 류 : 자체조",
+      "penalty_context": "영동대로 지하공간 복합개발 3공구 건설공사(토목) 도시기반시설본부 영동대로복합개발추진단 업 체 명 : 주식회사 동아기술공사 업 체 구 분 : 감리 점 검 종 류 : 자체조사 벌 점 번 호 : 1, 2 벌 점 : 0.4점 벌점부과일 : 2026-08-18 벌 점 내 용 : 설계도서의 내용대로 시공되었는지에 관한 단계별 확인의 소홀, 시공상세도면에 대한 검토의 소홀 조회수 : 24 등록일 : 2026-08-18 15 ",
       "first_seen_kst": "2026-09-15T18:12:01+09:00",
-      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
     },
     "EXTENSION|6192026051598|22058|2": {
       "key": "EXTENSION|6192026051598|22058|2",
@@ -862,11 +862,11 @@
       "pjt_cd": "1032026031998",
       "record_key": "21987689|21987690",
       "title": "낙산근린공원 노후시설물 정비사업",
-      "registration_date": "2026-09-29",
+      "registration_date": "2026-09-28",
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-29T17:24:14+09:00",
-      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
     },
     "DESIGN|1112024112298|21988259|21988260": {
       "key": "DESIGN|1112024112298|21988259|21988260",
@@ -878,7 +878,7 @@
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-29T17:24:14+09:00",
-      "last_seen_kst": "2026-09-29T17:24:14+09:00"
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
     },
     "DESIGN|6192026051597|21990092|21990093": {
       "key": "DESIGN|6192026051597|21990092|21990093",
@@ -891,6 +891,98 @@
       "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
       "first_seen_kst": "2026-09-29T17:24:14+09:00",
       "last_seen_kst": "2026-09-29T17:24:14+09:00"
+    },
+    "EXTENSION|7602026031894|22122|1": {
+      "key": "EXTENSION|7602026031894|22122|1",
+      "category": "EXTENSION",
+      "pjt_cd": "7602026031894",
+      "record_key": "22122|1",
+      "title": "탄천센터 소화조 준설 공사",
+      "registration_date": "2026-09-30",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 6,
+      "before_completion": "2026-09-12",
+      "after_completion": "2026-09-18",
+      "first_seen_kst": "2026-09-30T17:27:30+09:00",
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
+    },
+    "EXTENSION|6082026060198|22121|1": {
+      "key": "EXTENSION|6082026060198|22121|1",
+      "category": "EXTENSION",
+      "pjt_cd": "6082026060198",
+      "record_key": "22121|1",
+      "title": "오동근린공원 자락길 정비공사",
+      "registration_date": "2026-09-30",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 44,
+      "before_completion": "2026-09-01",
+      "after_completion": "2026-10-15",
+      "first_seen_kst": "2026-09-30T17:27:30+09:00",
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
+    },
+    "EXTENSION|6232025050865|22117|5": {
+      "key": "EXTENSION|6232025050865|22117|5",
+      "category": "EXTENSION",
+      "pjt_cd": "6232025050865",
+      "record_key": "22117|5",
+      "title": "개포동148 도로확장공사",
+      "registration_date": "2026-09-30",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 20,
+      "before_completion": "2026-09-30",
+      "after_completion": "2026-10-20",
+      "first_seen_kst": "2026-09-30T17:27:30+09:00",
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
+    },
+    "EXTENSION|6232026040295|22119|2": {
+      "key": "EXTENSION|6232026040295|22119|2",
+      "category": "EXTENSION",
+      "pjt_cd": "6232026040295",
+      "record_key": "22119|2",
+      "title": "논현로 106길 31 외 4개소 하수관로 개량공사",
+      "registration_date": "2026-09-30",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/PicChgList.action",
+      "extension_days": 30,
+      "before_completion": "2026-09-30",
+      "after_completion": "2026-10-30",
+      "first_seen_kst": "2026-09-30T17:27:30+09:00",
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
+    },
+    "DESIGN|1112023121599|21991491|21991492": {
+      "key": "DESIGN|1112023121599|21991491|21991492",
+      "category": "DESIGN",
+      "pjt_cd": "1112023121599",
+      "record_key": "21991491|21991492",
+      "title": "양곡도매시장 건립공사",
+      "registration_date": "2026-09-30",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-30T17:27:30+09:00",
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
+    },
+    "DESIGN|3202025122397|21991473|21991474": {
+      "key": "DESIGN|3202025122397|21991473|21991474",
+      "category": "DESIGN",
+      "pjt_cd": "3202025122397",
+      "record_key": "21991473|21991474",
+      "title": "2026년 포장도로 긴급복구정비공사(연간단가)-동부",
+      "registration_date": "2026-09-30",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-30T17:27:30+09:00",
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
+    },
+    "DESIGN|3502025060281|21990333|21990334": {
+      "key": "DESIGN|3502025060281|21990333|21990334",
+      "category": "DESIGN",
+      "pjt_cd": "3502025060281",
+      "record_key": "21990333|21990334",
+      "title": "2025년 학동로 장기사용 배수관 정비공사 (장기계속)",
+      "registration_date": "2026-09-29",
+      "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/DocList.action",
+      "change_reason_status": "LIST_VALUE_NOT_VERIFIED",
+      "first_seen_kst": "2026-09-30T17:27:30+09:00",
+      "last_seen_kst": "2026-09-30T17:27:30+09:00"
     }
   },
   "progress": {
@@ -899,11 +991,11 @@
       "title": "4호선 연장(진접선) 차량기지 건설",
       "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
       "plan_percent": 97.8,
-      "actual_percent": 97.9,
-      "gap_pp": 0.1,
+      "actual_percent": 98.1,
+      "gap_pp": 0.3,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-29T17:24:14+09:00"
+      "observed_at_kst": "2026-09-30T17:27:30+09:00"
     },
     "57eca32c8e203306": {
       "key": "57eca32c8e203306",
@@ -914,7 +1006,7 @@
       "gap_pp": 0.1,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-29T17:24:14+09:00"
+      "observed_at_kst": "2026-09-30T17:27:30+09:00"
     },
     "2b009f5c7daf5f7a": {
       "key": "2b009f5c7daf5f7a",
@@ -925,47 +1017,47 @@
       "gap_pp": 2.0,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-29T17:24:14+09:00"
+      "observed_at_kst": "2026-09-30T17:27:30+09:00"
     },
     "c335f452fa78b48c": {
       "key": "c335f452fa78b48c",
       "title": "거여 119안전센터 건립공사",
       "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
-      "plan_percent": 18.6,
-      "actual_percent": 17.5,
+      "plan_percent": 18.8,
+      "actual_percent": 17.7,
       "gap_pp": -1.1,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-29T17:24:14+09:00"
+      "observed_at_kst": "2026-09-30T17:27:30+09:00"
     },
     "ca05789869ab2a65": {
       "key": "ca05789869ab2a65",
       "title": "광화문 일대 대심도 빗물배수터널 건설공사",
       "identity_scope": "WITHIN_PROGRESS_TITLE_ONLY",
       "plan_percent": 11.8,
-      "actual_percent": 11.5,
-      "gap_pp": -0.3,
+      "actual_percent": 11.6,
+      "gap_pp": -0.2,
       "source_url": "https://cis.seoul.go.kr/TotalAlimi_new/SmrizeBsnsNews.action",
       "pjt_cd": null,
-      "observed_at_kst": "2026-09-29T17:24:14+09:00"
+      "observed_at_kst": "2026-09-30T17:27:30+09:00"
     }
   },
   "last_run": {
     "first_baseline": false,
     "new_record_keys": [
-      "EXTENSION|6062025032698|22116|2",
-      "EXTENSION|6162026041695|22115|1",
-      "EXTENSION|1032026031998|22114|2",
-      "DESIGN|7182026040398|21989339|21989340",
-      "DESIGN|1032026031998|21987689|21987690",
-      "DESIGN|1112024112298|21988259|21988260",
-      "DESIGN|6192026051597|21990092|21990093"
+      "EXTENSION|7602026031894|22122|1",
+      "EXTENSION|6082026060198|22121|1",
+      "EXTENSION|6232025050865|22117|5",
+      "EXTENSION|6232026040295|22119|2",
+      "DESIGN|1112023121599|21991491|21991492",
+      "DESIGN|3202025122397|21991473|21991474",
+      "DESIGN|3502025060281|21990333|21990334"
     ],
     "signals": [],
     "sample_counts": {
       "EXTENSION": 4,
       "DESIGN": 5,
-      "PENALTY": 3,
+      "PENALTY": 2,
       "PROGRESS": 5
     },
     "coverage": "FIRST_PAGE_ONLY",
