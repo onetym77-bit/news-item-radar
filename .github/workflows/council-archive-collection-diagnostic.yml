@@ -1,0 +1,62 @@
+name: Diagnose council archive collection
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: council-archive-collection-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUTF8: "1"
+      CLIK_API_KEY: ${{ secrets.CLIK_API_KEY }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Test collection safety rules
+        run: python -X utf8 -m unittest discover -s council-archive-v1 -p 'test_*.py' -v
+
+      - name: Diagnose all council list and detail connections
+        run: python -X utf8 council-archive-v1/diagnose_collection.py
+
+      - name: Check diagnostic boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("council-archive-v1/output/collection_diagnostic_latest.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          assert payload["schema"] == 1
+          assert payload["mode"] == "COUNCIL_COLLECTION_CONNECTIVITY_DIAGNOSTIC"
+          assert payload["openai_call_count"] == 0
+          assert payload["source_count"] == 26
+          assert len(payload["sources"]) == 26
+          serialized = json.dumps(payload, ensure_ascii=False)
+          forbidden = ("CLIK_API_KEY", "serviceKey=", "api_key", '"body"')
+          assert not any(term in serialized for term in forbidden)
+          PY
+
+      - name: Upload collection diagnostic
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: council-collection-diagnostic-${{ github.run_id }}
+          path: |
+            council-archive-v1/output/collection_diagnostic_latest.json
+            council-archive-v1/output/COLLECTION_DIAGNOSTIC.md
+          if-no-files-found: warn
+          retention-days: 7
