@@ -133,6 +133,11 @@ jobs:
           assert analysis["mode"] == "FULL_TEXT_SEMANTIC_READING"
           assert analysis["document_count"] == archive["archived_total"]
           assert analysis["model_call_count"] <= int("${{ inputs.analysis_calls }}")
+          assert analysis["consolidation_model_call_count"] in (0, 1)
+          assert analysis["model_call_count"] == (
+              analysis["chunk_model_call_count"]
+              + analysis["consolidation_model_call_count"]
+          )
           assert analysis["review_candidate_count"] <= analysis["candidate_total"]
           assert analysis["duplicate_collapsed_count"] == (
               analysis["candidate_total"] - analysis["review_candidate_count"]
