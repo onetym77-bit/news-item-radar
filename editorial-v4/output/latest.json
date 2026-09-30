@@ -1,19 +1,56 @@
 {
   "schema": 2,
-  "head_contract_version": "1.6",
-  "generated_at_utc": "2026-09-29T06:46:04.569277+00:00",
+  "head_contract_version": "1.7",
+  "generated_at_utc": "2026-09-30T04:01:11.077520+00:00",
   "collection_cycle": {
-    "mode": "STORED_SNAPSHOT",
-    "verified": false,
-    "cycle_id": "",
-    "started_at_utc": "",
-    "runs": [],
-    "note": "저장된 최신 스냅샷을 재평가한 실행입니다."
+    "mode": "FRESH_CYCLE",
+    "verified": true,
+    "cycle_id": "fresh-36665958265-1",
+    "started_at_utc": "2026-09-30T03:47:09Z",
+    "runs": [
+      {
+        "source": "뉴스·유튜브 관심 신호",
+        "workflow": "collect-interest-signals.yml",
+        "run_id": 36665966069,
+        "conclusion": "success"
+      },
+      {
+        "source": "서울 원자료 피드",
+        "workflow": "daily-briefing.yml",
+        "run_id": 36666552899,
+        "conclusion": "success"
+      },
+      {
+        "source": "서울시 감사",
+        "workflow": "source-onboarding-audit-l4-shadow.yml",
+        "run_id": 36666643357,
+        "conclusion": "success"
+      },
+      {
+        "source": "25개 자치구의회",
+        "workflow": "district-council-recent-l3.yml",
+        "run_id": 36666694264,
+        "conclusion": "success"
+      },
+      {
+        "source": "시민제안",
+        "workflow": "citizen-proposal-shadow.yml",
+        "run_id": 36666899946,
+        "conclusion": "success"
+      },
+      {
+        "source": "시민제안 검토 큐",
+        "workflow": "publish-citizen-shadow.yml",
+        "run_id": 36666946753,
+        "conclusion": "success"
+      }
+    ],
+    "note": "표시된 상위 수집 실행이 모두 성공한 뒤 통합 헤드를 실행했습니다."
   },
   "status": "NO_QUALITY_PROPOSAL",
-  "source_inputs": 2,
-  "validated_inputs": 1,
-  "model_inputs": 1,
+  "source_inputs": 7,
+  "validated_inputs": 7,
+  "model_inputs": 6,
   "unmodeled_inputs": 0,
   "model_calls": 1,
   "assessment_retries": 0,
@@ -24,15 +61,50 @@
       "id": "3849dbf9ac53135a",
       "source": "뉴스 본문 판정",
       "headline": "국토부 \"GTX-A 삼성역 추가 안전성 검증 필요…서울시에 지연 구상금 검토\"",
-      "reason": "본문 근거 부족",
-      "verdict": "INPUT_HOLD"
+      "reason": "사람 판정 완료·보류",
+      "verdict": "SKIP"
+    },
+    {
+      "id": "7a81af2eb6d59862",
+      "source": "뉴스 본문 판정",
+      "headline": "이수진 서울시의원, \"교육재정, 반복적 세입 오차·선제적 예산편성 점검해야\"",
+      "reason": "반복 연도와 금액 단서가 있어 후속 취재 가치는 있으나, 기사만으로 추계 오류·재정 손실·서비스 영향을 확정할 수 없다. 예산 원자료와 양 기관의 책임·개선 절차를 확인하기 전까지 HOLD한다.",
+      "verdict": "HOLD"
     },
     {
       "id": "0d358185844d134c",
       "source": "서울시 감사 결과",
       "headline": "관리 유치원·학교 파견강사 성범죄 경력 확인 절차 개선 필요 - 통보(2)",
-      "reason": "아동 대상 대면 강사의 성범죄 경력 확인은 중대한 안전 쟁점이 될 수 있고 기관·학교·감사 자료에 접근할 취재 경로도 있다. 그러나 제공 자료는 감사 지적의 존재와 요약에 그치며, 원문·강사별 조회 기록·감사 후 개선 이행·반복 범위·실제 피해가 검증되지 않았다. 우선 감사 원문과 증빙",
+      "reason": "공식 감사라는 강한 단서와 아동 안전성이 있으나, 제공된 자료는 감사 요약에 머물고 실제 누락 규모·대상·시정 결과가 확인되지 않았다. 감사 원문과 사람·기관 검증이 완료될 때까지 HOLD한다.",
       "verdict": "HOLD"
+    },
+    {
+      "id": "95bbd613a021ef25",
+      "source": "뉴스 본문 판정",
+      "headline": "홍지선 ‘삼성역 철근 누락 구상권 청구’에 서울시 “적반하장”",
+      "reason": "안전성과 비용 책임이라는 공익성은 크지만, 핵심 시설의 안전 판정 자료와 책임기관 접근이 제한돼 지역방송이 독자적으로 검증·장면화하기 어렵다. 동일 쟁점의 다른 입력도 있어 단일 후보로 정리할 수 있는 자료가 확보되기 전까지 HOLD한다.",
+      "verdict": "HOLD"
+    },
+    {
+      "id": "7aaa37a5f45d9284",
+      "source": "뉴스 본문 판정",
+      "headline": "[기획특집] 서울시교육감·노동계, 교육재정교부금 개편에 한목소리로 ‘재검토’ 요구",
+      "reason": "시민 영향의 방향은 크지만 정책이 확정되지 않았고 실제 재정 변화도 산출되지 않은 간담회·주장 수준이다. 자료를 더 찾을 수 있다는 이유만으로 제안하지 않고, 시행이 확정되거나 구체적 선택이 임박할 때 재검토한다.",
+      "verdict": "REJECT"
+    },
+    {
+      "id": "f225b50e35773b37",
+      "source": "뉴스 본문 판정",
+      "headline": "GTX-A 삼성역 철근 누락 책임공방…서울시 구상권 청구 부적절",
+      "reason": "구체적인 일정과 비용 쟁점은 있으나 핵심 주장이 서울시 설명에 의존하고, GTX-A의 안전 판정·책임 자료 접근성이 낮다. 같은 사건에 대한 다른 입력과 중복되므로 독자 검증 경로가 확보되기 전까지 HOLD한다.",
+      "verdict": "HOLD"
+    },
+    {
+      "id": "7177506b73b9f5e1",
+      "source": "뉴스 본문 판정",
+      "headline": "서울시의회 정진철 의원, 교육청 소송비용 불용률 22.2% 지적… “예비비 활용 등 예산 체계 개선해야”",
+      "reason": "수치와 제도 개선 논의는 있으나 높은 불용률 자체가 낭비나 시민 피해를 입증하지 않는다. 기관 내부 예산 절차에 가까운 평범한 단일 사안으로, 추가 자료를 찾는 것만으로는 6~7분 기획의 규모·영향 관문을 통과하지 못한다.",
+      "verdict": "REJECT"
     }
   ],
   "source_gaps": [
@@ -46,11 +118,11 @@
     },
     {
       "source": "서울시의회",
-      "reason": "이번 회차 신규 운영 입력 없음; 오래된 이월 자료 9건은 재평가에서 제외, 문맥 보류 71건"
+      "reason": "이번 회차 신규 운영 입력 없음; 오래된 이월 자료 9건은 재평가에서 제외, 문맥 보류 76건"
     },
     {
       "source": "유튜브",
-      "reason": "개별 영상 358건 장부 연결; 독립 채널·행동 반복·서울 맥락을 함께 갖춘 군집 없음"
+      "reason": "개별 영상 359건 장부 연결; 독립 채널·행동 반복·서울 맥락을 함께 갖춘 군집 없음"
     },
     {
       "source": "지역 커뮤니티·제보",
@@ -97,8 +169,8 @@
     }
   ],
   "cluster_audit": {
-    "before": 1,
-    "after": 1,
+    "before": 7,
+    "after": 7,
     "exact_duplicates": 0,
     "fuzzy_merge": false
   },
@@ -128,10 +200,10 @@
   "source_coverage": [
     {
       "source": "뉴스",
-      "state": "입력 게이트 보류",
-      "input": 1,
-      "eligible": 0,
-      "model_input": 0,
+      "state": "통합 판정 완료·선정 없음",
+      "input": 6,
+      "eligible": 5,
+      "model_input": 5,
       "proposals": 0,
       "pending_shadow": 0,
       "reason": ""
@@ -144,7 +216,7 @@
       "model_input": 0,
       "proposals": 0,
       "pending_shadow": 0,
-      "reason": "이번 회차 신규 운영 입력 없음; 오래된 이월 자료 9건은 재평가에서 제외, 문맥 보류 71건"
+      "reason": "이번 회차 신규 운영 입력 없음; 오래된 이월 자료 9건은 재평가에서 제외, 문맥 보류 76건"
     },
     {
       "source": "서울시 감사",
@@ -184,7 +256,7 @@
       "model_input": 0,
       "proposals": 0,
       "pending_shadow": 0,
-      "reason": "개별 영상 358건 장부 연결; 독립 채널·행동 반복·서울 맥락을 함께 갖춘 군집 없음"
+      "reason": "개별 영상 359건 장부 연결; 독립 채널·행동 반복·서울 맥락을 함께 갖춘 군집 없음"
     },
     {
       "source": "지역 커뮤니티·제보",
