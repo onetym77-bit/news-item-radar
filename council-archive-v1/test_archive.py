@@ -152,6 +152,35 @@ class ArchiveTests(unittest.TestCase):
             "PORTAL_STALE_USE_OFFICIAL",
         )
 
+    def test_error_reason_redacts_credentials_and_urls(self):
+        reason = archive.safe_error_reason(
+            ValueError("request https://example.com/path?serviceKey=visible token=also-visible failed")
+        )
+        self.assertNotIn("example.com", reason)
+        self.assertNotIn("visible", reason)
+        self.assertNotIn("also-visible", reason)
+        self.assertIn("[URL]", reason)
+
+    def test_error_summary_groups_same_failure_across_sources(self):
+        errors = [
+            {
+                "source_id": "alpha",
+                "stage": "list",
+                "error_type": "ClikAPIError",
+                "reason": "CLIK API returned ERROR-301",
+            },
+            {
+                "source_id": "beta",
+                "stage": "list",
+                "error_type": "ClikAPIError",
+                "reason": "CLIK API returned ERROR-301",
+            },
+        ]
+        summary = archive.error_summary(errors)
+        self.assertEqual(summary[0]["count"], 2)
+        self.assertEqual(summary[0]["source_count"], 2)
+        self.assertEqual(summary[0]["reason"], "CLIK API returned ERROR-301")
+
     def test_real_source_registry_covers_all_26_councils(self):
         sources = archive.load_sources(
             MODULE_PATH.parent.parent / "district-council-pilot" / "sources_25.json"
