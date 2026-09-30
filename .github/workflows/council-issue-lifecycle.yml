@@ -1,4 +1,4 @@
-name: Archive all Seoul council minutes
+name: Archive and read all Seoul council minutes
 
 on:
   workflow_dispatch:
@@ -22,6 +22,15 @@ on:
           - "52"
           - "104"
           - "208"
+      analysis_calls:
+        description: 이번 실행에서 회의록 문맥을 읽을 최대 분석 횟수
+        required: true
+        default: "12"
+        type: choice
+        options:
+          - "6"
+          - "12"
+          - "24"
   pull_request:
     paths:
       - "council-archive-v1/**"
@@ -44,6 +53,7 @@ jobs:
     env:
       PYTHONUTF8: "1"
       CLIK_API_KEY: ${{ github.event_name != 'pull_request' && secrets.CLIK_API_KEY || '' }}
+      OPENAI_API_KEY: ${{ github.event_name != 'pull_request' && secrets.OPENAI_API_KEY || '' }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -53,7 +63,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Test archive safety and resume rules
+      - name: Test archive and semantic-reading safety rules
         run: python -X utf8 -m unittest discover -s council-archive-v1 -p 'test_*.py' -v
 
       - name: Restore archive and progress
@@ -90,40 +100,59 @@ jobs:
         if: ${{ github.event_name != 'pull_request' && hashFiles('.runtime/official-watch/pilot_latest.json') != '' }}
         run: cp .runtime/official-watch/pilot_latest.json .runtime/council-archive/official_previous.json
 
-      - name: Save archive and progress
+      - name: Read archived minutes by civic problem structure
+        if: ${{ github.event_name != 'pull_request' }}
+        run: >-
+          python -X utf8 council-archive-v1/analyze.py
+          --max-calls ${{ inputs.analysis_calls }}
+          --model gpt-5.6-luna
+
+      - name: Save archive and analysis progress
         if: ${{ always() && github.event_name != 'pull_request' }}
         uses: actions/cache/save@v4
         with:
           path: .runtime/council-archive
           key: council-minutes-archive-v1-${{ github.run_id }}
 
-      - name: Check archive report boundaries
+      - name: Check output boundaries
         if: ${{ github.event_name != 'pull_request' }}
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
 
-          data = json.loads(Path("council-archive-v1/output/status_latest.json").read_text(encoding="utf-8"))
-          assert data["schema"] == 1
-          assert data["mode"] == "KEYWORD_FREE_FULL_MINUTES_ARCHIVE"
-          assert data["source_count"] == 26
-          assert data["all_minutes_are_read_before_issue_selection"] is True
-          assert data["silence_is_not_resolution"] is True
-          assert 0 <= data["complete_source_count"] <= 26
-          forbidden = {"api_key", "CLIK_API_KEY", "searchKeyword"}
-          assert not forbidden.intersection(json.dumps(data, ensure_ascii=False))
+          archive = json.loads(Path("council-archive-v1/output/status_latest.json").read_text(encoding="utf-8"))
+          analysis = json.loads(Path("council-archive-v1/output/analysis_latest.json").read_text(encoding="utf-8"))
+          assert archive["schema"] == 1
+          assert archive["mode"] == "KEYWORD_FREE_FULL_MINUTES_ARCHIVE"
+          assert archive["source_count"] == 26
+          assert archive["all_minutes_are_read_before_issue_selection"] is True
+          assert archive["silence_is_not_resolution"] is True
+          assert 0 <= archive["complete_source_count"] <= 26
+          assert analysis["schema"] == 1
+          assert analysis["mode"] == "FULL_TEXT_SEMANTIC_READING"
+          assert analysis["document_count"] == archive["archived_total"]
+          assert analysis["model_call_count"] <= int("${{ inputs.analysis_calls }}")
+          forbidden = ("api_key", "CLIK_API_KEY", "OPENAI_API_KEY", "searchKeyword", '"body"')
+          serialized = json.dumps({"archive": archive, "analysis": analysis}, ensure_ascii=False)
+          assert not any(term in serialized for term in forbidden)
+          for row in analysis["review_candidates"]:
+              assert row["anchor_quote"]
+              assert row["public_question"] != row["subject"]
+              assert row["review_status"] == "UNREVIEWED"
           PY
 
-      - name: Upload archive progress and new documents
+      - name: Upload archive and semantic review
         if: ${{ always() && github.event_name != 'pull_request' }}
         uses: actions/upload-artifact@v7
         with:
-          name: council-minutes-archive-${{ github.run_id }}
+          name: council-minutes-review-${{ github.run_id }}
           path: |
             council-archive-v1/output/status_latest.json
             council-archive-v1/output/SUMMARY.md
             council-archive-v1/output/new_documents.jsonl.gz
+            council-archive-v1/output/analysis_latest.json
+            council-archive-v1/output/ANALYSIS_SUMMARY.md
             .runtime/official-watch/pilot_latest.json
           if-no-files-found: warn
           retention-days: 7

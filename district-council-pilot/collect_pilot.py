@@ -394,8 +394,10 @@ def run(source, as_of, count=4):
     client = Client(source)
     listing_url = source["list_url"]
     listing = client.get(listing_url)
-    fallback = source.get("list_fallback_url",listing_url)
-    if listing is None and fallback and not client.stopped and "name resolution" in client.logs[-1].get("error",""):
+    fallback = source.get("list_fallback_url", listing_url)
+    # A separately configured official entry page is a safe retry for transient
+    # TLS reset/time-out failures. Never retry a 403/429 block or another host.
+    if listing is None and fallback != listing_url and not client.stopped:
         listing_url = fallback
         listing = client.get(listing_url)
     if listing is not None and source.get("discover_list_label"):
