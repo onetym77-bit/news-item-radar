@@ -75,6 +75,39 @@ def write_json(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+def safe_error_reason(exc):
+    text = re.sub(r"https?://\\S+", "[URL]", compact_error(exc))
+    text = re.sub(
+        r"(?i)(api[_-]?key|token|secret|serviceKey)=([^&\\s]+)",
+        r"\\1=[REDACTED]",
+        text,
+    )
+    return text[:180] or type(exc).__name__
+
+
+def compact_error(exc):
+    return re.sub(r"\\s+", " ", str(exc or "")).strip()
+
+
+def error_summary(errors):
+    groups = {}
+    for row in errors:
+        key = (row["stage"], row["error_type"], row.get("reason", ""))
+        group = groups.setdefault(key, {"count": 0, "sources": set()})
+        group["count"] += 1
+        group["sources"].add(row["source_id"])
+    return [
+        {
+            "stage": stage,
+            "error_type": error_type,
+            "reason": reason,
+            "count": group["count"],
+            "source_count": len(group["sources"]),
+        }
+        for (stage, error_type, reason), group in sorted(groups.items())
+    ]
+
+
 def parse_meeting_date(value):
     text = str(value or "")
     if not re.fullmatch(r"20[0-9]{6}", text):
@@ -293,6 +326,7 @@ def archive(
                         "source_id": source["id"],
                         "stage": "list",
                         "error_type": type(exc).__name__,
+                        "reason": safe_error_reason(exc),
                     })
 
             candidate = next(
@@ -322,6 +356,7 @@ def archive(
                     "document_id": candidate["docid"],
                     "stage": "detail",
                     "error_type": type(exc).__name__,
+                    "reason": safe_error_reason(exc),
                     "attempt": candidate["attempts"],
                 })
                 if candidate["attempts"] >= 3:
@@ -386,6 +421,7 @@ def status_payload(state, sources, added, errors, cutoff):
         "added_this_run": len(added),
         "complete_source_count": sum(row["complete_for_window"] for row in rows),
         "error_count": len(errors),
+        "error_summary": error_summary(errors),
         "all_minutes_are_read_before_issue_selection": True,
         "silence_is_not_resolution": True,
         "sources": rows,
@@ -404,13 +440,20 @@ def render_status(payload):
         f"- 이번 실행 추가: {payload['added_this_run']}건",
         f"- 범위 완료: {payload['complete_source_count']}/{payload['source_count']}곳",
         f"- 오류: {payload['error_count']}건 (0건으로 해석하지 않음)",
+    ]
+    for row in payload["error_summary"]:
+        lines.append(
+            f"  - {row['stage']} · {row['reason'] or row['error_type']}: "
+            f"{row['count']}건 / {row['source_count']}개 소스"
+        )
+    lines.extend([
         "",
         "> 지방의정포털은 역사 자료의 공통 색인으로 사용합니다. "
         "공식 의회 페이지가 더 최신이면 해당 의회는 기존 공식 경로를 우선합니다.",
         "",
         "| 의회 | 누적 | 대기 | 범위 완료 | 최신성 판정 |",
         "|---|---:|---:|---|---|",
-    ]
+    ])
     for row in payload["sources"]:
         lines.append(
             f"| {row['source_name']} | {row['archived_count']} | {row['pending_count']} | "
