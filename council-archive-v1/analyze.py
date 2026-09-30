@@ -511,6 +511,67 @@ def group_for_review(rows):
     return build_review(groups)
 
 
+def grouping_diagnostics(answer, rows):
+    by_id = {row["candidate_id"]: row for row in rows}
+    groups = answer.get("groups") if isinstance(answer, dict) else None
+    if not isinstance(groups, list):
+        return {
+            "group_count": 0,
+            "candidate_count": len(by_id),
+            "unknown_id_count": 0,
+            "duplicate_within_group_count": 0,
+            "duplicate_across_groups_count": 0,
+            "missing_candidate_count": len(by_id),
+            "representative_outside_group_count": 0,
+            "unknown_ids": [],
+            "duplicate_across_groups": [],
+            "missing_candidates": sorted(by_id)[:20],
+            "representative_outside_groups": [],
+        }
+
+    occurrences = {}
+    unknown_ids = set()
+    duplicate_within = 0
+    representative_outside = []
+    for index, group in enumerate(groups, 1):
+        if not isinstance(group, dict):
+            continue
+        member_ids = group.get("candidate_ids")
+        if not isinstance(member_ids, list):
+            member_ids = []
+        duplicate_within += len(member_ids) - len(set(member_ids))
+        unique_members = set(member_ids)
+        for candidate_id in unique_members:
+            if candidate_id not in by_id:
+                unknown_ids.add(str(candidate_id))
+            else:
+                occurrences[candidate_id] = occurrences.get(candidate_id, 0) + 1
+        representative_id = group.get("representative_candidate_id")
+        if representative_id not in unique_members:
+            representative_outside.append({
+                "group_number": index,
+                "representative_candidate_id": str(representative_id or ""),
+            })
+
+    duplicate_across = sorted(
+        candidate_id for candidate_id, count in occurrences.items() if count > 1
+    )
+    missing = sorted(set(by_id) - set(occurrences))
+    return {
+        "group_count": len(groups),
+        "candidate_count": len(by_id),
+        "unknown_id_count": len(unknown_ids),
+        "duplicate_within_group_count": duplicate_within,
+        "duplicate_across_groups_count": len(duplicate_across),
+        "missing_candidate_count": len(missing),
+        "representative_outside_group_count": len(representative_outside),
+        "unknown_ids": sorted(unknown_ids)[:20],
+        "duplicate_across_groups": duplicate_across[:20],
+        "missing_candidates": missing[:20],
+        "representative_outside_groups": representative_outside[:20],
+    }
+
+
 def validate_grouping(answer, rows):
     groups = answer.get("groups") if isinstance(answer, dict) else None
     if not isinstance(groups, list) or not groups:
