@@ -89,6 +89,19 @@ def compact_error(exc):
     return re.sub(r"\s+", " ", str(exc or "")).strip()
 
 
+def unique_error_count(errors):
+    return len({
+        (
+            row.get("source_id", ""),
+            row.get("document_id", ""),
+            row.get("stage", ""),
+            row.get("error_type", ""),
+            row.get("reason", ""),
+        )
+        for row in errors
+    })
+
+
 def error_summary(errors):
     groups = {}
     for row in errors:
@@ -420,7 +433,8 @@ def status_payload(state, sources, added, errors, cutoff):
         "archived_total": len(state["documents"]),
         "added_this_run": len(added),
         "complete_source_count": sum(row["complete_for_window"] for row in rows),
-        "error_count": len(errors),
+        "error_count": unique_error_count(errors),
+        "error_attempt_count": len(errors),
         "error_summary": error_summary(errors),
         "all_minutes_are_read_before_issue_selection": True,
         "silence_is_not_resolution": True,
@@ -439,7 +453,8 @@ def render_status(payload):
         f"- 누적 아카이브: {payload['archived_total']}건",
         f"- 이번 실행 추가: {payload['added_this_run']}건",
         f"- 범위 완료: {payload['complete_source_count']}/{payload['source_count']}곳",
-        f"- 오류: {payload['error_count']}건 (0건으로 해석하지 않음)",
+        f"- 오류 사안: {payload['error_count']}건 (0건으로 해석하지 않음)",
+        f"- 재시도 포함 오류 발생: {payload['error_attempt_count']}회",
     ]
     for row in payload["error_summary"]:
         lines.append(
@@ -507,6 +522,7 @@ def main():
         "added_this_run": payload["added_this_run"],
         "complete_source_count": payload["complete_source_count"],
         "error_count": payload["error_count"],
+        "error_attempt_count": payload["error_attempt_count"],
     }, ensure_ascii=False))
     return 0
 
