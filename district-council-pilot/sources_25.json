@@ -93,7 +93,9 @@
       "www.sbc.go.kr"
     ],
     "verified_entry_on": "2026-09-14",
-    "role": "DISTRICT_CONNECTION_TEST"
+    "role": "DISTRICT_CONNECTION_TEST",
+    "list_fallback_url": "https://www.sbc.go.kr/kr/main.do",
+    "discover_list_label": "최근회의록"
   },
   {
     "id": "gangbuk",
@@ -216,7 +218,9 @@
       "council.ddm.go.kr"
     ],
     "verified_entry_on": "2026-09-14",
-    "role": "DISTRICT_CONNECTION_TEST"
+    "role": "DISTRICT_CONNECTION_TEST",
+    "list_fallback_url": "https://council.ddm.go.kr/",
+    "discover_list_label": "최근회의록"
   },
   {
     "id": "jungnang",
@@ -342,4 +346,3 @@
     ]
   }
 ]
-
