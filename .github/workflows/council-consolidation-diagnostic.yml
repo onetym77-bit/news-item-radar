@@ -58,6 +58,7 @@ jobs:
           assert payload["schema"] == 1
           assert payload["mode"] == "FIXED_CANDIDATE_CONSOLIDATION_DIAGNOSTIC"
           assert payload["model_call_count"] == 1
+          assert isinstance(payload["model_response_completed"], bool)
           assert payload["raw_candidate_count"] >= payload["consolidation_input_count"] >= 2
           for key in (
               "unknown_ids",
@@ -72,11 +73,12 @@ jobs:
           PY
 
       - name: Upload diagnostic
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: council-consolidation-diagnostic-${{ github.run_id }}
           path: |
             council-archive-v1/output/consolidation_diagnostic_latest.json
             council-archive-v1/output/CONSOLIDATION_DIAGNOSTIC.md
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 7
