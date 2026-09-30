@@ -1,0 +1,82 @@
+name: Diagnose council candidate consolidation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: council-consolidation-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUTF8: "1"
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Test consolidation diagnostics
+        run: python -X utf8 -m unittest discover -s council-archive-v1 -p 'test_*.py' -v
+
+      - name: Restore fixed candidate cache
+        id: archive-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .runtime/council-archive
+          key: council-consolidation-diagnostic-${{ github.run_id }}
+          restore-keys: |
+            council-minutes-archive-v1-
+
+      - name: Require cached candidates
+        run: |
+          test -s .runtime/council-archive/semantic_candidates.jsonl
+
+      - name: Diagnose consolidation only
+        run: >-
+          python -X utf8 council-archive-v1/diagnose_consolidation.py
+          --model gpt-5.6-luna
+
+      - name: Check diagnostic boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("council-archive-v1/output/consolidation_diagnostic_latest.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          assert payload["schema"] == 1
+          assert payload["mode"] == "FIXED_CANDIDATE_CONSOLIDATION_DIAGNOSTIC"
+          assert payload["model_call_count"] == 1
+          assert payload["raw_candidate_count"] >= payload["consolidation_input_count"] >= 2
+          for key in (
+              "unknown_ids",
+              "duplicate_across_groups",
+              "missing_candidates",
+              "representative_outside_groups",
+          ):
+              assert len(payload[key]) <= 20
+          serialized = json.dumps(payload, ensure_ascii=False)
+          forbidden = ("api_key", "OPENAI_API_KEY", '"body"', "anchor_quote")
+          assert not any(term in serialized for term in forbidden)
+          PY
+
+      - name: Upload diagnostic
+        uses: actions/upload-artifact@v7
+        with:
+          name: council-consolidation-diagnostic-${{ github.run_id }}
+          path: |
+            council-archive-v1/output/consolidation_diagnostic_latest.json
+            council-archive-v1/output/CONSOLIDATION_DIAGNOSTIC.md
+          if-no-files-found: error
+          retention-days: 7
