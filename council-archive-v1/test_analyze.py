@@ -151,6 +151,67 @@ class AnalyzeTests(unittest.TestCase):
 
         self.assertEqual(len(analyze.group_for_review([first, second])), 2)
 
+    def test_semantic_consolidation_merges_same_problem_with_different_words(self):
+        first = {
+            "candidate_id": "alpha",
+            "document_id": "CLIKC100",
+            "source_id": "seoul_city",
+            "source_name": "서울시의회",
+            "meeting_date": "2026-09-11",
+            "document_url": "https://example.com/a",
+            "chunk_number": 1,
+            **valid_item(),
+            "review_status": "UNREVIEWED",
+        }
+        second = {
+            **first,
+            "candidate_id": "beta",
+            "document_id": "CLIKC200",
+            "document_url": "https://example.com/b",
+            "headline": "생성형 도구 지원이 디지털 역량 격차를 놓칠 수 있다",
+            "subject": "새 정책이 청년의 경제적 부담과 활용 역량 부족을 구분해 설계되는지 따져본다.",
+            "affected_group": "인공지능 서비스를 업무와 학업에 쓰기 어려운 청년층",
+            "mechanism": "일률적인 이용료 보조가 교육과 활용 지원이 필요한 계층을 비껴갈 수 있다.",
+        }
+        self.assertEqual(len(analyze.group_for_review([first, second])), 2)
+        answer = {
+            "groups": [{
+                "representative_candidate_id": "alpha",
+                "candidate_ids": ["alpha", "beta"],
+                "reason": "표현은 다르지만 같은 청년 AI 접근 장벽과 지원 설계 문제다.",
+            }]
+        }
+
+        grouped = analyze.consolidate_for_review([first, second], answer)
+
+        self.assertEqual(len(grouped), 1)
+        self.assertEqual(grouped[0]["related_evidence_count"], 2)
+        self.assertEqual(grouped[0]["related_document_count"], 2)
+        self.assertIn("청년 AI 접근 장벽", grouped[0]["consolidation_reason"])
+
+    def test_semantic_grouping_must_cover_every_candidate_once(self):
+        first = {
+            "candidate_id": "alpha",
+            "document_id": "CLIKC100",
+            "source_id": "seoul_city",
+            "source_name": "서울시의회",
+            "meeting_date": "2026-09-11",
+            "document_url": "https://example.com/a",
+            "chunk_number": 1,
+            **valid_item(),
+            "review_status": "UNREVIEWED",
+        }
+        second = {**first, "candidate_id": "beta", "document_id": "CLIKC200"}
+        answer = {
+            "groups": [{
+                "representative_candidate_id": "alpha",
+                "candidate_ids": ["alpha"],
+                "reason": "한 항목만 포함",
+            }]
+        }
+        with self.assertRaisesRegex(ValueError, "cover every candidate"):
+            analyze.validate_grouping(answer, [first, second])
+
     def test_no_signal_marks_chunk_complete_without_candidate(self):
         document = self.document()
         state = analyze.normalize_state(None)

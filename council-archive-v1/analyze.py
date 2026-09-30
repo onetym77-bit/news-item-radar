@@ -117,6 +117,23 @@ public_question은 시민이 자신의 삶과 공공 책임을 구체적으로 �
 counterintuitive_question은 통념과 다른 원인·배분·대체수단·부작용을 확인하는 질문이어야 한다.
 유의미한 문제가 없으면 items를 빈 배열로 반환한다."""
 
+CONSOLIDATION_INSTRUCTIONS = """당신은 서울 지역방송의 기획취재 후보를 정리하는 통합 데스크다.
+후보마다 제목, 대상 시민, 문제의 작동 방식, 시민 질문이 주어진다.
+표현이나 키워드가 아니라 같은 현실의 시민 문제를 가리키는 후보만 한 그룹으로 묶어라.
+
+반드시 함께 묶는 경우:
+- 같은 피해 대상과 같은 원인·행정 책임을 다른 문장으로 설명한 경우
+- 같은 회의록의 인접 문맥에서 하나의 사안을 나눠 추출한 경우
+- 여러 의회에서 같은 제도적 실패를 반복 지적하고 비교 취재가 가능한 경우
+
+분리해야 하는 경우:
+- 기관명·정책 분야·단어만 같고 피해 대상이나 원인이 다른 경우
+- 한 사안은 예산, 다른 사안은 안전처럼 취재 질문이 다른 경우
+- 확신할 수 없는 경우
+
+모든 candidate_id를 정확히 한 번만 포함하라. 하나로 묶을 근거가 없으면 단독 그룹으로 둔다.
+대표 후보는 시민 문제 구조가 가장 구체적이고 방송 취재로 확장하기 쉬운 항목을 고른다."""
+
 
 def compact(value):
     return re.sub(r"\s+", " ", str(value or "")).strip()
@@ -215,6 +232,92 @@ def call_model(model, api_key, metadata, passage):
     ]
     if answer.get("status") != "completed" or not texts:
         raise ValueError("Model response incomplete")
+    return json.loads("".join(texts))
+
+
+def call_group_model(model, api_key, rows):
+    candidate_ids = [row["candidate_id"] for row in rows]
+    schema = {
+        "type": "object",
+        "additionalProperties": False,
+        "required": ["groups"],
+        "properties": {
+            "groups": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": len(rows),
+                "items": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": ["representative_candidate_id", "candidate_ids", "reason"],
+                    "properties": {
+                        "representative_candidate_id": {
+                            "type": "string",
+                            "enum": candidate_ids,
+                        },
+                        "candidate_ids": {
+                            "type": "array",
+                            "minItems": 1,
+                            "uniqueItems": True,
+                            "items": {"type": "string", "enum": candidate_ids},
+                        },
+                        "reason": {"type": "string"},
+                    },
+                },
+            }
+        },
+    }
+    compact_rows = [
+        {
+            key: row[key]
+            for key in (
+                "candidate_id", "source_name", "meeting_date", "signal_type",
+                "headline", "subject", "affected_group", "mechanism",
+                "public_question", "counterintuitive_question",
+            )
+        }
+        for row in rows
+    ]
+    request_data = {
+        "model": model,
+        "store": False,
+        "max_output_tokens": 6000,
+        "input": [
+            {"role": "system", "content": CONSOLIDATION_INSTRUCTIONS},
+            {"role": "user", "content": json.dumps(
+                {"candidates": compact_rows},
+                ensure_ascii=False,
+            )},
+        ],
+        "text": {
+            "format": {
+                "type": "json_schema",
+                "name": "council_issue_groups",
+                "strict": True,
+                "schema": schema,
+            }
+        },
+    }
+    request = urllib.request.Request(
+        OPENAI,
+        data=json.dumps(request_data, ensure_ascii=False).encode("utf-8"),
+        headers={
+            "Authorization": "Bearer " + api_key,
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(request, timeout=150) as response:
+        answer = json.load(response)
+    texts = [
+        part.get("text", "")
+        for item in answer.get("output", [])
+        if item.get("type") == "message"
+        for part in item.get("content", [])
+        if part.get("type") == "output_text"
+    ]
+    if answer.get("status") != "completed" or not texts:
+        raise ValueError("Consolidation response incomplete")
     return json.loads("".join(texts))
 
 
@@ -323,8 +426,50 @@ def same_issue(left, right):
     )
 
 
+def build_review(groups):
+    review = []
+    for group in groups:
+        representative = dict(group["representative"])
+        members = group["members"]
+        anchors = []
+        seen_anchors = set()
+        unknowns = []
+        for row in members:
+            for anchor in row.get("supporting_anchors", [{
+                "document_id": row["document_id"],
+                "source_name": row["source_name"],
+                "meeting_date": row["meeting_date"],
+                "document_url": row["document_url"],
+                "anchor_quote": row["anchor_quote"],
+                "evidence_status": row["evidence_status"],
+            }]):
+                anchor_key = (anchor.get("document_id"), anchor["anchor_quote"])
+                if anchor_key not in seen_anchors and len(anchors) < 8:
+                    seen_anchors.add(anchor_key)
+                    anchors.append(anchor)
+            for value in row.get("unknowns", []):
+                if value not in unknowns:
+                    unknowns.append(value)
+        representative["unknowns"] = unknowns[:10]
+        representative["related_evidence_count"] = sum(
+            int(row.get("related_evidence_count") or 1) for row in members
+        )
+        representative["related_document_count"] = len({
+            anchor.get("document_id") or anchor.get("document_url")
+            for anchor in anchors
+        })
+        representative["related_sources"] = sorted({
+            source
+            for row in members
+            for source in row.get("related_sources", [row["source_name"]])
+        })
+        representative["supporting_anchors"] = anchors
+        review.append(representative)
+    return review
+
+
 def group_for_review(rows):
-    """Keep raw evidence, but show one card per semantic issue."""
+    """Fast exact-ish pass; semantic consolidation follows when budget permits."""
     ordered = sorted(
         rows,
         key=lambda row: (
@@ -344,38 +489,54 @@ def group_for_review(rows):
             groups.append({"representative": row, "members": [row]})
         else:
             target["members"].append(row)
+    return build_review(groups)
 
-    review = []
+
+def validate_grouping(answer, rows):
+    groups = answer.get("groups") if isinstance(answer, dict) else None
+    if not isinstance(groups, list) or not groups:
+        raise ValueError("Semantic grouping is missing")
+    by_id = {row["candidate_id"]: row for row in rows}
+    seen = set()
+    validated = []
     for group in groups:
-        representative = dict(group["representative"])
-        members = group["members"]
-        anchors = []
-        seen_anchors = set()
-        unknowns = []
-        for row in members:
-            anchor_key = (row["document_id"], row["anchor_quote"])
-            if anchor_key not in seen_anchors and len(anchors) < 5:
-                seen_anchors.add(anchor_key)
-                anchors.append({
-                    "source_name": row["source_name"],
-                    "meeting_date": row["meeting_date"],
-                    "document_url": row["document_url"],
-                    "anchor_quote": row["anchor_quote"],
-                    "evidence_status": row["evidence_status"],
-                })
-            for value in row.get("unknowns", []):
-                if value not in unknowns:
-                    unknowns.append(value)
-        representative["unknowns"] = unknowns[:8]
-        representative["related_evidence_count"] = len(members)
-        representative["related_document_count"] = len({
-            row["document_id"] for row in members
+        if not isinstance(group, dict) or set(group) != {
+            "representative_candidate_id", "candidate_ids", "reason"
+        }:
+            raise ValueError("Invalid semantic grouping keys")
+        member_ids = group["candidate_ids"]
+        representative_id = group["representative_candidate_id"]
+        if (
+            not isinstance(member_ids, list)
+            or not member_ids
+            or len(member_ids) != len(set(member_ids))
+            or representative_id not in member_ids
+            or any(candidate_id not in by_id for candidate_id in member_ids)
+            or any(candidate_id in seen for candidate_id in member_ids)
+        ):
+            raise ValueError("Invalid semantic grouping membership")
+        reason = compact(group["reason"])
+        if not reason:
+            raise ValueError("Missing semantic grouping reason")
+        seen.update(member_ids)
+        validated.append({
+            "representative": by_id[representative_id],
+            "members": [by_id[candidate_id] for candidate_id in member_ids],
+            "reason": reason,
         })
-        representative["related_sources"] = sorted({
-            row["source_name"] for row in members
-        })
-        representative["supporting_anchors"] = anchors
-        review.append(representative)
+    if seen != set(by_id):
+        raise ValueError("Semantic grouping does not cover every candidate")
+    return validated
+
+
+def consolidate_for_review(rows, answer):
+    initial = group_for_review(rows)
+    if len(initial) < 2:
+        return initial
+    groups = validate_grouping(answer, initial)
+    review = build_review(groups)
+    for row, group in zip(review, groups):
+        row["consolidation_reason"] = group["reason"]
     return review
 
 
@@ -396,6 +557,8 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
     added = []
     errors = []
     calls = 0
+    consolidation_calls = 0
+    chunk_limit = max_calls - 1 if len(existing) >= 2 else max_calls
 
     doc_chunks = {row["document_id"]: chunks(row["body"]) for row in documents}
     for row in documents:
@@ -406,10 +569,10 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
             "candidate_count": 0,
         })
 
-    while calls < max_calls:
+    while calls < chunk_limit:
         progress = False
         for document in documents:
-            if calls >= max_calls:
+            if calls >= chunk_limit:
                 break
             document_id = document["document_id"]
             document_state = state["documents"][document_id]
@@ -485,6 +648,17 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
     state["updated_at_kst"] = datetime.now(KST).isoformat(timespec="seconds")
     all_candidates = existing + added
     grouped_review = group_for_review(all_candidates)
+    if len(grouped_review) >= 2 and calls < max_calls:
+        calls += 1
+        consolidation_calls = 1
+        try:
+            grouping_answer = call_group_model(model, api_key, grouped_review)
+            grouped_review = consolidate_for_review(all_candidates, grouping_answer)
+        except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
+            errors.append({
+                "stage": "semantic_consolidation",
+                "error_type": type(exc).__name__,
+            })
     review = grouped_review[:50]
     return {
         "schema": 1,
@@ -495,6 +669,8 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
             bool(state["documents"][row["document_id"]]["complete"]) for row in documents
         ),
         "model_call_count": calls,
+        "chunk_model_call_count": calls - consolidation_calls,
+        "consolidation_model_call_count": consolidation_calls,
         "new_candidate_count": len(added),
         "candidate_total": len(all_candidates),
         "review_candidate_count": len(grouped_review),
@@ -516,6 +692,8 @@ def render(payload):
         f"- 아카이브 문서: {payload['document_count']}건",
         f"- 문서 전체 분석 완료: {payload['completed_document_count']}건",
         f"- 이번 실행 분석 호출: {payload['model_call_count']}회",
+        f"  - 원문 읽기: {payload['chunk_model_call_count']}회",
+        f"  - 사안 통합: {payload['consolidation_model_call_count']}회",
         f"- 이번 실행 새 단서: {payload['new_candidate_count']}건",
         f"- 누적 원문 단서: {payload['candidate_total']}건",
         f"- 중복 통합 뒤 검토 사안: {payload['review_candidate_count']}건",
@@ -583,6 +761,8 @@ def main():
         "document_count": payload["document_count"],
         "completed_document_count": payload["completed_document_count"],
         "model_call_count": payload["model_call_count"],
+        "chunk_model_call_count": payload["chunk_model_call_count"],
+        "consolidation_model_call_count": payload["consolidation_model_call_count"],
         "new_candidate_count": payload["new_candidate_count"],
         "candidate_total": payload["candidate_total"],
         "review_candidate_count": payload["review_candidate_count"],
