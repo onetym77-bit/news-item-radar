@@ -155,10 +155,11 @@ class AnalyzeTests(unittest.TestCase):
         schema = analyze.group_schema(["alpha", "beta"])
         serialized = json.dumps(schema)
         self.assertNotIn("uniqueItems", serialized)
-        candidate_ids = (
-            schema["properties"]["groups"]["items"]["properties"]["candidate_ids"]
-        )
-        self.assertEqual(candidate_ids["minItems"], 1)
+        groups = schema["properties"]["groups"]
+        candidate_ids = groups["items"]["properties"]["candidate_ids"]
+        self.assertEqual(groups["minItems"], 0)
+        self.assertEqual(groups["maxItems"], 1)
+        self.assertEqual(candidate_ids["minItems"], 2)
         self.assertEqual(candidate_ids["maxItems"], 2)
 
     def test_incomplete_group_response_exposes_safe_reason(self):
@@ -256,7 +257,7 @@ class AnalyzeTests(unittest.TestCase):
         self.assertEqual(diagnostics["duplicate_across_groups"], ["beta"])
         self.assertEqual(diagnostics["missing_candidates"], ["gamma"])
 
-    def test_semantic_grouping_must_cover_every_candidate_once(self):
+    def test_unmentioned_candidates_are_preserved_as_singletons(self):
         first = {
             "candidate_id": "alpha",
             "document_id": "CLIKC100",
@@ -268,16 +269,47 @@ class AnalyzeTests(unittest.TestCase):
             **valid_item(),
             "review_status": "UNREVIEWED",
         }
-        second = {**first, "candidate_id": "beta", "document_id": "CLIKC200"}
+        second = {
+            **first,
+            "candidate_id": "beta",
+            "document_id": "CLIKC200",
+            "headline": "학교 통학 셔틀 비용이 학부모 부담으로 넘어갔다",
+            "subject": "학교 배정과 대중교통 공백 때문에 사설 통학버스를 이용하는 가정의 비용 부담을 확인한다.",
+        }
+
+        grouped = analyze.consolidate_for_review(
+            [first, second],
+            {"groups": []},
+        )
+
+        self.assertEqual(len(grouped), 2)
+        self.assertEqual(
+            {row["candidate_id"] for row in grouped},
+            {"alpha", "beta"},
+        )
+
+    def test_sparse_grouping_rejects_single_member_groups(self):
+        first = {
+            "candidate_id": "alpha",
+            "document_id": "CLIKC100",
+            "source_id": "seoul_city",
+            "source_name": "서울시의회",
+            "meeting_date": "2026-09-11",
+            "document_url": "https://example.com/a",
+            "chunk_number": 1,
+            **valid_item(),
+            "review_status": "UNREVIEWED",
+        }
         answer = {
             "groups": [{
                 "representative_candidate_id": "alpha",
                 "candidate_ids": ["alpha"],
-                "reason": "한 항목만 포함",
+                "reason": "단독 그룹",
             }]
         }
-        with self.assertRaisesRegex(ValueError, "cover every candidate"):
-            analyze.validate_grouping(answer, [first, second])
+
+        with self.assertRaisesRegex(ValueError, "membership"):
+            analyze.validate_grouping(answer, [first])
 
     def test_no_signal_marks_chunk_complete_without_candidate(self):
         document = self.document()

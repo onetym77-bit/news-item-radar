@@ -32,7 +32,7 @@ def render(payload):
         f"- 배정 완전성: {'정상' if payload['grouping_valid'] else '오류'}",
         f"- 그룹 내부 중복: {payload['duplicate_within_group_count']}건",
         f"- 그룹 간 중복 배정: {payload['duplicate_across_groups_count']}건",
-        f"- 누락 후보: {payload['missing_candidate_count']}건",
+        f"- 모델이 묶지 않아 단독 보존할 후보: {payload['missing_candidate_count']}건",
         f"- 대표 ID가 그룹 밖에 있음: {payload['representative_outside_group_count']}건",
     ]
     if payload["validation_error"]:
