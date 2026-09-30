@@ -336,8 +336,34 @@ def call_group_model(model, api_key, rows):
         if part.get("type") == "output_text"
     ]
     if answer.get("status") != "completed" or not texts:
-        raise ValueError("Consolidation response incomplete")
+        raise ValueError(consolidation_response_error(answer, texts))
     return json.loads("".join(texts))
+
+
+def consolidation_response_error(answer, texts):
+    status = compact(answer.get("status", "")) or "unknown"
+    details = answer.get("incomplete_details")
+    reason = ""
+    if isinstance(details, dict):
+        reason = compact(details.get("reason", ""))
+    refusal_count = sum(
+        1
+        for item in answer.get("output", [])
+        if isinstance(item, dict)
+        for part in item.get("content", [])
+        if isinstance(part, dict) and part.get("type") == "refusal"
+    )
+    output_types = sorted({
+        compact(item.get("type", ""))
+        for item in answer.get("output", [])
+        if isinstance(item, dict) and compact(item.get("type", ""))
+    })
+    return (
+        "Consolidation response incomplete: "
+        f"status={status}; reason={reason or 'not_reported'}; "
+        f"output_text_count={len(texts)}; refusal_count={refusal_count}; "
+        f"output_types={','.join(output_types) or 'none'}"
+    )
 
 
 def validate_item(item, passage):
