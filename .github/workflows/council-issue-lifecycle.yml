@@ -135,8 +135,11 @@ jobs:
           assert analysis["document_count"] == archive["archived_total"]
           assert analysis["model_call_count"] <= int("${{ inputs.analysis_calls }}")
           assert analysis["consolidation_model_call_count"] in (0, 1)
-          assert analysis["consolidation_status"] in ("NOT_RUN", "SUCCEEDED", "FAILED")
+          assert analysis["consolidation_status"] in (
+              "NOT_RUN", "SUCCEEDED", "SUCCEEDED_WITH_REPAIRS", "FAILED"
+          )
           assert analysis["consolidation_input_count"] >= analysis["consolidation_group_count"]
+          assert analysis["consolidation_repair_count"] >= 0
           if analysis["consolidation_status"] == "FAILED":
               assert analysis["consolidation_error_type"]
               assert analysis["consolidation_error_reason"]

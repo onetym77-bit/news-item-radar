@@ -548,15 +548,80 @@ def validate_grouping(answer, rows):
     return validated
 
 
-def consolidate_for_review(rows, answer):
+def repair_grouping(answer, rows):
+    groups = answer.get("groups") if isinstance(answer, dict) else None
+    if not isinstance(groups, list) or not groups:
+        raise ValueError("Semantic grouping is missing")
+    by_id = {row["candidate_id"]: row for row in rows}
+    occurrences = {}
+    prepared = []
+    repairs = 0
+    for group in groups:
+        if not isinstance(group, dict) or set(group) != {
+            "representative_candidate_id", "candidate_ids", "reason"
+        }:
+            raise ValueError("Invalid semantic grouping keys")
+        member_ids = group["candidate_ids"]
+        if (
+            not isinstance(member_ids, list)
+            or not member_ids
+            or any(candidate_id not in by_id for candidate_id in member_ids)
+        ):
+            raise ValueError("Invalid semantic grouping membership")
+        unique_ids = list(dict.fromkeys(member_ids))
+        repairs += len(member_ids) - len(unique_ids)
+        for candidate_id in unique_ids:
+            occurrences[candidate_id] = occurrences.get(candidate_id, 0) + 1
+        prepared.append({
+            "representative_id": group["representative_candidate_id"],
+            "member_ids": unique_ids,
+            "reason": compact(group["reason"]) or "동일 시민 문제로 분류",
+        })
+
+    conflicts = {
+        candidate_id for candidate_id, count in occurrences.items() if count > 1
+    }
+    repaired_groups = []
+    assigned = set()
+    for group in prepared:
+        member_ids = [
+            candidate_id
+            for candidate_id in group["member_ids"]
+            if candidate_id not in conflicts
+        ]
+        if not member_ids:
+            continue
+        representative_id = group["representative_id"]
+        if representative_id not in member_ids:
+            representative_id = member_ids[0]
+            repairs += 1
+        assigned.update(member_ids)
+        repaired_groups.append({
+            "representative": by_id[representative_id],
+            "members": [by_id[candidate_id] for candidate_id in member_ids],
+            "reason": group["reason"],
+        })
+
+    fallback_ids = sorted(set(by_id) - assigned)
+    repairs += len(fallback_ids)
+    for candidate_id in fallback_ids:
+        repaired_groups.append({
+            "representative": by_id[candidate_id],
+            "members": [by_id[candidate_id]],
+            "reason": "모델 배정 충돌 또는 누락으로 단독 보존",
+        })
+    return repaired_groups, repairs
+
+
+def consolidate_for_review(rows, answer, with_metrics=False):
     initial = group_for_review(rows)
     if len(initial) < 2:
-        return initial
-    groups = validate_grouping(answer, initial)
+        return (initial, 0) if with_metrics else initial
+    groups, repairs = repair_grouping(answer, initial)
     review = build_review(groups)
     for row, group in zip(review, groups):
         row["consolidation_reason"] = group["reason"]
-    return review
+    return (review, repairs) if with_metrics else review
 
 
 def empty_state():
@@ -581,6 +646,7 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
     consolidation_error_type = ""
     consolidation_error_reason = ""
     consolidation_input_count = 0
+    consolidation_repair_count = 0
     chunk_limit = max_calls - 1 if len(existing) >= 2 else max_calls
 
     doc_chunks = {row["document_id"]: chunks(row["body"]) for row in documents}
@@ -678,8 +744,16 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
         consolidation_status = "RUNNING"
         try:
             grouping_answer = call_group_model(model, api_key, grouped_review)
-            grouped_review = consolidate_for_review(all_candidates, grouping_answer)
-            consolidation_status = "SUCCEEDED"
+            grouped_review, consolidation_repair_count = consolidate_for_review(
+                all_candidates,
+                grouping_answer,
+                with_metrics=True,
+            )
+            consolidation_status = (
+                "SUCCEEDED_WITH_REPAIRS"
+                if consolidation_repair_count
+                else "SUCCEEDED"
+            )
         except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
             consolidation_status = "FAILED"
             consolidation_error_type = type(exc).__name__
@@ -704,6 +778,7 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
         "consolidation_status": consolidation_status,
         "consolidation_input_count": consolidation_input_count,
         "consolidation_group_count": len(grouped_review),
+        "consolidation_repair_count": consolidation_repair_count,
         "consolidation_error_type": consolidation_error_type,
         "consolidation_error_reason": consolidation_error_reason,
         "new_candidate_count": len(added),
@@ -730,6 +805,7 @@ def render(payload):
         f"  - 원문 읽기: {payload['chunk_model_call_count']}회",
         f"  - 사안 통합: {payload['consolidation_model_call_count']}회 · {payload['consolidation_status']}",
         f"  - 통합 입력/출력: {payload['consolidation_input_count']}건 → {payload['consolidation_group_count']}건",
+        f"  - 보수적 단독 복구: {payload['consolidation_repair_count']}건",
         f"- 이번 실행 새 단서: {payload['new_candidate_count']}건",
         f"- 누적 원문 단서: {payload['candidate_total']}건",
         f"- 중복 통합 뒤 검토 사안: {payload['review_candidate_count']}건",
@@ -807,6 +883,7 @@ def main():
         "consolidation_status": payload["consolidation_status"],
         "consolidation_input_count": payload["consolidation_input_count"],
         "consolidation_group_count": payload["consolidation_group_count"],
+        "consolidation_repair_count": payload["consolidation_repair_count"],
         "consolidation_error_type": payload["consolidation_error_type"],
         "consolidation_error_reason": payload["consolidation_error_reason"],
         "new_candidate_count": payload["new_candidate_count"],
