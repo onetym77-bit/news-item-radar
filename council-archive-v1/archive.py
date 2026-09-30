@@ -76,17 +76,17 @@ def write_json(path, value):
 
 
 def safe_error_reason(exc):
-    text = re.sub(r"https?://\\S+", "[URL]", compact_error(exc))
+    text = re.sub(r"https?://\S+", "[URL]", compact_error(exc))
     text = re.sub(
-        r"(?i)(api[_-]?key|token|secret|serviceKey)=([^&\\s]+)",
-        r"\\1=[REDACTED]",
+        r"(?i)(api[_-]?key|token|secret|serviceKey)=([^&\s]+)",
+        r"\1=[REDACTED]",
         text,
     )
     return text[:180] or type(exc).__name__
 
 
 def compact_error(exc):
-    return re.sub(r"\\s+", " ", str(exc or "")).strip()
+    return re.sub(r"\s+", " ", str(exc or "")).strip()
 
 
 def error_summary(errors):
