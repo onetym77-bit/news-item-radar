@@ -180,6 +180,9 @@ class ArchiveTests(unittest.TestCase):
         self.assertEqual(summary[0]["count"], 2)
         self.assertEqual(summary[0]["source_count"], 2)
         self.assertEqual(summary[0]["reason"], "CLIK API returned ERROR-301")
+        self.assertEqual(archive.unique_error_count(errors), 2)
+        retried = [errors[0], errors[0], errors[1], errors[1]]
+        self.assertEqual(archive.unique_error_count(retried), 2)
 
     def test_real_source_registry_covers_all_26_councils(self):
         sources = archive.load_sources(
