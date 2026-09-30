@@ -132,7 +132,9 @@ CONSOLIDATION_INSTRUCTIONS = """당신은 서울 지역방송의 기획취재 �
 - 한 사안은 예산, 다른 사안은 안전처럼 취재 질문이 다른 경우
 - 확신할 수 없는 경우
 
-모든 candidate_id를 정확히 한 번만 포함하라. 하나로 묶을 근거가 없으면 단독 그룹으로 둔다.
+두 건 이상이 같은 시민 문제라고 판단되는 묶음만 groups에 반환하라.
+독립 후보와 확신할 수 없는 후보는 출력하지 않는다. 출력에서 빠진 후보는 시스템이 단독 후보로
+그대로 보존한다. candidate_id는 전체 응답에서 최대 한 번만 사용할 수 있다.
 대표 후보는 시민 문제 구조가 가장 구체적이고 방송 취재로 확장하기 쉬운 항목을 고른다."""
 
 
@@ -254,8 +256,8 @@ def group_schema(candidate_ids):
         "properties": {
             "groups": {
                 "type": "array",
-                "minItems": 1,
-                "maxItems": len(candidate_ids),
+                "minItems": 0,
+                "maxItems": max(1, len(candidate_ids) // 2),
                 "items": {
                     "type": "object",
                     "additionalProperties": False,
@@ -267,7 +269,7 @@ def group_schema(candidate_ids):
                         },
                         "candidate_ids": {
                             "type": "array",
-                            "minItems": 1,
+                            "minItems": 2,
                             "maxItems": len(candidate_ids),
                             "items": {"type": "string", "enum": candidate_ids},
                         },
@@ -600,7 +602,7 @@ def grouping_diagnostics(answer, rows):
 
 def validate_grouping(answer, rows):
     groups = answer.get("groups") if isinstance(answer, dict) else None
-    if not isinstance(groups, list) or not groups:
+    if not isinstance(groups, list):
         raise ValueError("Semantic grouping is missing")
     by_id = {row["candidate_id"]: row for row in rows}
     seen = set()
@@ -614,7 +616,7 @@ def validate_grouping(answer, rows):
         representative_id = group["representative_candidate_id"]
         if (
             not isinstance(member_ids, list)
-            or not member_ids
+            or len(member_ids) < 2
             or len(member_ids) != len(set(member_ids))
             or representative_id not in member_ids
             or any(candidate_id not in by_id for candidate_id in member_ids)
@@ -630,8 +632,13 @@ def validate_grouping(answer, rows):
             "members": [by_id[candidate_id] for candidate_id in member_ids],
             "reason": reason,
         })
-    if seen != set(by_id):
-        raise ValueError("Semantic grouping does not cover every candidate")
+    for candidate_id, row in by_id.items():
+        if candidate_id not in seen:
+            validated.append({
+                "representative": row,
+                "members": [row],
+                "reason": "",
+            })
     return validated
 
 
@@ -642,7 +649,8 @@ def consolidate_for_review(rows, answer):
     groups = validate_grouping(answer, initial)
     review = build_review(groups)
     for row, group in zip(review, groups):
-        row["consolidation_reason"] = group["reason"]
+        if group["reason"]:
+            row["consolidation_reason"] = group["reason"]
     return review
 
 
