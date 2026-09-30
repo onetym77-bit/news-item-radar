@@ -199,6 +199,48 @@ class AnalyzeTests(unittest.TestCase):
         self.assertEqual(grouped[0]["related_document_count"], 2)
         self.assertIn("청년 AI 접근 장벽", grouped[0]["consolidation_reason"])
 
+    def test_conflicted_or_missing_members_are_kept_as_singletons(self):
+        first = {
+            "candidate_id": "alpha",
+            "document_id": "CLIKC100",
+            "source_id": "seoul_city",
+            "source_name": "서울시의회",
+            "meeting_date": "2026-09-11",
+            "document_url": "https://example.com/a",
+            "chunk_number": 1,
+            **valid_item(),
+            "review_status": "UNREVIEWED",
+        }
+        second = {**first, "candidate_id": "beta", "document_id": "CLIKC200"}
+        third = {**first, "candidate_id": "gamma", "document_id": "CLIKC300"}
+        answer = {
+            "groups": [
+                {
+                    "representative_candidate_id": "alpha",
+                    "candidate_ids": ["alpha", "beta"],
+                    "reason": "같은 문제",
+                },
+                {
+                    "representative_candidate_id": "beta",
+                    "candidate_ids": ["beta"],
+                    "reason": "중복 배정",
+                },
+            ]
+        }
+
+        groups, repairs = analyze.repair_grouping(
+            answer,
+            [first, second, third],
+        )
+
+        self.assertEqual(repairs, 2)
+        self.assertEqual(len(groups), 3)
+        self.assertEqual(
+            {group["representative"]["candidate_id"] for group in groups},
+            {"alpha", "beta", "gamma"},
+        )
+        self.assertTrue(all(len(group["members"]) == 1 for group in groups))
+
     def test_semantic_grouping_must_cover_every_candidate_once(self):
         first = {
             "candidate_id": "alpha",
