@@ -272,6 +272,113 @@ def append_candidate_log(path, rows):
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
+STOP_TERMS = {
+    "서울", "서울시", "시민", "문제", "사업", "지원", "관련", "대한", "위한",
+    "통해", "있는", "있다", "한다", "필요", "확인", "실제", "경우", "여부",
+}
+
+
+def issue_tokens(*values):
+    return {
+        term
+        for value in values
+        for term in re.findall(r"[가-힣A-Za-z0-9]{2,}", compact(value))
+        if term not in STOP_TERMS
+    }
+
+
+def similarity(left, right):
+    if not left or not right:
+        return 0.0
+    return len(left & right) / len(left | right)
+
+
+def same_issue(left, right):
+    headline = similarity(
+        issue_tokens(left.get("headline")),
+        issue_tokens(right.get("headline")),
+    )
+    structure = similarity(
+        issue_tokens(left.get("subject"), left.get("affected_group"), left.get("mechanism")),
+        issue_tokens(right.get("subject"), right.get("affected_group"), right.get("mechanism")),
+    )
+    affected = similarity(
+        issue_tokens(left.get("affected_group")),
+        issue_tokens(right.get("affected_group")),
+    )
+    if left.get("document_id") == right.get("document_id"):
+        return (
+            headline >= 0.45
+            or structure >= 0.50
+            or (
+                left.get("signal_type") == right.get("signal_type")
+                and affected >= 0.50
+                and structure >= 0.34
+            )
+        )
+    return (
+        left.get("signal_type") == right.get("signal_type")
+        and affected >= 0.55
+        and (headline >= 0.68 or structure >= 0.68)
+    )
+
+
+def group_for_review(rows):
+    """Keep raw evidence, but show one card per semantic issue."""
+    ordered = sorted(
+        rows,
+        key=lambda row: (
+            row["broadcast_potential"],
+            row["meeting_date"],
+            row["candidate_id"],
+        ),
+        reverse=True,
+    )
+    groups = []
+    for row in ordered:
+        target = next(
+            (group for group in groups if same_issue(group["representative"], row)),
+            None,
+        )
+        if target is None:
+            groups.append({"representative": row, "members": [row]})
+        else:
+            target["members"].append(row)
+
+    review = []
+    for group in groups:
+        representative = dict(group["representative"])
+        members = group["members"]
+        anchors = []
+        seen_anchors = set()
+        unknowns = []
+        for row in members:
+            anchor_key = (row["document_id"], row["anchor_quote"])
+            if anchor_key not in seen_anchors and len(anchors) < 5:
+                seen_anchors.add(anchor_key)
+                anchors.append({
+                    "source_name": row["source_name"],
+                    "meeting_date": row["meeting_date"],
+                    "document_url": row["document_url"],
+                    "anchor_quote": row["anchor_quote"],
+                    "evidence_status": row["evidence_status"],
+                })
+            for value in row.get("unknowns", []):
+                if value not in unknowns:
+                    unknowns.append(value)
+        representative["unknowns"] = unknowns[:8]
+        representative["related_evidence_count"] = len(members)
+        representative["related_document_count"] = len({
+            row["document_id"] for row in members
+        })
+        representative["related_sources"] = sorted({
+            row["source_name"] for row in members
+        })
+        representative["supporting_anchors"] = anchors
+        review.append(representative)
+    return review
+
+
 def empty_state():
     return {"schema": STATE_SCHEMA, "documents": {}, "updated_at_kst": ""}
 
@@ -377,15 +484,8 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
     append_candidate_log(candidate_path, added)
     state["updated_at_kst"] = datetime.now(KST).isoformat(timespec="seconds")
     all_candidates = existing + added
-    review = sorted(
-        all_candidates,
-        key=lambda row: (
-            row["broadcast_potential"],
-            row["meeting_date"],
-            row["candidate_id"],
-        ),
-        reverse=True,
-    )[:50]
+    grouped_review = group_for_review(all_candidates)
+    review = grouped_review[:50]
     return {
         "schema": 1,
         "generated_at_kst": datetime.now(KST).isoformat(timespec="seconds"),
@@ -397,6 +497,8 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
         "model_call_count": calls,
         "new_candidate_count": len(added),
         "candidate_total": len(all_candidates),
+        "review_candidate_count": len(grouped_review),
+        "duplicate_collapsed_count": len(all_candidates) - len(grouped_review),
         "error_count": len(errors),
         "selection_boundary": (
             "이 결과는 의미 구조를 추출한 검토 단서이며 기사 후보 확정이 아니다. "
@@ -415,7 +517,9 @@ def render(payload):
         f"- 문서 전체 분석 완료: {payload['completed_document_count']}건",
         f"- 이번 실행 분석 호출: {payload['model_call_count']}회",
         f"- 이번 실행 새 단서: {payload['new_candidate_count']}건",
-        f"- 누적 단서: {payload['candidate_total']}건",
+        f"- 누적 원문 단서: {payload['candidate_total']}건",
+        f"- 중복 통합 뒤 검토 사안: {payload['review_candidate_count']}건",
+        f"- 묶어서 줄인 중복: {payload['duplicate_collapsed_count']}건",
         f"- 오류: {payload['error_count']}건",
         "",
         "> 발언을 사실로 확정하지 않습니다. 새 사업에 실적 자료가 없다는 이유만으로 "
@@ -433,6 +537,7 @@ def render(payload):
             f"- 원문 앵커: {row['anchor_quote']}",
             f"- 검증 전 상태: {row['evidence_status']}",
             f"- 확인 필요: {' / '.join(row['unknowns'])}",
+            f"- 관련 근거: {row['related_evidence_count']}건 · 문서 {row['related_document_count']}건 · {' / '.join(row['related_sources'])}",
             f"- 방송 확장 점수: {row['broadcast_potential']}",
         ])
     return "\n".join(lines) + "\n"
@@ -480,6 +585,8 @@ def main():
         "model_call_count": payload["model_call_count"],
         "new_candidate_count": payload["new_candidate_count"],
         "candidate_total": payload["candidate_total"],
+        "review_candidate_count": payload["review_candidate_count"],
+        "duplicate_collapsed_count": payload["duplicate_collapsed_count"],
         "error_count": payload["error_count"],
     }, ensure_ascii=False))
     return 0

@@ -98,6 +98,59 @@ class AnalyzeTests(unittest.TestCase):
             self.assertEqual(len(rows), 1)
             self.assertTrue(state["documents"]["CLIKC100"]["complete"])
 
+    def test_semantic_duplicates_are_grouped_without_losing_evidence(self):
+        base = {
+            "candidate_id": "one",
+            "document_id": "CLIKC100",
+            "source_id": "seoul_city",
+            "source_name": "서울시의회",
+            "meeting_date": "2026-09-11",
+            "document_url": "https://example.com/minutes",
+            "chunk_number": 1,
+            **valid_item(),
+            "review_status": "UNREVIEWED",
+        }
+        duplicate = {
+            **base,
+            "candidate_id": "two",
+            "chunk_number": 2,
+            "headline": "청년 AI 지원, 구독료보다 이용 장벽을 먼저 봐야 한다",
+            "anchor_quote": "무료와 유료 기능의 차이보다 청년이 왜 접근하지 못하는지 먼저 확인해야 합니다.",
+            "unknowns": ["수요 조사", "사업 대상"],
+        }
+
+        grouped = analyze.group_for_review([base, duplicate])
+
+        self.assertEqual(len(grouped), 1)
+        self.assertEqual(grouped[0]["related_evidence_count"], 2)
+        self.assertEqual(grouped[0]["related_document_count"], 1)
+        self.assertEqual(len(grouped[0]["supporting_anchors"]), 2)
+        self.assertIn("수요 조사", grouped[0]["unknowns"])
+
+    def test_different_civic_problems_remain_separate(self):
+        first = {
+            "candidate_id": "one",
+            "document_id": "CLIKC100",
+            "source_id": "seoul_city",
+            "source_name": "서울시의회",
+            "meeting_date": "2026-09-11",
+            "document_url": "https://example.com/minutes",
+            "chunk_number": 1,
+            **valid_item(),
+            "review_status": "UNREVIEWED",
+        }
+        second = {
+            **first,
+            "candidate_id": "other",
+            "headline": "학교 통학 셔틀 비용이 학부모 부담으로 넘어갔다",
+            "subject": "학교 배정과 대중교통 공백 때문에 사설 통학버스를 이용하는 가정의 비용 부담을 확인한다.",
+            "affected_group": "대중교통으로 통학하기 어려운 초등학생 가정",
+            "mechanism": "공공 통학 수단 부족이 사설 셔틀 비용 부담으로 전가된다.",
+            "signal_type": "SERVICE_GAP",
+        }
+
+        self.assertEqual(len(analyze.group_for_review([first, second])), 2)
+
     def test_no_signal_marks_chunk_complete_without_candidate(self):
         document = self.document()
         state = analyze.normalize_state(None)

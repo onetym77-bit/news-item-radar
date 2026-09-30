@@ -133,6 +133,10 @@ jobs:
           assert analysis["mode"] == "FULL_TEXT_SEMANTIC_READING"
           assert analysis["document_count"] == archive["archived_total"]
           assert analysis["model_call_count"] <= int("${{ inputs.analysis_calls }}")
+          assert analysis["review_candidate_count"] <= analysis["candidate_total"]
+          assert analysis["duplicate_collapsed_count"] == (
+              analysis["candidate_total"] - analysis["review_candidate_count"]
+          )
           forbidden = ("api_key", "CLIK_API_KEY", "OPENAI_API_KEY", "searchKeyword", '"body"')
           serialized = json.dumps({"archive": archive, "analysis": analysis}, ensure_ascii=False)
           assert not any(term in serialized for term in forbidden)
@@ -140,6 +144,9 @@ jobs:
               assert row["anchor_quote"]
               assert row["public_question"] != row["subject"]
               assert row["review_status"] == "UNREVIEWED"
+              assert row["related_evidence_count"] >= 1
+              assert row["related_document_count"] >= 1
+              assert row["supporting_anchors"]
           PY
 
       - name: Upload archive and semantic review
