@@ -28,6 +28,7 @@ def render(payload):
         f"- 원자료 후보: {payload['raw_candidate_count']}건",
         f"- 1차 통합 입력: {payload['consolidation_input_count']}건",
         f"- 모델 반환 그룹: {payload['group_count']}개",
+        f"- 모델 응답 완료: {'예' if payload['model_response_completed'] else '아니오'}",
         f"- 배정 완전성: {'정상' if payload['grouping_valid'] else '오류'}",
         f"- 그룹 내부 중복: {payload['duplicate_within_group_count']}건",
         f"- 그룹 간 중복 배정: {payload['duplicate_across_groups_count']}건",
@@ -60,14 +61,29 @@ def main():
         raise ValueError("At least two cached candidates are required")
 
     review_rows = analyze.group_for_review(candidates)
-    answer = analyze.call_group_model(args.model, api_key, review_rows)
-    diagnostics = analyze.grouping_diagnostics(answer, review_rows)
+    diagnostics = {
+        "group_count": 0,
+        "duplicate_within_group_count": 0,
+        "duplicate_across_groups_count": 0,
+        "missing_candidate_count": len(review_rows),
+        "representative_outside_group_count": 0,
+        "unknown_ids": [],
+        "duplicate_across_groups": [],
+        "missing_candidates": [
+            row["candidate_id"] for row in review_rows[:20]
+        ],
+        "representative_outside_groups": [],
+    }
     validation_error = ""
-    grouping_valid = True
+    grouping_valid = False
+    model_response_completed = False
     try:
+        answer = analyze.call_group_model(args.model, api_key, review_rows)
+        model_response_completed = True
+        diagnostics = analyze.grouping_diagnostics(answer, review_rows)
         analyze.validate_grouping(answer, review_rows)
-    except (ValueError, KeyError, TypeError) as exc:
-        grouping_valid = False
+        grouping_valid = True
+    except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
         validation_error = analyze.safe_error_text(exc)
 
     payload = {
@@ -78,6 +94,7 @@ def main():
         "model_call_count": 1,
         "raw_candidate_count": len(candidates),
         "consolidation_input_count": len(review_rows),
+        "model_response_completed": model_response_completed,
         "grouping_valid": grouping_valid,
         "validation_error": validation_error,
         **diagnostics,
