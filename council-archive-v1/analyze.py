@@ -139,6 +139,16 @@ def compact(value):
     return re.sub(r"\s+", " ", str(value or "")).strip()
 
 
+def safe_error_text(exc):
+    text = re.sub(r"https?://\S+", "[URL]", compact(exc))
+    text = re.sub(
+        r"(?i)(api[_-]?key|token|secret)=([^&\s]+)",
+        r"\1=[REDACTED]",
+        text,
+    )
+    return text[:180] or type(exc).__name__
+
+
 def read_json(path, default=None):
     if not path.is_file():
         return default
@@ -558,6 +568,10 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
     errors = []
     calls = 0
     consolidation_calls = 0
+    consolidation_status = "NOT_RUN"
+    consolidation_error_type = ""
+    consolidation_error_reason = ""
+    consolidation_input_count = 0
     chunk_limit = max_calls - 1 if len(existing) >= 2 else max_calls
 
     doc_chunks = {row["document_id"]: chunks(row["body"]) for row in documents}
@@ -648,16 +662,23 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
     state["updated_at_kst"] = datetime.now(KST).isoformat(timespec="seconds")
     all_candidates = existing + added
     grouped_review = group_for_review(all_candidates)
+    consolidation_input_count = len(grouped_review)
     if len(grouped_review) >= 2 and calls < max_calls:
         calls += 1
         consolidation_calls = 1
+        consolidation_status = "RUNNING"
         try:
             grouping_answer = call_group_model(model, api_key, grouped_review)
             grouped_review = consolidate_for_review(all_candidates, grouping_answer)
+            consolidation_status = "SUCCEEDED"
         except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
+            consolidation_status = "FAILED"
+            consolidation_error_type = type(exc).__name__
+            consolidation_error_reason = safe_error_text(exc)
             errors.append({
                 "stage": "semantic_consolidation",
-                "error_type": type(exc).__name__,
+                "error_type": consolidation_error_type,
+                "reason": consolidation_error_reason,
             })
     review = grouped_review[:50]
     return {
@@ -671,6 +692,11 @@ def analyze(documents, *, state, candidate_path, api_key, model, max_calls):
         "model_call_count": calls,
         "chunk_model_call_count": calls - consolidation_calls,
         "consolidation_model_call_count": consolidation_calls,
+        "consolidation_status": consolidation_status,
+        "consolidation_input_count": consolidation_input_count,
+        "consolidation_group_count": len(grouped_review),
+        "consolidation_error_type": consolidation_error_type,
+        "consolidation_error_reason": consolidation_error_reason,
         "new_candidate_count": len(added),
         "candidate_total": len(all_candidates),
         "review_candidate_count": len(grouped_review),
@@ -693,12 +719,18 @@ def render(payload):
         f"- 문서 전체 분석 완료: {payload['completed_document_count']}건",
         f"- 이번 실행 분석 호출: {payload['model_call_count']}회",
         f"  - 원문 읽기: {payload['chunk_model_call_count']}회",
-        f"  - 사안 통합: {payload['consolidation_model_call_count']}회",
+        f"  - 사안 통합: {payload['consolidation_model_call_count']}회 · {payload['consolidation_status']}",
+        f"  - 통합 입력/출력: {payload['consolidation_input_count']}건 → {payload['consolidation_group_count']}건",
         f"- 이번 실행 새 단서: {payload['new_candidate_count']}건",
         f"- 누적 원문 단서: {payload['candidate_total']}건",
         f"- 중복 통합 뒤 검토 사안: {payload['review_candidate_count']}건",
         f"- 묶어서 줄인 중복: {payload['duplicate_collapsed_count']}건",
         f"- 오류: {payload['error_count']}건",
+        *(
+            [f"- 통합 실패 원인: {payload['consolidation_error_type']} · {payload['consolidation_error_reason']}"]
+            if payload["consolidation_status"] == "FAILED"
+            else []
+        ),
         "",
         "> 발언을 사실로 확정하지 않습니다. 새 사업에 실적 자료가 없다는 이유만으로 "
         "버리지 않고, 확인할 항목을 분리합니다.",
@@ -763,6 +795,11 @@ def main():
         "model_call_count": payload["model_call_count"],
         "chunk_model_call_count": payload["chunk_model_call_count"],
         "consolidation_model_call_count": payload["consolidation_model_call_count"],
+        "consolidation_status": payload["consolidation_status"],
+        "consolidation_input_count": payload["consolidation_input_count"],
+        "consolidation_group_count": payload["consolidation_group_count"],
+        "consolidation_error_type": payload["consolidation_error_type"],
+        "consolidation_error_reason": payload["consolidation_error_reason"],
         "new_candidate_count": payload["new_candidate_count"],
         "candidate_total": payload["candidate_total"],
         "review_candidate_count": payload["review_candidate_count"],
