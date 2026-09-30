@@ -199,6 +199,47 @@ class AnalyzeTests(unittest.TestCase):
         self.assertEqual(grouped[0]["related_document_count"], 2)
         self.assertIn("청년 AI 접근 장벽", grouped[0]["consolidation_reason"])
 
+    def test_grouping_diagnostics_identify_membership_failures(self):
+        first = {
+            "candidate_id": "alpha",
+            "document_id": "CLIKC100",
+            "source_id": "seoul_city",
+            "source_name": "서울시의회",
+            "meeting_date": "2026-09-11",
+            "document_url": "https://example.com/a",
+            "chunk_number": 1,
+            **valid_item(),
+            "review_status": "UNREVIEWED",
+        }
+        rows = [
+            first,
+            {**first, "candidate_id": "beta", "document_id": "CLIKC200"},
+            {**first, "candidate_id": "gamma", "document_id": "CLIKC300"},
+        ]
+        answer = {
+            "groups": [
+                {
+                    "representative_candidate_id": "alpha",
+                    "candidate_ids": ["alpha", "beta", "beta"],
+                    "reason": "첫 그룹",
+                },
+                {
+                    "representative_candidate_id": "missing-representative",
+                    "candidate_ids": ["beta"],
+                    "reason": "둘째 그룹",
+                },
+            ]
+        }
+
+        diagnostics = analyze.grouping_diagnostics(answer, rows)
+
+        self.assertEqual(diagnostics["duplicate_within_group_count"], 1)
+        self.assertEqual(diagnostics["duplicate_across_groups_count"], 1)
+        self.assertEqual(diagnostics["missing_candidate_count"], 1)
+        self.assertEqual(diagnostics["representative_outside_group_count"], 1)
+        self.assertEqual(diagnostics["duplicate_across_groups"], ["beta"])
+        self.assertEqual(diagnostics["missing_candidates"], ["gamma"])
+
     def test_semantic_grouping_must_cover_every_candidate_once(self):
         first = {
             "candidate_id": "alpha",
