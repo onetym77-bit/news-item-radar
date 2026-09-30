@@ -161,6 +161,22 @@ class AnalyzeTests(unittest.TestCase):
         self.assertEqual(candidate_ids["minItems"], 1)
         self.assertEqual(candidate_ids["maxItems"], 2)
 
+    def test_incomplete_group_response_exposes_safe_reason(self):
+        answer = {
+            "id": "resp_sensitive_identifier",
+            "status": "incomplete",
+            "incomplete_details": {"reason": "max_output_tokens"},
+            "output": [{"type": "reasoning", "content": []}],
+        }
+
+        message = analyze.consolidation_response_error(answer, [])
+
+        self.assertIn("status=incomplete", message)
+        self.assertIn("reason=max_output_tokens", message)
+        self.assertIn("output_text_count=0", message)
+        self.assertIn("output_types=reasoning", message)
+        self.assertNotIn("resp_sensitive_identifier", message)
+
     def test_semantic_consolidation_merges_same_problem_with_different_words(self):
         first = {
             "candidate_id": "alpha",
