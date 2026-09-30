@@ -129,11 +129,17 @@ jobs:
           assert archive["all_minutes_are_read_before_issue_selection"] is True
           assert archive["silence_is_not_resolution"] is True
           assert 0 <= archive["complete_source_count"] <= 26
+          assert archive["error_attempt_count"] >= archive["error_count"]
           assert analysis["schema"] == 1
           assert analysis["mode"] == "FULL_TEXT_SEMANTIC_READING"
           assert analysis["document_count"] == archive["archived_total"]
           assert analysis["model_call_count"] <= int("${{ inputs.analysis_calls }}")
           assert analysis["consolidation_model_call_count"] in (0, 1)
+          assert analysis["consolidation_status"] in ("NOT_RUN", "SUCCEEDED", "FAILED")
+          assert analysis["consolidation_input_count"] >= analysis["consolidation_group_count"]
+          if analysis["consolidation_status"] == "FAILED":
+              assert analysis["consolidation_error_type"]
+              assert analysis["consolidation_error_reason"]
           assert analysis["model_call_count"] == (
               analysis["chunk_model_call_count"]
               + analysis["consolidation_model_call_count"]
