@@ -369,7 +369,12 @@ class Client:
 def fetch_page(client, url, form=None):
     """Retry one transient transport failure, never a block or parse failure."""
     page = client.get(url, form=form)
-    if page is None and not client.stopped and client.logs and client.logs[-1].get("retryable") is True:
+    if (
+        page is None
+        and not getattr(client, "stopped", False)
+        and getattr(client, "logs", [])
+        and client.logs[-1].get("retryable") is True
+    ):
         return client.get(url, form=form)
     return page
 
