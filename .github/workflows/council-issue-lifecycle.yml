@@ -76,18 +76,19 @@ jobs:
           restore-keys: |
             council-minutes-archive-v1-
 
-      - name: Check official council pages for fresher meetings
+      - name: Collect recent minutes from official council pages
         if: ${{ github.event_name != 'pull_request' }}
         continue-on-error: true
         run: >-
           python -X utf8 district-council-pilot/collect_pilot.py
           --sources district-council-pilot/sources_25.json
-          --per-source 1
+          --per-source 4
           --workers 3
           --output .runtime/official-watch
           --previous .runtime/council-archive/official_previous.json
+          --archive-output .runtime/official-watch/official_documents.jsonl.gz
 
-      - name: Archive council minutes without search keywords
+      - name: Archive official minutes and supplement from portal API
         if: ${{ github.event_name != 'pull_request' }}
         run: >-
           python -X utf8 council-archive-v1/archive.py
@@ -95,6 +96,7 @@ jobs:
           --max-documents ${{ inputs.max_documents }}
           --page-size 50
           --official-observation .runtime/official-watch/pilot_latest.json
+          --official-documents .runtime/official-watch/official_documents.jsonl.gz
 
       - name: Preserve latest official-page observation
         if: ${{ github.event_name != 'pull_request' && hashFiles('.runtime/official-watch/pilot_latest.json') != '' }}
