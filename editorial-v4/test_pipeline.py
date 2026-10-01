@@ -249,6 +249,67 @@ class PipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "ID 불일치"):
             module.apply_second_review([{**GOOD, "source": BASE["source"]}], {"reviews": []})
 
+    def test_council_archive_maps_semantic_clues_as_unverified_head_inputs(self):
+        payload = {
+            "schema": 1,
+            "mode": "FULL_TEXT_SEMANTIC_READING",
+            "review_candidates": [{
+                "candidate_id": "archive-one",
+                "source_name": "서초구의회",
+                "meeting_date": "2026-09-20",
+                "document_url": "https://example.org/council/1",
+                "review_status": "UNREVIEWED",
+                "headline": "돌봄 대기 기준이 자치구마다 달라지는가",
+                "subject": "돌봄 대기 시민의 실제 이용 경로",
+                "mechanism": "자치구별 배정 기준 차이",
+                "civic_importance": "같은 조건의 시민이 거주지에 따라 다른 대기기간을 겪을 수 있다",
+                "anchor_quote": "돌봄 신청 뒤 배정 기준과 대기기간을 자치구별로 다시 확인해야 합니다.",
+                "public_question": "같은 조건인데 어느 구에서는 더 오래 기다리는가?",
+                "counterintuitive_question": "예산보다 배정 기준 차이가 대기를 만드는 것은 아닌가?",
+                "scope_hint": "MULTI_DISTRICT",
+                "broadcast_potential": 70,
+                "unknowns": ["실제 대기기간", "자치구별 배정 기준"],
+                "related_document_count": 2,
+                "related_evidence_count": 2,
+                "related_sources": ["서초구의회", "송파구의회"],
+            }],
+        }
+        records = module.council_archive_inputs(payload)
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]["family"], "의회 전량 아카이브")
+        self.assertEqual(records[0]["source_stage"], "전량 아카이브 의미 분석")
+        self.assertTrue(records[0]["production_eligible"])
+        self.assertEqual(records[0]["claim_status"], "의회 발언·의미 분석·미검증")
+        self.assertEqual(records[0]["archive_related_document_count"], 2)
+        self.assertGreater(records[0]["editorial_priority"], 70)
+
+    def test_council_archive_rejects_unreviewed_boundary_failures(self):
+        base = {
+            "schema": 1,
+            "mode": "FULL_TEXT_SEMANTIC_READING",
+            "review_candidates": [{
+                "candidate_id": "archive-one",
+                "source_name": "서초구의회",
+                "meeting_date": "2026-09-20",
+                "document_url": "https://example.org/council/1",
+                "review_status": "REVIEWED",
+                "headline": "검토 완료 사안은 다시 올리지 않는다",
+                "anchor_quote": "이미 사람이 검토한 사안은 다시 후보 입력으로 올리지 않습니다.",
+            }],
+        }
+        self.assertEqual(module.council_archive_inputs(base), [])
+        base["review_candidates"][0]["review_status"] = "UNREVIEWED"
+        base["review_candidates"][0]["document_url"] = "http://example.org/council/1"
+        self.assertEqual(module.council_archive_inputs(base), [])
+
+    def test_archive_priority_precedes_date_within_same_lane(self):
+        newer = {**BASE, "id": "newer", "family": "의회 전량 아카이브",
+                 "date": "2026-09-30", "editorial_priority": 20}
+        stronger = {**BASE, "id": "stronger", "family": "의회 전량 아카이브",
+                   "date": "2026-09-01", "editorial_priority": 90}
+        selected = module.prioritize_inputs([newer, stronger])
+        self.assertEqual([row["id"] for row in selected[:2]], ["stronger", "newer"])
+
     def test_district_shadow_accepts_only_reviewed_l3_cards(self):
         payload = {
             "schema": 1, "mode": "SEMANTIC_SHADOW", "source_count": 25,
