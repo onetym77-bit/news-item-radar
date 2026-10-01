@@ -85,11 +85,11 @@ class ClikApiTests(unittest.TestCase):
             patch.object(module, "urlopen", side_effect=OSError("temporary")) as opened,
             patch.object(module.time, "sleep") as slept,
         ):
-            with self.assertRaisesRegex(module.ClikAPIError, "after 3 attempt"):
+            with self.assertRaisesRegex(module.ClikAPIError, "after 2 attempt"):
                 module.fetch_payload("secret-value", displayType="list")
 
-        self.assertEqual(opened.call_count, 3)
-        self.assertEqual(slept.call_count, 2)
+        self.assertEqual(opened.call_count, 2)
+        self.assertEqual(slept.call_count, 1)
 
     def test_list_is_bounded_deduplicated_and_uses_public_url(self):
         row = list_row()

@@ -23,7 +23,8 @@ USER_AGENT = (
     "+https://github.com/onetym77-bit/news-item-radar)"
 )
 MAX_RESPONSE_BYTES = 6_000_000
-MAX_ATTEMPTS = 3
+MAX_ATTEMPTS = 2
+REQUEST_TIMEOUT_SECONDS = 10
 RETRYABLE_HTTP_STATUS = {408, 429, 500, 502, 503, 504}
 DOCID = re.compile(r"CLIKC[0-9]+")
 ASSEMBLY_ID = re.compile(r"0020(?:0[2-9]|1[0-9]|2[0-6])")
@@ -59,7 +60,7 @@ def fetch_payload(api_key, **params):
     attempts = 0
     for attempts in range(1, MAX_ATTEMPTS + 1):
         try:
-            with urlopen(request, timeout=20) as response:
+            with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
                 raw = response.read(MAX_RESPONSE_BYTES + 1)
             break
         except OSError as exc:
