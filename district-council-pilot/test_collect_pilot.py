@@ -1,4 +1,8 @@
+import gzip
+import json
+import tempfile
 import unittest
+from pathlib import Path
 from collect_pilot import Page, select_rows, transcript, day, review_windows, identity_conflict, discover_list, window_change, canonical
 SRC={"hosts":["example.gov"]}
 class PilotRegression(unittest.TestCase):
@@ -169,6 +173,37 @@ class ConnectionRegression(unittest.TestCase):
         self.assertEqual(window_change(current,prior),"BASELINE_AFTER_FAILURE")
     def test_configured_legacy_identity_preserved(self):
         self.assertEqual(canonical("https://example.gov/popup.do?contype=1&ntime=318&num=1&subtype=0&noise=x",{"id_params":["contype","ntime","num","subtype"]}),"https://example.gov/popup.do?contype=1&ntime=318&num=1&subtype=0")
+
+    def test_official_archive_body_is_persisted_but_not_exposed_in_observation(self):
+        from collect_pilot import official_archive_records, write_official_archive
+        sources = [{
+            "id": "alpha", "name": "알파구",
+            "list_url": "https://example.gov/late",
+            "clik_assembly_id": "002002",
+            "hosts": ["example.gov"],
+        }]
+        results = [{
+            "id": "alpha",
+            "selected": [{
+                "meeting_date": "2026-09-30",
+                "label": "제300회 본회의",
+                "url": "https://example.gov/record/main?uid=7",
+                "metadata_check": "MATCH",
+                "body_sha256": "abc",
+                "_archive_body": "검증된 회의록 본문 " * 20,
+            }],
+        }]
+        records = official_archive_records(results, sources)
+        self.assertEqual(len(records), 1)
+        self.assertEqual(records[0]["transport"], "OFFICIAL_COUNCIL_PAGE")
+        self.assertNotIn("_archive_body", results[0]["selected"][0])
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "official.jsonl.gz"
+            write_official_archive(path, records)
+            with gzip.open(path, "rt", encoding="utf-8") as handle:
+                stored = json.loads(handle.readline())
+        self.assertEqual(stored["document_id"], records[0]["document_id"])
+        self.assertIn("검증된 회의록", stored["body"])
 
 if __name__=="__main__":
     unittest.main()

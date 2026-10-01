@@ -38,6 +38,7 @@ on:
       - "district-council-pilot/clik_api.py"
       - "district-council-pilot/collect_pilot.py"
       - "district-council-pilot/sources_25.json"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
 
 permissions:
   contents: read
@@ -64,7 +65,55 @@ jobs:
           python-version: "3.12"
 
       - name: Test archive and semantic-reading safety rules
-        run: python -X utf8 -m unittest discover -s council-archive-v1 -p 'test_*.py' -v
+        run: |
+          python -X utf8 -m unittest discover -s council-archive-v1 -p 'test_*.py' -v
+          python -X utf8 -m unittest discover -s district-council-pilot -p 'test_*.py' -v
+
+      - name: Validate no new discovery-system errors
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set +e
+          python -X utf8 agent-system-v1/validate_discovery_system.py > "$RUNNER_TEMP/current-validation.log" 2>&1
+          current_status=$?
+          git worktree add --detach "$RUNNER_TEMP/discovery-base" "$BASE_SHA"
+          (
+            cd "$RUNNER_TEMP/discovery-base"
+            python -X utf8 agent-system-v1/validate_discovery_system.py
+          ) > "$RUNNER_TEMP/base-validation.log" 2>&1
+          base_status=$?
+          set -e
+          cat "$RUNNER_TEMP/current-validation.log"
+          CURRENT_STATUS="$current_status" BASE_STATUS="$base_status" python - <<'PY'
+          import os
+          from pathlib import Path
+
+          def errors(path):
+              return {
+                  line
+                  for line in Path(path).read_text(encoding="utf-8").splitlines()
+                  if line.startswith("ERROR:")
+              }
+
+          root = Path(os.environ["RUNNER_TEMP"])
+          base = errors(root / "base-validation.log")
+          current = errors(root / "current-validation.log")
+          introduced = sorted(current - base)
+          if introduced:
+              raise SystemExit(
+                  "New discovery-system validation errors:\n"
+                  + "\n".join(introduced)
+              )
+          if int(os.environ["CURRENT_STATUS"]) not in (0, 1):
+              raise SystemExit("Current validator ended unexpectedly")
+          if int(os.environ["BASE_STATUS"]) not in (0, 1):
+              raise SystemExit("Base validator ended unexpectedly")
+          print(
+              f"기존 오류 {len(base)}건, 현재 오류 {len(current)}건, "
+              "신규 오류 0건"
+          )
+          PY
 
       - name: Restore archive and progress
         if: ${{ github.event_name != 'pull_request' }}
@@ -76,18 +125,20 @@ jobs:
           restore-keys: |
             council-minutes-archive-v1-
 
-      - name: Check official council pages for fresher meetings
+      - name: Collect recent minutes from official council pages
         if: ${{ github.event_name != 'pull_request' }}
         continue-on-error: true
         run: >-
           python -X utf8 district-council-pilot/collect_pilot.py
           --sources district-council-pilot/sources_25.json
-          --per-source 1
+          --per-source 4
           --workers 3
+          --include-seoul-city
           --output .runtime/official-watch
           --previous .runtime/council-archive/official_previous.json
+          --archive-output .runtime/official-watch/official_documents.jsonl.gz
 
-      - name: Archive council minutes without search keywords
+      - name: Archive official minutes and supplement from portal API
         if: ${{ github.event_name != 'pull_request' }}
         run: >-
           python -X utf8 council-archive-v1/archive.py
@@ -95,6 +146,7 @@ jobs:
           --max-documents ${{ inputs.max_documents }}
           --page-size 50
           --official-observation .runtime/official-watch/pilot_latest.json
+          --official-documents .runtime/official-watch/official_documents.jsonl.gz
 
       - name: Preserve latest official-page observation
         if: ${{ github.event_name != 'pull_request' && hashFiles('.runtime/official-watch/pilot_latest.json') != '' }}

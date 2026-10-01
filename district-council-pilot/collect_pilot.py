@@ -2,6 +2,7 @@
 """Read-only district council pilot. No editorial ledger transitions."""
 from __future__ import annotations
 import argparse
+import gzip
 import hashlib
 import json
 import re
@@ -16,6 +17,15 @@ from urllib.request import Request, urlopen
 
 BASE = Path(__file__).resolve().parent
 KST = timezone(timedelta(hours=9))
+SEOUL_CITY_SOURCE = {
+    "id": "seoul_city",
+    "name": "서울시의회",
+    "clik_assembly_id": "002001",
+    "list_url": "https://ms.smc.seoul.kr/kr/assembly/late.do",
+    "hosts": ["ms.smc.seoul.kr"],
+    "detail_pattern": r"/record/recordView\.do",
+    "id_params": ["key"],
+}
 DATE = re.compile(r"(?<!\d)(20\d{2})\s*[.\-/년]\s*(\d{1,2})\s*[.\-/월]\s*(\d{1,2})")
 DETAIL = re.compile(r"/(?:viewer/minutes\.do|record/recordView\.do|record/main)(?:\?|$)", re.I)
 ERROR_BODY = re.compile(r"행을 찾을 수 없|존재하지 않는 회의록|등록된 회의록이 없")
@@ -390,7 +400,7 @@ def load_recent_tabs(client, source):
     page.rows = recent_api_rows(records,source["list_url"],source)
     return page
 
-def run(source, as_of, count=4):
+def run(source, as_of, count=4, include_archive_body=False):
     client = Client(source)
     listing_url = source["list_url"]
     listing = client.get(listing_url)
@@ -467,6 +477,8 @@ def run(source, as_of, count=4):
                                 page = framed
                                 row["body_url"] = inner
                     row["body_ok"] = bool(body)
+                    if body and include_archive_body:
+                        row["_archive_body"] = body
                     row["body_characters"] = len(body)
                     row["body_sha256"] = hashlib.sha256(body.encode("utf-8")).hexdigest() if body else ""
                     row["speech_turns"] = len(parts)
@@ -501,6 +513,60 @@ def run(source, as_of, count=4):
     result["metadata_matched"] = sum(r.get("metadata_check") == "MATCH" for r in result["selected"])
     result["editorial_precision"] = None
     return result
+
+def official_archive_records(results, sources):
+    """Convert verified official-page bodies into the shared archive schema.
+
+    The full body is removed from the observation payload before it is logged or
+    written. It is only retained in the private runtime gzip used by the
+    semantic reader.
+    """
+    source_by_id = {source["id"]: source for source in sources}
+    captured_at = datetime.now(KST).isoformat(timespec="seconds")
+    records = []
+    for result in results:
+        source = source_by_id[result["id"]]
+        for row in result.get("selected", []):
+            body = row.pop("_archive_body", "")
+            if (
+                not body
+                or not row.get("meeting_date")
+                or not row.get("url")
+                or row.get("metadata_check") == "CONFLICT"
+            ):
+                continue
+            document_url = row.get("body_url") or row["url"]
+            identity = canonical(document_url, source)
+            digest = row.get("body_sha256") or hashlib.sha256(
+                body.encode("utf-8")
+            ).hexdigest()
+            records.append({
+                "schema": 1,
+                "document_id": (
+                    f"OFFICIAL:{source['id']}:"
+                    + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24]
+                ),
+                "source_id": source["id"],
+                "source_name": source["name"],
+                "assembly_id": source.get("clik_assembly_id", ""),
+                "meeting_date": row["meeting_date"],
+                "title": row.get("label") or row.get("title") or "회의록",
+                "document_url": document_url,
+                "official_list_url": source["list_url"],
+                "body_sha256": digest,
+                "body": body,
+                "captured_at_kst": captured_at,
+                "transport": "OFFICIAL_COUNCIL_PAGE",
+            })
+    return records
+
+
+def write_official_archive(path, records):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with gzip.open(path, "wt", encoding="utf-8") as handle:
+        for row in records:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+
 
 def write(results, as_of, output=None):
     output = output or BASE / "output"
@@ -537,9 +603,13 @@ def main():
     parser.add_argument("--workers",type=int,choices=range(1,5),default=1)
     parser.add_argument("--output",type=Path,default=BASE/"output")
     parser.add_argument("--previous",type=Path)
+    parser.add_argument("--archive-output",type=Path)
+    parser.add_argument("--include-seoul-city",action="store_true")
     parser.add_argument("--source-id",nargs="+")
     args = parser.parse_args()
     sources = json.loads(args.sources.read_text(encoding="utf-8"))
+    if args.include_seoul_city:
+        sources = [SEOUL_CITY_SOURCE, *sources]
     if len({s["id"] for s in sources}) != len(sources):
         parser.error("Duplicate source identifiers")
     if args.source_id:
@@ -550,9 +620,20 @@ def main():
     if args.previous and args.previous.is_file():
         old = {r["id"]:r for r in json.loads(args.previous.read_text(encoding="utf-8"))["sources"]}
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
-        results = list(pool.map(lambda source: run(source,args.as_of,args.per_source),sources))
+        results = list(pool.map(
+            lambda source: run(
+                source, args.as_of, args.per_source,
+                include_archive_body=bool(args.archive_output),
+            ),
+            sources,
+        ))
     for result in results:
         result["change_status"] = window_change(result,old.get(result["id"]))
+    if args.archive_output:
+        write_official_archive(
+            args.archive_output,
+            official_archive_records(results, sources),
+        )
     write(results,args.as_of,args.output)
     # Successful diagnostic execution is distinct from source availability.
     return 0
