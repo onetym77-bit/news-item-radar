@@ -15,6 +15,7 @@ RUNS = [
     {"source": "원자료", "workflow": "daily-briefing.yml", "run_id": 2, "conclusion": "success"},
     {"source": "감사", "workflow": "source-onboarding-audit-l4-shadow.yml", "run_id": 3, "conclusion": "success"},
     {"source": "구의회", "workflow": "district-council-recent-l3.yml", "run_id": 4, "conclusion": "success"},
+    {"source": "의회 전량 아카이브", "workflow": "council-issue-lifecycle.yml", "run_id": 7, "conclusion": "success"},
     {"source": "시민제안", "workflow": "citizen-proposal-shadow.yml", "run_id": 5, "conclusion": "success"},
     {"source": "시민제안 큐", "workflow": "publish-citizen-shadow.yml", "run_id": 6, "conclusion": "success"},
 ]
@@ -36,7 +37,7 @@ class CollectionCycleTest(unittest.TestCase):
             cycle = MODULE.collection_cycle_from_env()
         self.assertEqual(cycle["mode"], "FRESH_CYCLE")
         self.assertTrue(cycle["verified"])
-        self.assertEqual(len(cycle["runs"]), 6)
+        self.assertEqual(len(cycle["runs"]), 7)
 
     def test_partial_cycle_is_rejected(self):
         env = {

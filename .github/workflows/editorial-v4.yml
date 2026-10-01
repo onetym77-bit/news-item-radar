@@ -18,6 +18,8 @@ on:
   pull_request:
     paths:
       - "editorial-v4/**"
+      - "council-archive-v1/output/analysis_latest.json"
+      - ".github/workflows/council-issue-lifecycle.yml"
       - "interest-radar-v2/review_youtube_context.py"
       - "interest-radar-v2/build_youtube_review_queue.py"
       - "interest-radar-v2/publish_youtube_review_queue.py"

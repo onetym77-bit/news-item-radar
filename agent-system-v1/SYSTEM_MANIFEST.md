@@ -60,7 +60,7 @@
 | 유튜브 시민 신호 의미 검증 그림자(자동 후보 승격 금지) | interest-radar-v2/review_youtube_context.py, .github/workflows/editorial-v4.yml |
 | 자치구의회 25곳 연결 등록(수동 점검, 핵심소스 승인 전) | district-council-pilot/sources_25.json |
 | 자치구의회 공통 지방의정포털 API 어댑터·운영 기준 | district-council-pilot/clik_api.py, district-council-pilot/CLIK_API_RUNBOOK.md |
-| 서울시·25개 자치구의회 공식 홈페이지 우선 아카이브·지방의정포털 과거자료 보완 | district-council-pilot/collect_pilot.py, council-archive-v1/archive.py, .github/workflows/council-issue-lifecycle.yml |
+| 서울시·25개 자치구의회 공식 홈페이지 우선 아카이브·지방의정포털 과거자료 보완·파생 의미 분석의 통합 헤드 연결 | district-council-pilot/collect_pilot.py, council-archive-v1/archive.py, council-archive-v1/analyze.py, council-archive-v1/output/analysis_latest.json, .github/workflows/council-issue-lifecycle.yml, editorial-v4/pipeline.py |
 | 자치구의회 연결 점검기 | district-council-pilot/collect_pilot.py |
 | 자치구의회 25곳 얇은 반복 관측 | district-council-pilot/watch_new_minutes.py |
 | 자치구의회 관측 예약·파생 상태 저장 | .github/workflows/district-council-watch.yml |

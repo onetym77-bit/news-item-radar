@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "editorial-v4" / "output" / "latest.json"
 OPENAI = "https://api.openai.com/v1/responses"
-MAX_INPUTS = 8
+MAX_INPUTS = 10
 MAX_PROPOSALS = 3
 SCHEMA = {
     "type": "object", "additionalProperties": False,
@@ -127,6 +127,7 @@ FRESH_CYCLE_WORKFLOWS = {
     "daily-briefing.yml",
     "source-onboarding-audit-l4-shadow.yml",
     "district-council-recent-l3.yml",
+    "council-issue-lifecycle.yml",
     "citizen-proposal-shadow.yml",
     "publish-citizen-shadow.yml",
 }
@@ -195,7 +196,7 @@ def stable_id(kind, url, text):
     return hashlib.sha256((kind + "|" + url + "|" + text[:160]).encode("utf-8")).hexdigest()[:16]
 
 
-HEAD_CONTRACT_VERSION = "1.7"
+HEAD_CONTRACT_VERSION = "1.8"
 SHADOW_QUEUE_SPECS = (
     ("25개 자치구의회", "district-council-pilot/output/recent-l3/editorial_review_queue.json",
      "district-council-pilot/output/recent-l3/editor_decisions.json"),
@@ -204,8 +205,9 @@ SHADOW_QUEUE_SPECS = (
     ("유튜브", "interest-radar-v2/output/youtube_review_queue.json",
      "interest-radar-v2/output/youtube_editor_decisions.json"),
 )
-EXPECTED_LANES = ("뉴스", "서울시의회", "서울시 감사", "25개 자치구의회",
-                  "시민제안", "유튜브", "지역 커뮤니티·제보", "검색 관심도")
+EXPECTED_LANES = ("뉴스", "서울시의회", "의회 전량 아카이브", "서울시 감사",
+                  "25개 자치구의회", "시민제안", "유튜브",
+                  "지역 커뮤니티·제보", "검색 관심도")
 
 
 def audit_human_reviews():
@@ -397,6 +399,62 @@ def district_shadow_inputs(document):
     return records
 
 
+def council_archive_inputs(document):
+    """Map semantic archive clues into bounded, still-unverified head inputs."""
+    if not isinstance(document, dict) or document.get("schema") != 1:
+        return []
+    if document.get("mode") != "FULL_TEXT_SEMANTIC_READING":
+        return []
+    records = []
+    for item in document.get("review_candidates", []):
+        if item.get("review_status") != "UNREVIEWED":
+            continue
+        url = compact(item.get("document_url"))
+        excerpt = compact(item.get("anchor_quote"))
+        headline = compact(item.get("headline"))
+        if not url.startswith("https://") or len(excerpt) < 15 or len(headline) < 8:
+            continue
+        subject = compact(item.get("subject"))
+        mechanism = compact(item.get("mechanism"))
+        civic_importance = compact(item.get("civic_importance"))
+        unknowns = [compact(value) for value in item.get("unknowns", []) if compact(value)]
+        related_sources = [
+            compact(value) for value in item.get("related_sources", []) if compact(value)
+        ]
+        related_documents = int(item.get("related_document_count") or 1)
+        related_evidence = int(item.get("related_evidence_count") or 1)
+        broadcast_potential = int(item.get("broadcast_potential") or 0)
+        priority = broadcast_potential + min(related_documents, 5) * 3 + min(related_evidence, 5) * 2
+        candidate_id = compact(item.get("candidate_id"))
+        source_name = compact(item.get("source_name")) or "의회"
+        context_bits = [value for value in (subject, mechanism, civic_importance) if value]
+        records.append({
+            "id": "council-archive-" + (
+                candidate_id or stable_id("council-archive", url, excerpt)
+            ),
+            "family": "의회 전량 아카이브",
+            "source": source_name + (" 회의록" if not source_name.endswith("회의록") else ""),
+            "url": url,
+            "date": compact(item.get("meeting_date")),
+            "headline": headline[:130],
+            "evidence_text": excerpt[:1800],
+            "context": " / ".join(context_bits)[:1300],
+            "citizen_relevance": civic_importance[:500],
+            "prior_question": compact(item.get("public_question"))[:500],
+            "counterpossibility": compact(item.get("counterintuitive_question"))[:500],
+            "claim_status": "의회 발언·의미 분석·미검증",
+            "issue_hint": headline[:130],
+            "source_stage": "전량 아카이브 의미 분석",
+            "production_eligible": True,
+            "editorial_priority": priority,
+            "archive_scope_hint": compact(item.get("scope_hint")),
+            "archive_unknowns": unknowns[:10],
+            "archive_related_document_count": related_documents,
+            "archive_related_sources": related_sources[:10],
+        })
+    return records
+
+
 def citizen_proposal_shadow_inputs(document):
     """Accept only redacted first-person friction statements from the official proposal pilot."""
     if not isinstance(document, dict) or document.get("schema") != 2:
@@ -445,11 +503,14 @@ def citizen_proposal_shadow_inputs(document):
     return records
 
 
-def source_inputs(district_shadow=None, citizen_shadow=None,
+def source_inputs(district_shadow=None, citizen_shadow=None, council_archive=None,
                   only_district=False, only_citizen=False):
     district_records = district_shadow_inputs(district_shadow)
     citizen_records = citizen_proposal_shadow_inputs(citizen_shadow)
-    records = list(district_records) + list(citizen_records)
+    if council_archive is None and not (only_district or only_citizen):
+        council_archive = read("council-archive-v1/output/analysis_latest.json", {})
+    archive_records = council_archive_inputs(council_archive)
+    records = list(district_records) + list(citizen_records) + list(archive_records)
     gaps = []
     if not district_records:
         gaps.append({"source": "25개 자치구의회",
@@ -457,6 +518,9 @@ def source_inputs(district_shadow=None, citizen_shadow=None,
     if not citizen_records:
         gaps.append({"source": "시민제안",
                      "reason": "당사자 경험과 구체적 불편이 함께 있는 개인정보 제거 본문 단서 없음"})
+    if not archive_records and not (only_district or only_citizen):
+        gaps.append({"source": "의회 전량 아카이브",
+                     "reason": "전량 아카이브 의미 분석의 미검토 단서 없음"})
     if only_district:
         return district_records, [gap for gap in gaps if gap["source"] == "25개 자치구의회"]
     if only_citizen:
@@ -610,9 +674,16 @@ def prioritize_inputs(records):
     for record in records:
         buckets.setdefault(record["family"], []).append(record)
     for rows in buckets.values():
-        rows.sort(key=lambda row: compact(row.get("date"))[:10], reverse=True)
+        rows.sort(
+            key=lambda row: (
+                int(row.get("editorial_priority") or 0),
+                compact(row.get("date"))[:10],
+            ),
+            reverse=True,
+        )
     output = []
-    preferred = ("뉴스", "시민제안", "서울시의회", "서울시 감사", "25개 자치구의회")
+    preferred = ("뉴스", "시민제안", "서울시의회", "의회 전량 아카이브",
+                 "서울시 감사", "25개 자치구의회")
     families = preferred + tuple(family for family in buckets if family not in set(preferred))
     while len(output) < MAX_INPUTS and any(buckets.values()):
         for family in families:
