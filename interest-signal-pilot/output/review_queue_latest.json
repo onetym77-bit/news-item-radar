@@ -1,316 +1,24 @@
 {
   "schema": 4,
-  "generated_at_utc": "2026-10-01T05:23:10.064483+00:00",
-  "source_snapshot": "2026-10-01T05:23:09.985050+00:00",
+  "generated_at_utc": "2026-10-01T06:08:09.469767+00:00",
+  "source_snapshot": "2026-10-01T06:08:09.352369+00:00",
   "candidate_ready": false,
   "review_count": 30,
-  "new_input_count": 62,
-  "seen_input_excluded": 23,
+  "new_input_count": 38,
+  "seen_input_excluded": 48,
   "items": [
-    {
-      "review_id": "CBMid0FVX3lxTFB0WVo2OEZE",
-      "headline": "[단독] 삼성역 주철근 누락, 서울시 관계자들 보고 받고도 점검 때 '침묵'",
-      "source_headline": "[단독] 삼성역 주철근 누락, 서울시 관계자들 보고 받고도 점검 때 '침묵' - OhmyNews",
-      "title_key": "삼성역 주철근 누락 서울시 관계자들 보고 받고도 점검 때 침묵 ohmynews",
-      "source_query": "서울 안전 점검 누락",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-      "source_context_status": "BODY_READ",
-      "problem_status": "UNASSESSED",
-      "first_check": "제공된 원문에는 기사 본문이 대부분 포함되지 않아, 주철근 누락의 범위와 안전 영향, 보고를 받은 관계자의 직책·인원, 세 차례 점검의 날짜와 회의록, 서울시와 국가철도공단의 공식 반론 및 후속 조치가 확인되지 않는다.",
-      "counterpossibility": "기사의 표현만으로는 관계자들이 누락 사실을 의도적으로 숨겼다고 단정할 수 없다. 점검 당시 해당 정보가 점검 범위에 포함되지 않았거나 보고·공유 절차에 대한 기관별 해석이 달랐을 가능성도 확인해야 한다.",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-      "discovery_lane": "WATCHDOG_DUTY",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTFB0WVo2OEZEajZEcEhLempGSHBlYUw3a01sdExfOWktRk1wTndTVUdIZ2oxNDEydWVvZ21zU0F0Vy1hY21oNTQwWl9vcjBwMWtqNmRvQ2tZekNDZXVVeTVlejRsLWJpSHZVRllSRlRkT1JpTVVXWkJv?oc=5",
-          "published_at": "Wed, 30 Sep 2026 22:22:00 GMT"
-        },
-        {
-          "type": "publisher_article",
-          "url": "https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0003270211&CMPT_CD=P0010&utm_source=naver&utm_medium=newsearch&utm_campaign=naver_news"
-        }
-      ],
-      "context_failure": "",
-      "publisher_url": "https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0003270211&CMPT_CD=P0010&utm_source=naver&utm_medium=newsearch&utm_campaign=naver_news",
-      "content_assessment": {
-        "document_type": "INCIDENT",
-        "claim_type": "ATTRIBUTED_CLAIM",
-        "what_happened": "기사 제목과 설명에 따르면, 시공사로부터 GTX-A 삼성역의 주철근 누락을 보고받은 서울시 관계자들이 국가철도공단과 세 차례 점검에 참여했지만 해당 시공오류를 공유하지 않았다는 의혹이 제기됐다. 이는 기사에서 제시한 관계기관 및 철도공단의 주장·확인 내용이다.",
-        "citizen_relevance": "삼성역 GTX-A의 구조 안전과 점검·보고 체계, 공공기관 간 정보 공유 및 책임 소재와 관련된 사안이다.",
-        "question_worth": "HIGH",
-        "editorial_question": "서울시 관계자들이 주철근 누락을 언제 누구에게 보고받았고, 세 차례 점검에서 이를 공유하지 않은 이유는 무엇이며, 당시 회의록과 점검 결과에는 어떻게 기록돼 있는가?",
-        "missing_check": "제공된 원문에는 기사 본문이 대부분 포함되지 않아, 주철근 누락의 범위와 안전 영향, 보고를 받은 관계자의 직책·인원, 세 차례 점검의 날짜와 회의록, 서울시와 국가철도공단의 공식 반론 및 후속 조치가 확인되지 않는다.",
-        "counterpossibility": "기사의 표현만으로는 관계자들이 누락 사실을 의도적으로 숨겼다고 단정할 수 없다. 점검 당시 해당 정보가 점검 범위에 포함되지 않았거나 보고·공유 절차에 대한 기관별 해석이 달랐을 가능성도 확인해야 한다.",
-        "anchor_quote": "시공오류를 공유하지 않은 것으로 확인됐다",
-        "reason": "단순한 기관 발표가 아니라 주철근 누락에 대한 사전 보고와 이후 세 차례 점검에서의 정보 공유 여부라는 구체적 사건을 다룬다. 구조 안전과 공공 점검의 책임 소재를 확인할 후속 질문이 분명하지만, 현재 제공된 텍스트만으로는 의혹의 근거와 실제 안전상 영향은 추가 취재가 필요하다."
-      }
-    },
-    {
-      "review_id": "CBMiZEFVX3lxTE03WE54MTMt",
-      "headline": "서대문구, 추석 연휴에도 24시간…안전·의료·돌봄 공백 막는다",
-      "source_headline": "서대문구, 추석 연휴에도 24시간…안전·의료·돌봄 공백 막는다 - m-i.kr",
-      "title_key": "서대문구 추석 연휴에도 24시간 안전 의료 돌봄 공백 막는다 m i kr",
-      "source_query": "서울 학교 안전 공백",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-      "source_context_status": "BODY_READ",
-      "problem_status": "UNASSESSED",
-      "first_check": "24시간 상황실과 의료·돌봄·청소 대책반이 실제로 계획대로 운영됐는지, 이용자 불편이나 대응 지연이 있었는지는 확인되지 않았다.",
-      "counterpossibility": "기사에 제시된 ‘생활 공백’과 ‘주민 불편’은 구가 예방·대응 목표로 내세운 표현일 뿐, 실제 공백이나 피해가 발생했다는 근거는 없다.",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-      "discovery_lane": "WATCHDOG_DUTY",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE03WE54MTMtVTJyN05WRDFEUTJ2M2w4VW9sNUxRY0xSTEJKN3VvSkdDbVpjdFZYSEJfMzZ5OXVzWWR5c0ZvUVl6aHVxWWRXTUFjOTJCc0h5WDFMODY5ZXdLX25FOF_SAWhBVV95cUxPVEM2OWpKdUV0ZkF0cjI2akdDX3VqaHROVWJsdUxDdGppUVdmWHNPTkIxY3RFcnNKRUF0aHlLSUYzZ3pEejQ4eUloUldnczFYbTBiZ1BpRjUtM3VpQXlpeWhEMlo4UVliVA?oc=5",
-          "published_at": "Sat, 19 Sep 2026 23:44:53 GMT"
-        },
-        {
-          "type": "publisher_article",
-          "url": "https://www.megaeconomy.co.kr/news/newsview.php?ncode=1065583078482326"
-        }
-      ],
-      "context_failure": "",
-      "publisher_url": "https://www.megaeconomy.co.kr/news/newsview.php?ncode=1065583078482326",
-      "content_assessment": {
-        "document_type": "POLICY_ANNOUNCEMENT",
-        "claim_type": "ANNOUNCEMENT",
-        "what_happened": "서대문구가 추석 연휴인 23일부터 28일까지 24시간 상황실과 분야별 대책반을 운영하고, 의료기관·약국 안내, 취약계층 식사 지원, 무료 주차장 개방 등을 시행하겠다고 발표했다. 총 415명이 비상근무에 참여할 예정이다.",
-        "citizen_relevance": "연휴期间 응급진료와 약국 이용, 취약계층 식사, 주차·쓰레기 처리 등 생활 서비스 이용 방법을 확인하는 데 참고가 된다. 다만 기사에는 실제 서비스 운영 결과나 문제 사례가 제시되지 않았다.",
-        "question_worth": "LOW",
-        "editorial_question": "",
-        "missing_check": "24시간 상황실과 의료·돌봄·청소 대책반이 실제로 계획대로 운영됐는지, 이용자 불편이나 대응 지연이 있었는지는 확인되지 않았다.",
-        "counterpossibility": "기사에 제시된 ‘생활 공백’과 ‘주민 불편’은 구가 예방·대응 목표로 내세운 표현일 뿐, 실제 공백이나 피해가 발생했다는 근거는 없다.",
-        "anchor_quote": "총 415명이 비상근무에 참여해",
-        "reason": "구체적인 충돌이나 선택의 쟁점보다는 명절 종합대책과 지원 계획을 소개한 기관 발표 기사다. 시민에게 필요한 이용 정보는 있으나, 후속 취재를 요구할 만한 문서화된 통제 공백이나 논쟁적 사안은 본문에 드러나지 않는다."
-      }
-    },
-    {
-      "review_id": "CBMiaEFVX3lxTFBOcWpGdEV4",
-      "headline": "서울성모병원, 아즈라로부터 소외계층 환자 위한 기부금 전달받아",
-      "source_headline": "서울성모병원, 아즈라로부터 소외계층 환자 위한 기부금 전달받아 - 헬스이슈앤뉴스",
-      "title_key": "서울성모병원 아즈라로부터 소외계층 환자 위한 기부금 전달받아 헬스이슈앤뉴스",
-      "source_query": "서울 취약계층 지원 중단",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "시민 영향·갈등·책임 단서 부족",
-      "discovery_lane": "WATCHDOG_DUTY",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBOcWpGdEV4VWpveUpybGdkUnRGR1ljZndJV3FsZ3p0MEFTVV9LUF84V3Z0OUxOSDg3emdxZS1LU3BaYTFwaDlCZjNIY1FjVWdQR1FJdFhKbG45QkJoMnlVNVJLZmdxdU9p?oc=5",
-          "published_at": "Wed, 30 Sep 2026 09:01:05 GMT"
-        }
-      ],
-      "context_failure": "NO_TITLE_MATCH"
-    },
-    {
-      "review_id": "CBMiXEFVX3lxTE9kTXZscXIz",
-      "headline": "2026년 서울장애인정책박람회 개최 안내 9.30.(수)",
-      "source_headline": "2026년 서울장애인정책박람회 개최 안내 9.30.(수) - 동행·매력 특별시 서울",
-      "title_key": "2026년 서울장애인정책박람회 개최 안내 9 30 동행 매력 특별시 서울",
-      "source_query": "서울 장애인 접근권",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
-      "discovery_lane": "WATCHDOG_DUTY",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9kTXZscXIzbFFVMXlCVW9mSGhLN0xsTHM3M0tQaV9NdVBjTW5VMnBlYklxN05LV01QQjV5ZUtzYksteERSVE9XNU5yMnFSTU0xeUlsV3d0aDdvb1JN?oc=5",
-          "published_at": "Wed, 23 Sep 2026 07:42:50 GMT"
-        }
-      ],
-      "context_failure": "NO_TITLE_MATCH"
-    },
-    {
-      "review_id": "CBMiXEFVX3lxTFAwSmlNVGxs",
-      "headline": "서울시의회 행정자치위, ‘속초수련원’ 현장방문 … 시설 운영 및 편의 점검",
-      "source_headline": "서울시의회 행정자치위, ‘속초수련원’ 현장방문 … 시설 운영 및 편의 점검 - 영등포신문",
-      "title_key": "서울시의회 행정자치위 속초수련원 현장방문 시설 운영 및 편의 점검 영등포신문",
-      "source_query": "서울 복지시설 인력 부족",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
-      "discovery_lane": "WATCHDOG_DUTY",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFAwSmlNVGxsVTZsVEc0UHBVaGVjeHBfMU1JY1J5dGlzd0diUXF2d1luQ0dxQXhUMnZBZ2tabFk5Z2xsdHhSM0dWVHRrdV9qUW1YQ3gzQjNPS0d3a1J2?oc=5",
-          "published_at": "Fri, 18 Sep 2026 08:32:27 GMT"
-        }
-      ],
-      "context_failure": "NO_TITLE_MATCH"
-    },
-    {
-      "review_id": "CBMiWkFVX3lxTFAzNVFPYTlK",
-      "headline": "GTX-A 삼성역 철근 누락 책임공방…서울시 구상권 청구 부적절",
-      "source_headline": "GTX-A 삼성역 철근 누락 책임공방…서울시 구상권 청구 부적절 - 아주경제",
-      "title_key": "gtx a 삼성역 철근 누락 책임공방 서울시 구상권 청구 부적절 아주경제",
-      "source_query": "서울 안전 점검 누락",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-      "source_context_status": "BODY_READ",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사에는 철근 누락의 구체적인 발생 원인, 무정차 통과 지연으로 발생한 손실 규모, 점검기간 연장을 결정한 공식 근거와 책임 배분을 검증할 독립적인 조사 결과가 제시되지 않았다.",
-      "counterpossibility": "진동 수치와 안전점검 결과가 기준 이내였더라도, 국토부의 추가 점검이 운행 안전이나 시설 검증을 위해 필요했을 수 있다. 반대로 서울시 주장처럼 추가 점검이 불필요하게 길었다면 지연 책임은 철근 누락과 별도로 판단해야 한다.",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-      "discovery_lane": "WATCHDOG_DUTY",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFAzNVFPYTlKcEZ3SldyRVBJTlViNllsU29hTURrd1RJdzhaNkM4UjZmVDNQNFQ0Q0ZZdjcyZW5JNkI5Ul9GQkt3anB0MVYyT0hmVmpMRjB6aGlWQdIBWEFVX3lxTE9oTDcyaWgxX3g3VThqY1ZOWmlMUExPSFRfUVQ2WjJNY1RFamNfOTZrNGpuTE9LbjVxc3lVek9QWWM4bGtuZkljSTBUUTBBbmdvS2dUYy1pQ0E?oc=5",
-          "published_at": "Thu, 17 Sep 2026 07:00:00 GMT"
-        },
-        {
-          "type": "publisher_article",
-          "url": "https://www.ajunews.com/view/20260917160652758"
-        }
-      ],
-      "context_failure": "",
-      "publisher_url": "https://www.ajunews.com/view/20260917160652758",
-      "content_assessment": {
-        "document_type": "INCIDENT",
-        "claim_type": "ATTRIBUTED_CLAIM",
-        "what_happened": "GTX-A 삼성역 구간에서 철근 누락이 확인된 뒤 보강공사와 무정차 통과 일정이 늦어졌다. 국토교통부 장관 후보자는 서울시 시공관리 미흡을 주원인으로 보고 운영손실금 구상 청구를 언급했으며, 서울시는 국토부와 국가철도공단의 추가 점검 및 절차 지연이 일정 지연의 원인이라고 반박하고 있다.",
-        "citizen_relevance": "삼성역 무정차 통과가 늦어지면서 GTX-A 이용 예정인 수도권 주민의 불편이 길어질 수 있고, 향후 손실금을 서울시가 부담할 경우 서울시민의 공공재정 부담으로 이어질 수 있다. 동시에 안전 확보와 조기 운행 사이의 판단 기준도 시민 안전과 직결된다.",
-        "question_worth": "HIGH",
-        "editorial_question": "국토부·국가철도공단의 점검기간 4개월 연장은 어떤 안전 근거와 의사결정 기록에 따른 것이며, 철근 누락 자체와 추가 점검·일정 지연으로 발생한 손실을 각각 누가 얼마만큼 부담할지 독립적으로 산정됐는가?",
-        "missing_check": "기사에는 철근 누락의 구체적인 발생 원인, 무정차 통과 지연으로 발생한 손실 규모, 점검기간 연장을 결정한 공식 근거와 책임 배분을 검증할 독립적인 조사 결과가 제시되지 않았다.",
-        "counterpossibility": "진동 수치와 안전점검 결과가 기준 이내였더라도, 국토부의 추가 점검이 운행 안전이나 시설 검증을 위해 필요했을 수 있다. 반대로 서울시 주장처럼 추가 점검이 불필요하게 길었다면 지연 책임은 철근 누락과 별도로 판단해야 한다.",
-        "anchor_quote": "추가 검증을 이유로 관련 절차를 장기간 지연시켜 놓고",
-        "reason": "단순한 기관 간 공방이 아니라 철근 누락 이후 안전 점검, 운행 일정, 손실금 부담 주체가 연결된 사안이다. 기사에 점검 결과와 일정 변경 시점이 구체적으로 제시돼 있어, 책임과 비용 산정의 근거를 후속 취재할 가치가 높다."
-      }
-    },
-    {
-      "review_id": "CBMiX0FVX3lxTE1BVWNjWk1I",
-      "headline": "서울시 용산구, 추석 연휴 응급진료체계 가동…진료 공백 최소화",
-      "source_headline": "서울시 용산구, 추석 연휴 응급진료체계 가동…진료 공백 최소화 - justeconomix.com",
-      "title_key": "서울시 용산구 추석 연휴 응급진료체계 가동 진료 공백 최소화 justeconomix com",
-      "source_query": "서울 학교 안전 공백",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-      "discovery_lane": "WATCHDOG_DUTY",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1BVWNjWk1IN3ZSWWExY2tmYjJzalV2UUlFUVh1MFRYdWNOd3phak1RYWNkNzlHdkhZMlRMMm96SHNtMnRpYy1kcElqa2plRU1KVWw0akh4NzBxTi1SRDln?oc=5",
-          "published_at": "Fri, 18 Sep 2026 07:00:00 GMT"
-        }
-      ],
-      "context_failure": "NO_TITLE_MATCH"
-    },
-    {
-      "review_id": "CBMiakFVX3lxTFBZakV6RFRZ",
-      "headline": "서울성모병원, 아즈라로부터 환자 지원 기부금품 전달받아",
-      "source_headline": "서울성모병원, 아즈라로부터 환자 지원 기부금품 전달받아 - 의학신문",
-      "title_key": "서울성모병원 아즈라로부터 환자 지원 기부금품 전달받아 의학신문",
-      "source_query": "서울 취약계층 지원 중단",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-      "source_context_status": "BODY_READ",
-      "problem_status": "UNASSESSED",
-      "first_check": "기부금과 물품이 실제로 어떤 환자에게 어떤 기준으로 배분됐는지, 집행 결과가 공개됐는지는 본문에 없다.",
-      "counterpossibility": "이 기부가 실제 치료비 지원으로 집행되기보다 병원의 감사·홍보성 전달 행사에 그칠 가능성도 본문만으로는 배제할 수 없다.",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "시민 영향·갈등·책임 단서 부족",
-      "discovery_lane": "WATCHDOG_DUTY",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBZakV6RFRZeUNFTDdFV2xSOVIwajh6ZlFXa3RoTDdvN0lsNkd4Q2R4QTczLUp4d2FtcHlPR1FoZWtBWGd2U0xPQ2ppZmpqRzVoTGZxMTkxRUV5b2MzNm45LU1BN3pSV3BNbnc?oc=5",
-          "published_at": "Wed, 30 Sep 2026 06:27:20 GMT"
-        },
-        {
-          "type": "publisher_article",
-          "url": "https://www.bosa.co.kr/news/articleView.html?idxno=3013073"
-        }
-      ],
-      "context_failure": "",
-      "publisher_url": "https://www.bosa.co.kr/news/articleView.html?idxno=3013073",
-      "content_assessment": {
-        "document_type": "PROMOTION",
-        "claim_type": "OBSERVED_EVENT",
-        "what_happened": "서울성모병원이 아즈라 대표로부터 현금 2,000만원과 1,500만원 상당의 후원 물품 등 총 3,500만원 상당의 기부를 전달받았다고 밝혔다. 기부금과 물품은 취약계층 환자의 치료비와 복지 지원에 사용될 예정이라고 설명했다.",
-        "citizen_relevance": "취약계층 환자 지원에 쓰일 기부 소식이라는 의미는 있으나, 지원 대상 선정이나 집행 과정에서 시민이 맞닥뜨릴 구체적인 선택·갈등·문제는 본문에 제시되지 않았다.",
-        "question_worth": "LOW",
-        "editorial_question": "",
-        "missing_check": "기부금과 물품이 실제로 어떤 환자에게 어떤 기준으로 배분됐는지, 집행 결과가 공개됐는지는 본문에 없다.",
-        "counterpossibility": "이 기부가 실제 치료비 지원으로 집행되기보다 병원의 감사·홍보성 전달 행사에 그칠 가능성도 본문만으로는 배제할 수 없다.",
-        "anchor_quote": "소외계층 환자 지원을 위한 3500만원 상당의 기부금과 물품을 전달받았다고 밝혔다",
-        "reason": "구체적인 피해나 통제 공백, 시민의 선택이 드러난 사건이 아니라 기업 기부 전달과 병원의 사용 계획을 알리는 단순 지원 발표에 해당한다."
-      }
-    },
     {
       "review_id": "CBMiZEFVX3lxTE9ib01QZTZn",
       "headline": "서울시의회 행정자치위원회, ‘속초수련원’ 현장방문 … 시설 운영·편의 점검",
-      "source_headline": "서울시의회 행정자치위원회, ‘속초수련원’ 현장방문 … 시설 운영·편의 점검 - m-i.kr",
-      "title_key": "서울시의회 행정자치위원회 속초수련원 현장방문 시설 운영 편의 점검 m i kr",
+      "source_headline": "서울시의회 행정자치위원회, ‘속초수련원’ 현장방문 … 시설 운영·편의 점검 - 매일일보",
+      "title_key": "서울시의회 행정자치위원회 속초수련원 현장방문 시설 운영 편의 점검 매일일보",
       "source_query": "서울 복지시설 인력 부족",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
       "source_context_status": "BODY_READ",
       "problem_status": "UNASSESSED",
-      "first_check": "실제 이용률과 이용자 만족도, 시설별 보수 필요 내역, 청소 인력 부족의 구체적 현황, 개선에 필요한 예산과 추진 일정이 확인되지 않았다.",
-      "counterpossibility": "이번 방문이 구체적인 운영 문제나 통제 공백을 확인한 것이라기보다, 통상적인 현장 점검과 시설 개선 방향을 알리는 기관 발표일 가능성이 있다.",
+      "first_check": "청소인력 부족이 실제로 어떤 업무 차질이나 이용자 불편으로 이어졌는지, 시설 개선에 필요한 예산과 일정이 정해졌는지, 이용자 수요나 만족도 조사가 있는지 확인되지 않았다.",
+      "counterpossibility": "위원들의 현장 발언은 점검 과정에서 제시된 개선 요구일 뿐, 실제로 수련원 운영에 중대한 관리 부실이나 이용자 피해가 발생했다는 뜻은 아닐 수 있다.",
       "promotion_status": "HOLD",
       "status": "DISCOVERY_ONLY",
       "needs_human_review": true,
@@ -333,360 +41,22 @@
       "publisher_url": "https://www.m-i.kr/news/articleView.html?idxno=1415831",
       "content_assessment": {
         "document_type": "OTHER",
-        "claim_type": "ATTRIBUTED_CLAIM",
-        "what_happened": "서울시의회 행정자치위원회가 15∼16일 서울시 속초수련원을 방문해 객실·식당·부대시설의 관리 상태와 운영 현황을 살펴보고, 노후 시설 개선과 청소 인력 운영 등에 관한 의견을 들었다고 보도했다. 위원들은 향후 행정사무감사와 예산안 심사에 현장 의견을 반영하겠다고 밝혔다.",
-        "citizen_relevance": "서울시가 운영하는 공무원·가족 대상 수련원의 시설 개선과 예산 반영 여부와 관련된 내용이지만, 기사에는 이용 규모, 구체적인 시설 문제, 예산 액수나 이용자 피해가 제시되지 않았다.",
-        "question_worth": "LOW",
-        "editorial_question": "",
-        "missing_check": "실제 이용률과 이용자 만족도, 시설별 보수 필요 내역, 청소 인력 부족의 구체적 현황, 개선에 필요한 예산과 추진 일정이 확인되지 않았다.",
-        "counterpossibility": "이번 방문이 구체적인 운영 문제나 통제 공백을 확인한 것이라기보다, 통상적인 현장 점검과 시설 개선 방향을 알리는 기관 발표일 가능성이 있다.",
-        "anchor_quote": "시설물 관리 실태와 운영 현황을 직접 점검",
-        "reason": "기사의 실체는 서울시의회가 산하 수련원을 방문해 운영과 시설 개선을 점검했다는 발표에 가깝다. 위원들의 지적은 있으나 실제 피해, 이용 공백, 구체적인 선택이나 후속 조치가 확인되지 않아 6~7분 방송 아이템으로 발전시킬 질문 가치는 낮다."
-      }
-    },
-    {
-      "review_id": "CBMiYEFVX3lxTFBEQTNMT0pr",
-      "headline": "'염색 상추' 논란에 서울시 특별점검… 원산지 미표시 적발",
-      "source_headline": "'염색 상추' 논란에 서울시 특별점검… 원산지 미표시 적발 - 아시아경제",
-      "title_key": "염색 상추 논란에 서울시 특별점검 원산지 미표시 적발 아시아경제",
-      "source_query": "서울 자치구 논란",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-      "source_context_status": "BODY_READ",
-      "problem_status": "UNASSESSED",
-      "first_check": "전체 점검 대상 약 9500개소 가운데 아직 결과가 취합되지 않은 일반음식점 등의 점검 결과와, 적발된 6개 업소의 행정처분 내용은 기사에 구체적으로 제시되지 않았다.",
-      "counterpossibility": "현재까지 검사한 제품에서 이상이 없었으므로, 기사에 언급된 해외 위해정보가 서울 유통 제품의 실제 위해로 이어졌다고 단정할 수는 없다.",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBEQTNMT0prR05wcjBXWHZkYVBQLXU2d3g3dnFrTU9PUXBWMnIxMEo1QjM1cnVPdXhURUk3UWVSS0pGWHFmZDlpMG9iWXRSTjNWOXhyQ05CRW9nOXEwc3RoVQ?oc=5",
-          "published_at": "Thu, 01 Oct 2026 02:15:00 GMT"
-        },
-        {
-          "type": "publisher_article",
-          "url": "https://view.asiae.co.kr/article/2026100109433838915"
-        }
-      ],
-      "context_failure": "",
-      "publisher_url": "https://view.asiae.co.kr/article/2026100109433838915",
-      "content_assessment": {
-        "document_type": "POLICY_ANNOUNCEMENT",
         "claim_type": "OBSERVED_EVENT",
-        "what_happened": "서울시가 김치 취급업소와 전통시장 등 6365개소를 우선 점검한 결과, 원산지 미표시 업소 6곳을 적발해 행정처분을 진행했다. 중국산 배추·김치와 궁채 등 수거 제품의 위해성분 검사에서는 현재까지 불검출 또는 이상 없음으로 확인됐으며, 서울시는 일반음식점 점검과 수입 농·수산물 검사를 계속할 계획이라고 밝혔다.",
-        "citizen_relevance": "김치와 수입 농·수산물의 원산지 표시 및 안전성 검사 결과는 시민의 식품 선택과 먹거리 안전에 직접 관련된다. 다만 기사에 제시된 점검 결과에서는 위해성분 검출이나 구체적인 소비자 피해 사례는 확인되지 않았다.",
+        "what_happened": "서울시의회 행정자치위원회가 2026년 9월 15~16일 속초수련원을 방문해 운영 현황, 객실·식당·편의시설 관리 상태와 직원 애로사항을 살폈다고 보도했다. 일부 위원들은 청소인력 대체인력 확보와 노후 시설의 단계적 개선 필요성을 언급했다.",
+        "citizen_relevance": "서울시가 운영하는 수련원의 시설 개선과 운영비·예산 편성은 공공재정 및 공무원 복지와 관련된다. 다만 기사에는 구체적인 시설 결함, 이용 불편 사례, 이용률, 개선 비용이나 확정된 후속 조치가 제시되지 않았다.",
         "question_worth": "LOW",
         "editorial_question": "",
-        "missing_check": "전체 점검 대상 약 9500개소 가운데 아직 결과가 취합되지 않은 일반음식점 등의 점검 결과와, 적발된 6개 업소의 행정처분 내용은 기사에 구체적으로 제시되지 않았다.",
-        "counterpossibility": "현재까지 검사한 제품에서 이상이 없었으므로, 기사에 언급된 해외 위해정보가 서울 유통 제품의 실제 위해로 이어졌다고 단정할 수는 없다.",
-        "anchor_quote": "원산지를 표시하지 않은 6개소",
-        "reason": "구체적으로 확인된 내용은 원산지 미표시 6건과 위해성분 검사 결과이며, 실제 피해나 위해물질 검출, 구조적 관리 공백은 본문에서 확인되지 않는다. 기사 실체가 서울시의 특별점검 결과와 추가 검사 계획을 알리는 기관 발표에 가까워, 6~7분 기획 아이템으로 발전시킬 만한 충돌이나 후속 쟁점은 현재로서는 약하다."
+        "missing_check": "청소인력 부족이 실제로 어떤 업무 차질이나 이용자 불편으로 이어졌는지, 시설 개선에 필요한 예산과 일정이 정해졌는지, 이용자 수요나 만족도 조사가 있는지 확인되지 않았다.",
+        "counterpossibility": "위원들의 현장 발언은 점검 과정에서 제시된 개선 요구일 뿐, 실제로 수련원 운영에 중대한 관리 부실이나 이용자 피해가 발생했다는 뜻은 아닐 수 있다.",
+        "anchor_quote": "시설물 관리 실태와 운영 현황을 직접 점검하고",
+        "reason": "본문의 실체는 의회의 현장방문과 시설 개선 필요성에 대한 기관·위원 발언을 전하는 데 그친다. 구체적인 충돌이나 확인된 피해, 예산 선택, 후속 조치가 없어 6~7분 방송 아이템으로 발전시킬 질문 가치는 낮다."
       }
     },
     {
-      "review_id": "CBMickFVX3lxTE5NdHhGMFJ6",
-      "headline": "서울광역청년센터, 교육복지·청년시설협회와 손잡고 졸업 후 지원 공백 잇는다",
-      "source_headline": "서울광역청년센터, 교육복지·청년시설협회와 손잡고 졸업 후 지원 공백 잇는다 - 스페셜타임스",
-      "title_key": "서울광역청년센터 교육복지 청년시설협회와 손잡고 졸업 후 지원 공백 잇는다 스페셜타임스",
-      "source_query": "서울 복지 공백",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5NdHhGMFJ6d1pxWHhhRmhWb3VuM3V5R04xbGpXODdydWpEN1lYU1gwZWZHQzhobGFWY0YtUXFSUHpGTmdzbVowdXRYR1BtR2dwb2VSbWFKQm9LZ21vOGNGNURmT2piZ1Jvc3VhMS1SdWxEUQ?oc=5",
-          "published_at": "Thu, 01 Oct 2026 01:50:58 GMT"
-        }
-      ],
-      "context_failure": "NO_TITLE_MATCH"
-    },
-    {
-      "review_id": "CBMib0FVX3lxTE93dVdDYVY1",
-      "headline": "제2의 서소문고가 사고 막는다…서울시, 노후교량 해체 안전관리 강화",
-      "source_headline": "제2의 서소문고가 사고 막는다…서울시, 노후교량 해체 안전관리 강화 - 머니투데이 - 머니투데이",
-      "title_key": "제2의 서소문고가 사고 막는다 서울시 노후교량 해체 안전관리 강화 머니투데이 머니투데이",
-      "source_query": "서울 안전 사고",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-      "source_context_status": "BODY_READ",
-      "problem_status": "UNASSESSED",
-      "first_check": "서소문고가 사고의 구체적인 원인과 후속 조치, 각 예정 해체공사의 일정·적용 기준, ‘즉시 시행’과 ‘순차 추진’ 대책의 구분 및 이행 점검 방식이 본문에 없다.",
-      "counterpossibility": "새 체계가 실제로 기존 절차를 얼마나 바꾸는지 불분명하며, 구체적인 적용 일정과 공개·점검 장치가 없다면 기관의 안전관리 강화 발표에 그칠 가능성이 있다.",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE93dVdDYVY1eDdWTEp1VnN6WGNZVW13SHNHbUFDVzRscFphTlBLVWYwUEx4a3NTTHRrc19zX0N5R0FlMmRFdW93dHRTVzg1TUpaNmRieGNzQ2VJek1lX0FHcFlDM3EwVnNEYkIyQVh5WdIBb0FVX3lxTE93dVdDYVY1eDdWTEp1VnN6WGNZVW13SHNHbUFDVzRscFphTlBLVWYwUEx4a3NTTHRrc19zX0N5R0FlMmRFdW93dHRTVzg1TUpaNmRieGNzQ2VJek1lX0FHcFlDM3EwVnNEYkIyQVh5WQ?oc=5",
-          "published_at": "Wed, 30 Sep 2026 23:08:08 GMT"
-        },
-        {
-          "type": "publisher_article",
-          "url": "https://www.mt.co.kr/estate/2026/10/01/2026100107313419727"
-        }
-      ],
-      "context_failure": "",
-      "publisher_url": "https://www.mt.co.kr/estate/2026/10/01/2026100107313419727",
-      "content_assessment": {
-        "document_type": "POLICY_ANNOUNCEMENT",
-        "claim_type": "ANNOUNCEMENT",
-        "what_happened": "서울시는 서소문고가 해체 사고를 계기로 도림고가·삼각지고가·이촌고가 등 노후 교량과 고가차도 해체공사의 안전관리 체계를 강화하겠다고 발표했다. 해체설계 사전 검증, 전문 감리와 공정 기록, 이상징후 대응, 드론·로봇·내시경을 활용한 비접촉 점검 등을 단계적으로 적용할 계획이다.",
-        "citizen_relevance": "노후 교량·고가차도 해체공사 과정에서 시민과 현장 작업자의 안전에 영향을 줄 수 있는 관리 기준과 대응 절차가 바뀐다. 특히 철도 위를 지나는 구조물의 작업시간 확보와 공사비에 안전관리 비용을 반영하는 문제는 공공사업의 운영 및 재정과도 관련된다.",
-        "question_worth": "HIGH",
-        "editorial_question": "서울시는 즉시 시행할 대책과 관계기관 협의 뒤 순차 추진할 대책을 해체공사별로 언제부터 적용하고, 사전 검증·이상징후 점검 결과와 조치 기록을 시민에게 어떻게 공개할 것인가?",
-        "missing_check": "서소문고가 사고의 구체적인 원인과 후속 조치, 각 예정 해체공사의 일정·적용 기준, ‘즉시 시행’과 ‘순차 추진’ 대책의 구분 및 이행 점검 방식이 본문에 없다.",
-        "counterpossibility": "새 체계가 실제로 기존 절차를 얼마나 바꾸는지 불분명하며, 구체적인 적용 일정과 공개·점검 장치가 없다면 기관의 안전관리 강화 발표에 그칠 가능성이 있다.",
-        "anchor_quote": "해체설계 사전 검증 절차를 도입한다",
-        "reason": "구체적인 노후 구조물 해체공사를 앞두고 사전 검증과 무인점검 등 새로운 안전관리 절차를 발표한 정책 기사다. 실제 사고 재발이나 관리 공백을 본문만으로 확인할 수는 없지만, 시민 안전과 관련된 대책의 적용 시점·검증 결과 공개 여부를 따져볼 후속 질문이 있다."
-      }
-    },
-    {
-      "review_id": "CBMia0FVX3lxTE1oRGJhNjJ2",
-      "headline": "서울시의회, ‘공공 주도 설명회’ 제안…“깜깜이 재개발이 갈등 부른다”",
-      "source_headline": "서울시의회, ‘공공 주도 설명회’ 제안…“깜깜이 재개발이 갈등 부른다” - 비즈월드",
-      "title_key": "서울시의회 공공 주도 설명회 제안 깜깜이 재개발이 갈등 부른다 비즈월드",
-      "source_query": "서울 재개발 갈등",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-      "source_context_status": "BODY_READ",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사에 제시된 ‘정보 격차’, ‘민원 폭주’, ‘분쟁조정 제도를 모르는 주민이 많다’는 주장을 뒷받침하는 정비사업별 민원·분쟁 자료와 현재 공공 안내의 법적 근거·운영 실적을 확인해야 한다.",
-      "counterpossibility": "재개발 사업의 지연이나 주민 대립이 정보 부족만으로 발생한 것이 아닐 수 있으며, 공공 설명회가 추가되더라도 보상·분담금 등 이해관계 충돌을 해결하지 못할 가능성이 있다.",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE1oRGJhNjJ2OGp5RnpkR3hSTlJ0LTktd29kdklCd3o4UUVna1lfQUh1SlN5REJZMzEzWGlDbURXVTc2cVlZY1MzUHNRVDhVTUlFOXNnaVFPTHUtY0NLUTJoeDdReGgzV280VExB?oc=5",
-          "published_at": "Thu, 10 Sep 2026 08:22:00 GMT"
-        },
-        {
-          "type": "publisher_article",
-          "url": "https://www.bizwnews.com/news/articleView.html?idxno=145841"
-        }
-      ],
-      "context_failure": "",
-      "publisher_url": "https://www.bizwnews.com/news/articleView.html?idxno=145841",
-      "content_assessment": {
-        "document_type": "POLICY_ANNOUNCEMENT",
-        "claim_type": "ATTRIBUTED_CLAIM",
-        "what_happened": "김정애 서울시의원이 재개발 조합 설명회와 별도로 서울시·자치구 등 공공기관이 세입자와 비조합원을 포함한 주민에게 사업 절차, 이주·보상 기준, 권리와 분쟁조정 제도를 설명하는 ‘공공 주도 설명회’를 정례화하자고 제안했다. 아직 시행이 결정됐다는 내용은 아니다.",
-        "citizen_relevance": "재개발 지역의 세입자·비조합원 등에게 어떤 정보를 누가 제공할지, 공공 설명회가 도입될 경우 주민의 권리와 참여 방식이 달라질 수 있다.",
-        "question_worth": "HIGH",
-        "editorial_question": "서울시와 자치구는 공공 주도 설명회를 실제로 도입할 계획이 있는가. 도입한다면 조합원뿐 아니라 세입자·비조합원을 어떻게 대상에 포함하고, 이주·보상 안내의 중립성과 정확성을 누가 책임질 것인가?",
-        "missing_check": "기사에 제시된 ‘정보 격차’, ‘민원 폭주’, ‘분쟁조정 제도를 모르는 주민이 많다’는 주장을 뒷받침하는 정비사업별 민원·분쟁 자료와 현재 공공 안내의 법적 근거·운영 실적을 확인해야 한다.",
-        "counterpossibility": "재개발 사업의 지연이나 주민 대립이 정보 부족만으로 발생한 것이 아닐 수 있으며, 공공 설명회가 추가되더라도 보상·분담금 등 이해관계 충돌을 해결하지 못할 가능성이 있다.",
-        "anchor_quote": "조합 측 설명회와 별개로, 자치구 등 공공이 주도해",
-        "reason": "구체적인 공공 개입 방안과 대상 주민의 권리·정보 접근 문제가 제시된 정책 제안이다. 다만 기사 자체는 의원의 주장과 제안에 의존하고 있어 실제 갈등 규모와 제도의 효과는 확인이 필요하다."
-      }
-    },
-    {
-      "review_id": "CBMimAJBVV95cUxQLXVWYW8t",
-      "headline": "서울 강서구, 주민 맞춤형 행정 서비스 위한 '마을행정사' 사업 추진",
-      "source_headline": "서울 강서구, 주민 맞춤형 행정 서비스 위한 '마을행정사' 사업 추진 - 데일리안",
-      "title_key": "서울 강서구 주민 맞춤형 행정 서비스 위한 마을행정사 사업 추진 데일리안",
-      "source_query": "서울 민원",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-      "source_context_status": "BODY_READ",
-      "problem_status": "UNASSESSED",
-      "first_check": "11명의 행정사가 담당할 동별 상담 수요와 실제 이용 건수, 상담 이후 민원 해결 여부, 상담 대상과 절차의 구체적인 기준은 확인되지 않았다.",
-      "counterpossibility": "무료 상담 창구가 개설되더라도 상담 시간이 주 1회 2시간으로 제한돼 주민 수요를 충분히 감당하지 못하거나, 전화 상담만으로 복잡한 민원을 해결하기 어려울 수 있다.",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "시민 영향·갈등·책임 단서 부족",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "보통",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMimAJBVV95cUxQLXVWYW8tLWRWQ3I5YWtIQWhoODFNU2NyUVptRlp2SUlxeERnM2xSSUpyenhkdlJGZEJjSl81UUd0US1UbHBSS3RCQUFUdThNc3FVOHhGaHBEZDFDdmhVa28yWGxUQ0c0TnlvXy1iOUNuQ3JwWXhFakg1NXlpZ1UzRVdqeVlpSnRTMlBaYWVhWU14NHhlYlNpelRWcTFaYkxna0pxbmxPTVo1SzJNd0ZDd1dvMS0tREd5cW85Z3lnTVBjdkROUS16Wm9TTmE1ZFZaNXJpN1lEYkI4UWc3TVVSNHlJY29HTktNSWlqTkVpbmdoR2NkTHdtZER1NmZqamFUZlZKTTFHNTlwdWR2ZE84YjBzV081N3JY?oc=5",
-          "published_at": "Thu, 01 Oct 2026 03:07:00 GMT"
-        },
-        {
-          "type": "publisher_article",
-          "url": "https://www.dailian.co.kr/news/view/1696785/?sc=Naver"
-        }
-      ],
-      "context_failure": "",
-      "publisher_url": "https://www.dailian.co.kr/news/view/1696785/?sc=Naver",
-      "content_assessment": {
-        "document_type": "POLICY_ANNOUNCEMENT",
-        "claim_type": "ANNOUNCEMENT",
-        "what_happened": "강서구가 대한행정사회와 업무협약을 맺고 11명의 마을행정사를 위촉해 주민 대상 무료 행정 상담 사업을 추진한다. 상담은 올해 12월까지 매주 수요일 전화로 진행하며, 필요하면 동주민센터에서 대면 상담도 제공한다.",
-        "citizen_relevance": "인·허가, 면허, 가족관계, 행정 처분 관련 서류 작성과 이의신청 등에 어려움을 겪는 강서구 주민은 무료 상담을 받을 수 있다. 다만 기사에는 실제 이용 규모나 상담 결과, 기존 민원 처리의 문제 사례는 제시되지 않았다.",
-        "question_worth": "LOW",
-        "editorial_question": "",
-        "missing_check": "11명의 행정사가 담당할 동별 상담 수요와 실제 이용 건수, 상담 이후 민원 해결 여부, 상담 대상과 절차의 구체적인 기준은 확인되지 않았다.",
-        "counterpossibility": "무료 상담 창구가 개설되더라도 상담 시간이 주 1회 2시간으로 제한돼 주민 수요를 충분히 감당하지 못하거나, 전화 상담만으로 복잡한 민원을 해결하기 어려울 수 있다.",
-        "anchor_quote": "11명의 마을행정사를 위촉해 무료 상담을 제공",
-        "reason": "기사의 실체는 무료 행정 상담 사업의 도입·위촉 발표다. 구체적인 충돌이나 선택, 확인된 피해·공백, 반복 가능한 절차상의 통제 문제는 본문에 제시되지 않아 6~7분 방송 아이템으로서 질문 가치는 낮다."
-      }
-    },
-    {
-      "review_id": "CBMimAJBVV95cUxQSXJ0OWcy",
-      "headline": "서울 마포구, 주민 교통·보행 불편 해소 위해 생활환경 개선 추진",
-      "source_headline": "서울 마포구, 주민 교통·보행 불편 해소 위해 생활환경 개선 추진 - 데일리안",
-      "title_key": "서울 마포구 주민 교통 보행 불편 해소 위해 생활환경 개선 추진 데일리안",
-      "source_query": "서울 교통 불편",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-      "source_context_status": "BODY_READ",
-      "problem_status": "UNASSESSED",
-      "first_check": "정비 전후 사고·민원·이용 변화, 정류장 이전에 따른 다른 이용자의 불편, 보도 정비의 점검 결과와 사업비가 제시되지 않았다.",
-      "counterpossibility": "주민 의견을 반영한 조치로 실제 불편이 줄었을 수 있지만, 기사에 나온 내용만으로는 개선 효과나 새로운 불편이 확인됐다고 단정하기 어렵다.",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "시민 영향·갈등·책임 단서 부족",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "보통",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMimAJBVV95cUxQSXJ0OWcySTNPUmk4dEFNVzc3SU45S0RfbTRWMlM2OGpZSlJpN20zSXdKaExuSEYxdGItdm9nOGdaSGIyczNFdlFYek16RmFBYVVEQThYSnFMaHFfZDV3VUpsUjY0ZWVwSzR4d1pPRzNQLWZSUnhTUVJsZml0ek1PMFgtMjQ5Tk5lcW5HNWhVbjhWUmVJY0RHc1ZtQXYzUHRXTGFyUkxGMVZWM3hadWYwRnhkVmtiYldDZVQwUmFQU3I4N1VWcUU1Wm1OeG9WNjZDMlcyUDYyeE5RMm1DQUU2WEw3UWJWZTIzREJDOXNNNXg1QXBTNi1UX2Vzb2ZWVzFBYlh5NTc0QXV2ZUVvcndSVjZaNXpCeTVF?oc=5",
-          "published_at": "Wed, 30 Sep 2026 06:05:00 GMT"
-        },
-        {
-          "type": "publisher_article",
-          "url": "https://www.dailian.co.kr/news/view/1696301/?sc=Naver"
-        }
-      ],
-      "context_failure": "",
-      "publisher_url": "https://www.dailian.co.kr/news/view/1696301/?sc=Naver",
-      "content_assessment": {
-        "document_type": "PROMOTION",
-        "claim_type": "ANNOUNCEMENT",
-        "what_happened": "마포구가 주민 건의사항을 바탕으로 버스정류장 이전, 휴식용 의자 설치, 노후 보도 정비 등을 완료했다고 알렸다. 오는 11월 주민과의 대화를 다시 열 계획도 밝혔다.",
-        "citizen_relevance": "정류장 위치와 보행로, 휴식공간처럼 주민들이 일상적으로 이용하는 시설이 바뀌었다는 내용이다. 다만 기사에는 조치 이후 실제 이용 변화나 남은 불편, 주민 간 이견은 제시되지 않았다.",
-        "question_worth": "LOW",
-        "editorial_question": "",
-        "missing_check": "정비 전후 사고·민원·이용 변화, 정류장 이전에 따른 다른 이용자의 불편, 보도 정비의 점검 결과와 사업비가 제시되지 않았다.",
-        "counterpossibility": "주민 의견을 반영한 조치로 실제 불편이 줄었을 수 있지만, 기사에 나온 내용만으로는 개선 효과나 새로운 불편이 확인됐다고 단정하기 어렵다.",
-        "anchor_quote": "중동초등학교 인근 시내버스 정류장의 경우, 성산2동 주민들이 안전과 환승 편의를 위해 정류장 이전을 요청했다.",
-        "reason": "구체적인 생활시설 개선을 알리는 기관 발표 성격이 강하고, 실제 충돌이나 선택의 문제, 반복 가능한 절차 공백이 본문에 드러나지 않는다. 따라서 6~7분 후속 기획의 질문 가치는 낮다."
-      }
-    },
-    {
-      "review_id": "CBMiZkFVX3lxTE1tY1dZMEtq",
-      "headline": "용산도 강남도 반대…주택은 어디에?",
-      "source_headline": "용산도 강남도 반대…주택은 어디에? - 딜라이브뉴스",
-      "title_key": "용산도 강남도 반대 주택은 어디에 딜라이브뉴스",
-      "source_query": "서울 주민 반발 갈등",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "시민 영향·갈등·책임 단서 부족",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "보통",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE1tY1dZMEtqeXdRcnlDWUFpYzdRQ0xYcmhMSU1CWFJtRWdFUWI3NndkdnMwc3pNN0VEUU1ZR19UUTFpWlJ6Q29IZDlOazJOcVdrUEhxdG56OU5CdjNRdG5meERtX05iZw?oc=5",
-          "published_at": "Mon, 28 Sep 2026 09:20:25 GMT"
-        }
-      ],
-      "context_failure": "NO_TITLE_MATCH"
-    },
-    {
-      "review_id": "CBMicEFVX3lxTE45X3B1Y0ky",
-      "headline": "‘또 공사 중단’ 서울7호선 청라연장선 2단계 2033년 개통 전망",
-      "source_headline": "‘또 공사 중단’ 서울7호선 청라연장선 2단계 2033년 개통 전망 - 인천투데이",
-      "title_key": "또 공사 중단 서울7호선 청라연장선 2단계 2033년 개통 전망 인천투데이",
-      "source_query": "서울 건설 공사 지연",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "시민 영향·갈등·책임 단서 부족",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "보통",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE45X3B1Y0kyS19GMkY3RTVhV3N3bFo1bWR6N2pWemM5Tm1aVVFSTElfeV9Zdkp5eDhSMFg0R18xeGNxeWxzV0dNUlplUXVnV1Y0ZF9aOXdUQzdCT21WaEwyWHRvT2Z2VVVmaHdpamhCSk8?oc=5",
-          "published_at": "Tue, 15 Sep 2026 07:00:00 GMT"
-        }
-      ],
-      "context_failure": "MODEL_NOT_RUN",
-      "publisher_url": "https://www.incheontoday.com/news/articleView.html?idxno=323651"
-    },
-    {
-      "review_id": "CBMickFVX3lxTFBpUlB3b2Z0",
-      "headline": "“부모 간병 부담 확 줄인다” 서울시, 퇴원 어르신 간병 지원",
-      "source_headline": "“부모 간병 부담 확 줄인다” 서울시, 퇴원 어르신 간병 지원 - 지역연합신문",
-      "title_key": "부모 간병 부담 확 줄인다 서울시 퇴원 어르신 간병 지원 지역연합신문",
-      "source_query": "서울 복지 공백",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "높음",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTFBpUlB3b2Z0dl85Nm45ODRUZklQZlMtN3ZSMTFUcDVhSFpEbk12WFlvbFpxTzhnd3RKZ2xzVm9GQ2plekFCekFiRkxSbUhYbE5ZUjBKS2dMZi1JcTI3cXBJR1hCYmJtNTJSS1dOMTZmR0F4Zw?oc=5",
-          "published_at": "Tue, 22 Sep 2026 05:51:54 GMT"
-        }
-      ],
-      "context_failure": "NO_TITLE_MATCH"
-    },
-    {
-      "review_id": "CBMiY0FVX3lxTE8wRm9ETEhn",
-      "headline": "싱크홀·붕괴·철거사고…서울 시설물 ‘안전 경고음’",
-      "source_headline": "싱크홀·붕괴·철거사고…서울 시설물 ‘안전 경고음’ - 쿠키뉴스",
-      "title_key": "싱크홀 붕괴 철거사고 서울 시설물 안전 경고음 쿠키뉴스",
+      "review_id": "CBMiakFVX3lxTE1yT0dCWi1x",
+      "headline": "서소문고가 사고 재발 막는다…서울시, 노후고가 해체공사 안전관리 강화",
+      "source_headline": "서소문고가 사고 재발 막는다…서울시, 노후고가 해체공사 안전관리 강화 - 동양뉴스",
+      "title_key": "서소문고가 사고 재발 막는다 서울시 노후고가 해체공사 안전관리 강화 동양뉴스",
       "source_query": "서울 안전 사고",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -704,19 +74,18 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE8wRm9ETEhnTG1KVDRJcGxYNWw4ZVFxdTFtLXZvQWQxWEFwUThxbEo5S2VNeURSSFQ5TWNnN1dVUFlPMXRZTVo5aHRGYjk3d2JvQ0RsUE5HUHByUFR5dWFzM1FzVQ?oc=5",
-          "published_at": "Sun, 27 Sep 2026 08:23:28 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1yT0dCWi1xbXk2STRueE1Kd2pxTzNGS085VEljTkluc18tZWM0dGt2cVBqeVBDMDBxQnVaRzhTaVQwV0ZqVFE5cGd1bnRoeDlYVThkbXg0LTMtdjdJNlpPT1EtdVRCM3AyS3c?oc=5",
+          "published_at": "Thu, 01 Oct 2026 02:09:00 GMT"
         }
       ],
-      "context_failure": "FETCH_HTTP_403",
-      "publisher_url": "https://www.kukinews.com/article/view/kuk202605300007"
+      "context_failure": "NO_TITLE_MATCH"
     },
     {
-      "review_id": "CBMiYEFVX3lxTE10QThDeXpD",
-      "headline": "서울 강서구 '마을행정사' 운영…\"무료 행정상담 서비스\"",
-      "source_headline": "서울 강서구 '마을행정사' 운영…\"무료 행정상담 서비스\" - 연합뉴스",
-      "title_key": "서울 강서구 마을행정사 운영 무료 행정상담 서비스 연합뉴스",
-      "source_query": "서울 민원",
+      "review_id": "CBMiakFVX3lxTE5BeVlEeUcy",
+      "headline": "소아청소년과 전공의 80%가 서울에…지방 진료공백 심각",
+      "source_headline": "소아청소년과 전공의 80%가 서울에…지방 진료공백 심각 - ggilbo.com",
+      "title_key": "소아청소년과 전공의 80 가 서울에 지방 진료공백 심각 ggilbo com",
+      "source_query": "서울 복지 공백",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
       "source_context_status": "BODY_UNAVAILABLE",
@@ -726,25 +95,70 @@
       "promotion_status": "HOLD",
       "status": "DISCOVERY_ONLY",
       "needs_human_review": true,
-      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
       "discovery_lane": "CITIZEN_ATTENTION",
       "is_new": true,
-      "screening_priority": "보통",
+      "screening_priority": "높음",
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE10QThDeXpDd1BPXzdnajBFcmN0cUpEdDlvMXVISmloUUFuSjBGNk1sOEZ6c21UY25nbHkxZ2g3VmNQSEVkYUZLUTg4UWE2ZElhZXNadElCRVZpeEUtdHJuWtIBYEFVX3lxTE10QThDeXpDd1BPXzdnajBFcmN0cUpEdDlvMXVISmloUUFuSjBGNk1sOEZ6c21UY25nbHkxZ2g3VmNQSEVkYUZLUTg4UWE2ZElhZXNadElCRVZpeEUtdHJuWg?oc=5",
-          "published_at": "Thu, 01 Oct 2026 00:06:07 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5BeVlEeUcyMGFOOUV6X0xWR3laSTFTdG95SUROWUtzVTJFQTNPajRCOGx1ZklvaWpxVU5SNU81WFpJTlBZSHlUcUVyaU5HNzZFbHRvbUlvbG5PYVpHZ1JJU3pZX3Nib0ZoakE?oc=5",
+          "published_at": "Tue, 29 Sep 2026 09:45:43 GMT"
         }
       ],
-      "context_failure": "MODEL_NOT_RUN",
-      "publisher_url": "https://www.yna.co.kr/view/AKR20261001036300004?input=1195m"
+      "context_failure": "MODEL_VALUEERROR",
+      "publisher_url": "https://www.ggilbo.com/news/articleView.html?idxno=1184275"
+    },
+    {
+      "review_id": "CBMiXEFVX3lxTE45bDI1cHNq",
+      "headline": "동대문구, 대학가 전세피해 막는다…서울시립대서 무료 상담",
+      "source_headline": "동대문구, 대학가 전세피해 막는다…서울시립대서 무료 상담 - ddmissue.com",
+      "title_key": "동대문구 대학가 전세피해 막는다 서울시립대서 무료 상담 ddmissue com",
+      "source_query": "서울 주거 피해",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
+      "source_context_status": "BODY_READ",
+      "problem_status": "UNASSESSED",
+      "first_check": "상담 참여 인원, 실제 지원 신청·지급 규모, 지원 요건을 충족하지 못한 피해 사례와 사업 이후의 성과는 본문에 제시되지 않았다.",
+      "counterpossibility": "이번 보도는 구체적인 추가 피해나 제도 운영상의 공백을 보여주기보다, 예정된 상담·홍보와 기존 지원사업을 소개하는 기관 발표일 수 있다.",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "높음",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE45bDI1cHNqUkNhTk5Yd0RrRkhrYnFNMjNDcGFZTmhPNUNDOTQ1WHAwMmtIWmREQzVzWjRUWDdfWlpyczMzYUZIZHJ4TGp5NjNhZGRaajVGQ0xpVkcz?oc=5",
+          "published_at": "Tue, 15 Sep 2026 23:22:00 GMT"
+        },
+        {
+          "type": "publisher_article",
+          "url": "https://www.gukjenews.com/news/articleView.html?idxno=3696943"
+        }
+      ],
+      "context_failure": "",
+      "publisher_url": "https://www.gukjenews.com/news/articleView.html?idxno=3696943",
+      "content_assessment": {
+        "document_type": "POLICY_ANNOUNCEMENT",
+        "claim_type": "ANNOUNCEMENT",
+        "what_happened": "동대문구가 최근 회기동의 전세보증금 미반환 사례를 계기로 서울시립대에서 대학생·사회초년생 대상 무료 임대차 상담과 피해 예방 안내를 이틀간 진행하고, 요건을 충족한 전세피해 임차인에게 소송비용과 주거안정자금을 각각 최대 100만 원까지 지원한다고 알렸다.",
+        "citizen_relevance": "대학생과 사회초년생은 전세계약 전후 확인사항과 보증금 미반환 대응 절차를 상담받을 수 있고, 일부 피해 임차인은 구의 지원사업을 신청할 수 있다.",
+        "question_worth": "LOW",
+        "editorial_question": "",
+        "missing_check": "상담 참여 인원, 실제 지원 신청·지급 규모, 지원 요건을 충족하지 못한 피해 사례와 사업 이후의 성과는 본문에 제시되지 않았다.",
+        "counterpossibility": "이번 보도는 구체적인 추가 피해나 제도 운영상의 공백을 보여주기보다, 예정된 상담·홍보와 기존 지원사업을 소개하는 기관 발표일 수 있다.",
+        "anchor_quote": "무료 현장상담을 진행한다고 밝혔다",
+        "reason": "최근 전세보증금 미반환 사례를 계기로 한 예방 상담과 지원사업 발표이지만, 구체적인 충돌·선택의 문제나 반복되는 절차 공백, 후속 확인이 필요한 통제 실패는 본문에 드러나지 않는다."
+      }
     },
     {
       "review_id": "CBMiWEFVX3lxTE9nXzJyVTAw",
       "headline": "환승 불편 덜어준다! 서울의 환승센터, 어디에 더 생기나?",
-      "source_headline": "환승 불편 덜어준다! 서울의 환승센터, 어디에 더 생기나? - mediahub.seoul.go.kr",
-      "title_key": "환승 불편 덜어준다 서울의 환승센터 어디에 더 생기나 mediahub seoul go kr",
+      "source_headline": "환승 불편 덜어준다! 서울의 환승센터, 어디에 더 생기나? - 내 손안에 서울",
+      "title_key": "환승 불편 덜어준다 서울의 환승센터 어디에 더 생기나 내 손안에 서울",
       "source_query": "서울 교통 불편",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -769,10 +183,100 @@
       "context_failure": "NO_TITLE_MATCH"
     },
     {
-      "review_id": "CBMibkFVX3lxTE1MRG1qMlla",
-      "headline": "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원",
-      "source_headline": "“돌봄 공백 줄인다”…서울시, 퇴원한 65세 이상 어르신 간병 지원 - 아시아투데이",
-      "title_key": "돌봄 공백 줄인다 서울시 퇴원한 65세 이상 어르신 간병 지원 아시아투데이",
+      "review_id": "CBMiVEFVX3lxTE04bkM0S3gx",
+      "headline": "[단독]서울 악취 민원 5년새 2.5배로 급증… 음식점 관련 최다",
+      "source_headline": "[단독]서울 악취 민원 5년새 2.5배로 급증… 음식점 관련 최다 - v.daum.net",
+      "title_key": "서울 악취 민원 5년새 2 5배로 급증 음식점 관련 최다 v daum net",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
+      "source_context_status": "BODY_READ",
+      "problem_status": "UNASSESSED",
+      "first_check": "민원 건수만으로 실제 악취 발생이나 피해 규모를 판단하기 어렵다. 자치구별 민원 집계 방식과 중복 여부, 현장 확인 및 처리 결과, 동작구 민원 0건의 의미를 확인할 필요가 있다.",
+      "counterpossibility": "악취 발생 자체가 급증한 것이 아니라 코로나19 이후 영업 재개, 시민의 민감도 상승, 신고·접수 방식의 차이 때문에 민원만 늘었을 가능성이 있다.",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE04bkM0S3gxSTkySlBqRjdMVDB2NjNTaUpPYmM0OV9zV2RfdTBFYWhQQmdkekYxSzRaOUtsZVl4Vm5IWWdxVzlhSE5PbExicVpmeXlpeg?oc=5",
+          "published_at": "Mon, 28 Sep 2026 19:33:35 GMT"
+        },
+        {
+          "type": "publisher_article",
+          "url": "https://www.donga.com/news/Society/article/all/20260929/134748451/2"
+        }
+      ],
+      "context_failure": "",
+      "publisher_url": "https://www.donga.com/news/Society/article/all/20260929/134748451/2",
+      "content_assessment": {
+        "document_type": "OTHER",
+        "claim_type": "OBSERVED_EVENT",
+        "what_happened": "서울시에 접수된 악취 민원이 2021년 964건에서 2025년 2428건으로 늘었고, 그중 음식점 관련 민원이 1296건으로 가장 많았다는 자료를 소개한다. 하수구·정화조 관련 민원도 증가했다. 다만 코로나19 이후 영업 재개와 시민 민감도 상승이 증가 원인이라는 설명, 음식점이 악취방지법상 신고 대상이 아니어서 행정 개입 수단이 제한된다는 평가는 각각 서울시와 전문가·정치인의 주장이다.",
+        "citizen_relevance": "주택가와 생활권에서 반복되는 냄새 민원과 관련되고, 음식점 악취가 늘어도 현행 제도상 어떤 행정 조치가 가능한지에 따라 주민의 생활환경과 업주의 비용 부담이 달라질 수 있다.",
+        "question_worth": "HIGH",
+        "editorial_question": "음식점 악취 민원 1296건 가운데 실제 현장 확인·개선 권고·시설 지원 등으로 처리된 건수는 얼마이며, 음식점이 신고 대상이 아닌 상황에서 서울시와 자치구는 어떤 기준으로 개입하고 있는가?",
+        "missing_check": "민원 건수만으로 실제 악취 발생이나 피해 규모를 판단하기 어렵다. 자치구별 민원 집계 방식과 중복 여부, 현장 확인 및 처리 결과, 동작구 민원 0건의 의미를 확인할 필요가 있다.",
+        "counterpossibility": "악취 발생 자체가 급증한 것이 아니라 코로나19 이후 영업 재개, 시민의 민감도 상승, 신고·접수 방식의 차이 때문에 민원만 늘었을 가능성이 있다.",
+        "anchor_quote": "음식점 등 일반 사업장은 현행법상 신고 대상이 아니어서",
+        "reason": "단순한 민원 증가 보도에 그치지 않고, 가장 많은 비중을 차지한 음식점 악취에 대해 신고 대상 제외라는 구체적인 제도상 개입 한계를 제시한다. 실제 피해 규모는 아직 확인되지 않았지만, 민원 처리와 행정 개입 절차가 작동하는지 점검할 수 있어 후속 질문 가치가 있다."
+      }
+    },
+    {
+      "review_id": "CBMiUEFVX3lxTE5YNE9Da0F0",
+      "headline": "서울교통공사, 안전사고 예방 유공직원 3명 표창…“현장 중심 안전경영”",
+      "source_headline": "서울교통공사, 안전사고 예방 유공직원 3명 표창…“현장 중심 안전경영” - 문화일보",
+      "title_key": "서울교통공사 안전사고 예방 유공직원 3명 표창 현장 중심 안전경영 문화일보",
+      "source_query": "서울 안전 사고",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
+      "source_context_status": "BODY_READ",
+      "problem_status": "UNASSESSED",
+      "first_check": "표창받은 직원들의 구체적인 활동과 그 결과, 논의된 안전 취약점과 개선 대책, 혼잡도 관리의 실행 일정·성과가 확인되지 않는다.",
+      "counterpossibility": "이번 기사는 실제 안전 개선이 확인된 사건이라기보다 표창식과 공사의 안전경영 방침을 알리는 기관 발표일 수 있다.",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "높음",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5YNE9Da0F0RnVKNExjWjZqd2VUcUhZdnJCbTdzQmc0aWxKN29FTEp2R05tMTlzdTljMEVFcWRUQ2tyMDMtblBHTDB5N1N3ZVpr?oc=5",
+          "published_at": "Fri, 18 Sep 2026 07:00:00 GMT"
+        },
+        {
+          "type": "publisher_article",
+          "url": "https://www.munhwa.com/article/11617964?ref=naver"
+        }
+      ],
+      "context_failure": "",
+      "publisher_url": "https://www.munhwa.com/article/11617964?ref=naver",
+      "content_assessment": {
+        "document_type": "PROMOTION",
+        "claim_type": "ANNOUNCEMENT",
+        "what_happened": "서울교통공사가 지하철 안전사고 예방과 안전문화 확산에 기여했다는 직원 3명에게 사장 표창을 수여하고, 중대재해 예방과 혼잡도 관리 방안을 논의했다고 알렸다. 공사는 앞으로 정기적인 안전회의를 열겠다고 밝혔다.",
+        "citizen_relevance": "지하철 안전관리와 혼잡도 대응에 관한 공사의 방침을 보여주지만, 실제 안전사고나 혼잡 피해, 개선 결과에 관한 구체적인 내용은 제시되지 않았다.",
+        "question_worth": "LOW",
+        "editorial_question": "",
+        "missing_check": "표창받은 직원들의 구체적인 활동과 그 결과, 논의된 안전 취약점과 개선 대책, 혼잡도 관리의 실행 일정·성과가 확인되지 않는다.",
+        "counterpossibility": "이번 기사는 실제 안전 개선이 확인된 사건이라기보다 표창식과 공사의 안전경영 방침을 알리는 기관 발표일 수 있다.",
+        "anchor_quote": "공사는 지난 16일 ‘2026 안전분야 유공직원 사장표창 수여식’을 열고 중대재해 사고 예방과 안전문화 확산에 기여한 우수 직원 3명에게 표창장을 전달했다.",
+        "reason": "기사의 실체가 직원 표창과 안전회의 개최, 향후 정기회의 계획을 소개하는 데 머물러 있다. 실제 사고·피해·구체적 통제 공백이나 시민이 판단해야 할 선택과 후속 쟁점이 제시되지 않아 단독 기획 질문으로서의 가치는 낮다."
+      }
+    },
+    {
+      "review_id": "CBMiY0FVX3lxTE9aT0hjR2FM",
+      "headline": "서울시, 추석에도 '복지안전망 정상 가동'… 취약 어르신 4만명·고립위험 7만가구 안부 확인",
+      "source_headline": "서울시, 추석에도 '복지안전망 정상 가동'… 취약 어르신 4만명·고립위험 7만가구 안부 확인 - kmkj.kr",
+      "title_key": "서울시 추석에도 복지안전망 정상 가동 취약 어르신 4만명 고립위험 7만가구 안부 확인 kmkj kr",
       "source_query": "서울 복지 공백",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -790,17 +294,271 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1MRG1qMllaNEdCRnFtTlFDTEE2UkViQXBkNmE4NF9TY2d2eE16bEdkZENDbWZzRWFtTHBfYUVPZTROZUdzVXM3NEtMZy1ockpGaHFPbVR1WVlXOWdWR05WTWRSYWZqTndCY3REd2lR?oc=5",
-          "published_at": "Tue, 15 Sep 2026 08:34:05 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE9aT0hjR2FMTW5xQVRfSkZneXc4N1k4OWVXdkRIVTNzWlphNVZ6cXMyMkh6dzB6SDZvbWVoaGhEeEdfYmItRTM0djl2NDltMGZrQWVrRWUwUnNCRHlQWGF3bUVWMNIBZ0FVX3lxTE9aa0loUXJTYnNNMGRMYnR0VlNoZU01dnVtS00tOGxsZzJ1SkhkWTgxSVI4Y1ZLQkIyTVFYOHhmNEU1M1hQU0pqOGlpR1JReGRwRVZIcGMxdi1FYnppQWdlRUloNjBtTUU?oc=5",
+          "published_at": "Fri, 25 Sep 2026 10:00:00 GMT"
         }
       ],
       "context_failure": "NO_TITLE_MATCH"
     },
     {
-      "review_id": "CBMibkFVX3lxTE5kUzRtSFBR",
-      "headline": "서울교통공사, 안전사고 예방 기여한 직원 3명 표창",
-      "source_headline": "서울교통공사, 안전사고 예방 기여한 직원 3명 표창 - gukjenews.com",
-      "title_key": "서울교통공사 안전사고 예방 기여한 직원 3명 표창 gukjenews com",
+      "review_id": "CBMiYEFVX3lxTE45akVvTTBr",
+      "headline": "이인화 서울시의원, \"개포동 242번 버스 증차·2413번 집중배차로 주민 교통 불편 개선\"",
+      "source_headline": "이인화 서울시의원, \"개포동 242번 버스 증차·2413번 집중배차로 주민 교통 불편 개선\" - TV서울",
+      "title_key": "이인화 서울시의원 개포동 242번 버스 증차 2413번 집중배차로 주민 교통 불편 개선 tv서울",
+      "source_query": "서울 교통 불편",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
+      "source_context_status": "BODY_READ",
+      "problem_status": "UNASSESSED",
+      "first_check": "서울시 교통실의 공식 운행 변경 자료, 실제 배차 이행 여부와 이용객의 체감 효과는 기사에서 확인되지 않는다.",
+      "counterpossibility": "운행 차량 1대 증차와 배차간격 단축 폭이 제한적이어서 주민들이 체감하는 개선 효과가 크지 않을 수 있다.",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE45akVvTTBrS0FySk9CalowTmtJWmVQRkc2bTlHTERPTTYzb1RzR2UzY21rczROdVplWERoTTlwWTBmU0ZJNEZmbnJZSURfR21DU18yOXhQSGhiQ1c1Mk1STQ?oc=5",
+          "published_at": "Tue, 29 Sep 2026 00:32:19 GMT"
+        },
+        {
+          "type": "publisher_article",
+          "url": "https://www.segye.com/newsView/20260929518032?OutUrl=naver"
+        }
+      ],
+      "context_failure": "",
+      "publisher_url": "https://www.segye.com/newsView/20260929518032?OutUrl=naver",
+      "content_assessment": {
+        "document_type": "POLICY_ANNOUNCEMENT",
+        "claim_type": "ATTRIBUTED_CLAIM",
+        "what_happened": "이인화 서울시의원실은 9월 28일부터 개포동을 운행하는 242번 버스가 19대에서 20대로 증차되고, 2413번 버스의 출퇴근 시간대 배차간격이 기존보다 1~2분 단축됐다고 밝혔다.",
+        "citizen_relevance": "개포동 주민의 출퇴근 버스 운행 횟수와 배차간격이 일부 개선됐다는 내용으로, 해당 노선 이용자에게 직접적인 교통서비스 변화가 될 수 있다.",
+        "question_worth": "LOW",
+        "editorial_question": "",
+        "missing_check": "서울시 교통실의 공식 운행 변경 자료, 실제 배차 이행 여부와 이용객의 체감 효과는 기사에서 확인되지 않는다.",
+        "counterpossibility": "운행 차량 1대 증차와 배차간격 단축 폭이 제한적이어서 주민들이 체감하는 개선 효과가 크지 않을 수 있다.",
+        "anchor_quote": "기존 19대에서 20대로 1대 늘어나며",
+        "reason": "구체적인 충돌이나 선택, 구조적 공백을 다루기보다 의원실이 버스 증차와 배차 강화를 알리는 단순 정책·성과 발표에 가깝다. 운행 변경의 시민 영향은 있으나, 기사만으로는 추가 취재를 구성할 만한 갈등이나 후속 쟁점이 제시되지 않아 질문 가치는 낮다."
+      }
+    },
+    {
+      "review_id": "CBMidkFVX3lxTE9HWFg4aEFC",
+      "headline": "[단독]서울시 악취민원 5년새 2.5배로…절반 이상이 ‘음식점 냄새’",
+      "source_headline": "[단독]서울시 악취민원 5년새 2.5배로…절반 이상이 ‘음식점 냄새’ - 동아일보",
+      "title_key": "서울시 악취민원 5년새 2 5배로 절반 이상이 음식점 냄새 동아일보",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
+      "source_context_status": "BODY_READ",
+      "problem_status": "UNASSESSED",
+      "first_check": "제출 자료의 악취 민원 집계 기준과 중복·반복 민원 처리 방식, 음식점 관련 민원의 실제 현장 확인 및 종결 결과, 자치구별 편차와 동작구 민원 0건의 원인을 확인해야 한다.",
+      "counterpossibility": "민원 증가는 실제 악취 발생량의 증가라기보다 거리두기 해제에 따른 영업 재개, 시민의 신고 민감도 상승, 생활환경 기대 수준 변화 때문일 수 있다.",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE9HWFg4aEFCUDEzRHVDWHFmZTJONWJka29fMmZkSmZ5TXZEaTc1VlR1LWtNQ1Q3d19jam9VYy01SGI5N29PUmkydTg0dFVJT3oxbDZPeGlMSTdZSFd2M0hSY0oyX3lDUU04TERGWmlvZ0FiNDNST0HSAWZBVV95cUxOVEVFMEttY3pESUZuX196d1NmaU85dFVhLWNyS3lGZkhBMUhod1pIUFR0c2NHWnhBUnhnbXJEUkxadXlSdTNUT3JicW9qUWhjTjRWWmRyS2U5MWxETzhwZW1RN0xPZGc?oc=5",
+          "published_at": "Mon, 28 Sep 2026 08:52:00 GMT"
+        },
+        {
+          "type": "publisher_article",
+          "url": "https://www.donga.com/news/Society/article/all/20260928/134745185/1"
+        }
+      ],
+      "context_failure": "",
+      "publisher_url": "https://www.donga.com/news/Society/article/all/20260928/134745185/1",
+      "content_assessment": {
+        "document_type": "INCIDENT",
+        "claim_type": "OBSERVED_EVENT",
+        "what_happened": "기사에 따르면 서울시 악취 민원은 2021년 964건에서 2025년 2428건으로 늘었고, 그중 음식점 관련 민원이 1296건으로 가장 큰 비중을 차지했다. 기사에서는 일반 음식점이 현행 악취방지법상 신고 대상이 아니어서 민원 발생 시 행정 개입 수단이 제한적이라고 전한다.",
+        "citizen_relevance": "주거지와 일상생활에서 반복되는 음식점·하수구 악취에 시민이 어떻게 대응할 수 있는지, 민원이 접수된 뒤 행정기관이 어느 수준까지 조치할 수 있는지와 관련된다.",
+        "question_worth": "HIGH",
+        "editorial_question": "서울시는 2025년 음식점 악취 민원 1296건에 대해 자치구별로 몇 건을 현장 확인·개선 조치했으며, 일반 음식점이 법정 신고 대상이 아니라는 이유로 해결되지 않은 민원은 얼마나 되는가?",
+        "missing_check": "제출 자료의 악취 민원 집계 기준과 중복·반복 민원 처리 방식, 음식점 관련 민원의 실제 현장 확인 및 종결 결과, 자치구별 편차와 동작구 민원 0건의 원인을 확인해야 한다.",
+        "counterpossibility": "민원 증가는 실제 악취 발생량의 증가라기보다 거리두기 해제에 따른 영업 재개, 시민의 신고 민감도 상승, 생활환경 기대 수준 변화 때문일 수 있다.",
+        "anchor_quote": "음식점 관련 악취 민원이 2021년 347건에서 2025년 1296건으로 3.7배로 급증했다",
+        "reason": "단순한 지원 발표가 아니라 민원 증가 수치와 일반 음식점에 대한 행정 개입의 법적·절차적 제한이 함께 제시돼 있어, 실제 처리 현황과 관리 공백을 확인하는 후속 취재 가치가 있다."
+      }
+    },
+    {
+      "review_id": "CBMiakFVX3lxTE5PYllTcTF2",
+      "headline": "서울교통공사, 지하철 안전사고 적극 예방 직원 특별 격려",
+      "source_headline": "서울교통공사, 지하철 안전사고 적극 예방 직원 특별 격려 - 머니투데이 - 머니투데이",
+      "title_key": "서울교통공사 지하철 안전사고 적극 예방 직원 특별 격려 머니투데이 머니투데이",
+      "source_query": "서울 안전 사고",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
+      "source_context_status": "BODY_READ",
+      "problem_status": "UNASSESSED",
+      "first_check": "소개된 안전 아이디어의 시행 범위, 설치·공사 이후 사고·민원 변화, 다른 역사로의 확대 계획과 예산이 확인되지 않는다.",
+      "counterpossibility": "표창 사례가 개별 직원의 개선 활동에 그치고, 공사 전체의 사고 예방 체계나 시민 안전 수준의 변화로 이어졌다고 보기 어려울 수 있다.",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "높음",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5PYllTcTF2WW5hc1h4Tzc4UTJHby1xV0JFSjZxOVRzQlRUOFN6WXNHMWcyZ2h0OU1ONDhSVXh3SzJxcG1fdHF5U09WbHdNRlRoa2hBbzlqWnZDUjRCajNEeW5hWlJhSEYzU1HSAW9BVV95cUxQaElZTndfSmZCQnZ4Z3Y1TGtIRlh6MFkwUzZ6bUpkc000anVKdVpubXhOSERfOUNRZzdsYXluZWwwaFQ4SFctbHRxNWJmV2U4a2lhZ1hNeVZ5cEJwUnRHWmZEbDVTVnZpNVVSOFNGQ00?oc=5",
+          "published_at": "Fri, 18 Sep 2026 07:00:00 GMT"
+        },
+        {
+          "type": "publisher_article",
+          "url": "https://www.mt.co.kr/policy/2026/09/18/2026091815095576815"
+        }
+      ],
+      "context_failure": "",
+      "publisher_url": "https://www.mt.co.kr/policy/2026/09/18/2026091815095576815",
+      "content_assessment": {
+        "document_type": "PROMOTION",
+        "claim_type": "ANNOUNCEMENT",
+        "what_happened": "서울교통공사가 안전사고 예방에 기여했다는 직원 3명에게 표창을 수여하고, 향후 정기 안전회의와 현장 소통을 이어가겠다고 밝혔다. 기사에는 출입문 셔터 시청각 경보, 캐노피와 계단 미끄럼 방지 시공, 터널·차량기지 조명 개선 등의 사례가 소개됐다.",
+        "citizen_relevance": "시민이 이용하는 역사와 열차 운행 공간의 안전 개선 사례를 다루지만, 해당 조치가 실제 사고를 얼마나 줄였는지나 전 역사·노선에 적용됐는지는 제시되지 않았다.",
+        "question_worth": "LOW",
+        "editorial_question": "",
+        "missing_check": "소개된 안전 아이디어의 시행 범위, 설치·공사 이후 사고·민원 변화, 다른 역사로의 확대 계획과 예산이 확인되지 않는다.",
+        "counterpossibility": "표창 사례가 개별 직원의 개선 활동에 그치고, 공사 전체의 사고 예방 체계나 시민 안전 수준의 변화로 이어졌다고 보기 어려울 수 있다.",
+        "anchor_quote": "안전 최우선",
+        "reason": "구체적인 충돌이나 피해, 제도적 공백을 다룬 사건 보도라기보다 직원 표창과 기관의 안전 경영 방침을 소개하는 홍보성 기사다. 안전 조치의 효과와 적용 범위에 관한 후속 쟁점도 본문에 충분히 제시되지 않아 6~7분 기획 질문으로서의 가치는 낮다."
+      }
+    },
+    {
+      "review_id": "CBMiZEFVX3lxTE95NzBoVzg5",
+      "headline": "양천구, 독감 무료접종 대상 ‘서울시 최대 범위’ 지원",
+      "source_headline": "양천구, 독감 무료접종 대상 ‘서울시 최대 범위’ 지원 - 서울복지신문",
+      "title_key": "양천구 독감 무료접종 대상 서울시 최대 범위 지원 서울복지신문",
+      "source_query": "서울 복지 공백",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
+      "source_context_status": "BODY_READ",
+      "problem_status": "UNASSESSED",
+      "first_check": "약 3만 명이라는 예상 대상 규모와 145개 위탁의료기관의 산정 근거, 새 대상별 자격 확인에 사용되는 증빙자료와 의료기관 안내 방식이 본문에 구체적으로 제시되지 않았다.",
+      "counterpossibility": "지원 대상이 확대돼도 실제 접종을 원하는 주민이 적거나 자격 확인 절차가 원활하면 별도의 이용 혼선이나 접근성 문제는 나타나지 않을 수 있다.",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE95NzBoVzg5LXJISTJlUEVoUV9UZ3RhWE1YUWxfLUcxOHY5SVJmY0QyZEppV0psTzYya05tOTBHaTRDUkREanh0QXlwTXVjX2dOY2JqSGVHbUxRazczdHBlV2dXd1DSAWhBVV95cUxNZHN2R294T3V4Qmw4WG95ZlpxYzZhY2lkVjRxSmdxaHhuZ0VwNFI0aXh0WS1uLUZsaEdBT1J4dnJ2OXB5RF9YeFRrOHdId1kxWWs3bUg2WTN5QUE3b1NGMERTYmFuajRRWQ?oc=5",
+          "published_at": "Sun, 27 Sep 2026 21:47:03 GMT"
+        },
+        {
+          "type": "publisher_article",
+          "url": "https://www.m-i.kr/news/articleView.html?idxno=1418239"
+        }
+      ],
+      "context_failure": "",
+      "publisher_url": "https://www.m-i.kr/news/articleView.html?idxno=1418239",
+      "content_assessment": {
+        "document_type": "POLICY_ANNOUNCEMENT",
+        "claim_type": "ANNOUNCEMENT",
+        "what_happened": "양천구가 2026~2027년 독감 무료 예방접종의 자체 지원 대상을 15~64세 주민 중 장애인·취약계층 등에 더해 통·반장, 주민자치회 위원, 해당 연도 관내 봉사활동 4시간 이상 자원봉사자까지 확대한다고 발표했다. 자체 지원 대상은 약 3만 명으로 늘고, 위탁의료기관은 145개소로 확대되며 접종은 10월 6일부터 2027년 4월 30일까지 진행될 예정이다.",
+        "citizen_relevance": "양천구민 가운데 국가 무료접종 대상이 아닌 15~64세 주민도 자신의 자격과 증빙자료를 확인해 무료접종을 받을 수 있게 된다는 내용이다. 지원 대상 확대에 따라 대상 여부, 필요한 서류, 접종기관과 기간을 시민에게 안내할 필요가 있다.",
+        "question_worth": "HIGH",
+        "editorial_question": "자원봉사 4시간 이상 등 새 기준에 해당하는 주민이 실제 접종 현장에서 어떤 증빙자료를 인정받는지, 특히 통·반장·주민자치회 위원과 자원봉사자의 자격 확인 절차가 의료기관마다 동일하게 적용되는가?",
+        "missing_check": "약 3만 명이라는 예상 대상 규모와 145개 위탁의료기관의 산정 근거, 새 대상별 자격 확인에 사용되는 증빙자료와 의료기관 안내 방식이 본문에 구체적으로 제시되지 않았다.",
+        "counterpossibility": "지원 대상이 확대돼도 실제 접종을 원하는 주민이 적거나 자격 확인 절차가 원활하면 별도의 이용 혼선이나 접근성 문제는 나타나지 않을 수 있다.",
+        "anchor_quote": "자원봉사자의 경우 기존 연간 200시간 이상이던 기준을 해당 연도 관내 봉사활동 4시간 이상으로 대폭 완화",
+        "reason": "단순한 접종 지원 발표이지만, 기존 200시간에서 4시간으로 자격 기준이 크게 바뀌고 약 3만 명을 대상으로 새 증빙·자격 확인 절차가 적용된다. 시민이 실제 혜택을 받을 수 있는지 확인할 구체적인 행정 절차와 적용 기준이 있어 후속 질문 가치가 있다."
+      }
+    },
+    {
+      "review_id": "CBMibEFVX3lxTE5iZElETEtq",
+      "headline": "이인화 서울시의원, 개포동 242번 증차·2413번 집중배차…출퇴근 교통 불편 개선",
+      "source_headline": "이인화 서울시의원, 개포동 242번 증차·2413번 집중배차…출퇴근 교통 불편 개선 - 파이낸스투데이",
+      "title_key": "이인화 서울시의원 개포동 242번 증차 2413번 집중배차 출퇴근 교통 불편 개선 파이낸스투데이",
+      "source_query": "서울 교통 불편",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
+      "source_context_status": "BODY_READ",
+      "problem_status": "UNASSESSED",
+      "first_check": "242번의 증차 대수, 2413번의 출퇴근 배차 간격, 시행일과 실제 운행 여부를 확인할 필요가 있다.",
+      "counterpossibility": "발표가 실제 증차나 배차 간격 단축으로 이어지지 않거나, 시행 시점이 정해지지 않았을 가능성이 있다.",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5iZElETEtqeWcwVWV1dDV6eVdHTGhkNmdLa0loSmRhWHJUVUplcTloOHRGcWFXZlREYkNTTW9RMzlJZ3BWVG52Z2pLRlM5ZGpWVk1OTWV1SzRhZnBBLUNpdDc3bGxxbVltVWFnZQ?oc=5",
+          "published_at": "Mon, 28 Sep 2026 12:20:52 GMT"
+        },
+        {
+          "type": "publisher_article",
+          "url": "https://hbnpress.com/news/view/1065564382488337"
+        }
+      ],
+      "context_failure": "",
+      "publisher_url": "https://hbnpress.com/news/view/1065564382488337",
+      "content_assessment": {
+        "document_type": "POLICY_ANNOUNCEMENT",
+        "claim_type": "ANNOUNCEMENT",
+        "what_happened": "서울시 교통실과 협의한 결과 개포동을 운행하는 242번 버스는 증차되고, 2413번 버스는 출퇴근 시간대 배차가 강화될 예정이라고 이인화 서울시의원이 밝혔다. 다만 시행 시점과 구체적인 운행 변경 내용은 제시되지 않았다.",
+        "citizen_relevance": "개포동 버스 이용자의 출퇴근 선택과 대기시간에 영향을 줄 수 있는 운행계획 변경 발표다.",
+        "question_worth": "LOW",
+        "editorial_question": "",
+        "missing_check": "242번의 증차 대수, 2413번의 출퇴근 배차 간격, 시행일과 실제 운행 여부를 확인할 필요가 있다.",
+        "counterpossibility": "발표가 실제 증차나 배차 간격 단축으로 이어지지 않거나, 시행 시점이 정해지지 않았을 가능성이 있다.",
+        "anchor_quote": "242번과 2413번 버스의 운행계획이 조정된다",
+        "reason": "버스 운행 변경 발표라는 시민 관련성은 있으나, 구체적인 변경 규모·시행일·이용자 선택이나 충돌이 본문에 없어 단순 지원·발표를 넘어서는 취재 질문 가치는 낮다."
+      }
+    },
+    {
+      "review_id": "CBMiWkFVX3lxTE4zQ0h0aVph",
+      "headline": "[단독]“신천지 이만희 외부 병원 가게 해달라”…올해만 서울구치소에 민원 1만2000건",
+      "source_headline": "[단독]“신천지 이만희 외부 병원 가게 해달라”…올해만 서울구치소에 민원 1만2000건 - 경향신문",
+      "title_key": "신천지 이만희 외부 병원 가게 해달라 올해만 서울구치소에 민원 1만2000건 경향신문",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE4zQ0h0aVphcW8xUWpJZWxZa1BtY3RBOXlxQTRfOG9abFdpQkhIcldsVGpsMTFhU25GTnFDVkgwWHlnYkxTVFUzMU9IQzdwNFhVSWppa3VUT2lWQdIBX0FVX3lxTE1rYjVnQzhGa3UxUFlyRGcyTVlqT1RQNEFGUmVqb3gxZ1JvU0t1em0tRzkzUFk0MjZ3S1JXNXJkRHJlZzEzWDR6Q3RqN2NmYlJMakpCZE52OFAwQnZ0WjNz?oc=5",
+          "published_at": "Mon, 28 Sep 2026 06:13:00 GMT"
+        }
+      ],
+      "context_failure": "MODEL_NOT_RUN",
+      "publisher_url": "https://www.khan.co.kr/article/202609281513001"
+    },
+    {
+      "review_id": "CBMiYEFVX3lxTE9NX0tWM2ZB",
+      "headline": "서울교통공사, 지하철 안전사고 예방 직원에 표창",
+      "source_headline": "서울교통공사, 지하철 안전사고 예방 직원에 표창 - 아시아경제",
+      "title_key": "서울교통공사 지하철 안전사고 예방 직원에 표창 아시아경제",
       "source_query": "서울 안전 사고",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -818,103 +576,18 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5kUzRtSFBRaDVSMmZOakdTUDRiczVZNFNGeU81QllTQUhNWnBEbUlXeTZuUzVlc0NHTHBWaVpfeGlTWVE5WGtaM05Fa0ZNVTNvLWtQOWhueUQtM3Bkbk1NZnVBemxkMlp5UUs0YmdR?oc=5",
-          "published_at": "Fri, 18 Sep 2026 14:58:05 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9NX0tWM2ZBbHNJRmMwYUc1cXh0aVA5TE84STViUXFrRGRFdzY3VmwwUEdWQTNvR20tZ2drUjVxMUFBQWpKU3R2Q0o2NmVZUTgwZlR5My04eUVqSHNKek1lbQ?oc=5",
+          "published_at": "Thu, 17 Sep 2026 23:22:56 GMT"
         }
       ],
       "context_failure": "MODEL_NOT_RUN",
-      "publisher_url": "https://www.gukjenews.com/news/articleView.html?idxno=3700413"
+      "publisher_url": "https://view.asiae.co.kr/article/2026091808225730785"
     },
     {
-      "review_id": "CBMiakFVX3lxTE5lYUwxblkw",
-      "headline": "서울남부보훈지청, 고령대상자에 맞춘‘어르신 통합민원실’ 운영",
-      "source_headline": "서울남부보훈지청, 고령대상자에 맞춘‘어르신 통합민원실’ 운영 - 관악신문",
-      "title_key": "서울남부보훈지청 고령대상자에 맞춘 어르신 통합민원실 운영 관악신문",
-      "source_query": "서울 민원",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "보통",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5lYUwxblkwQlFTcFZaVmlQeWJkM3JTcXV2QkQyb01GeFZQRVNqWjFyNnloQXVBZjN5QWhxRWh1MldBRU1jOUdFVHdqWFVKZlBsZzNiVWVhbDVPSFNqVjR3dDN2SEVxTjlDR2c?oc=5",
-          "published_at": "Wed, 30 Sep 2026 08:00:09 GMT"
-        }
-      ],
-      "context_failure": "NO_TITLE_MATCH"
-    },
-    {
-      "review_id": "CBMicEFVX3lxTE1qRGdxWWZi",
-      "headline": "[AI로 여는 의정의 새길]유기훈 서울시의원 ‘AI 의정 활용 실전 연구회’ 교육 개최…정책자료 분석·민원 대응 등 실습",
-      "source_headline": "[AI로 여는 의정의 새길]유기훈 서울시의원 ‘AI 의정 활용 실전 연구회’ 교육 개최…정책자료 분석·민원 대응 등 실습 - 전국뉴스",
-      "title_key": "유기훈 서울시의원 ai 의정 활용 실전 연구회 교육 개최 정책자료 분석 민원 대응 등 실습 전국뉴스",
-      "source_query": "서울 민원",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "보통",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE1qRGdxWWZibHZnSzNLVjh3aEhGMTRucmlwdDRmejM1RkFvaE85RENJNXF6LWpWLUtzb0owZWlaMUxvYko1cVdMeDlDRGJ1cFl4RHY3ZlVqNmJkS3N3ejlMNDBXSGhYMnVYYVZJTVB2cFk?oc=5",
-          "published_at": "Wed, 30 Sep 2026 07:56:05 GMT"
-        }
-      ],
-      "context_failure": "NO_TITLE_MATCH"
-    },
-    {
-      "review_id": "CBMickFVX3lxTE1oUmJlSDB4",
-      "headline": "유기훈 서울시의 ‘AI 의정 활용 실전 연구회’, AI 역량 강화 교육 개최… 정책 분석 및 민원 대응 접목 모색",
-      "source_headline": "유기훈 서울시의 ‘AI 의정 활용 실전 연구회’, AI 역량 강화 교육 개최… 정책 분석 및 민원 대응 접목 모색 - 디스커버리뉴스(DISCOVERYNEWS)",
-      "title_key": "유기훈 서울시의 ai 의정 활용 실전 연구회 ai 역량 강화 교육 개최 정책 분석 및 민원 대응 접목 모색 디스커버리뉴스",
-      "source_query": "서울 민원",
-      "source_name": "검색 관심도·뉴스 확산",
-      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
-      "source_context_status": "BODY_UNAVAILABLE",
-      "problem_status": "UNASSESSED",
-      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
-      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
-      "promotion_status": "HOLD",
-      "status": "DISCOVERY_ONLY",
-      "needs_human_review": true,
-      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
-      "discovery_lane": "CITIZEN_ATTENTION",
-      "is_new": true,
-      "screening_priority": "보통",
-      "evidence": [
-        {
-          "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1oUmJlSDB4RGZ2UE5tb1VHZVcyRXlLSzBWY3JncGQ0a1lmWUxwUXg0YXBZdGhtT0NUZnhxZGRSMkZBRnpodWh4Yll5YjZyOWJpdXpYUjljZlk4Vzd5a1NURnB3VDVXVjA2YWp4OFRNQmxMZw?oc=5",
-          "published_at": "Wed, 30 Sep 2026 01:27:22 GMT"
-        }
-      ],
-      "context_failure": "MODEL_NOT_RUN",
-      "publisher_url": "https://www.discoverynews.kr/news/articleView.html?idxno=1102900"
-    },
-    {
-      "review_id": "CBMiZEFVX3lxTE0yX29lb0xB",
-      "headline": "강북구, 임산부·배우자·산후조리원 종사자 ‘백일해 무료 예방접종’ 시행",
-      "source_headline": "강북구, 임산부·배우자·산후조리원 종사자 ‘백일해 무료 예방접종’ 시행 - 서울복지신문",
-      "title_key": "강북구 임산부 배우자 산후조리원 종사자 백일해 무료 예방접종 시행 서울복지신문",
+      "review_id": "CBMiT0FVX3lxTE5abkR5T19u",
+      "headline": "“연락 안 되면 직접 방문”…서울시 복지안전망 ‘이상無’",
+      "source_headline": "“연락 안 되면 직접 방문”…서울시 복지안전망 ‘이상無’ - v.daum.net",
+      "title_key": "연락 안 되면 직접 방문 서울시 복지안전망 이상 v daum net",
       "source_query": "서울 복지 공백",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -932,19 +605,19 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE0yX29lb0xBVEQ1V20zX2FadFdwS0drX09JRXVpU3lzMzNkaEVDM1d5bngzSUNBeWpCYmZUckQzSWotOC1sRUJsd3RXMkNxSDJYeE5FOGlNSHdQNTUwclVnV3JlWjTSAWhBVV95cUxOZTRtWWdFWV95d3hrd1NwV3Y0aTJ6ZXNlQjNBeGxtZEtfdmdOU3VBeTJoVnJrMUtvNEswSHhXN3BuaUZIZVZyQVQxYnpUenQtUHpycGJHRWNDak5ibVVmQ2VybHhKdTFmVw?oc=5",
-          "published_at": "Wed, 30 Sep 2026 01:27:16 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5abkR5T19ud09KQnJJRk5yMl92UjdCLVZzNUllZ0N2YlBSRThTaFFBQ0lyM1k0Q0w2WHdHd3pPSmo1OHFzX3BoNDJ3WkRIT3M?oc=5",
+          "published_at": "Fri, 25 Sep 2026 10:11:00 GMT"
         }
       ],
       "context_failure": "MODEL_NOT_RUN",
-      "publisher_url": "https://www.cnbizm.com/news/articleView.html?idxno=316619"
+      "publisher_url": "https://www.dt.co.kr/article/12085807?ref=naver"
     },
     {
-      "review_id": "CBMibEFVX3lxTE50SDhwMWhL",
-      "headline": "이인화 서울시의원, 개포동 242번 버스 증차·2413번 집중배차로 주민 교통 불편 개선",
-      "source_headline": "이인화 서울시의원, 개포동 242번 버스 증차·2413번 집중배차로 주민 교통 불편 개선 - 글로벌경제신문",
-      "title_key": "이인화 서울시의원 개포동 242번 버스 증차 2413번 집중배차로 주민 교통 불편 개선 글로벌경제신문",
-      "source_query": "서울 교통 불편",
+      "review_id": "CBMiWkFVX3lxTFBIcFJQWTUw",
+      "headline": "\"같은 서울사랑상품권인데 혜택 제각각\"…민원 빗발친 이유 [김영리의 서울메이트]",
+      "source_headline": "\"같은 서울사랑상품권인데 혜택 제각각\"…민원 빗발친 이유 [김영리의 서울메이트] - 한국경제",
+      "title_key": "같은 서울사랑상품권인데 혜택 제각각 민원 빗발친 이유 한국경제",
+      "source_query": "서울 민원",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
       "source_context_status": "BODY_UNAVAILABLE",
@@ -961,19 +634,19 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE50SDhwMWhLOGpmeUZ3QllNZjM3WEFnQWFfMlc0NzE2RW1aQ0Y4aUY0T1E0SkNoeFRUVDBIX1hkX0NpdUI2U1dEQkxid0UtQl9JRnN5YTdveW16ZlhKV2RGUkc1TjZuUTdLZUdGZdIBcEFVX3lxTE9QOE55X2RuREI4cUVfLW13N1Y0ZGtrQmxKS2R1YTBqNVVHM2xYUTJrNDZUZWdydDZTZ1Z4YVQzM3F6QTBtYWpsU0RsdWxSa2pydEhWQk1LOVd0cFo0MmRRUHlCMWJkVTRDcHB1ek9LMnc?oc=5",
-          "published_at": "Tue, 29 Sep 2026 05:43:35 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFBIcFJQWTUwUnpXRE5PWkpMNm1oRE04cGdXZEwxd3hzN3NjNXFqeFh0bV85eE84NzVSS0FINGQ5WWVTdzVLU1AzQTg5eFlYRkplODZScmwyMjI4UQ?oc=5",
+          "published_at": "Thu, 24 Sep 2026 05:39:11 GMT"
         }
       ],
       "context_failure": "MODEL_NOT_RUN",
-      "publisher_url": "https://www.segye.com/newsView/20260929518032?OutUrl=naver"
+      "publisher_url": "https://www.hankyung.com/article/202609233853i"
     },
     {
-      "review_id": "CBMiZkFVX3lxTE5DakUzNlFH",
-      "headline": "이인화 서울시의원, 개포동 버스 증차·배차 개선 이끌어",
-      "source_headline": "이인화 서울시의원, 개포동 버스 증차·배차 개선 이끌어 - 강남포스트",
-      "title_key": "이인화 서울시의원 개포동 버스 증차 배차 개선 이끌어 강남포스트",
-      "source_query": "서울 교통 불편",
+      "review_id": "CBMiZEFVX3lxTFBoak5pb2tj",
+      "headline": "강남구, 취약계층 지원 종합대책 추진... “추석 밀착돌봄 총력”",
+      "source_headline": "강남구, 취약계층 지원 종합대책 추진... “추석 밀착돌봄 총력” - 서울복지신문",
+      "title_key": "강남구 취약계층 지원 종합대책 추진 추석 밀착돌봄 총력 서울복지신문",
+      "source_query": "서울 복지 공백",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
       "source_context_status": "BODY_UNAVAILABLE",
@@ -983,24 +656,309 @@
       "promotion_status": "HOLD",
       "status": "DISCOVERY_ONLY",
       "needs_human_review": true,
-      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
       "discovery_lane": "CITIZEN_ATTENTION",
       "is_new": true,
       "screening_priority": "보통",
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5DakUzNlFHQ1c4V0t6R1dOREx5dl9qQjhLNzdHZ1UxMGhJS2FHd2hyNFhJRU9Jd2NVUzhQRnVweDVqMXFIUEdjaUFsVFM3c29KcE5aTV9pMEx3QnFmZXpDQTJnREZIZw?oc=5",
-          "published_at": "Tue, 29 Sep 2026 04:37:36 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBoak5pb2tja256azl5Z2VTNHAtam1CN1hIT2hhWm9GVUlmN01QNjRyc2R1cTV6RUt4QjJEQmpyeUplQ2pKLWllbEVMRVlPeUdpc0NsaFllbUZLaWlaN21FTmh2S1PSAWhBVV95cUxPR2Q4N0J4cU10bnl4c1dwVTFxVlBCNWdrRTFFUV9Gek9vSm1PZFZrQVBtbGV0Tm4tQUx5QzlPazZRaHZ1eXFpNGVkemNNMzc1WFBNQkFLb0xDWFdkVVQwTkNKUmRCclFrTQ?oc=5",
+          "published_at": "Mon, 21 Sep 2026 22:17:04 GMT"
         }
       ],
       "context_failure": "NO_TITLE_MATCH"
     },
     {
-      "review_id": "CBMibkFVX3lxTE9Cd1RpOFVU",
-      "headline": "서울시의회 김호진·이인화 의원, 서울 곳곳 교통 불편 해소 나선다",
-      "source_headline": "서울시의회 김호진·이인화 의원, 서울 곳곳 교통 불편 해소 나선다 - 전국매일신문",
-      "title_key": "서울시의회 김호진 이인화 의원 서울 곳곳 교통 불편 해소 나선다 전국매일신문",
+      "review_id": "CBMikgFBVV95cUxNb0tzakxV",
+      "headline": "금천 “통합나래봇에 물어봐”… ‘AI 민원상담 챗봇’ 확대",
+      "source_headline": "금천 “통합나래봇에 물어봐”… ‘AI 민원상담 챗봇’ 확대 - 서울신문",
+      "title_key": "금천 통합나래봇에 물어봐 ai 민원상담 챗봇 확대 서울신문",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNb0tzakxVWnl4aF8zM0V1M0QxZVVjekR6NEoyd2VjbzRWYlQwOWttZ2lPUEl0Mi00b0NVekN1dHVhZWk3TUd2RVdUeGVOb2I2bVV1VHZXUVQ4ZHVXbW14MlpQLVVZaTg5RGluTFN5M2dEekk4OEE0ZzJsbzNvbzcyWV9EdjNhMC1idHVYZjJ6cjBYdw?oc=5",
+          "published_at": "Mon, 21 Sep 2026 15:35:21 GMT"
+        }
+      ],
+      "context_failure": "NO_TITLE_MATCH"
+    },
+    {
+      "review_id": "CBMibkFVX3lxTFBtUUtuTDJJ",
+      "headline": "강남구, 'AI 민원 해결사' 서비스 운영 시작",
+      "source_headline": "강남구, 'AI 민원 해결사' 서비스 운영 시작 - gukjenews.com",
+      "title_key": "강남구 ai 민원 해결사 서비스 운영 시작 gukjenews com",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFBtUUtuTDJJTFdJNi14X29NY21NZDdDNDBLSFpySXhXU1Q3U25INjdZelNIWFhTRjNXSU5ndUo4X1NrQTZBSnNiTXRKbk9JV3JBLWE1bkxJQ0phZlBHakFPTmtmUllzZnlNSE9mWGRB?oc=5",
+          "published_at": "Mon, 21 Sep 2026 13:42:32 GMT"
+        }
+      ],
+      "context_failure": "MODEL_NOT_RUN",
+      "publisher_url": "https://www.gukjenews.com/news/articleView.html?idxno=3702773"
+    },
+    {
+      "review_id": "CBMi-AFBVV95cUxNX2lhRk1Y",
+      "headline": "서울 금천구, AI 챗봇 '통합나래봇'으로 24시간 민원상담 제공",
+      "source_headline": "서울 금천구, AI 챗봇 '통합나래봇'으로 24시간 민원상담 제공 - 데일리안",
+      "title_key": "서울 금천구 ai 챗봇 통합나래봇 으로 24시간 민원상담 제공 데일리안",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxNX2lhRk1YcUtvaHgzRGZmeUgzVGlkd0hGNDFFeWVGcHQ1ZGM3WnRpZTdfTlMzQnBwY3l4QXhxeFVOTjAzbjdNS25kTkh4MHBpdE9oVnRPUlEwQ2M2Yk1qcFVMTDdSUVdsRXlXM1RUaXIyVVNOV3hPekRBVmRiWjg4NGtzcWotMVNfRVhDS0ZvajRkQWE1V0dFam51VzZqU01EWVhUXzNhMGFaYVQzNm5KTFBMdlhRSnV2U3piRnJPQU12ME8xZ2lRdzZKUXk4YWFrWm1zODU2NUtFOEpGdzdSUlAxQ1pUUjY5T1JoZ2RTQXYtWUdoU2VFUA?oc=5",
+          "published_at": "Mon, 21 Sep 2026 07:00:00 GMT"
+        }
+      ],
+      "context_failure": "MODEL_NOT_RUN",
+      "publisher_url": "https://www.dailian.co.kr/news/view/1692743/?sc=Naver"
+    },
+    {
+      "review_id": "CBMiZEFVX3lxTE9iWWFCenRa",
+      "headline": "광진구, 연휴 기간 응급의료체계 가동",
+      "source_headline": "광진구, 연휴 기간 응급의료체계 가동 - 서울복지신문",
+      "title_key": "광진구 연휴 기간 응급의료체계 가동 서울복지신문",
+      "source_query": "서울 복지 공백",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9iWWFCenRaOTQ1eG1JekNQeFh3MHZzNXNfczNhUWRBY1FaZ004b2dHVHBndk1xYUxRSkVvNDhPRzVPRjdlR3E1SDJaOGxoV09JeTluRDdkTHVNSktaU2JQdDd0Q1XSAWhBVV95cUxQZTRoYXY0NFVHUV95SUJUUlE5S2tzdGdYQVk0cEphU093Y2JoQk9mRDB0V2RHenRkWk42X0EzY2hKUzNsdTRyRk9FTDV6Wm9VUVo5VW5OWVZXeTJhamVLQzVEbmJNb3NRNQ?oc=5",
+          "published_at": "Mon, 21 Sep 2026 04:13:25 GMT"
+        }
+      ],
+      "context_failure": "NO_TITLE_MATCH"
+    },
+    {
+      "review_id": "CBMibkFVX3lxTE1jbVlzWmk5",
+      "headline": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영",
+      "source_headline": "강동구, 추석 연휴 무인민원발급기 18곳 야간·휴일 운영 - gukjenews.com",
+      "title_key": "강동구 추석 연휴 무인민원발급기 18곳 야간 휴일 운영 gukjenews com",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1jbVlzWmk5RF9fdEZBOTRxN3EwR3Zndm5JVDZubUNYQWVuLU0ybDNYVXBidkNGMGppYm5ZMnhFelVSYlVzVjdOdGpDSGZBdllYcHByVGg1LTJvSmw3bWYwbTVoZ2ZzV1BNS0hCNE5n?oc=5",
+          "published_at": "Mon, 21 Sep 2026 02:52:35 GMT"
+        }
+      ],
+      "context_failure": "MODEL_NOT_RUN",
+      "publisher_url": "https://www.gukjenews.com/news/articleView.html?idxno=3701987"
+    },
+    {
+      "review_id": "CBMibkFVX3lxTFA5TklYTklo",
+      "headline": "강동 무인민원발급기 연휴도 운영",
+      "source_headline": "강동 무인민원발급기 연휴도 운영 - 서울동부신문",
+      "title_key": "강동 무인민원발급기 연휴도 운영 서울동부신문",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFA5TklYTklodjQ1OWtoU0g2VHpsc2lJbTVjUUZ0TlhMQXZZcXF6SjR3VkVzdkwxOTVoVUZ3U0hlbzVYczZMZExBUDUyX2NnRzdnZHZ6UVAwaWU4M0laQVdKdXZhcjRHdWRuS2VWVS13?oc=5",
+          "published_at": "Mon, 21 Sep 2026 02:06:24 GMT"
+        }
+      ],
+      "context_failure": "NO_TITLE_MATCH"
+    },
+    {
+      "review_id": "CBMibkFVX3lxTE9iLWQzSDRG",
+      "headline": "강남구, 추석 종합대책 시행…재난·안전사고 예방 총력",
+      "source_headline": "강남구, 추석 종합대책 시행…재난·안전사고 예방 총력 - gukjenews.com",
+      "title_key": "강남구 추석 종합대책 시행 재난 안전사고 예방 총력 gukjenews com",
+      "source_query": "서울 안전 사고",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9iLWQzSDRGSEJwb21OQlZmSExjNl9jUmVCcUJHRE9WR29WQmNPNnJCZ2Fxd1g3c2laTVA0eVJwdkhZMlY2RE5oOG1kTXpEOWlDOHRpeVZxSXpWdVNZU2E4by03U1dfZ1YwMTlZNGh3?oc=5",
+          "published_at": "Sun, 20 Sep 2026 23:59:49 GMT"
+        }
+      ],
+      "context_failure": "MODEL_NOT_RUN",
+      "publisher_url": "https://www.gukjenews.com/news/articleView.html?idxno=3701612"
+    },
+    {
+      "review_id": "CBMiZkFVX3lxTE9jeDROSXY0",
+      "headline": "서울 서초구, ‘특이민원대응전문관’ 투입",
+      "source_headline": "서울 서초구, ‘특이민원대응전문관’ 투입 - 뉴뉴스",
+      "title_key": "서울 서초구 특이민원대응전문관 투입 뉴뉴스",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9jeDROSXY0U3BzNE5SWWxsUzhvZ1E5Wmo5VlpsNG5ISG9GbC15QmMwYnRoMjktSVN4ZGZMdFhtRXZOUW5yaDZmWVU0bDd5T2ljdThCenphM1k2WmJjYWZqbWREclRJZw?oc=5",
+          "published_at": "Fri, 18 Sep 2026 01:01:44 GMT"
+        }
+      ],
+      "context_failure": "NO_TITLE_MATCH"
+    },
+    {
+      "review_id": "CBMiT0FVX3lxTE1nS2o0c0xK",
+      "headline": "서초구, 특이민원 대응 강화…전문인력 투입 '효과'",
+      "source_headline": "서초구, 특이민원 대응 강화…전문인력 투입 '효과' - v.daum.net",
+      "title_key": "서초구 특이민원 대응 강화 전문인력 투입 효과 v daum net",
+      "source_query": "서울 민원",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1nS2o0c0xKb2lUYlJqQU9qaTJ3YkV3eUxaOHRLZW1ybzRSWDIxSk92bmFTRTBTRkMzaVhqWXJ6UDRkdFJPX0xkYXljZk1LWGs?oc=5",
+          "published_at": "Thu, 17 Sep 2026 00:50:00 GMT"
+        }
+      ],
+      "context_failure": "MODEL_NOT_RUN",
+      "publisher_url": "https://www.yna.co.kr/view/AKR20260917060400004?input=1195m"
+    },
+    {
+      "review_id": "CBMib0FVX3lxTE1DQWVfQ1Vx",
+      "headline": "서울시의회 박춘선 의원, 서울교육 안전예산 점검… 사고 뒤 수습보다 예방이 먼저",
+      "source_headline": "서울시의회 박춘선 의원, 서울교육 안전예산 점검… 사고 뒤 수습보다 예방이 먼저 - 서울시티",
+      "title_key": "서울시의회 박춘선 의원 서울교육 안전예산 점검 사고 뒤 수습보다 예방이 먼저 서울시티",
+      "source_query": "서울 안전 사고",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "높음",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1DQWVfQ1Vxb08zTXJDd2pyNEJTdDNIS2NXWm01TnJwUjBEc3UwZlYwZ0RaMUg2QnJ2SUtFOGJrN044YjFGX2hNV3lLV29udE1HYXdmX3dfZ0tNbElNWGRHNU14WmM2akp2M1hBVGZkRQ?oc=5",
+          "published_at": "Wed, 16 Sep 2026 07:00:00 GMT"
+        }
+      ],
+      "context_failure": "NO_TITLE_MATCH"
+    },
+    {
+      "review_id": "CBMiaEFVX3lxTE9CY2VvNWRx",
+      "headline": "시내버스 파업, 서울 교통 대란 예고... 대체 교통수단 총동원",
+      "source_headline": "시내버스 파업, 서울 교통 대란 예고... 대체 교통수단 총동원 - 공감신문",
+      "title_key": "시내버스 파업 서울 교통 대란 예고 대체 교통수단 총동원 공감신문",
       "source_query": "서울 교통 불편",
       "source_name": "검색 관심도·뉴스 확산",
       "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
@@ -1018,23 +976,51 @@
       "evidence": [
         {
           "type": "news_search_result",
-          "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9Cd1RpOFVUQWh4RHg1WmVWNmNtOHY4VXdtSFc4THJFbmRXMXVnal94azlRSTRVTFBPOWdNSmVMV2dyTXJtNWFpcmlDZ0xaUWZkM21hMFZnbFRMYlBickRWbG1XQjRUNXlBVnFJLWpR?oc=5",
-          "published_at": "Tue, 29 Sep 2026 00:59:08 GMT"
+          "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9CY2VvNWRxdTRFa1NxTEctWGJWc2MtdjZUOVJ4R210QjlaUjF4cW0zbmlhRmtYbVNmUk01ZmJSRms5aFNyLVpCNUhjcjBjUTZ3a3FiVW1LeUxRTVNxak5TV3FzNzFOREJl?oc=5",
+          "published_at": "Wed, 16 Sep 2026 07:00:00 GMT"
         }
       ],
       "context_failure": "MODEL_NOT_RUN",
-      "publisher_url": "https://www.jeonmae.co.kr/news/articleView.html?idxno=1297068"
+      "publisher_url": "https://www.gokorea.kr/news/articleView.html?idxno=878546"
+    },
+    {
+      "review_id": "CBMiakFVX3lxTE1SM0VyTno0",
+      "headline": "서울시의회 김정애 의원, 501번·5516번 버스 노선 조정 이끌어내, 교통 불편 해소",
+      "source_headline": "서울시의회 김정애 의원, 501번·5516번 버스 노선 조정 이끌어내, 교통 불편 해소 - 관악신문",
+      "title_key": "서울시의회 김정애 의원 501번 5516번 버스 노선 조정 이끌어내 교통 불편 해소 관악신문",
+      "source_query": "서울 교통 불편",
+      "source_name": "검색 관심도·뉴스 확산",
+      "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+      "source_context_status": "BODY_UNAVAILABLE",
+      "problem_status": "UNASSESSED",
+      "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+      "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+      "promotion_status": "HOLD",
+      "status": "DISCOVERY_ONLY",
+      "needs_human_review": true,
+      "screening_hint": "시민 영향·갈등·책임 단서 부족",
+      "discovery_lane": "CITIZEN_ATTENTION",
+      "is_new": true,
+      "screening_priority": "보통",
+      "evidence": [
+        {
+          "type": "news_search_result",
+          "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1SM0VyTno0NGJBaFJfWmtCbHlPRVpNV1hpZDkwZmUtdTY5YTBDS01LdmRXU01ITDRzN0hRODNzZEd6RmpiMWxxdnBFVVFXTV9aUjB3dkxCV3AzZkI1cTZRYzZJSmY2djdhb1E?oc=5",
+          "published_at": "Tue, 15 Sep 2026 07:00:00 GMT"
+        }
+      ],
+      "context_failure": "NO_TITLE_MATCH"
     }
   ],
   "lane_counts": {
-    "공익 감시": 9,
-    "시민 관심": 21
+    "공익 감시": 1,
+    "시민 관심": 29
   },
   "policy": "이번 수집 회차에 처음 발견된 제목만 검토한다. 시민 관심 경로와 관심도와 무관한 공익 감시 경로를 분리하며, 본문 맥락과 구체적 취재 가설을 확인하기 전에는 최종 후보로 승격하지 않는다.",
   "context_review": {
     "attempted": 30,
     "model_calls": 10,
-    "body_read": 10,
+    "body_read": 9,
     "note": "원문 내용 판정은 취재 가설 검토일 뿐 사실 검증이나 편집 후보 승인이 아님"
   }
 }

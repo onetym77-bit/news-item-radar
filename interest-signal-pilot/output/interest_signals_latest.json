@@ -1,6 +1,6 @@
 {
   "schema": 5,
-  "generated_at_utc": "2026-10-01T05:23:09.985050+00:00",
+  "generated_at_utc": "2026-10-01T06:08:09.352369+00:00",
   "source_id": "search_news_interest",
   "source_name": "검색 관심도·뉴스 확산",
   "collection_mode": [
@@ -36,12 +36,12 @@
   ],
   "quality_gate": {
     "raw_news_count": 1685,
-    "seoul_relevant_count": 86,
-    "unique_news_count": 85,
-    "new_news_count": 62,
-    "seen_news_count": 23,
-    "duplicate_or_irrelevant_count": 1600,
-    "duplicate_irrelevant_or_outdated_count": 1600,
+    "seoul_relevant_count": 87,
+    "unique_news_count": 86,
+    "new_news_count": 38,
+    "seen_news_count": 48,
+    "duplicate_or_irrelevant_count": 1599,
+    "duplicate_irrelevant_or_outdated_count": 1599,
     "news_window_days": 21,
     "trend_groups": 5,
     "trend_groups_without_data": [
@@ -55,7 +55,7 @@
     "candidate_ready": false,
     "reason": "관심 신호는 탐색용이며, 후보 승격 전 원문·시민 영향·책임 주체 확인 필요"
   },
-  "news_count": 85,
+  "news_count": 86,
   "trend_count": 0,
   "news_signals": [
     {
@@ -72,7 +72,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울 강서구 마을행정사 운영 무료 행정상담 서비스 연합뉴스",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 건설 공사 지연",
@@ -104,7 +104,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "제2의 서소문고가 사고 막는다 서울시 노후교량 해체 안전관리 강화 머니투데이 머니투데이",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 재개발 갈등",
@@ -124,10 +124,10 @@
     },
     {
       "query": "서울 교통 불편",
-      "title": "환승 불편 덜어준다! 서울의 환승센터, 어디에 더 생기나? - mediahub.seoul.go.kr",
+      "title": "환승 불편 덜어준다! 서울의 환승센터, 어디에 더 생기나? - 내 손안에 서울",
       "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9nXzJyVTAwMm9RZnd2N3FrVXpVXzBBRXhpelVfRWRpaHVMSmRSZkNZMmNpQ3RickVpX0doSlNwMHdfTG1FbGRBT3FfREl6OTJvVHZKQUFjaEw?oc=5",
       "published_at": "Tue, 29 Sep 2026 06:33:02 GMT",
-      "summary": "환승 불편 덜어준다! 서울의 환승센터, 어디에 더 생기나? &nbsp;&nbsp; mediahub.seoul.go.kr",
+      "summary": "환승 불편 덜어준다! 서울의 환승센터, 어디에 더 생기나? &nbsp;&nbsp; 내 손안에 서울",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": false,
@@ -135,15 +135,15 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "환승 불편 덜어준다 서울의 환승센터 어디에 더 생기나 mediahub seoul go kr",
+      "title_key": "환승 불편 덜어준다 서울의 환승센터 어디에 더 생기나 내 손안에 서울",
       "is_new": true
     },
     {
       "query": "서울 주거 피해",
-      "title": "동대문구, 대학가 전세피해 막는다…서울시립대서 무료 상담 - 동대문 이슈",
+      "title": "동대문구, 대학가 전세피해 막는다…서울시립대서 무료 상담 - ddmissue.com",
       "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE45bDI1cHNqUkNhTk5Yd0RrRkhrYnFNMjNDcGFZTmhPNUNDOTQ1WHAwMmtIWmREQzVzWjRUWDdfWlpyczMzYUZIZHJ4TGp5NjNhZGRaajVGQ0xpVkcz?oc=5",
       "published_at": "Tue, 15 Sep 2026 23:22:00 GMT",
-      "summary": "동대문구, 대학가 전세피해 막는다…서울시립대서 무료 상담 &nbsp;&nbsp; 동대문 이슈",
+      "summary": "동대문구, 대학가 전세피해 막는다…서울시립대서 무료 상담 &nbsp;&nbsp; ddmissue.com",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -151,8 +151,8 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "동대문구 대학가 전세피해 막는다 서울시립대서 무료 상담 동대문 이슈",
-      "is_new": false
+      "title_key": "동대문구 대학가 전세피해 막는다 서울시립대서 무료 상담 ddmissue com",
+      "is_new": true
     },
     {
       "query": "서울 복지 공백",
@@ -168,7 +168,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울광역청년센터 교육복지 청년시설협회와 손잡고 졸업 후 지원 공백 잇는다 스페셜타임스",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 자치구 논란",
@@ -184,7 +184,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "염색 상추 논란에 서울시 특별점검 원산지 미표시 적발 아시아경제",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 요금 부담 비용",
@@ -236,10 +236,10 @@
     },
     {
       "query": "서울 학교 안전 공백",
-      "title": "서대문구, 추석 연휴에도 24시간…안전·의료·돌봄 공백 막는다 - m-i.kr",
+      "title": "서대문구, 추석 연휴에도 24시간…안전·의료·돌봄 공백 막는다 - 매일일보",
       "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE03WE54MTMtVTJyN05WRDFEUTJ2M2w4VW9sNUxRY0xSTEJKN3VvSkdDbVpjdFZYSEJfMzZ5OXVzWWR5c0ZvUVl6aHVxWWRXTUFjOTJCc0h5WDFMODY5ZXdLX25FOF_SAWhBVV95cUxPVEM2OWpKdUV0ZkF0cjI2akdDX3VqaHROVWJsdUxDdGppUVdmWHNPTkIxY3RFcnNKRUF0aHlLSUYzZ3pEejQ4eUloUldnczFYbTBiZ1BpRjUtM3VpQXlpeWhEMlo4UVliVA?oc=5",
       "published_at": "Sat, 19 Sep 2026 23:44:53 GMT",
-      "summary": "서대문구, 추석 연휴에도 24시간…안전·의료·돌봄 공백 막는다 &nbsp;&nbsp; m-i.kr",
+      "summary": "서대문구, 추석 연휴에도 24시간…안전·의료·돌봄 공백 막는다 &nbsp;&nbsp; 매일일보",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서대문",
       "editorial_eligible": true,
@@ -247,8 +247,8 @@
       "signal_lane": "WATCHDOG_DUTY",
       "signal_type": "NEWS_PUBLIC_DUTY",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서대문구 추석 연휴에도 24시간 안전 의료 돌봄 공백 막는다 m i kr",
-      "is_new": true
+      "title_key": "서대문구 추석 연휴에도 24시간 안전 의료 돌봄 공백 막는다 매일일보",
+      "is_new": false
     },
     {
       "query": "서울 안전 점검 누락",
@@ -264,7 +264,7 @@
       "signal_type": "NEWS_PUBLIC_DUTY",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "삼성역 주철근 누락 서울시 관계자들 보고 받고도 점검 때 침묵 ohmynews",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 장애인 접근권",
@@ -280,7 +280,7 @@
       "signal_type": "NEWS_PUBLIC_DUTY",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "2026년 서울장애인정책박람회 개최 안내 9 30 동행 매력 특별시 서울",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 아동 보호 절차",
@@ -312,7 +312,7 @@
       "signal_type": "NEWS_PUBLIC_DUTY",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울시의회 행정자치위 속초수련원 현장방문 시설 운영 및 편의 점검 영등포신문",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 공공위탁 관리 부실",
@@ -360,7 +360,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울 강서구 주민 맞춤형 행정 서비스 위한 마을행정사 사업 추진 데일리안",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 건설 공사 지연",
@@ -376,14 +376,14 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "또 공사 중단 서울7호선 청라연장선 2단계 2033년 개통 전망 인천투데이",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 안전 사고",
-      "title": "싱크홀·붕괴·철거사고…서울 시설물 ‘안전 경고음’ - 쿠키뉴스",
-      "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE8wRm9ETEhnTG1KVDRJcGxYNWw4ZVFxdTFtLXZvQWQxWEFwUThxbEo5S2VNeURSSFQ5TWNnN1dVUFlPMXRZTVo5aHRGYjk3d2JvQ0RsUE5HUHByUFR5dWFzM1FzVQ?oc=5",
-      "published_at": "Sun, 27 Sep 2026 08:23:28 GMT",
-      "summary": "싱크홀·붕괴·철거사고…서울 시설물 ‘안전 경고음’ &nbsp;&nbsp; 쿠키뉴스",
+      "title": "서소문고가 사고 재발 막는다…서울시, 노후고가 해체공사 안전관리 강화 - 동양뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1yT0dCWi1xbXk2STRueE1Kd2pxTzNGS085VEljTkluc18tZWM0dGt2cVBqeVBDMDBxQnVaRzhTaVQwV0ZqVFE5cGd1bnRoeDlYVThkbXg0LTMtdjdJNlpPT1EtdVRCM3AyS3c?oc=5",
+      "published_at": "Thu, 01 Oct 2026 02:09:00 GMT",
+      "summary": "서소문고가 사고 재발 막는다…서울시, 노후고가 해체공사 안전관리 강화 &nbsp;&nbsp; 동양뉴스",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -391,7 +391,7 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "싱크홀 붕괴 철거사고 서울 시설물 안전 경고음 쿠키뉴스",
+      "title_key": "서소문고가 사고 재발 막는다 서울시 노후고가 해체공사 안전관리 강화 동양뉴스",
       "is_new": true
     },
     {
@@ -408,7 +408,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울시의회 공공 주도 설명회 제안 깜깜이 재개발이 갈등 부른다 비즈월드",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 교통 불편",
@@ -424,7 +424,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울시의회 김호진 이인화 의원 서울 곳곳 교통 불편 해소 나선다 전국매일신문",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 복지 공백",
@@ -472,14 +472,14 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "용산도 강남도 반대 주택은 어디에 딜라이브뉴스",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 학교 안전 공백",
-      "title": "서울시 용산구, 추석 연휴 응급진료체계 가동…진료 공백 최소화 - justeconomix.com",
+      "title": "서울시 용산구, 추석 연휴 응급진료체계 가동…진료 공백 최소화 - 저스트 이코노믹스",
       "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1BVWNjWk1IN3ZSWWExY2tmYjJzalV2UUlFUVh1MFRYdWNOd3phak1RYWNkNzlHdkhZMlRMMm96SHNtMnRpYy1kcElqa2plRU1KVWw0akh4NzBxTi1SRDln?oc=5",
       "published_at": "Fri, 18 Sep 2026 07:00:00 GMT",
-      "summary": "서울시 용산구, 추석 연휴 응급진료체계 가동…진료 공백 최소화 &nbsp;&nbsp; justeconomix.com",
+      "summary": "서울시 용산구, 추석 연휴 응급진료체계 가동…진료 공백 최소화 &nbsp;&nbsp; 저스트 이코노믹스",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -487,8 +487,8 @@
       "signal_lane": "WATCHDOG_DUTY",
       "signal_type": "NEWS_PUBLIC_DUTY",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울시 용산구 추석 연휴 응급진료체계 가동 진료 공백 최소화 justeconomix com",
-      "is_new": true
+      "title_key": "서울시 용산구 추석 연휴 응급진료체계 가동 진료 공백 최소화 저스트 이코노믹스",
+      "is_new": false
     },
     {
       "query": "서울 안전 점검 누락",
@@ -504,7 +504,7 @@
       "signal_type": "NEWS_PUBLIC_DUTY",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "gtx a 삼성역 철근 누락 책임공방 서울시 구상권 청구 부적절 아주경제",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 복지시설 인력 부족",
@@ -536,7 +536,7 @@
       "signal_type": "NEWS_PUBLIC_DUTY",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울성모병원 아즈라로부터 환자 지원 기부금품 전달받아 의학신문",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 민원",
@@ -572,10 +572,10 @@
     },
     {
       "query": "서울 안전 사고",
-      "title": "서울교통공사, 안전사고 예방 유공직원 3명 표창…“현장 중심 안전경영” - 문화일보",
-      "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5YNE9Da0F0RnVKNExjWjZqd2VUcUhZdnJCbTdzQmc0aWxKN29FTEp2R05tMTlzdTljMEVFcWRUQ2tyMDMtblBHTDB5N1N3ZVpr?oc=5",
-      "published_at": "Fri, 18 Sep 2026 07:00:00 GMT",
-      "summary": "서울교통공사, 안전사고 예방 유공직원 3명 표창…“현장 중심 안전경영” &nbsp;&nbsp; 문화일보",
+      "title": "싱크홀·붕괴·철거사고…서울 시설물 ‘안전 경고음’ - 쿠키뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE8wRm9ETEhnTG1KVDRJcGxYNWw4ZVFxdTFtLXZvQWQxWEFwUThxbEo5S2VNeURSSFQ5TWNnN1dVUFlPMXRZTVo5aHRGYjk3d2JvQ0RsUE5HUHByUFR5dWFzM1FzVQ?oc=5",
+      "published_at": "Sun, 27 Sep 2026 08:23:28 GMT",
+      "summary": "싱크홀·붕괴·철거사고…서울 시설물 ‘안전 경고음’ &nbsp;&nbsp; 쿠키뉴스",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -583,8 +583,8 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울교통공사 안전사고 예방 유공직원 3명 표창 현장 중심 안전경영 문화일보",
-      "is_new": true
+      "title_key": "싱크홀 붕괴 철거사고 서울 시설물 안전 경고음 쿠키뉴스",
+      "is_new": false
     },
     {
       "query": "서울 교통 불편",
@@ -616,7 +616,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "돌봄 공백 줄인다 서울시 퇴원한 65세 이상 어르신 간병 지원 아시아투데이",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 요금 부담 비용",
@@ -652,10 +652,10 @@
     },
     {
       "query": "서울 복지시설 인력 부족",
-      "title": "서울시의회 행정자치위원회, ‘속초수련원’ 현장방문 … 시설 운영·편의 점검 - m-i.kr",
+      "title": "서울시의회 행정자치위원회, ‘속초수련원’ 현장방문 … 시설 운영·편의 점검 - 매일일보",
       "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9ib01QZTZnMU0wQXV6WW5YMzZfN0RuOVlXM3dNaW9MLUtwRlhhV0cwZlloeEhIUEVpcmJBbURmc19kaXUyTTlOd2FHcnYzMWMzXzBoNFE3azByRDF2bkx2end1QVU?oc=5",
       "published_at": "Fri, 18 Sep 2026 07:00:00 GMT",
-      "summary": "서울시의회 행정자치위원회, ‘속초수련원’ 현장방문 … 시설 운영·편의 점검 &nbsp;&nbsp; m-i.kr",
+      "summary": "서울시의회 행정자치위원회, ‘속초수련원’ 현장방문 … 시설 운영·편의 점검 &nbsp;&nbsp; 매일일보",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": false,
@@ -663,7 +663,7 @@
       "signal_lane": "WATCHDOG_DUTY",
       "signal_type": "NEWS_PUBLIC_DUTY",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울시의회 행정자치위원회 속초수련원 현장방문 시설 운영 편의 점검 m i kr",
+      "title_key": "서울시의회 행정자치위원회 속초수련원 현장방문 시설 운영 편의 점검 매일일보",
       "is_new": true
     },
     {
@@ -700,10 +700,10 @@
     },
     {
       "query": "서울 안전 사고",
-      "title": "서울교통공사, 지하철 안전사고 예방 직원 3명 표창 - 뉴시스",
-      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9DdnBmR2kyQlpFTVZrNmtDSmZVRnN5c2F0X3dKQjJQcF9ZVUJFZ3dWcHJ1dUY5TGdqQWh5UkZrbS1yNVBpM0VkRkxYcU5PdTFuMXZ6T2ZwelA3VDJ0YmphatIBeEFVX3lxTE9TRzRTUDk3S3JBaTZ4SlVHcWtkZWNqNGpLSTRqQXRDX0ZSNC1uNVYxRWszRjNNblZVVXViak5LUE5JQXF0dWhhTi0zaUM1VHM2RlBtTEdzMDZNU3lLMkc3UHZlNXBNbWtfa1V2RmRUTnJMSUJtNE16YQ?oc=5",
+      "title": "서울교통공사, 안전사고 예방 유공직원 3명 표창…“현장 중심 안전경영” - 문화일보",
+      "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5YNE9Da0F0RnVKNExjWjZqd2VUcUhZdnJCbTdzQmc0aWxKN29FTEp2R05tMTlzdTljMEVFcWRUQ2tyMDMtblBHTDB5N1N3ZVpr?oc=5",
       "published_at": "Fri, 18 Sep 2026 07:00:00 GMT",
-      "summary": "서울교통공사, 지하철 안전사고 예방 직원 3명 표창 &nbsp;&nbsp; 뉴시스",
+      "summary": "서울교통공사, 안전사고 예방 유공직원 3명 표창…“현장 중심 안전경영” &nbsp;&nbsp; 문화일보",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -711,8 +711,8 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울교통공사 지하철 안전사고 예방 직원 3명 표창 뉴시스",
-      "is_new": false
+      "title_key": "서울교통공사 안전사고 예방 유공직원 3명 표창 현장 중심 안전경영 문화일보",
+      "is_new": true
     },
     {
       "query": "서울 교통 불편",
@@ -728,7 +728,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "이인화 서울시의원 개포동 버스 증차 배차 개선 이끌어 강남포스트",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 복지 공백",
@@ -792,7 +792,7 @@
       "signal_type": "NEWS_PUBLIC_DUTY",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울성모병원 아즈라로부터 소외계층 환자 위한 기부금 전달받아 헬스이슈앤뉴스",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 민원",
@@ -812,10 +812,10 @@
     },
     {
       "query": "서울 안전 사고",
-      "title": "가스안전公 서울동부지사, 추석 앞두고 휴대용 가스레인지 사고 예방 캠페인 - 에너지데일리",
-      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5RRFhFQXFSODZaVjBrczRaZmpPQ2Y5UGpaeFZvRUdhbkZueDNYeE1qbTNvbWZOM0NEQzZuRXlia3BEcFVzcm1XUlREd0l3SHlSMFNzei1DY0ZTazlLTE9fZDNjdHlfcFNpSXlMVTdmdldnUQ?oc=5",
-      "published_at": "Wed, 23 Sep 2026 00:49:07 GMT",
-      "summary": "가스안전公 서울동부지사, 추석 앞두고 휴대용 가스레인지 사고 예방 캠페인 &nbsp;&nbsp; 에너지데일리",
+      "title": "서울교통공사, 지하철 안전사고 예방 직원 3명 표창 - 뉴시스",
+      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9DdnBmR2kyQlpFTVZrNmtDSmZVRnN5c2F0X3dKQjJQcF9ZVUJFZ3dWcHJ1dUY5TGdqQWh5UkZrbS1yNVBpM0VkRkxYcU5PdTFuMXZ6T2ZwelA3VDJ0YmphatIBeEFVX3lxTE9TRzRTUDk3S3JBaTZ4SlVHcWtkZWNqNGpLSTRqQXRDX0ZSNC1uNVYxRWszRjNNblZVVXViak5LUE5JQXF0dWhhTi0zaUM1VHM2RlBtTEdzMDZNU3lLMkc3UHZlNXBNbWtfa1V2RmRUTnJMSUJtNE16YQ?oc=5",
+      "published_at": "Fri, 18 Sep 2026 07:00:00 GMT",
+      "summary": "서울교통공사, 지하철 안전사고 예방 직원 3명 표창 &nbsp;&nbsp; 뉴시스",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -823,15 +823,15 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "가스안전 서울동부지사 추석 앞두고 휴대용 가스레인지 사고 예방 캠페인 에너지데일리",
+      "title_key": "서울교통공사 지하철 안전사고 예방 직원 3명 표창 뉴시스",
       "is_new": false
     },
     {
       "query": "서울 교통 불편",
-      "title": "서울 마포구, 주민 교통·보행 불편 해소 위해 생활환경 개선 추진 - 데일리안",
-      "url": "https://news.google.com/rss/articles/CBMimAJBVV95cUxQSXJ0OWcySTNPUmk4dEFNVzc3SU45S0RfbTRWMlM2OGpZSlJpN20zSXdKaExuSEYxdGItdm9nOGdaSGIyczNFdlFYek16RmFBYVVEQThYSnFMaHFfZDV3VUpsUjY0ZWVwSzR4d1pPRzNQLWZSUnhTUVJsZml0ek1PMFgtMjQ5Tk5lcW5HNWhVbjhWUmVJY0RHc1ZtQXYzUHRXTGFyUkxGMVZWM3hadWYwRnhkVmtiYldDZVQwUmFQU3I4N1VWcUU1Wm1OeG9WNjZDMlcyUDYyeE5RMm1DQUU2WEw3UWJWZTIzREJDOXNNNXg1QXBTNi1UX2Vzb2ZWVzFBYlh5NTc0QXV2ZUVvcndSVjZaNXpCeTVF?oc=5",
-      "published_at": "Wed, 30 Sep 2026 06:05:00 GMT",
-      "summary": "서울 마포구, 주민 교통·보행 불편 해소 위해 생활환경 개선 추진 &nbsp;&nbsp; 데일리안",
+      "title": "이인화 서울시의원, 개포동 242번 버스 증차·2413번 집중배차로 주민 교통 불편 개선 - 글로벌경제신문",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE50SDhwMWhLOGpmeUZ3QllNZjM3WEFnQWFfMlc0NzE2RW1aQ0Y4aUY0T1E0SkNoeFRUVDBIX1hkX0NpdUI2U1dEQkxid0UtQl9JRnN5YTdveW16ZlhKV2RGUkc1TjZuUTdLZUdGZdIBcEFVX3lxTE9QOE55X2RuREI4cUVfLW13N1Y0ZGtrQmxKS2R1YTBqNVVHM2xYUTJrNDZUZWdydDZTZ1Z4YVQzM3F6QTBtYWpsU0RsdWxSa2pydEhWQk1LOVd0cFo0MmRRUHlCMWJkVTRDcHB1ek9LMnc?oc=5",
+      "published_at": "Tue, 29 Sep 2026 05:43:35 GMT",
+      "summary": "이인화 서울시의원, 개포동 242번 버스 증차·2413번 집중배차로 주민 교통 불편 개선 &nbsp;&nbsp; 글로벌경제신문",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": false,
@@ -839,8 +839,8 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울 마포구 주민 교통 보행 불편 해소 위해 생활환경 개선 추진 데일리안",
-      "is_new": true
+      "title_key": "이인화 서울시의원 개포동 242번 버스 증차 2413번 집중배차로 주민 교통 불편 개선 글로벌경제신문",
+      "is_new": false
     },
     {
       "query": "서울 복지 공백",
@@ -872,14 +872,14 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울남부보훈지청 고령대상자에 맞춘 어르신 통합민원실 운영 관악신문",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 안전 사고",
-      "title": "서울교통공사, 지하철 안전사고 예방 직원에 표창 - 아시아경제",
-      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9NX0tWM2ZBbHNJRmMwYUc1cXh0aVA5TE84STViUXFrRGRFdzY3VmwwUEdWQTNvR20tZ2drUjVxMUFBQWpKU3R2Q0o2NmVZUTgwZlR5My04eUVqSHNKek1lbQ?oc=5",
-      "published_at": "Thu, 17 Sep 2026 23:22:56 GMT",
-      "summary": "서울교통공사, 지하철 안전사고 예방 직원에 표창 &nbsp;&nbsp; 아시아경제",
+      "title": "가스안전公 서울동부지사, 추석 앞두고 휴대용 가스레인지 사고 예방 캠페인 - 에너지데일리",
+      "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5RRFhFQXFSODZaVjBrczRaZmpPQ2Y5UGpaeFZvRUdhbkZueDNYeE1qbTNvbWZOM0NEQzZuRXlia3BEcFVzcm1XUlREd0l3SHlSMFNzei1DY0ZTazlLTE9fZDNjdHlfcFNpSXlMVTdmdldnUQ?oc=5",
+      "published_at": "Wed, 23 Sep 2026 00:49:07 GMT",
+      "summary": "가스안전公 서울동부지사, 추석 앞두고 휴대용 가스레인지 사고 예방 캠페인 &nbsp;&nbsp; 에너지데일리",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -887,15 +887,15 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울교통공사 지하철 안전사고 예방 직원에 표창 아시아경제",
-      "is_new": true
+      "title_key": "가스안전 서울동부지사 추석 앞두고 휴대용 가스레인지 사고 예방 캠페인 에너지데일리",
+      "is_new": false
     },
     {
       "query": "서울 교통 불편",
-      "title": "이인화 서울시의원, 개포동 242번 버스 증차·2413번 집중배차로 주민 교통 불편 개선 - 글로벌경제신문",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE50SDhwMWhLOGpmeUZ3QllNZjM3WEFnQWFfMlc0NzE2RW1aQ0Y4aUY0T1E0SkNoeFRUVDBIX1hkX0NpdUI2U1dEQkxid0UtQl9JRnN5YTdveW16ZlhKV2RGUkc1TjZuUTdLZUdGZdIBcEFVX3lxTE9QOE55X2RuREI4cUVfLW13N1Y0ZGtrQmxKS2R1YTBqNVVHM2xYUTJrNDZUZWdydDZTZ1Z4YVQzM3F6QTBtYWpsU0RsdWxSa2pydEhWQk1LOVd0cFo0MmRRUHlCMWJkVTRDcHB1ek9LMnc?oc=5",
-      "published_at": "Tue, 29 Sep 2026 05:43:35 GMT",
-      "summary": "이인화 서울시의원, 개포동 242번 버스 증차·2413번 집중배차로 주민 교통 불편 개선 &nbsp;&nbsp; 글로벌경제신문",
+      "title": "서울 마포구, 주민 교통·보행 불편 해소 위해 생활환경 개선 추진 - 데일리안",
+      "url": "https://news.google.com/rss/articles/CBMimAJBVV95cUxQSXJ0OWcySTNPUmk4dEFNVzc3SU45S0RfbTRWMlM2OGpZSlJpN20zSXdKaExuSEYxdGItdm9nOGdaSGIyczNFdlFYek16RmFBYVVEQThYSnFMaHFfZDV3VUpsUjY0ZWVwSzR4d1pPRzNQLWZSUnhTUVJsZml0ek1PMFgtMjQ5Tk5lcW5HNWhVbjhWUmVJY0RHc1ZtQXYzUHRXTGFyUkxGMVZWM3hadWYwRnhkVmtiYldDZVQwUmFQU3I4N1VWcUU1Wm1OeG9WNjZDMlcyUDYyeE5RMm1DQUU2WEw3UWJWZTIzREJDOXNNNXg1QXBTNi1UX2Vzb2ZWVzFBYlh5NTc0QXV2ZUVvcndSVjZaNXpCeTVF?oc=5",
+      "published_at": "Wed, 30 Sep 2026 06:05:00 GMT",
+      "summary": "서울 마포구, 주민 교통·보행 불편 해소 위해 생활환경 개선 추진 &nbsp;&nbsp; 데일리안",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": false,
@@ -903,15 +903,15 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "이인화 서울시의원 개포동 242번 버스 증차 2413번 집중배차로 주민 교통 불편 개선 글로벌경제신문",
-      "is_new": true
+      "title_key": "서울 마포구 주민 교통 보행 불편 해소 위해 생활환경 개선 추진 데일리안",
+      "is_new": false
     },
     {
       "query": "서울 복지 공백",
-      "title": "서울시, 추석에도 '복지안전망 정상 가동'… 취약 어르신 4만명·고립위험 7만가구 안부 확인 - 국민기자뉴스",
+      "title": "서울시, 추석에도 '복지안전망 정상 가동'… 취약 어르신 4만명·고립위험 7만가구 안부 확인 - kmkj.kr",
       "url": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE9aT0hjR2FMTW5xQVRfSkZneXc4N1k4OWVXdkRIVTNzWlphNVZ6cXMyMkh6dzB6SDZvbWVoaGhEeEdfYmItRTM0djl2NDltMGZrQWVrRWUwUnNCRHlQWGF3bUVWMNIBZ0FVX3lxTE9aa0loUXJTYnNNMGRMYnR0VlNoZU01dnVtS00tOGxsZzJ1SkhkWTgxSVI4Y1ZLQkIyTVFYOHhmNEU1M1hQU0pqOGlpR1JReGRwRVZIcGMxdi1FYnppQWdlRUloNjBtTUU?oc=5",
       "published_at": "Fri, 25 Sep 2026 10:00:00 GMT",
-      "summary": "서울시, 추석에도 '복지안전망 정상 가동'… 취약 어르신 4만명·고립위험 7만가구 안부 확인 &nbsp;&nbsp; 국민기자뉴스",
+      "summary": "서울시, 추석에도 '복지안전망 정상 가동'… 취약 어르신 4만명·고립위험 7만가구 안부 확인 &nbsp;&nbsp; kmkj.kr",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -919,8 +919,8 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울시 추석에도 복지안전망 정상 가동 취약 어르신 4만명 고립위험 7만가구 안부 확인 국민기자뉴스",
-      "is_new": false
+      "title_key": "서울시 추석에도 복지안전망 정상 가동 취약 어르신 4만명 고립위험 7만가구 안부 확인 kmkj kr",
+      "is_new": true
     },
     {
       "query": "서울 민원",
@@ -936,14 +936,14 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "유기훈 서울시의원 ai 의정 활용 실전 연구회 교육 개최 정책자료 분석 민원 대응 등 실습 전국뉴스",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 안전 사고",
-      "title": "서울교통공사, 안전사고 예방 기여한 직원 3명 표창 - gukjenews.com",
-      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5kUzRtSFBRaDVSMmZOakdTUDRiczVZNFNGeU81QllTQUhNWnBEbUlXeTZuUzVlc0NHTHBWaVpfeGlTWVE5WGtaM05Fa0ZNVTNvLWtQOWhueUQtM3Bkbk1NZnVBemxkMlp5UUs0YmdR?oc=5",
-      "published_at": "Fri, 18 Sep 2026 14:58:05 GMT",
-      "summary": "서울교통공사, 안전사고 예방 기여한 직원 3명 표창 &nbsp;&nbsp; gukjenews.com",
+      "title": "서울교통공사, 지하철 안전사고 예방 직원에 표창 - 아시아경제",
+      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9NX0tWM2ZBbHNJRmMwYUc1cXh0aVA5TE84STViUXFrRGRFdzY3VmwwUEdWQTNvR20tZ2drUjVxMUFBQWpKU3R2Q0o2NmVZUTgwZlR5My04eUVqSHNKek1lbQ?oc=5",
+      "published_at": "Thu, 17 Sep 2026 23:22:56 GMT",
+      "summary": "서울교통공사, 지하철 안전사고 예방 직원에 표창 &nbsp;&nbsp; 아시아경제",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -951,7 +951,7 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울교통공사 안전사고 예방 기여한 직원 3명 표창 gukjenews com",
+      "title_key": "서울교통공사 지하철 안전사고 예방 직원에 표창 아시아경제",
       "is_new": true
     },
     {
@@ -1000,14 +1000,14 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "유기훈 서울시의 ai 의정 활용 실전 연구회 ai 역량 강화 교육 개최 정책 분석 및 민원 대응 접목 모색 디스커버리뉴스",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 안전 사고",
-      "title": "화재·인파·포트홀까지..서울시설공단, AI로 안전사고 선제 대응 - v.daum.net",
-      "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9ncUJMM21KODFiMElWNGZhcWExNld3Uzh2N2owMEFjV2stb2t2X1dVU2ExSm1iQnZ2NWFTRk91QmxmOUdHdWRxWEhhcjNLUDdJSHJUeA?oc=5",
-      "published_at": "Fri, 11 Sep 2026 07:00:00 GMT",
-      "summary": "화재·인파·포트홀까지..서울시설공단, AI로 안전사고 선제 대응 &nbsp;&nbsp; v.daum.net",
+      "title": "서울교통공사, 안전사고 예방 기여한 직원 3명 표창 - gukjenews.com",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE5kUzRtSFBRaDVSMmZOakdTUDRiczVZNFNGeU81QllTQUhNWnBEbUlXeTZuUzVlc0NHTHBWaVpfeGlTWVE5WGtaM05Fa0ZNVTNvLWtQOWhueUQtM3Bkbk1NZnVBemxkMlp5UUs0YmdR?oc=5",
+      "published_at": "Fri, 18 Sep 2026 14:58:05 GMT",
+      "summary": "서울교통공사, 안전사고 예방 기여한 직원 3명 표창 &nbsp;&nbsp; gukjenews.com",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -1015,8 +1015,8 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "화재 인파 포트홀까지 서울시설공단 ai로 안전사고 선제 대응 v daum net",
-      "is_new": true
+      "title_key": "서울교통공사 안전사고 예방 기여한 직원 3명 표창 gukjenews com",
+      "is_new": false
     },
     {
       "query": "서울 교통 불편",
@@ -1036,10 +1036,10 @@
     },
     {
       "query": "서울 복지 공백",
-      "title": "소아청소년과 전공의 80%가 서울에…지방 진료공백 심각 - 금강일보",
+      "title": "소아청소년과 전공의 80%가 서울에…지방 진료공백 심각 - ggilbo.com",
       "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5BeVlEeUcyMGFOOUV6X0xWR3laSTFTdG95SUROWUtzVTJFQTNPajRCOGx1ZklvaWpxVU5SNU81WFpJTlBZSHlUcUVyaU5HNzZFbHRvbUlvbG5PYVpHZ1JJU3pZX3Nib0ZoakE?oc=5",
       "published_at": "Tue, 29 Sep 2026 09:45:43 GMT",
-      "summary": "소아청소년과 전공의 80%가 서울에…지방 진료공백 심각 &nbsp;&nbsp; 금강일보",
+      "summary": "소아청소년과 전공의 80%가 서울에…지방 진료공백 심각 &nbsp;&nbsp; ggilbo.com",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -1047,8 +1047,8 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "소아청소년과 전공의 80 가 서울에 지방 진료공백 심각 금강일보",
-      "is_new": false
+      "title_key": "소아청소년과 전공의 80 가 서울에 지방 진료공백 심각 ggilbo com",
+      "is_new": true
     },
     {
       "query": "서울 민원",
@@ -1068,10 +1068,10 @@
     },
     {
       "query": "서울 안전 사고",
-      "title": "서울시의회 박춘선 의원, 서울교육 안전예산 점검… 사고 뒤 수습보다 예방이 먼저 - 서울시티",
-      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1DQWVfQ1Vxb08zTXJDd2pyNEJTdDNIS2NXWm01TnJwUjBEc3UwZlYwZ0RaMUg2QnJ2SUtFOGJrN044YjFGX2hNV3lLV29udE1HYXdmX3dfZ0tNbElNWGRHNU14WmM2akp2M1hBVGZkRQ?oc=5",
-      "published_at": "Wed, 16 Sep 2026 07:00:00 GMT",
-      "summary": "서울시의회 박춘선 의원, 서울교육 안전예산 점검… 사고 뒤 수습보다 예방이 먼저 &nbsp;&nbsp; 서울시티",
+      "title": "화재·인파·포트홀까지..서울시설공단, AI로 안전사고 선제 대응 - v.daum.net",
+      "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9ncUJMM21KODFiMElWNGZhcWExNld3Uzh2N2owMEFjV2stb2t2X1dVU2ExSm1iQnZ2NWFTRk91QmxmOUdHdWRxWEhhcjNLUDdJSHJUeA?oc=5",
+      "published_at": "Fri, 11 Sep 2026 07:00:00 GMT",
+      "summary": "화재·인파·포트홀까지..서울시설공단, AI로 안전사고 선제 대응 &nbsp;&nbsp; v.daum.net",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -1079,7 +1079,7 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울시의회 박춘선 의원 서울교육 안전예산 점검 사고 뒤 수습보다 예방이 먼저 서울시티",
+      "title_key": "화재 인파 포트홀까지 서울시설공단 ai로 안전사고 선제 대응 v daum net",
       "is_new": true
     },
     {
@@ -1116,10 +1116,10 @@
     },
     {
       "query": "서울 민원",
-      "title": "서울 서초구, ‘특이민원대응전문관’ 투입 - nnewss.com",
+      "title": "서울 서초구, ‘특이민원대응전문관’ 투입 - 뉴뉴스",
       "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE9jeDROSXY0U3BzNE5SWWxsUzhvZ1E5Wmo5VlpsNG5ISG9GbC15QmMwYnRoMjktSVN4ZGZMdFhtRXZOUW5yaDZmWVU0bDd5T2ljdThCenphM1k2WmJjYWZqbWREclRJZw?oc=5",
       "published_at": "Fri, 18 Sep 2026 01:01:44 GMT",
-      "summary": "서울 서초구, ‘특이민원대응전문관’ 투입 &nbsp;&nbsp; nnewss.com",
+      "summary": "서울 서초구, ‘특이민원대응전문관’ 투입 &nbsp;&nbsp; 뉴뉴스",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": false,
@@ -1127,15 +1127,15 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울 서초구 특이민원대응전문관 투입 nnewss com",
+      "title_key": "서울 서초구 특이민원대응전문관 투입 뉴뉴스",
       "is_new": true
     },
     {
       "query": "서울 안전 사고",
-      "title": "서울교통공사, 지하철 안전사고 적극 예방 직원 특별 격려 - 머니투데이 - 머니투데이",
-      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5PYllTcTF2WW5hc1h4Tzc4UTJHby1xV0JFSjZxOVRzQlRUOFN6WXNHMWcyZ2h0OU1ONDhSVXh3SzJxcG1fdHF5U09WbHdNRlRoa2hBbzlqWnZDUjRCajNEeW5hWlJhSEYzU1HSAW9BVV95cUxQaElZTndfSmZCQnZ4Z3Y1TGtIRlh6MFkwUzZ6bUpkc000anVKdVpubXhOSERfOUNRZzdsYXluZWwwaFQ4SFctbHRxNWJmV2U4a2lhZ1hNeVZ5cEJwUnRHWmZEbDVTVnZpNVVSOFNGQ00?oc=5",
-      "published_at": "Fri, 18 Sep 2026 07:00:00 GMT",
-      "summary": "서울교통공사, 지하철 안전사고 적극 예방 직원 특별 격려 - 머니투데이 &nbsp;&nbsp; 머니투데이",
+      "title": "서울시의회 박춘선 의원, 서울교육 안전예산 점검… 사고 뒤 수습보다 예방이 먼저 - 서울시티",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1DQWVfQ1Vxb08zTXJDd2pyNEJTdDNIS2NXWm01TnJwUjBEc3UwZlYwZ0RaMUg2QnJ2SUtFOGJrN044YjFGX2hNV3lLV29udE1HYXdmX3dfZ0tNbElNWGRHNU14WmM2akp2M1hBVGZkRQ?oc=5",
+      "published_at": "Wed, 16 Sep 2026 07:00:00 GMT",
+      "summary": "서울시의회 박춘선 의원, 서울교육 안전예산 점검… 사고 뒤 수습보다 예방이 먼저 &nbsp;&nbsp; 서울시티",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": true,
@@ -1143,7 +1143,7 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "서울교통공사 지하철 안전사고 적극 예방 직원 특별 격려 머니투데이 머니투데이",
+      "title_key": "서울시의회 박춘선 의원 서울교육 안전예산 점검 사고 뒤 수습보다 예방이 먼저 서울시티",
       "is_new": true
     },
     {
@@ -1176,7 +1176,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "강북구 임산부 배우자 산후조리원 종사자 백일해 무료 예방접종 시행 서울복지신문",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 민원",
@@ -1196,18 +1196,18 @@
     },
     {
       "query": "서울 안전 사고",
-      "title": "강남구, 추석 종합대책 시행…재난·안전사고 예방 총력 - gukjenews.com",
-      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9iLWQzSDRGSEJwb21OQlZmSExjNl9jUmVCcUJHRE9WR29WQmNPNnJCZ2Fxd1g3c2laTVA0eVJwdkhZMlY2RE5oOG1kTXpEOWlDOHRpeVZxSXpWdVNZU2E4by03U1dfZ1YwMTlZNGh3?oc=5",
-      "published_at": "Sun, 20 Sep 2026 23:59:49 GMT",
-      "summary": "강남구, 추석 종합대책 시행…재난·안전사고 예방 총력 &nbsp;&nbsp; gukjenews.com",
+      "title": "서울교통공사, 지하철 안전사고 적극 예방 직원 특별 격려 - 머니투데이 - 머니투데이",
+      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5PYllTcTF2WW5hc1h4Tzc4UTJHby1xV0JFSjZxOVRzQlRUOFN6WXNHMWcyZ2h0OU1ONDhSVXh3SzJxcG1fdHF5U09WbHdNRlRoa2hBbzlqWnZDUjRCajNEeW5hWlJhSEYzU1HSAW9BVV95cUxQaElZTndfSmZCQnZ4Z3Y1TGtIRlh6MFkwUzZ6bUpkc000anVKdVpubXhOSERfOUNRZzdsYXluZWwwaFQ4SFctbHRxNWJmV2U4a2lhZ1hNeVZ5cEJwUnRHWmZEbDVTVnZpNVVSOFNGQ00?oc=5",
+      "published_at": "Fri, 18 Sep 2026 07:00:00 GMT",
+      "summary": "서울교통공사, 지하철 안전사고 적극 예방 직원 특별 격려 - 머니투데이 &nbsp;&nbsp; 머니투데이",
       "seoul_relevant": true,
-      "relevance_reason": "기사 제목의 지역 표현: 강남",
-      "editorial_eligible": false,
-      "editorial_reason": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "editorial_eligible": true,
+      "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "강남구 추석 종합대책 시행 재난 안전사고 예방 총력 gukjenews com",
+      "title_key": "서울교통공사 지하철 안전사고 적극 예방 직원 특별 격려 머니투데이 머니투데이",
       "is_new": true
     },
     {
@@ -1240,7 +1240,7 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "부모 간병 부담 확 줄인다 서울시 퇴원 어르신 간병 지원 지역연합신문",
-      "is_new": true
+      "is_new": false
     },
     {
       "query": "서울 민원",
@@ -1260,18 +1260,18 @@
     },
     {
       "query": "서울 안전 사고",
-      "title": "화재·인파·포트홀까지…서울시설공단, AI로 안전사고 선제 대응 - 네이트",
-      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE83SkZmdXhwN0dyellOZHY2ZEJwY1ZiRGhiQ3JtdFZPVjNqY2FYSzRJeS0yX3V5MUZHSnNpdzZfMWZNU0ctZnloeFFIUlJadU5ZVWNZ?oc=5",
-      "published_at": "Fri, 11 Sep 2026 07:14:00 GMT",
-      "summary": "화재·인파·포트홀까지…서울시설공단, AI로 안전사고 선제 대응 &nbsp;&nbsp; 네이트",
+      "title": "강남구, 추석 종합대책 시행…재난·안전사고 예방 총력 - gukjenews.com",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE9iLWQzSDRGSEJwb21OQlZmSExjNl9jUmVCcUJHRE9WR29WQmNPNnJCZ2Fxd1g3c2laTVA0eVJwdkhZMlY2RE5oOG1kTXpEOWlDOHRpeVZxSXpWdVNZU2E4by03U1dfZ1YwMTlZNGh3?oc=5",
+      "published_at": "Sun, 20 Sep 2026 23:59:49 GMT",
+      "summary": "강남구, 추석 종합대책 시행…재난·안전사고 예방 총력 &nbsp;&nbsp; gukjenews.com",
       "seoul_relevant": true,
-      "relevance_reason": "기사 제목의 지역 표현: 서울",
-      "editorial_eligible": true,
-      "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+      "relevance_reason": "기사 제목의 지역 표현: 강남",
+      "editorial_eligible": false,
+      "editorial_reason": "기관 운영·홍보성 안내로 기획 후보 우선순위 하향",
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "화재 인파 포트홀까지 서울시설공단 ai로 안전사고 선제 대응 네이트",
+      "title_key": "강남구 추석 종합대책 시행 재난 안전사고 예방 총력 gukjenews com",
       "is_new": true
     },
     {
@@ -1288,6 +1288,22 @@
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
       "title_key": "서울시의회 제2기 시민권익위원회 출범 민원 해결 제도개선 박차 인더스트리뉴스",
+      "is_new": true
+    },
+    {
+      "query": "서울 안전 사고",
+      "title": "화재·인파·포트홀까지…서울시설공단, AI로 안전사고 선제 대응 - 네이트",
+      "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE83SkZmdXhwN0dyellOZHY2ZEJwY1ZiRGhiQ3JtdFZPVjNqY2FYSzRJeS0yX3V5MUZHSnNpdzZfMWZNU0ctZnloeFFIUlJadU5ZVWNZ?oc=5",
+      "published_at": "Fri, 11 Sep 2026 07:14:00 GMT",
+      "summary": "화재·인파·포트홀까지…서울시설공단, AI로 안전사고 선제 대응 &nbsp;&nbsp; 네이트",
+      "seoul_relevant": true,
+      "relevance_reason": "기사 제목의 지역 표현: 서울",
+      "editorial_eligible": true,
+      "editorial_reason": "갈등·지연·피해·책임 또는 건설사업 단서 확인",
+      "signal_lane": "CITIZEN_ATTENTION",
+      "signal_type": "NEWS_ATTENTION",
+      "status": "DISCOVERY_SIGNAL",
+      "title_key": "화재 인파 포트홀까지 서울시설공단 ai로 안전사고 선제 대응 네이트",
       "is_new": true
     },
     {
@@ -1372,10 +1388,10 @@
     },
     {
       "query": "서울 민원",
-      "title": "\"민원 해결 넘어 예방까지”··· 장세훈 서울시의원, 제2기 시민권익위원 위촉 - koreasisailbo.com",
+      "title": "\"민원 해결 넘어 예방까지”··· 장세훈 서울시의원, 제2기 시민권익위원 위촉 - 시사일보",
       "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE5HSmRCT3pOZlhsRjlpT2VQNGFzRDFCenQ2TGo4RG1ONFNDUXdXamF5ZHp2cmgxdUhHUURSdUN3YTJZNGR0MldjY1JxcHc?oc=5",
       "published_at": "Fri, 11 Sep 2026 09:40:00 GMT",
-      "summary": "\"민원 해결 넘어 예방까지”··· 장세훈 서울시의원, 제2기 시민권익위원 위촉 &nbsp;&nbsp; koreasisailbo.com",
+      "summary": "\"민원 해결 넘어 예방까지”··· 장세훈 서울시의원, 제2기 시민권익위원 위촉 &nbsp;&nbsp; 시사일보",
       "seoul_relevant": true,
       "relevance_reason": "기사 제목의 지역 표현: 서울",
       "editorial_eligible": false,
@@ -1383,7 +1399,7 @@
       "signal_lane": "CITIZEN_ATTENTION",
       "signal_type": "NEWS_ATTENTION",
       "status": "DISCOVERY_SIGNAL",
-      "title_key": "민원 해결 넘어 예방까지 장세훈 서울시의원 제2기 시민권익위원 위촉 koreasisailbo com",
+      "title_key": "민원 해결 넘어 예방까지 장세훈 서울시의원 제2기 시민권익위원 위촉 시사일보",
       "is_new": true
     },
     {
