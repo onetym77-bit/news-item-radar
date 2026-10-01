@@ -17,6 +17,7 @@ OUT = ROOT / "editorial-v4" / "output" / "latest.json"
 OPENAI = "https://api.openai.com/v1/responses"
 MAX_INPUTS = 10
 MAX_PROPOSALS = 3
+MODEL_OUTPUT_TOKEN_BUDGET = 12000
 SCHEMA = {
     "type": "object", "additionalProperties": False,
     "properties": {"assessments": {"type": "array", "items": {
@@ -729,7 +730,8 @@ def excluded(record, leads, reviewed):
     return ""
 
 def call_structured(model, api_key, instructions, data, schema, name):
-    payload = {"model": model, "store": False, "max_output_tokens": 6500,
+    payload = {"model": model, "store": False,
+               "max_output_tokens": MODEL_OUTPUT_TOKEN_BUDGET,
                "input": [{"role": "system", "content": instructions},
                          {"role": "user", "content": json.dumps(data, ensure_ascii=False)}],
                "text": {"format": {"type": "json_schema", "name": name,
@@ -743,7 +745,11 @@ def call_structured(model, api_key, instructions, data, schema, name):
     parts = [p.get("text", "") for item in answer.get("output", []) if item.get("type") == "message"
              for p in item.get("content", []) if p.get("type") == "output_text"]
     if answer.get("status") != "completed" or not parts:
-        raise ValueError("모델 응답 미완료")
+        details = answer.get("incomplete_details") or {}
+        reason = details.get("reason") or ("output_text 없음" if not parts else "미확인")
+        raise ValueError(
+            f"모델 응답 미완료: status={answer.get('status') or '미확인'}, reason={reason}"
+        )
     return json.loads("".join(parts))
 
 def schema_with_exact_ids(base_schema, array_property, ids):

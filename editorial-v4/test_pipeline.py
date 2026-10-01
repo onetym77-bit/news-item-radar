@@ -1,4 +1,5 @@
 import importlib.util
+import io
 import json
 import tempfile
 import unittest
@@ -124,6 +125,26 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(data["required_ids"], ["one", "two"])
         rows = schema["properties"]["reviews"]
         self.assertEqual(rows["items"]["properties"]["id"]["enum"], ["one", "two"])
+
+    def test_structured_call_uses_full_schema_budget_and_reports_incomplete_reason(self):
+        answer = {
+            "status": "incomplete",
+            "incomplete_details": {"reason": "max_output_tokens"},
+            "output": [],
+        }
+        response = io.BytesIO(json.dumps(answer).encode("utf-8"))
+        with patch.object(module.urllib.request, "urlopen", return_value=response) as urlopen:
+            with self.assertRaisesRegex(
+                    ValueError,
+                    "status=incomplete, reason=max_output_tokens"):
+                module.call_structured(
+                    "test-model", "test-key", "instructions", {"required_ids": ["one"]},
+                    module.SCHEMA, "test_schema",
+                )
+        request = urlopen.call_args.args[0]
+        payload = json.loads(request.data.decode("utf-8"))
+        self.assertEqual(payload["max_output_tokens"], module.MODEL_OUTPUT_TOKEN_BUDGET)
+        self.assertGreaterEqual(payload["max_output_tokens"], 12000)
 
     def test_run_retries_incomplete_assessment_once(self):
         record = {
