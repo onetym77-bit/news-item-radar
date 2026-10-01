@@ -17,6 +17,15 @@ from urllib.request import Request, urlopen
 
 BASE = Path(__file__).resolve().parent
 KST = timezone(timedelta(hours=9))
+SEOUL_CITY_SOURCE = {
+    "id": "seoul_city",
+    "name": "서울시의회",
+    "clik_assembly_id": "002001",
+    "list_url": "https://ms.smc.seoul.kr/kr/assembly/late.do",
+    "hosts": ["ms.smc.seoul.kr"],
+    "detail_pattern": r"/record/recordView\.do",
+    "id_params": ["key"],
+}
 DATE = re.compile(r"(?<!\d)(20\d{2})\s*[.\-/년]\s*(\d{1,2})\s*[.\-/월]\s*(\d{1,2})")
 DETAIL = re.compile(r"/(?:viewer/minutes\.do|record/recordView\.do|record/main)(?:\?|$)", re.I)
 ERROR_BODY = re.compile(r"행을 찾을 수 없|존재하지 않는 회의록|등록된 회의록이 없")
@@ -595,9 +604,12 @@ def main():
     parser.add_argument("--output",type=Path,default=BASE/"output")
     parser.add_argument("--previous",type=Path)
     parser.add_argument("--archive-output",type=Path)
+    parser.add_argument("--include-seoul-city",action="store_true")
     parser.add_argument("--source-id",nargs="+")
     args = parser.parse_args()
     sources = json.loads(args.sources.read_text(encoding="utf-8"))
+    if args.include_seoul_city:
+        sources = [SEOUL_CITY_SOURCE, *sources]
     if len({s["id"] for s in sources}) != len(sources):
         parser.error("Duplicate source identifiers")
     if args.source_id:
