@@ -34,6 +34,7 @@ SEOUL_CITY = {
     "list_url": "https://ms.smc.seoul.kr/kr/assembly/main.do",
 }
 STATE_SCHEMA = 1
+MAX_FAILED_SOURCES_PER_RUN = 5
 
 
 class TextPage(HTMLParser):
@@ -300,13 +301,19 @@ def archive(
     errors = []
     attempted_documents = set()
     attempted_pages = set()
+    failed_sources = set()
     source_by_id = {source["id"]: source for source in sources}
 
     while len(added) < max_documents:
         progress = False
         for source in sources:
-            if len(added) >= max_documents:
+            if (
+                len(added) >= max_documents
+                or len(failed_sources) >= MAX_FAILED_SOURCES_PER_RUN
+            ):
                 break
+            if source["id"] in failed_sources:
+                continue
             source_state = state["sources"][source["id"]]
             pending = source_state["pending"]
 
@@ -335,6 +342,7 @@ def archive(
                         source_state["finish_after_pending"] = True
                     progress = True
                 except (OSError, ValueError, KeyError, TypeError) as exc:
+                    failed_sources.add(source["id"])
                     errors.append({
                         "source_id": source["id"],
                         "stage": "list",
@@ -363,6 +371,7 @@ def archive(
                 added.append(record)
                 progress = True
             except (OSError, ValueError, KeyError, TypeError) as exc:
+                failed_sources.add(source["id"])
                 candidate["attempts"] = int(candidate.get("attempts") or 0) + 1
                 errors.append({
                     "source_id": source["id"],
@@ -382,7 +391,7 @@ def archive(
                     progress = True
 
         attempted_pages.clear()
-        if not progress:
+        if len(failed_sources) >= MAX_FAILED_SOURCES_PER_RUN or not progress:
             break
 
     append_jsonl_gzip(archive_path, added)
