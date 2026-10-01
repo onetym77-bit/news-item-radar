@@ -84,6 +84,7 @@ jobs:
           --sources district-council-pilot/sources_25.json
           --per-source 4
           --workers 3
+          --include-seoul-city
           --output .runtime/official-watch
           --previous .runtime/council-archive/official_previous.json
           --archive-output .runtime/official-watch/official_documents.jsonl.gz
