@@ -22,6 +22,20 @@ def list_row(docid="CLIKC123456789", assembly_id="002002"):
     }
 
 
+class FakeResponse:
+    def __init__(self, payload):
+        self.raw = json.dumps(payload).encode("utf-8")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, traceback):
+        return False
+
+    def read(self, _limit):
+        return self.raw
+
+
 class ClikApiTests(unittest.TestCase):
     def test_all_25_sources_have_exact_official_assembly_ids(self):
         sources = json.loads((BASE / "sources_25.json").read_text(encoding="utf-8"))
@@ -49,6 +63,33 @@ class ClikApiTests(unittest.TestCase):
     def test_unwrap_object_error_keeps_code_without_secret(self):
         with self.assertRaisesRegex(module.ClikAPIError, "ERROR07"):
             module._unwrap({"RESULT_CODE": "ERROR07", "RESULT_MESSAGE": "bad query"})
+
+    def test_fetch_payload_retries_transient_network_failure(self):
+        payload = {"RESULT_CODE": "SUCCESS", "LIST": [], "TOTAL_COUNT": "0"}
+        with (
+            patch.object(
+                module,
+                "urlopen",
+                side_effect=[OSError("temporary"), FakeResponse(payload)],
+            ) as opened,
+            patch.object(module.time, "sleep") as slept,
+        ):
+            result = module.fetch_payload("secret-value", displayType="list")
+
+        self.assertEqual(result["RESULT_CODE"], "SUCCESS")
+        self.assertEqual(opened.call_count, 2)
+        slept.assert_called_once_with(1)
+
+    def test_fetch_payload_stops_after_bounded_retries(self):
+        with (
+            patch.object(module, "urlopen", side_effect=OSError("temporary")) as opened,
+            patch.object(module.time, "sleep") as slept,
+        ):
+            with self.assertRaisesRegex(module.ClikAPIError, "after 3 attempt"):
+                module.fetch_payload("secret-value", displayType="list")
+
+        self.assertEqual(opened.call_count, 3)
+        self.assertEqual(slept.call_count, 2)
 
     def test_list_is_bounded_deduplicated_and_uses_public_url(self):
         row = list_row()
