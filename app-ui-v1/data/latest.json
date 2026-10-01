@@ -4,43 +4,14 @@
   "editorialBrief": {
     "schema": 4,
     "input": "interest-signal-pilot/review_queue_latest.json",
-    "generated_at_utc": "2026-09-30T03:47:53.584467+00:00",
+    "generated_at_utc": "2026-10-01T06:08:09.469767+00:00",
     "count": 0,
     "candidates": [],
     "discovery_count": 3,
     "discovery_signals": [
       {
-        "review_id": "CBMiVkFVX3lxTE5WOWVia2pW",
-        "headline": "홍지선 ‘삼성역 철근 누락 구상권 청구’에 서울시 “적반하장”",
-        "source": "검색 관심도·뉴스 확산",
-        "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
-        "source_context_status": "BODY_READ",
-        "context_failure": "",
-        "problem_status": "UNASSESSED",
-        "document_type": "INCIDENT",
-        "claim_type": "ATTRIBUTED_CLAIM",
-        "what_happened": "GTX-A 삼성역의 철근 누락과 관련해 서울시가 국토교통부 장관 후보자의 구상권 청구 예고를 비판했다. 서울시는 지난해 11월 철근 누락을 확인한 뒤 보강방안을 마련했고, 국토부와 국가철도공단의 점검에서 구조안전성이 확인됐다고 주장했다. 반면 추가 검증과 보강공사 일정이 지연돼 삼성역 무정차 통과 시기도 늦어졌으며, 그에 따른 비용 부담 주체를 두고 양측 주장이 맞서고 있다.",
-        "citizen_relevance": "삼성역 무정차 통과 일정 지연으로 시민의 교통 이용 계획에 영향이 생겼을 수 있고, 보강·점검 지연에 따른 추가 비용을 누가 부담할지는 서울시민의 세금과 직결될 수 있다. 다만 기사에는 실제 지연 기간, 비용 규모, 시민 불편의 구체적 사례는 제시되지 않았다.",
-        "editorial_question": "국토부·철도공단의 안전성 확인과 추가 검증 결정, 보강공사 지연 사이의 정확한 인과관계는 무엇이며, 철근 누락 자체와 점검·일정 지연으로 발생한 비용을 각각 누가 어떤 근거로 부담하게 되는가?",
-        "question_worth": "HIGH",
-        "assessment_reason": "철근 누락이라는 안전사고성 사건과 공공 교통시설의 일정·비용 책임을 다루고 있으며, 기사 안에 점검 수치와 일정, 기관별 조치가 구체적으로 제시돼 책임과 비용 배분을 후속 취재할 근거가 있다. 다만 현재 핵심 내용은 서울시의 입장과 주장에 기반하므로 양측 원자료 확인이 필수다.",
-        "first_check": "서울시가 제시한 점검·시험운행·진동측정 자료와 국토부·철도공단의 추가 검증 결정문, 보강공사 착수·완료 일정, 실제 추가 비용 및 구상권 산정 근거를 양측 자료로 대조해야 한다. 기사에는 장관 후보자의 구상권 청구 발언 원문과 국토부의 반론도 없다.",
-        "counterpossibility": "구조안전성이 일부 점검에서 확인됐더라도, 국토부나 철도공단이 추가 검증을 요구한 데 별도의 안전·절차상 사유가 있었을 수 있다. 일정 지연과 추가 비용이 모두 국토부 결정 때문이 아니라 철근 누락 자체 또는 보강 절차에서 비롯됐을 가능성도 배제되지 않는다.",
-        "evidence": [
-          {
-            "type": "news_search_result",
-            "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5WOWVia2pWYTA0NzkxQ3Q3MEh6ZGF0SG1jS1JheDlBbDBUM2tvNXFRRGtJU0ViOENOZGVQMWZVUEw3Tk9xMldPeXc0dXVETmREWnB6eEZR?oc=5",
-            "published_at": "Fri, 18 Sep 2026 07:00:00 GMT"
-          },
-          {
-            "type": "publisher_article",
-            "url": "https://biz.heraldcorp.com/article/10877512?ref=naver"
-          }
-        ]
-      },
-      {
-        "review_id": "CBMiU0FVX3lxTFBjWFpDLWNR",
-        "headline": "국토부 \"GTX-A 삼성역 추가 안전성 검증 필요…서울시에 지연 구상금 검토\"",
+        "review_id": "CBMidkFVX3lxTE9HWFg4aEFC",
+        "headline": "[단독]서울시 악취민원 5년새 2.5배로…절반 이상이 ‘음식점 냄새’",
         "source": "검색 관심도·뉴스 확산",
         "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
         "source_context_status": "BODY_READ",
@@ -48,51 +19,76 @@
         "problem_status": "UNASSESSED",
         "document_type": "INCIDENT",
         "claim_type": "OBSERVED_EVENT",
-        "what_happened": "기사에 따르면 GTX-A 삼성역 구간에서 설계와 다르게 최하층 기둥의 주요 철근이 누락된 시공 오류가 확인됐다. 국토교통부는 원인 규명과 보강안 검증, 재난·열차 운행을 고려한 추가 안전성 검증을 진행 중이며, 서울시는 정밀안전진단 중간 결과 현재 시공 단계의 구조 안전성이 A등급이라고 주장하고 있다. 양측은 보강공사와 삼성역 무정차 통과의 병행 여부, 공사 지연에 따른 손실보전금 책임을 두고 입장이 갈린 상태다.",
-        "citizen_relevance": "삼성역 개통 시기와 GTX-A 이용 가능 여부, 열차 운행 안전성, 보강공사 방식에 영향을 줄 수 있다. 공사 지연으로 국가가 민간사업자에게 분기별 손실보전금을 지급하고 있다는 설명도 있어 공공재정 부담과 책임 소재가 서울시민의 관심사다.",
-        "editorial_question": "하루 280회 이상 열차 운행을 전제로 삼성역 무정차 통과와 보강공사를 병행할지, 국토부는 어떤 추가 안전성 검증 결과와 공개 일정에 따라 결정할 것인가?",
+        "what_happened": "기사에 따르면 서울시 악취 민원은 2021년 964건에서 2025년 2428건으로 늘었고, 그중 음식점 관련 민원이 1296건으로 가장 큰 비중을 차지했다. 기사에서는 일반 음식점이 현행 악취방지법상 신고 대상이 아니어서 민원 발생 시 행정 개입 수단이 제한적이라고 전한다.",
+        "citizen_relevance": "주거지와 일상생활에서 반복되는 음식점·하수구 악취에 시민이 어떻게 대응할 수 있는지, 민원이 접수된 뒤 행정기관이 어느 수준까지 조치할 수 있는지와 관련된다.",
+        "editorial_question": "서울시는 2025년 음식점 악취 민원 1296건에 대해 자치구별로 몇 건을 현장 확인·개선 조치했으며, 일반 음식점이 법정 신고 대상이 아니라는 이유로 해결되지 않은 민원은 얼마나 되는가?",
         "question_worth": "HIGH",
-        "assessment_reason": "단순한 개통 발표가 아니라 철근 누락이라는 확인된 시공 오류와 200건 이상의 문제점, 실제 운행 조건을 반영한 추가 검증, 국가 재정 손실 및 책임 공방이 함께 제시됐다. 다만 기사에는 실제 이용자 피해나 구조물 붕괴 위험이 발생했다는 내용은 없으므로, 위험을 과장하기보다 검증 기준·결정 일정·책임 근거를 묻는 후속 취재가 적절하다.",
-        "first_check": "기사만으로는 추가 안전성 검증의 완료 시점과 판단 기준, 보강공사 및 삼성역 개통의 구체적 일정, 200건 이상의 문제점 중 철근 누락과 직접 관련된 항목, 손실보전금과 향후 구상금의 산정 근거 및 협약상 책임 주체가 확인되지 않는다.",
-        "counterpossibility": "서울시가 제시한 현재 시공 단계 구조 안전성 A등급이 완공 후 운행 안전까지 부정한다는 뜻은 아니다. 추가 검증 결과 무정차 통과와 보강공사의 병행이 가능하고, 공사 지연이나 재정 손실이 기사에서 제시된 규모보다 줄어들 가능성도 있다.",
+        "assessment_reason": "단순한 지원 발표가 아니라 민원 증가 수치와 일반 음식점에 대한 행정 개입의 법적·절차적 제한이 함께 제시돼 있어, 실제 처리 현황과 관리 공백을 확인하는 후속 취재 가치가 있다.",
+        "first_check": "제출 자료의 악취 민원 집계 기준과 중복·반복 민원 처리 방식, 음식점 관련 민원의 실제 현장 확인 및 종결 결과, 자치구별 편차와 동작구 민원 0건의 원인을 확인해야 한다.",
+        "counterpossibility": "민원 증가는 실제 악취 발생량의 증가라기보다 거리두기 해제에 따른 영업 재개, 시민의 신고 민감도 상승, 생활환경 기대 수준 변화 때문일 수 있다.",
         "evidence": [
           {
             "type": "news_search_result",
-            "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBjWFpDLWNRQUZxQm04WEhVSUstaUY5cnR2aVdqOXhDdkxJenBUdEJ4eHdDcWhoWDNTcHNtR1JNb1F3UXdCNGt2dEhyc2NVcWdWaEpN?oc=5",
-            "published_at": "Wed, 23 Sep 2026 10:01:00 GMT"
+            "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE9HWFg4aEFCUDEzRHVDWHFmZTJONWJka29fMmZkSmZ5TXZEaTc1VlR1LWtNQ1Q3d19jam9VYy01SGI5N29PUmkydTg0dFVJT3oxbDZPeGlMSTdZSFd2M0hSY0oyX3lDUU04TERGWmlvZ0FiNDNST0HSAWZBVV95cUxOVEVFMEttY3pESUZuX196d1NmaU85dFVhLWNyS3lGZkhBMUhod1pIUFR0c2NHWnhBUnhnbXJEUkxadXlSdTNUT3JicW9qUWhjTjRWWmRyS2U5MWxETzhwZW1RN0xPZGc?oc=5",
+            "published_at": "Mon, 28 Sep 2026 08:52:00 GMT"
           },
           {
             "type": "publisher_article",
-            "url": "https://www.newsis.com/view/NISX20260923_0003802676"
+            "url": "https://www.donga.com/news/Society/article/all/20260928/134745185/1"
           }
         ]
       },
       {
-        "review_id": "CBMiXEFVX3lxTFBvS1Y4cjhL",
-        "headline": "이수진 서울시의원, \"교육재정, 반복적 세입 오차·선제적 예산편성 점검해야\"",
+        "review_id": "CBMiZEFVX3lxTE95NzBoVzg5",
+        "headline": "양천구, 독감 무료접종 대상 ‘서울시 최대 범위’ 지원",
         "source": "검색 관심도·뉴스 확산",
         "observed_signal": "기사 본문을 읽고 내용 유형을 분류했습니다. 기사 서술은 독립 확인 전입니다.",
         "source_context_status": "BODY_READ",
         "context_failure": "",
         "problem_status": "UNASSESSED",
-        "document_type": "OTHER",
-        "claim_type": "ATTRIBUTED_CLAIM",
-        "what_happened": "서울시의회 예산결산특별위원회에서 서울시교육청 추가경정예산안을 심사하며, 2020~2026년 법정전입금이 본예산 이후 추경에서 반복적으로 증액된 현상과 2027년 남녀공학 전환 학교의 운영비·인건비 선편성 적정성이 지적됐다. 이번 추경에서는 지방교육재정교부금이 약 4429억6400만원 늘었다.",
-        "citizen_relevance": "세입을 본예산에 얼마나 정확히 반영하느냐는 서울시교육청의 예산 규모와 집행 시점에 영향을 준다. 학교 전환 예산 역시 실제 학교별 수요가 확정되기 전에 운영비·인건비를 편성하는 것이 적정한지와 관련된다. 다만 기사에는 이로 인한 구체적인 시민 피해나 예산 낭비 사례가 제시되지는 않았다.",
-        "editorial_question": "2020~2026년 법정전입금의 본예산 추계액·실제 세입·추경 증액액을 연도별로 대조하면 반복적인 차이의 원인은 무엇이며, 서울시와 서울시교육청은 다음 예산 편성에서 추계 방식이나 정보 공유 절차를 어떻게 바꿀 것인가?",
+        "document_type": "POLICY_ANNOUNCEMENT",
+        "claim_type": "ANNOUNCEMENT",
+        "what_happened": "양천구가 2026~2027년 독감 무료 예방접종의 자체 지원 대상을 15~64세 주민 중 장애인·취약계층 등에 더해 통·반장, 주민자치회 위원, 해당 연도 관내 봉사활동 4시간 이상 자원봉사자까지 확대한다고 발표했다. 자체 지원 대상은 약 3만 명으로 늘고, 위탁의료기관은 145개소로 확대되며 접종은 10월 6일부터 2027년 4월 30일까지 진행될 예정이다.",
+        "citizen_relevance": "양천구민 가운데 국가 무료접종 대상이 아닌 15~64세 주민도 자신의 자격과 증빙자료를 확인해 무료접종을 받을 수 있게 된다는 내용이다. 지원 대상 확대에 따라 대상 여부, 필요한 서류, 접종기관과 기간을 시민에게 안내할 필요가 있다.",
+        "editorial_question": "자원봉사 4시간 이상 등 새 기준에 해당하는 주민이 실제 접종 현장에서 어떤 증빙자료를 인정받는지, 특히 통·반장·주민자치회 위원과 자원봉사자의 자격 확인 절차가 의료기관마다 동일하게 적용되는가?",
         "question_worth": "HIGH",
-        "assessment_reason": "단순한 예산 점검 발표에 그치지 않고, 공공재정에서 같은 세입 추계 차이가 여러 해 반복됐다는 내용과 구체적인 증액 규모가 기사에 제시됐다. 실제 재정 손실이 확인된 것은 아니지만, 반복 패턴의 원인과 개선 절차를 확인할 수 있어 후속 질문 가치가 높다.",
-        "first_check": "기사에 제시된 ‘매년 증액’ 경향을 확인하려면 검토보고서의 연도별 본예산액, 실제 전입액, 추경 증액액과 각 차이의 발생 원인을 확인해야 한다. 남녀공학 전환 예산은 학교별 운영비·인건비 산출 근거와 실제 수요 확정 여부도 추가로 확인할 필요가 있다.",
-        "counterpossibility": "법정전입금 증액은 추계 체계의 문제라기보다 경기·세수 여건 변화로 실제 세입이 예상보다 늘어난 결과일 수 있다. 남녀공학 전환 관련 운영비·인건비도 사전 편성이 이후 집행을 위한 불가피한 준비일 가능성이 있다.",
+        "assessment_reason": "단순한 접종 지원 발표이지만, 기존 200시간에서 4시간으로 자격 기준이 크게 바뀌고 약 3만 명을 대상으로 새 증빙·자격 확인 절차가 적용된다. 시민이 실제 혜택을 받을 수 있는지 확인할 구체적인 행정 절차와 적용 기준이 있어 후속 질문 가치가 있다.",
+        "first_check": "약 3만 명이라는 예상 대상 규모와 145개 위탁의료기관의 산정 근거, 새 대상별 자격 확인에 사용되는 증빙자료와 의료기관 안내 방식이 본문에 구체적으로 제시되지 않았다.",
+        "counterpossibility": "지원 대상이 확대돼도 실제 접종을 원하는 주민이 적거나 자격 확인 절차가 원활하면 별도의 이용 혼선이나 접근성 문제는 나타나지 않을 수 있다.",
         "evidence": [
           {
             "type": "news_search_result",
-            "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBvS1Y4cjhLYWtmUk5jb0RCcXIzTW9vUTZuRGxucExodThrUEZ0MzZJRlpYcmV5LWVkQzFTd2JWMUJLN3k2R0hjMUQzZzB5TEdZd2k4NDNCdzRtdUJ0?oc=5",
-            "published_at": "Thu, 10 Sep 2026 01:35:00 GMT"
+            "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE95NzBoVzg5LXJISTJlUEVoUV9UZ3RhWE1YUWxfLUcxOHY5SVJmY0QyZEppV0psTzYya05tOTBHaTRDUkREanh0QXlwTXVjX2dOY2JqSGVHbUxRazczdHBlV2dXd1DSAWhBVV95cUxNZHN2R294T3V4Qmw4WG95ZlpxYzZhY2lkVjRxSmdxaHhuZ0VwNFI0aXh0WS1uLUZsaEdBT1J4dnJ2OXB5RF9YeFRrOHdId1kxWWs3bUg2WTN5QUE3b1NGMERTYmFuajRRWQ?oc=5",
+            "published_at": "Sun, 27 Sep 2026 21:47:03 GMT"
           },
           {
             "type": "publisher_article",
-            "url": "https://www.newspim.com/news/view/20260910000499"
+            "url": "https://www.m-i.kr/news/articleView.html?idxno=1418239"
+          }
+        ]
+      },
+      {
+        "review_id": "CBMiakFVX3lxTE1yT0dCWi1x",
+        "headline": "서소문고가 사고 재발 막는다…서울시, 노후고가 해체공사 안전관리 강화",
+        "source": "검색 관심도·뉴스 확산",
+        "observed_signal": "뉴스 검색 결과에서 이 기사 제목과 게시일을 확인했습니다.",
+        "source_context_status": "BODY_UNAVAILABLE",
+        "context_failure": "NO_TITLE_MATCH",
+        "problem_status": "UNASSESSED",
+        "document_type": "",
+        "claim_type": "",
+        "what_happened": "",
+        "citizen_relevance": "",
+        "editorial_question": "",
+        "question_worth": "",
+        "assessment_reason": "",
+        "first_check": "기사 본문을 읽고 실제 사건·시민 경험인지, 발표·예방 안내인지 구분",
+        "counterpossibility": "제목만으로는 시민의 피해나 제도 공백이 확인되지 않음",
+        "evidence": [
+          {
+            "type": "news_search_result",
+            "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1yT0dCWi1xbXk2STRueE1Kd2pxTzNGS085VEljTkluc18tZWM0dGt2cVBqeVBDMDBxQnVaRzhTaVQwV0ZqVFE5cGd1bnRoeDlYVThkbXg0LTMtdjdJNlpPT1EtdVRCM3AyS3c?oc=5",
+            "published_at": "Thu, 01 Oct 2026 02:09:00 GMT"
           }
         ]
       }
@@ -440,7 +436,7 @@
         "source": "뉴스·검색 관심",
         "stage": "본문 탐색",
         "status": "수집됨",
-        "collected_at": "2026-09-30T03:47:53.584467+00:00",
+        "collected_at": "2026-10-01T06:08:09.469767+00:00",
         "observed": 30,
         "review_count": 9,
         "reason": "기사 본문 판정은 사실 검증이나 최종 편집 승인이 아닙니다.",
@@ -451,10 +447,10 @@
         "source": "서울시 응답소 공개민원",
         "stage": "일일 원자료",
         "status": "수집됨",
-        "collected_at": "2026-09-30T14:51:22+09:00",
-        "observed": 3,
-        "review_count": 0,
-        "reason": "읽은 항목 3건, 원자료 적격 0건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
+        "collected_at": "2026-10-01T15:24:50+09:00",
+        "observed": 2,
+        "review_count": 1,
+        "reason": "읽은 항목 2건, 원자료 적격 1건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
         "url": "https://eungdapso.seoul.go.kr/main.do"
       },
       {
@@ -462,7 +458,7 @@
         "source": "서울시의회 회의록",
         "stage": "일일 원자료",
         "status": "수집됨",
-        "collected_at": "2026-09-30T14:51:22+09:00",
+        "collected_at": "2026-10-01T15:24:50+09:00",
         "observed": 87,
         "review_count": 9,
         "reason": "읽은 항목 87건, 원자료 적격 9건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
@@ -473,10 +469,10 @@
         "source": "서울 열린데이터 신규 데이터셋",
         "stage": "후속 검증 자료",
         "status": "수집됨",
-        "collected_at": "2026-09-30T14:51:22+09:00",
-        "observed": 120,
+        "collected_at": "2026-10-01T15:24:50+09:00",
+        "observed": 19,
         "review_count": 0,
-        "reason": "읽은 항목 120건, 원자료 적격 0건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
+        "reason": "읽은 항목 19건, 원자료 적격 0건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
         "url": "https://data.seoul.go.kr/datasetRanking/new.do"
       },
       {
@@ -484,7 +480,7 @@
         "source": "서울 빅데이터캠퍼스 갱신 데이터",
         "stage": "후속 검증 자료",
         "status": "수집됨",
-        "collected_at": "2026-09-30T14:51:22+09:00",
+        "collected_at": "2026-10-01T15:24:50+09:00",
         "observed": 17,
         "review_count": 0,
         "reason": "읽은 항목 17건, 원자료 적격 0건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
@@ -495,7 +491,7 @@
         "source": "서울연구원 정책·연구 자료",
         "stage": "일일 원자료",
         "status": "수집됨",
-        "collected_at": "2026-09-30T14:51:22+09:00",
+        "collected_at": "2026-10-01T15:24:50+09:00",
         "observed": 6,
         "review_count": 0,
         "reason": "읽은 항목 6건, 원자료 적격 0건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
@@ -506,7 +502,7 @@
         "source": "고용노동부 임금체불 통계",
         "stage": "일일 원자료",
         "status": "수집됨",
-        "collected_at": "2026-09-30T14:51:22+09:00",
+        "collected_at": "2026-10-01T15:24:50+09:00",
         "observed": 8,
         "review_count": 1,
         "reason": "읽은 항목 8건, 원자료 적격 1건. 적격은 기사 후보 선정이나 독립 사실 검증이 아닙니다.",
@@ -517,7 +513,7 @@
         "source": "한국소비자원 피해·분쟁 자료",
         "stage": "일일 원자료",
         "status": "수집 실패",
-        "collected_at": "2026-09-30T14:51:22+09:00",
+        "collected_at": "2026-10-01T15:24:50+09:00",
         "observed": null,
         "review_count": null,
         "reason": "접속 또는 검증에 실패했습니다. 항목 0건으로 해석하지 않습니다.",
@@ -539,7 +535,7 @@
         "source": "서울시 감사 결과",
         "stage": "L4 그림자 평가 · 운영 미승인",
         "status": "그림자 검토",
-        "collected_at": "2026-09-30",
+        "collected_at": "2026-10-01",
         "observed": 0,
         "review_count": 0,
         "reason": "이번 표본의 질문 준비 0건, 보류 0건. 그림자 평가 결과는 최종 후보에 자동 편입하지 않습니다.",
@@ -550,7 +546,7 @@
         "source": "유튜브 시민 관심",
         "stage": "검색 전략 시험 · 개별 영상 미편입",
         "status": "검색 시험",
-        "collected_at": "2026-10-01T10:38:14.624640+09:00",
+        "collected_at": "2026-10-01T18:52:07.868228+09:00",
         "observed": 72,
         "review_count": 0,
         "reason": "검색 전략 72개 중 활성 16개, 재검토 26개, 일시중지 30개. 누적 검색 적격 수는 기사 후보 수가 아닙니다.",
