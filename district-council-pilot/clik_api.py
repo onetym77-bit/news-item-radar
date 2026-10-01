@@ -8,6 +8,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import time
 from datetime import date
 from urllib.parse import parse_qsl, urlencode, urlparse
 from urllib.request import Request, urlopen
@@ -22,6 +23,8 @@ USER_AGENT = (
     "+https://github.com/onetym77-bit/news-item-radar)"
 )
 MAX_RESPONSE_BYTES = 6_000_000
+MAX_ATTEMPTS = 3
+RETRYABLE_HTTP_STATUS = {408, 429, 500, 502, 503, 504}
 DOCID = re.compile(r"CLIKC[0-9]+")
 ASSEMBLY_ID = re.compile(r"0020(?:0[2-9]|1[0-9]|2[0-6])")
 
@@ -52,11 +55,27 @@ def fetch_payload(api_key, **params):
         ENDPOINT + "?" + urlencode(query),
         headers={"User-Agent": USER_AGENT, "Accept": "application/json"},
     )
-    try:
-        with urlopen(request, timeout=20) as response:
-            raw = response.read(MAX_RESPONSE_BYTES + 1)
-    except OSError as exc:
-        raise ClikAPIError("CLIK API request failed") from exc
+    last_error = None
+    attempts = 0
+    for attempts in range(1, MAX_ATTEMPTS + 1):
+        try:
+            with urlopen(request, timeout=20) as response:
+                raw = response.read(MAX_RESPONSE_BYTES + 1)
+            break
+        except OSError as exc:
+            last_error = exc
+            status = getattr(exc, "code", None)
+            retryable = status is None or status in RETRYABLE_HTTP_STATUS
+            if attempts >= MAX_ATTEMPTS or not retryable:
+                label = f"HTTP {status}" if status else type(exc).__name__
+                raise ClikAPIError(
+                    f"CLIK API request failed after {attempts} attempt(s) ({label})"
+                ) from exc
+            time.sleep(2 ** (attempts - 1))
+    if last_error is not None and "raw" not in locals():
+        raise ClikAPIError(
+            f"CLIK API request failed after {attempts} attempt(s)"
+        ) from last_error
     if len(raw) > MAX_RESPONSE_BYTES:
         raise ClikAPIError("CLIK API response exceeds byte limit")
     try:
