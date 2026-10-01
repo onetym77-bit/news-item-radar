@@ -1,6 +1,6 @@
 # 서울 25개 구의회 얇은 관측
 
-관측 시각: 2026-10-01T09:47:31+09:00
+관측 시각: 2026-10-01T10:57:03+09:00
 
 공식 최근목록의 첫 화면만 비교합니다. 회의일은 게시일이 아닙니다.
 첫 관측은 신규로 세지 않으며 접속 실패는 자료 0건이 아닙니다.
@@ -11,27 +11,31 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 | 구 | 수집 경로 | 목록 확인 | 관측 | 확인 범위 내 신규 | 상태 |
 |---|---|---:|---:|---:|---|
 | 강남구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 관악구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
-| 노원구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
+| 관악구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 노원구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 마포구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 성동구 | 의회 홈페이지 | - | 0 | - | UNKNOWN_COLLECTION |
-| 종로구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
+| 성동구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
+| 종로구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 중구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 용산구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
+| 용산구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 성북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 강북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 강북구 | 의회 홈페이지 | 10 | 10 | 1 | NEW_IN_VISIBLE_WINDOW |
 | 도봉구 | 의회 홈페이지 | 8 | 8 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 은평구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 서대문구 | 의회 홈페이지 | 14 | 14 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 양천구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
+| 양천구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강서구 | 의회 홈페이지 | 17 | 17 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 광진구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
-| 동대문구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
-| 중랑구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
+| 광진구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 동대문구 | 의회 홈페이지 | - | 0 | - | UNKNOWN_COLLECTION |
+| 중랑구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 구로구 | 의회 홈페이지 | 20 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 금천구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
-| 영등포구 | 의회 홈페이지 | 15 | 15 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 동작구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
-| 서초구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
-| 송파구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
+| 금천구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 영등포구 | 의회 홈페이지 | - | 0 | - | UNKNOWN_COLLECTION |
+| 동작구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 서초구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 송파구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강동구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+
+## 강북구 · NEW_IN_VISIBLE_WINDOW
+
+- 2026-09-10 · [공식 회의록](https://council.gangbuk.go.kr/viewer/minutes.do?uid=8850)
