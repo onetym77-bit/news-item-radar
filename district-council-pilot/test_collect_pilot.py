@@ -3,7 +3,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from collect_pilot import Page, select_rows, transcript, day, review_windows, identity_conflict, discover_list, window_change, canonical
+from collect_pilot import Page, select_rows, transcript, day, review_windows, identity_conflict, session_identity_match, discover_list, window_change, canonical
 SRC={"hosts":["example.gov"]}
 class PilotRegression(unittest.TestCase):
     def test_selection_keeps_unresolved_newest_row(self):
@@ -55,6 +55,21 @@ class PilotRegression(unittest.TestCase):
     def test_title_session_conflict_is_not_a_matching_record(self):
         self.assertTrue(identity_conflict("제10대 제336회", "제7대 제235회 회의록"))
         self.assertFalse(identity_conflict("제10대 제336회", "제10대 제336회 회의록"))
+    def test_matching_session_identity_can_crosscheck_missing_date(self):
+        self.assertTrue(session_identity_match("제10대 제336회", "제10대 제336회 제2차 본회의"))
+        self.assertFalse(session_identity_match("제10대 제336회", "제10대 회의록"))
+        self.assertFalse(session_identity_match("제10대 제336회", "제10대 제335회 회의록"))
+
+    def test_single_speaker_opening_ceremony_is_valid(self):
+        speech = "의사담당 강가나 지금부터 제300회 임시회 개회식을 시작하겠습니다. " + ("국민의례와 개회 선언을 진행합니다. " * 12)
+        body, parts = transcript(Page("<p>○" + speech + "</p>"))
+        self.assertTrue(body)
+        self.assertEqual(len(parts), 1)
+
+    def test_single_speaker_ordinary_page_is_not_transcript(self):
+        speech = "위원 김가나 " + ("교통 현황 자료를 확인하겠습니다. " * 15)
+        self.assertFalse(transcript(Page("<p>○" + speech + "</p>"))[0])
+
     def test_dense_generic_topics_cannot_hide_late_problem(self):
         parts=['위원 김가나 '+('시설 돌봄 교통 안전 주거를 말씀드립니다. '*45)+'돌봄 대기 증가로 주민 부담이 커지고 있습니다.']
         self.assertIn("대기 증가",review_windows(parts)[0]["passage"])
@@ -143,6 +158,7 @@ class ConnectionRegression(unittest.TestCase):
         self.assertEqual(len(sources),25)
         self.assertEqual(len({s["id"] for s in sources}),25)
         self.assertEqual({s["name"] for s in sources},set("종로구 중구 용산구 성동구 광진구 동대문구 중랑구 성북구 강북구 도봉구 노원구 은평구 서대문구 마포구 양천구 강서구 구로구 금천구 영등포구 동작구 관악구 서초구 강남구 송파구 강동구".split()))
+        self.assertEqual([s["id"] for s in sources if s.get("allow_unverified_tls_fallback")], ["seongdong"])
 
     def test_official_recent_menu_discovery(self):
         page=Page('<a href="/kr/minutes/late.do"><span>최근회의록</span></a>')

@@ -340,5 +340,34 @@ class ArchiveTests(unittest.TestCase):
         self.assertEqual(len({row["clik_assembly_id"] for row in sources}), 26)
 
 
+    def test_official_coverage_separates_body_metadata_and_dedup(self):
+        payload = {"sources": [{"id": "alpha", "expected": 2, "diagnosis": "SAMPLE_METADATA_REVIEW", "tls_fallback_used": True, "selected": [
+            {"body_ok": True, "meeting_date": "2026-09-30", "url": "https://example.com/a", "metadata_check": "MATCH"},
+            {"body_ok": True, "meeting_date": "2026-09-29", "url": "https://example.com/b", "metadata_check": "UNVERIFIED"},
+        ]}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "pilot.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            coverage = archive.official_observation_coverage(path)
+        self.assertEqual(coverage["alpha"]["bodies"], 2)
+        self.assertEqual(coverage["alpha"]["archive_eligible"], 2)
+        self.assertFalse(coverage["alpha"]["metadata_complete"])
+        self.assertTrue(coverage["alpha"]["tls_fallback_used"])
+
+    def test_status_keeps_recent_and_historical_progress_separate(self):
+        sources = [self.source()]
+        state = archive.normalize_state(None, sources, 36)
+        payload = archive.status_payload(
+            state, sources, added=[], errors=[], cutoff=date(2026, 1, 1),
+            official_added_count=1,
+            official_coverage={"alpha": {"expected": 2, "bodies": 2, "metadata_matched": 1, "archive_eligible": 2, "body_complete": True, "metadata_complete": False}},
+        )
+        self.assertEqual(payload["official_recent_bodies"], 2)
+        self.assertEqual(payload["official_recent_not_added_count"], 1)
+        self.assertEqual(payload["official_recent_body_complete_source_count"], 1)
+        self.assertEqual(payload["historical_window_complete_source_count"], 0)
+        self.assertEqual(payload["complete_source_count"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()

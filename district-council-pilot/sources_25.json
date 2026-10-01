@@ -47,7 +47,8 @@
     "hosts": [
       "sdcouncil.sd.go.kr"
     ],
-    "uid_path": "/record/main"
+    "uid_path": "/record/main",
+    "allow_unverified_tls_fallback": true
   },
   {
     "id": "jongno",

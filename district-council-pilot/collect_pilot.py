@@ -6,6 +6,7 @@ import gzip
 import hashlib
 import json
 import re
+import ssl
 import time
 from datetime import date, datetime, timedelta, timezone
 from html.parser import HTMLParser
@@ -218,11 +219,28 @@ def identity_conflict(label, title):
             return True
     return False
 
+def session_identity_match(label, title):
+    """Return true only when both assembly and session numbers agree."""
+    pairs = []
+    for pattern in (r"제?\s*(\d+)\s*대", r"제?\s*(\d+)\s*회(?!의)"):
+        left, right = re.search(pattern, label), re.search(pattern, title)
+        if not left or not right:
+            return False
+        pairs.append(left.group(1) == right.group(1))
+    return all(pairs)
+
+def valid_transcript_parts(parts, text):
+    korean = len(re.findall(r"[가-힣]", " ".join(parts)))
+    if len(parts) >= 2 and korean >= 200:
+        return True
+    ceremony = re.search(r"(?:개회식|폐회식|개식을?\s*(?:선포|시작)|폐식을?\s*(?:선포|시작))", text)
+    return len(parts) == 1 and korean >= 80 and bool(ceremony)
+
 def transcript(page):
     text = norm(" ".join(page.chunks))
     if ERROR_BODY.search(text):
         return "", []
-    if len(page.speeches) >= 2 and len(re.findall(r"[가-힣]", " ".join(page.speeches))) >= 200:
+    if valid_transcript_parts(page.speeches, text):
         return " ○ ".join(page.speeches), page.speeches
     speaker = re.compile(
         r"^(?:(?:위원장|부위원장|의장|부의장|위원|의원)\s*[가-힣]{2,5}"
@@ -240,7 +258,7 @@ def transcript(page):
         elif parts and chunk:
             parts[-1] += " ○ " + chunk
     body = " ○ ".join(parts)
-    if len(parts) < 2 or len(re.findall(r"[가-힣]", body)) < 200:
+    if not valid_transcript_parts(parts, text):
         return "", []
     return body, parts
 
@@ -288,6 +306,11 @@ class Client:
         self.logs = []
         self.stopped = False
 
+    @staticmethod
+    def _certificate_failure(exc):
+        reason = getattr(exc, "reason", exc)
+        return isinstance(reason, ssl.SSLCertVerificationError) or "CERTIFICATE_VERIFY_FAILED" in str(exc)
+
     def get(self, url, form=None):
         if not allowed(url, self.source) or self.stopped or len(self.logs) >= 10:
             return None
@@ -301,7 +324,16 @@ class Client:
             if form is not None:
                 headers["Content-Type"] = "application/x-www-form-urlencoded"
                 headers["X-Requested-With"] = "XMLHttpRequest"
-            with urlopen(Request(url, data=data, headers=headers), timeout=18) as res:
+            request = Request(url, data=data, headers=headers)
+            try:
+                response = urlopen(request, timeout=18)
+            except (URLError, OSError) as exc:
+                if self._certificate_failure(exc) and self.source.get("allow_unverified_tls_fallback") is True:
+                    result["tls_mode"] = "HOST_PINNED_COMPATIBILITY"
+                    response = urlopen(request, timeout=18, context=ssl._create_unverified_context())
+                else:
+                    raise
+            with response as res:
                 result["status"] = res.status
                 result["final_url"] = clean_diagnostic(res.url)
                 if not allowed(res.url, self.source):
@@ -327,10 +359,24 @@ class Client:
             if isinstance(exc, HTTPError):
                 result["status"] = exc.code
                 self.stopped = exc.code in {403,429}
+            elif not self._certificate_failure(exc) and not isinstance(exc, ValueError):
+                result["retryable"] = True
             return None
         finally:
             result["elapsed_ms"] = round((time.monotonic()-started)*1000)
             self.logs.append(result)
+
+def fetch_page(client, url, form=None):
+    """Retry one transient transport failure, never a block or parse failure."""
+    page = client.get(url, form=form)
+    if (
+        page is None
+        and not getattr(client, "stopped", False)
+        and getattr(client, "logs", [])
+        and client.logs[-1].get("retryable") is True
+    ):
+        return client.get(url, form=form)
+    return page
 
 def discover_list(page, base, source):
     label = source.get("discover_list_label", "최근회의록")
@@ -385,7 +431,7 @@ def load_recent_tabs(client, source):
     endpoint = urljoin(source["list_url"],"/assem/recent/LoadingList.json")
     # Exact read-only requests made by the official recent.js: temporary/main/standing/special tabs.
     for group in ("","B","S","T"):
-        page = client.get(endpoint,form={"searchMtgClssGrp":group,
+        page = fetch_page(client,endpoint,form={"searchMtgClssGrp":group,
                          "searchTmpMinYn":"Y" if not group else "",
                          "pageIndex":"1","recordCountPerPage":"5"})
         if page is None:
@@ -403,18 +449,18 @@ def load_recent_tabs(client, source):
 def run(source, as_of, count=4, include_archive_body=False):
     client = Client(source)
     listing_url = source["list_url"]
-    listing = client.get(listing_url)
+    listing = fetch_page(client, listing_url)
     fallback = source.get("list_fallback_url", listing_url)
     # A separately configured official entry page is a safe retry for transient
     # TLS reset/time-out failures. Never retry a 403/429 block or another host.
     if listing is None and fallback != listing_url and not client.stopped:
         listing_url = fallback
-        listing = client.get(listing_url)
+        listing = fetch_page(client, listing_url)
     if listing is not None and source.get("discover_list_label"):
         discovered = discover_list(listing,listing_url,source)
         if discovered:
             listing_url = discovered
-            listing = client.get(discovered)
+            listing = fetch_page(client, discovered)
     api_error = ""
     if listing is not None and source.get("recent_tabs_api"):
         try:
@@ -464,14 +510,14 @@ def run(source, as_of, count=4, include_archive_body=False):
             elif not row["url"]:
                 row["diagnosis"] = "DETAIL_LINK_UNRESOLVED"
             else:
-                page = client.get(row["url"])
+                page = fetch_page(client, row["url"])
                 if page:
                     body, parts = transcript(page)
                     # Some viewers host the transcript in a same-site frame.
                     if not body:
                         inner = detail_from([("src",u) for u in page.frames], row["url"], source)
                         if inner and inner != row["url"]:
-                            framed = client.get(inner)
+                            framed = fetch_page(client, inner)
                             if framed:
                                 body, parts = transcript(framed)
                                 page = framed
@@ -496,7 +542,14 @@ def run(source, as_of, count=4, include_archive_body=False):
                     row["date_conflict"] = any(d != row["meeting_date"] for d in dates)
                     row["date_crosschecked"] = bool(dates) and not row["date_conflict"]
                     row["identity_conflict"] = identity_conflict(row["label"],row["title"])
-                    row["metadata_check"] = "CONFLICT" if row["date_conflict"] or row["identity_conflict"] else "MATCH" if row["date_crosschecked"] else "UNVERIFIED"
+                    row["identity_crosschecked"] = session_identity_match(row["label"], row["title"])
+                    row["metadata_check"] = (
+                        "CONFLICT"
+                        if row["date_conflict"] or row["identity_conflict"]
+                        else "MATCH"
+                        if row["date_crosschecked"] or row["identity_crosschecked"]
+                        else "UNVERIFIED"
+                    )
                     if row["metadata_check"] == "CONFLICT":
                         row["diagnosis"] = "BODY_METADATA_CONFLICT"
                         row["review_windows"] = []
@@ -508,6 +561,7 @@ def run(source, as_of, count=4, include_archive_body=False):
             metadata_ok = all(r.get("metadata_check") == "MATCH" for r in selected)
             result["diagnosis"] = "SAMPLE_COMPLETE" if complete and metadata_ok else "SAMPLE_METADATA_REVIEW" if complete else "SAMPLE_INCOMPLETE"
     result["requests"] = client.logs
+    result["tls_fallback_used"] = any(row.get("tls_mode") == "HOST_PINNED_COMPATIBILITY" for row in client.logs)
     result["bodies"] = sum(r["body_ok"] for r in result["selected"])
     result["documents_with_review_windows"] = sum(bool(r["review_windows"]) for r in result["selected"])
     result["metadata_matched"] = sum(r.get("metadata_check") == "MATCH" for r in result["selected"])
