@@ -523,6 +523,12 @@ def main():
         "complete_source_count": payload["complete_source_count"],
         "error_count": payload["error_count"],
         "error_attempt_count": payload["error_attempt_count"],
+        "error_summary": payload["error_summary"],
+        "incomplete_sources": [
+            row["source_name"]
+            for row in payload["sources"]
+            if not row["complete_for_window"]
+        ],
     }, ensure_ascii=False))
     return 0
 
