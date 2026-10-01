@@ -38,6 +38,7 @@ on:
       - "district-council-pilot/clik_api.py"
       - "district-council-pilot/collect_pilot.py"
       - "district-council-pilot/sources_25.json"
+      - "agent-system-v1/SYSTEM_MANIFEST.md"
 
 permissions:
   contents: read
@@ -64,7 +65,12 @@ jobs:
           python-version: "3.12"
 
       - name: Test archive and semantic-reading safety rules
-        run: python -X utf8 -m unittest discover -s council-archive-v1 -p 'test_*.py' -v
+        run: |
+          python -X utf8 -m unittest discover -s council-archive-v1 -p 'test_*.py' -v
+          python -X utf8 -m unittest discover -s district-council-pilot -p 'test_*.py' -v
+
+      - name: Validate active discovery system
+        run: python -X utf8 agent-system-v1/validate_discovery_system.py
 
       - name: Restore archive and progress
         if: ${{ github.event_name != 'pull_request' }}
