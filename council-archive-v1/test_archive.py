@@ -252,6 +252,86 @@ class ArchiveTests(unittest.TestCase):
         retried = [errors[0], errors[0], errors[1], errors[1]]
         self.assertEqual(archive.unique_error_count(retried), 2)
 
+    def test_daily_quota_error_stops_portal_after_first_source(self):
+        sources = [
+            self.source(f"source-{index}", f"0020{index + 1:02d}")
+            for index in range(6)
+        ]
+        state = archive.normalize_state(None, sources, 36)
+        calls = []
+
+        def fake_page(source, api_key, start, count):
+            calls.append(source["id"])
+            raise archive.ClikAPIError("CLIK API returned ERROR09")
+
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(
+            archive, "list_page", fake_page
+        ):
+            root = Path(tmp)
+            _added, errors = archive.archive(
+                sources,
+                api_key="secret",
+                state=state,
+                archive_path=root / "documents.jsonl.gz",
+                new_path=root / "new.jsonl.gz",
+                cutoff=date(2026, 1, 1),
+                max_documents=6,
+                page_size=20,
+                official_dates={},
+            )
+
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(len(errors), 1)
+        self.assertIn("ERROR09", errors[0]["reason"])
+
+    def test_official_records_are_ingested_and_deduplicated(self):
+        sources = [self.source()]
+        state = archive.normalize_state(None, sources, 36)
+        record = {
+            "schema": 1,
+            "document_id": "OFFICIAL:alpha:123",
+            "source_id": "alpha",
+            "source_name": "alpha",
+            "assembly_id": "002001",
+            "meeting_date": "2026-09-30",
+            "title": "제300회 본회의",
+            "document_url": "https://example.com/record/123",
+            "official_list_url": "https://example.com/minutes",
+            "body_sha256": "body-hash",
+            "body": "공식 홈페이지 회의록 본문 " * 20,
+            "captured_at_kst": "2026-10-01T09:00:00+09:00",
+            "transport": "OFFICIAL_COUNCIL_PAGE",
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            added, errors = archive.ingest_official_records(
+                [record],
+                state=state,
+                sources=sources,
+                archive_path=root / "documents.jsonl.gz",
+                new_path=root / "new.jsonl.gz",
+                cutoff=date(2026, 1, 1),
+                max_documents=10,
+            )
+            repeated, repeated_errors = archive.ingest_official_records(
+                [record],
+                state=state,
+                sources=sources,
+                archive_path=root / "documents.jsonl.gz",
+                new_path=root / "new.jsonl.gz",
+                cutoff=date(2026, 1, 1),
+                max_documents=10,
+            )
+            with gzip.open(root / "documents.jsonl.gz", "rt", encoding="utf-8") as handle:
+                stored = [json.loads(line) for line in handle]
+
+        self.assertFalse(errors)
+        self.assertFalse(repeated_errors)
+        self.assertEqual(len(added), 1)
+        self.assertEqual(repeated, [])
+        self.assertEqual(len(stored), 1)
+        self.assertEqual(stored[0]["transport"], "OFFICIAL_COUNCIL_PAGE")
+
     def test_real_source_registry_covers_all_26_councils(self):
         sources = archive.load_sources(
             MODULE_PATH.parent.parent / "district-council-pilot" / "sources_25.json"
