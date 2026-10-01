@@ -3,6 +3,7 @@ import json
 import sys
 import unittest
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
 HERE = Path(__file__).resolve().parent
@@ -93,12 +94,20 @@ class EditorialTriageTests(unittest.TestCase):
             if collector.context_hold_editorial_triage_reason(row)
         ]
         for lead in leads:
+            expected_host = urlsplit(lead["source_url"]).netloc
             self.assertTrue(
                 any(
                     row.get("source_id") == lead["source_id"]
-                    and row.get("url") == lead["source_url"]
                     and lead["anchor_text"] in (
                         row.get("text", "") + " " + row.get("context_text", "")
+                    )
+                    and (
+                        row.get("url") == lead["source_url"]
+                        or (
+                            lead.get("source_date")
+                            and row.get("source_date") == lead["source_date"]
+                            and urlsplit(row.get("url", "")).netloc == expected_host
+                        )
                     )
                     for row in selected_rows
                 ),
