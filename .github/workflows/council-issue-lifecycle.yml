@@ -181,6 +181,12 @@ jobs:
           assert archive["all_minutes_are_read_before_issue_selection"] is True
           assert archive["silence_is_not_resolution"] is True
           assert 0 <= archive["complete_source_count"] <= 26
+          assert archive["historical_window_complete_source_count"] == archive["complete_source_count"]
+          assert 0 <= archive["official_recent_bodies"] <= archive["official_recent_expected"]
+          assert 0 <= archive["official_recent_archive_eligible"] <= archive["official_recent_expected"]
+          assert 0 <= archive["official_recent_body_complete_source_count"] <= 26
+          assert 0 <= archive["official_recent_metadata_complete_source_count"] <= 26
+          assert archive["official_recent_not_added_count"] >= 0
           assert archive["error_attempt_count"] >= archive["error_count"]
           assert analysis["schema"] == 1
           assert analysis["mode"] == "FULL_TEXT_SEMANTIC_READING"

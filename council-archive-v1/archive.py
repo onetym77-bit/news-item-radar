@@ -276,6 +276,37 @@ def official_latest_map(path):
     return result
 
 
+def official_observation_coverage(path):
+    """Summarize latest official-page coverage without conflating dedup."""
+    payload = read_json(path, {})
+    coverage = {}
+    source_rows = payload.get("sources", []) if isinstance(payload, dict) else []
+    for source in source_rows:
+        if not isinstance(source, dict):
+            continue
+        selected = [row for row in source.get("selected", []) if isinstance(row, dict)]
+        expected = int(source.get("expected") or 0)
+        bodies = sum(bool(row.get("body_ok")) for row in selected)
+        metadata = sum(row.get("metadata_check") == "MATCH" for row in selected)
+        eligible = sum(
+            bool(row.get("body_ok")) and bool(row.get("meeting_date"))
+            and bool(row.get("url")) and row.get("metadata_check") != "CONFLICT"
+            for row in selected
+        )
+        coverage[str(source.get("id") or "")] = {
+            "expected": expected,
+            "selected": len(selected),
+            "bodies": bodies,
+            "metadata_matched": metadata,
+            "archive_eligible": eligible,
+            "body_complete": expected > 0 and bodies == expected,
+            "metadata_complete": expected > 0 and metadata == expected,
+            "diagnosis": str(source.get("diagnosis") or "NO_OBSERVATION"),
+            "tls_fallback_used": bool(source.get("tls_fallback_used")),
+        }
+    return coverage
+
+
 def append_jsonl_gzip(path, rows):
     if not rows:
         return
@@ -489,8 +520,6 @@ def archive(
             break
 
     append_jsonl_gzip(archive_path, added)
-    if new_path.exists():
-        new_path.unlink()
     append_jsonl_gzip(new_path, added)
 
     for source_id, source_state in state["sources"].items():
@@ -511,14 +540,15 @@ def archive(
 
 
 def status_payload(
-    state, sources, added, errors, cutoff, official_added_count=0
+    state, sources, added, errors, cutoff, official_added_count=0, official_coverage=None,
 ):
+    official_coverage = official_coverage or {}
     rows = []
     for source in sources:
         item = state["sources"][source["id"]]
+        recent = official_coverage.get(source["id"], {})
         rows.append({
-            "source_id": source["id"],
-            "source_name": source["name"],
+            "source_id": source["id"], "source_name": source["name"],
             "assembly_id": source["clik_assembly_id"],
             "archived_count": item["archived_count"],
             "pending_count": len(item["pending"]),
@@ -528,7 +558,19 @@ def status_payload(
             "official_latest_date": item["official_latest_date"],
             "freshness": item["freshness"],
             "failed_document_count": len(item["failed_documents"]),
+            "recent_expected": int(recent.get("expected") or 0),
+            "recent_bodies": int(recent.get("bodies") or 0),
+            "recent_metadata_matched": int(recent.get("metadata_matched") or 0),
+            "recent_archive_eligible": int(recent.get("archive_eligible") or 0),
+            "recent_body_complete": bool(recent.get("body_complete")),
+            "recent_metadata_complete": bool(recent.get("metadata_complete")),
+            "recent_diagnosis": str(recent.get("diagnosis") or "NO_OBSERVATION"),
+            "tls_fallback_used": bool(recent.get("tls_fallback_used")),
         })
+    expected = sum(row["recent_expected"] for row in rows)
+    bodies = sum(row["recent_bodies"] for row in rows)
+    eligible = sum(row["recent_archive_eligible"] for row in rows)
+    historical_complete = sum(row["complete_for_window"] for row in rows)
     return {
         "schema": 1,
         "generated_at_kst": datetime.now(KST).isoformat(timespec="seconds"),
@@ -538,12 +580,15 @@ def status_payload(
         "archived_total": len(state["documents"]),
         "added_this_run": len(added),
         "official_added_this_run": official_added_count,
-        "api_status": (
-            "DAILY_QUOTA_EXHAUSTED"
-            if any("ERROR09" in row.get("reason", "") for row in errors)
-            else "AVAILABLE"
-        ),
-        "complete_source_count": sum(row["complete_for_window"] for row in rows),
+        "official_recent_expected": expected,
+        "official_recent_bodies": bodies,
+        "official_recent_archive_eligible": eligible,
+        "official_recent_body_complete_source_count": sum(row["recent_body_complete"] for row in rows),
+        "official_recent_metadata_complete_source_count": sum(row["recent_metadata_complete"] for row in rows),
+        "official_recent_not_added_count": max(0, eligible - official_added_count),
+        "api_status": "DAILY_QUOTA_EXHAUSTED" if any("ERROR09" in row.get("reason", "") for row in errors) else "AVAILABLE",
+        "historical_window_complete_source_count": historical_complete,
+        "complete_source_count": historical_complete,
         "error_count": unique_error_count(errors),
         "error_attempt_count": len(errors),
         "error_summary": error_summary(errors),
@@ -553,42 +598,42 @@ def status_payload(
         "errors": errors,
     }
 
-
 def render_status(payload):
     lines = [
-        "# 서울시·자치구의회 회의록 전량 아카이브",
-        "",
-        f"- 수집 방식: 키워드 없이 회의록 목록 전체 순회",
+        "# 서울시·자치구의회 회의록 전량 아카이브", "",
+        "- 수집 방식: 공식 의회 최신 회의록 우선, 지방의정포털로 과거 범위 보완",
         f"- 대상: {payload['source_count']}곳",
         f"- 기준일: {payload['cutoff_date']} 이후",
+        f"- 최근 공식 홈페이지 원문 확보: {payload['official_recent_bodies']}/{payload['official_recent_expected']}건",
+        f"- 최근 공식 홈페이지 아카이브 가능: {payload['official_recent_archive_eligible']}/{payload['official_recent_expected']}건",
+        f"- 최근 원문 4건 모두 확보한 의회: {payload['official_recent_body_complete_source_count']}/{payload['source_count']}곳",
+        f"- 최근 메타데이터 4건 모두 확인한 의회: {payload['official_recent_metadata_complete_source_count']}/{payload['source_count']}곳",
+        f"- 공식 원문 중 기존 저장·중복·상한으로 새로 추가하지 않은 건: {payload['official_recent_not_added_count']}건",
         f"- 누적 아카이브: {payload['archived_total']}건",
         f"- 이번 실행 추가: {payload['added_this_run']}건",
-        f"- 공식 홈페이지에서 추가: {payload['official_added_this_run']}건",
+        f"- 공식 홈페이지에서 새로 추가: {payload['official_added_this_run']}건",
         f"- 지방의정포털 API 상태: {payload['api_status']}",
-        f"- 범위 완료: {payload['complete_source_count']}/{payload['source_count']}곳",
+        f"- 과거 범위 순회 완료: {payload['historical_window_complete_source_count']}/{payload['source_count']}곳",
         f"- 오류 사안: {payload['error_count']}건 (0건으로 해석하지 않음)",
         f"- 재시도 포함 오류 발생: {payload['error_attempt_count']}회",
     ]
     for row in payload["error_summary"]:
-        lines.append(
-            f"  - {row['stage']} · {row['reason'] or row['error_type']}: "
-            f"{row['count']}건 / {row['source_count']}개 소스"
-        )
+        lines.append(f"  - {row['stage']} · {row['reason'] or row['error_type']}: {row['count']}건 / {row['source_count']}개 소스")
     lines.extend([
         "",
-        "> 지방의정포털은 역사 자료의 공통 색인으로 사용합니다. "
-        "공식 의회 페이지가 더 최신이면 해당 의회는 기존 공식 경로를 우선합니다.",
+        "> 최근 공식 홈페이지 수집률과 과거 아카이브 완성률은 서로 다른 지표입니다. 새로 추가된 건수도 원문 확보 건수와 같지 않습니다.",
         "",
-        "| 의회 | 누적 | 대기 | 범위 완료 | 최신성 판정 |",
-        "|---|---:|---:|---|---|",
+        "| 의회 | 최근 원문 | 최근 메타 | 호환 TLS | 과거 누적 | 과거 범위 |",
+        "|---|---:|---:|---|---:|---|",
     ])
     for row in payload["sources"]:
         lines.append(
-            f"| {row['source_name']} | {row['archived_count']} | {row['pending_count']} | "
-            f"{'완료' if row['complete_for_window'] else '진행 중'} | {row['freshness']} |"
+            f"| {row['source_name']} | {row['recent_bodies']}/{row['recent_expected']} | "
+            f"{row['recent_metadata_matched']}/{row['recent_expected']} | "
+            f"{'사용' if row['tls_fallback_used'] else '-'} | {row['archived_count']} | "
+            f"{'완료' if row['complete_for_window'] else '진행 중'} |"
         )
     return "\n".join(lines) + "\n"
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -613,28 +658,32 @@ def main():
     state = normalize_state(read_json(state_path), sources, args.lookback_months)
     cutoff = datetime.now(KST).date() - timedelta(days=args.lookback_months * 31)
 
-    added, errors = archive(
-        sources,
-        api_key=api_key,
-        state=state,
-        archive_path=args.runtime / "documents.jsonl.gz",
-        new_path=args.output / "new_documents.jsonl.gz",
-        cutoff=cutoff,
-        max_documents=args.max_documents,
-        page_size=args.page_size,
-        official_dates=official_latest_map(args.official_observation),
-    )
+    archive_path = args.runtime / "documents.jsonl.gz"
+    new_path = args.output / "new_documents.jsonl.gz"
+    if new_path.exists():
+        new_path.unlink()
     official_added, official_errors = ingest_official_records(
         read_jsonl_gzip(args.official_documents),
         state=state,
         sources=sources,
-        archive_path=args.runtime / "documents.jsonl.gz",
-        new_path=args.output / "new_documents.jsonl.gz",
+        archive_path=archive_path,
+        new_path=new_path,
         cutoff=cutoff,
-        max_documents=max(0, args.max_documents - len(added)),
+        max_documents=args.max_documents,
     )
-    added.extend(official_added)
-    errors.extend(official_errors)
+    portal_added, portal_errors = archive(
+        sources,
+        api_key=api_key,
+        state=state,
+        archive_path=archive_path,
+        new_path=new_path,
+        cutoff=cutoff,
+        max_documents=max(0, args.max_documents - len(official_added)),
+        page_size=args.page_size,
+        official_dates=official_latest_map(args.official_observation),
+    )
+    added = official_added + portal_added
+    errors = official_errors + portal_errors
     write_json(state_path, state)
     payload = status_payload(
         state,
@@ -643,6 +692,7 @@ def main():
         errors,
         cutoff,
         official_added_count=len(official_added),
+        official_coverage=official_observation_coverage(args.official_observation),
     )
     write_json(args.output / "status_latest.json", payload)
     (args.output / "SUMMARY.md").write_text(render_status(payload), encoding="utf-8")
@@ -654,6 +704,10 @@ def main():
         "added_this_run": payload["added_this_run"],
         "official_added_this_run": payload["official_added_this_run"],
         "api_status": payload["api_status"],
+        "official_recent_bodies": payload["official_recent_bodies"],
+        "official_recent_expected": payload["official_recent_expected"],
+        "official_recent_body_complete_source_count": payload["official_recent_body_complete_source_count"],
+        "historical_window_complete_source_count": payload["historical_window_complete_source_count"],
         "complete_source_count": payload["complete_source_count"],
         "error_count": payload["error_count"],
         "error_attempt_count": payload["error_attempt_count"],
