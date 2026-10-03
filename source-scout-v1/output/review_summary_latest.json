@@ -1,17 +1,26 @@
 {
   "period": {
-    "start": "2026-09-26",
-    "end": "2026-10-02",
+    "start": "2026-09-27",
+    "end": "2026-10-03",
     "days": 7
   },
-  "generated": 0,
+  "generated": 1,
   "labeled": 0,
-  "coverage": null,
+  "coverage": 0.0,
   "promising": 0,
   "useful": 0,
   "precision": null,
   "useful_rate": null,
-  "by_source": {},
+  "by_source": {
+    "labor_arrears": {
+      "generated": 1,
+      "labeled": 0,
+      "promising": 0,
+      "useful": 0,
+      "precision": null,
+      "useful_rate": null
+    }
+  },
   "labels": {
     "PROMISING": "새 질문과 4시간 검증 경로가 모두 있는 강한 씨앗",
     "VERIFY": "즉시 기사는 아니지만 추가 확인 가치가 있는 씨앗",
