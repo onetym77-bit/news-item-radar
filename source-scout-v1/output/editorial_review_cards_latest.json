@@ -36,7 +36,7 @@
       "verification_axes": "자치구, 업종, 사업장 규모, 해결률",
       "editor_judgment": "PENDING",
       "transition_state": "미승인",
-      "active_today": true,
+      "active_today": false,
       "review_eligible": true
     }
   ],
