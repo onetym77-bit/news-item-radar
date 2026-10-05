@@ -1,22 +1,22 @@
 {
   "schema": 1,
-  "generated_at_kst": "2026-10-01T15:27:07+09:00",
+  "generated_at_kst": "2026-10-05T13:11:21+09:00",
   "mode": "FULL_TEXT_SEMANTIC_READING",
-  "document_count": 209,
-  "completed_document_count": 27,
+  "document_count": 313,
+  "completed_document_count": 28,
   "model_call_count": 12,
   "chunk_model_call_count": 11,
   "consolidation_model_call_count": 1,
   "consolidation_status": "SUCCEEDED",
-  "consolidation_input_count": 200,
-  "consolidation_group_count": 141,
+  "consolidation_input_count": 216,
+  "consolidation_group_count": 139,
   "consolidation_error_type": "",
   "consolidation_error_reason": "",
-  "new_candidate_count": 14,
-  "candidate_total": 200,
-  "review_candidate_count": 141,
-  "duplicate_collapsed_count": 59,
-  "error_count": 7,
+  "new_candidate_count": 17,
+  "candidate_total": 217,
+  "review_candidate_count": 139,
+  "duplicate_collapsed_count": 78,
+  "error_count": 6,
   "selection_boundary": "이 결과는 의미 구조를 추출한 검토 단서이며 기사 후보 확정이 아니다. 반복성·다른 자치구 비교·현장 취재 가능성은 다음 통합 단계에서 판정한다.",
   "review_candidates": [
     {
@@ -41,16 +41,16 @@
       "broadcast_potential": 10,
       "why_not_routine": "사망사고가 이미 발생했고, 대규모 공공 용역비·법령상 예외·민간업체 감독이 한 구조 안에 있어 현장 취재와 계약·비교 검증이 가능하다.",
       "unknowns": [
+        "사망사고의 구체적 경위와 책임 소재",
+        "사고 당시 작업 인원·차량·안전장비의 실제 운용 상태",
+        "1인 작업이 시행된 구역과 기간, 2인 1조 전환 완료 여부",
+        "연 2회 정기점검에서 어떤 위반이 확인됐고 어떤 처분이 내려졌는지",
         "사고 당시 실제 인력 배치와 작업 절차",
         "종로구 2026년 위험성 평가 결과와 공개 여부",
         "고위험 노선별 2인 1조 운영 현황",
         "대행업체 계약조건과 안전 관련 원가 반영 여부",
         "사고 당시 실제 작업 인원과 차량 운행·정차 상황",
-        "종로구 전체 수거 노선별 1인 작업 비율과 급경사·협소도로 현황",
-        "2024년 지적 이후 구청과 대행업체가 시행한 개선 조치",
-        "현재 진행 중인 위험성평가의 결과와 공개 여부",
-        "사망사고의 정확한 발생 경위와 산업재해 조사 결과",
-        "작업 당시 차량·인력 배치와 안전 통제 방식"
+        "종로구 전체 수거 노선별 1인 작업 비율과 급경사·협소도로 현황"
       ],
       "review_status": "UNREVIEWED",
       "related_evidence_count": 8,
@@ -59,6 +59,14 @@
         "종로구"
       ],
       "supporting_anchors": [
+        {
+          "document_id": "CLIKC3015916453536194",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
+          "anchor_quote": "이번 사고는 법령상 예외가 허용되는 작업이라 하더라도 안전에 취약한 작업 방식은 없는지 다시 한번 꼼꼼히 살펴보도록 하겠습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
         {
           "document_id": "CLIKC2972716603643697",
           "source_name": "종로구",
@@ -82,14 +90,6 @@
           "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
           "anchor_quote": "지난 8월 7일 창신동에서 생활폐기물 수집 운반 대행업체 작업자가 작업 중 차량에 치여 사망하는 안타까운 사고가 발생했습니다.",
           "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "CLIKC3015916453536194",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
-          "anchor_quote": "이번 사고는 법령상 예외가 허용되는 작업이라 하더라도 안전에 취약한 작업 방식은 없는지 다시 한번 꼼꼼히 살펴보도록 하겠습니다.",
-          "evidence_status": "OFFICIAL_FINDING"
         },
         {
           "document_id": "CLIKC2972716603643697",
@@ -124,74 +124,7 @@
           "evidence_status": "OBSERVED_OUTCOME"
         }
       ],
-      "consolidation_reason": "창신동 생활폐기물 수거에서 급경사·협소도로·야간작업과 1인 작업, 대행업체 관리 및 용역 원가가 결합해 노동자 사망사고와 재발 위험을 낳았다는 동일한 시민 안전 문제를 다룬다."
-    },
-    {
-      "candidate_id": "8725cab0c655427ea139",
-      "document_id": "CLIKC3007276402988407",
-      "source_id": "jongno",
-      "source_name": "종로구",
-      "meeting_date": "2026-09-16",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
-      "chunk_number": 2,
-      "signal_type": "RIGHTS_GAP",
-      "headline": "환경미화원 사망사고 현장정보가 정당별로 다르게 전달됐다면 의회의 안전감시권이 흔들린다",
-      "subject": "종로구청 주관 환경미화원 작업안전 현장방문의 의회 의원 대상 안내 및 참여 절차",
-      "affected_group": "종로구의회 의원과 이를 통해 행정을 감시해야 하는 종로구 주민, 사고 관련 노동자",
-      "mechanism": "구청 직원이 사고 경위와 업무 현황을 공식 보고한 현장방문에 특정 정당 소속 인사와 의원만 참여했고, 다른 의원들은 사후 보도자료로 알게 됐다는 주장이 제기됐다. 이 경우 안전사고에 대한 의회의 공동 감시와 주민 대표성에 정보 격차가 생긴다.",
-      "civic_importance": "안전사고 현장은 정당 행사가 아니라 공적 행정과 감독의 대상이다. 사고 대응 정보의 제공 기준이 불명확하면 집행부가 의회와 주민에게 어떤 정보를 언제 공개할지 임의로 정할 위험이 있다.",
-      "anchor_quote": "국민의힘 소속 종로구의원은 현장방문에 대해 추후 보도자료를 통해 알게 되었습니다.",
-      "evidence_status": "ALLEGATION",
-      "public_question": "종로구청은 안전사고 현장방문 정보를 어떤 기준으로 누구에게 안내했으며, 앞으로 모든 구의원이 같은 자료와 현장 접근 기회를 보장받을 수 있는가?",
-      "counterintuitive_question": "정당 간 형평성 논란의 핵심이 초청 명단이 아니라, 구청이 민간 대행업체의 안전자료와 사고 경위를 의회 전체에 공개하지 않는 구조에 있는 것은 아닌가?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 76,
-      "why_not_routine": "단순한 정당 간 공방이 아니라 중대 사고의 행정정보 공개와 지방의회의 안전감독 권한 문제다. 안내 기록 확보, 현장 관계자 인터뷰, 서울 자치구의 사고 대응·의회 보고 절차 비교가 가능하다.",
-      "unknowns": [
-        "현장방문 초청·안내 대상과 실제 발송 기록",
-        "현장방문이 행정 공식 행사로 사전 계획됐는지 여부",
-        "참석자 선정과 안내를 결정한 부서·책임자",
-        "종로구에 재난·안전 현안 관련 의회 전체 안내 기준이 있는지 여부",
-        "현장방문 참석 대상과 안내 경로, 안내 시점은 무엇이었는가",
-        "종로구가 특정 정당 소속 의원에게만 별도로 안내했는가",
-        "사망사고의 정확한 경위와 작업안전 관리방안의 구체적 내용은 무엇인가",
-        "서울 자치구의 사고·재난 현장 의회 보고 및 의원 통보 기준이 있는가",
-        "현장방문 참석자와 초청·안내 대상의 공식 명단",
-        "종로구청이 사전 안내를 하지 않은 이유와 당시 내부 결정 과정"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 3,
-      "related_document_count": 3,
-      "related_sources": [
-        "종로구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3007276402988407",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
-          "anchor_quote": "국민의힘 소속 종로구의원은 현장방문에 대해 추후 보도자료를 통해 알게 되었습니다.",
-          "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "CLIKC3015916453536194",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
-          "anchor_quote": "이번 현장방문에 대해 종로구의회 의원 전체에게 동일하게 안내되었어야 합니다.",
-          "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "CLIKC2972716603643697",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
-          "anchor_quote": "행정기관이 의원의 소속 정당에 따라 현장 정보를 선택적으로 제공한다면 과연 주민의 대표기관인 의회와 제대로 소통하고 있다고 할 수 있겠습니까?",
-          "evidence_status": "ALLEGATION"
-        }
-      ],
-      "consolidation_reason": "환경미화원 사망사고 관련 현장방문·업무보고 정보가 일부 의원에게만 전달돼 의회의 공동 감시권이 약화됐다는 동일한 절차·정보 공개 문제다."
+      "consolidation_reason": "창신동 등 경사지·협소 골목의 생활폐기물 수거에서 1인 작업과 차량 동선·대행계약 관리가 노동자 사망사고로 이어진 동일 사안이다."
     },
     {
       "candidate_id": "fa3bb31ce64d65f16985",
@@ -215,24 +148,40 @@
       "broadcast_potential": 8,
       "why_not_routine": "단순한 하천 공사 일정이 아니라 침수 피해 이후 원인 규명, 수문 관리 책임, 문화유산 훼손 가능성, 추가 공사와 예산 투입의 타당성이 한 사안에 얽혀 있다. 수문 작동 기록·공사 자료·현장 수위 및 배수 구조를 비교하면 6~7분 리포트로 검증할 수 있고, 다른 복개하천의 수문 관리 실태로 확장할 수 있다.",
       "unknowns": [
+        "수문이 열리지 않은 정확한 날짜와 집중호우 당시 작동·점검 기록",
+        "해당 수문의 관리 주체, 원격·수동 개폐 방식과 비상 대응 절차",
+        "암반 제거 또는 관련 공사의 위치·시기·허가 근거와 공사 전후 수리·수위 분석",
+        "문화유산의 종류와 훼손 범위, 복구 또는 보존 대책의 존재 여부",
+        "훼손됐다는 문화유산의 구체적 대상과 법적 지정 여부",
+        "암반 제거·지형 변경의 규모와 공사 전후 현장 상태",
+        "문화재·문화유산 관련 사전 조사와 심의·허가 여부",
+        "훼손 복구 계획과 비용 부담 주체",
         "수문이 열리지 않은 정확한 일시와 기상·수위 조건",
-        "수문 고장인지, 수동 조작·관리상의 문제인지",
-        "수문 점검·시험 작동 기록과 책임 부서",
-        "암반 제거 또는 지형 변경이 침수 저감에 실제로 어떤 효과를 냈는지",
-        "암반 제거 전후 통수능력과 수위 변화에 대한 정량적 수리 분석",
-        "침수 당시 도로 배수, 맨홀 뚜껑 개방, 복개천 수문 작동 여부",
-        "자문에 참여한 전문가 수와 자문서의 구체적인 결론",
-        "시간당 강우량이 다른 두 시점의 수위 비교가 암반 제거 효과를 입증할 수 있는지 여부",
-        "암반 제거 전후의 수리모형·통수능력 수치",
-        "도로 배수 실패와 하천 범람의 상대적 기여도"
+        "수문 고장인지, 수동 조작·관리상의 문제인지"
       ],
       "review_status": "UNREVIEWED",
-      "related_evidence_count": 4,
+      "related_evidence_count": 5,
       "related_document_count": 2,
       "related_sources": [
         "종로구"
       ],
       "supporting_anchors": [
+        {
+          "document_id": "CLIKC2972716603643697",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
+          "anchor_quote": "그런데 그 당시 열리지를 않았어요.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "CLIKC3015916453536194",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
+          "anchor_quote": "문화유산을 다 훼손시키고 그랬기 때문에…….",
+          "evidence_status": "ALLEGATION"
+        },
         {
           "document_id": "CLIKC3015916453536194",
           "source_name": "종로구",
@@ -256,17 +205,9 @@
           "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
           "anchor_quote": "하상암반만이 침수 원인이라고 단정할 수는 없지만",
           "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "CLIKC2972716603643697",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
-          "anchor_quote": "그런데 그 당시 열리지를 않았어요.",
-          "evidence_status": "ALLEGATION"
         }
       ],
-      "consolidation_reason": "홍제천 침수 원인을 하상암반으로 단정해 공사를 추진하기 전에 수문 미작동과 도로 배수 문제를 검증했는지, 그 결과에 따라 방재공사를 선택했는지를 묻는 동일 사안이다."
+      "consolidation_reason": "홍제천 침수 대응에서 수문 미작동·도로 배수와 하상암반 제거의 원인 검증 및 문화유산 훼손 책임을 다룬 같은 공사·침수 사안이다."
     },
     {
       "candidate_id": "69289a5bcb232f9b78a2",
@@ -333,40 +274,40 @@
           "evidence_status": "OBSERVED_OUTCOME"
         }
       ],
-      "consolidation_reason": "복지급여 신청 뒤 연락이 끊긴 1인 가구를 위험가구로 재평가하고 보건·의료·치안 지원으로 연결하지 못한 사후관리 공백이라는 동일한 시민 문제다."
+      "consolidation_reason": "복지 신청 뒤 연락이 끊긴 1인 가구를 위험가구로 재평가하고 보건·의료 등 지원으로 연결하지 못한 동일한 안전망 공백이다."
     },
     {
-      "candidate_id": "26c212ab182132bf7713",
-      "document_id": "CLIKC3007276402988407",
+      "candidate_id": "320b81c9d86966642d6d",
+      "document_id": "CLIKC3015916453536194",
       "source_id": "jongno",
       "source_name": "종로구",
       "meeting_date": "2026-09-16",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
       "chunk_number": 1,
       "signal_type": "SERVICE_GAP",
-      "headline": "시설관리공단의 17명 결원이 공공 체육·주차시설의 서비스와 안전 필수인력 공백으로 번질 수 있다",
-      "subject": "종로구시설관리공단의 인력 충원 중단 및 필수인력 운영",
-      "affected_group": "공단 관리시설 이용 주민, 현장 노동자, 시설 이용 취약계층",
-      "mechanism": "기록물·회계·노무 같은 내부통제 인력과 수영지도·주차관리 등 현장 인력이 부족한 상태가 장기화되면 업무 지연, 관리 부실, 안전 대응력 저하가 발생할 수 있음",
-      "civic_importance": "의원이 제시한 공단 자료상 정규직·임기제·기간제 등을 합쳐 17명이 부족하고, 공단이 충원을 요청했지만 구청의 명확한 답변이 없다고 주장함",
-      "anchor_quote": "공단 인력 충원이 시급합니다.",
+      "headline": "시설관리공단의 필수 인력 17명 공백이 공공 체육·문화·주차시설의 서비스와 안전을 동시에 위협한다",
+      "subject": "종로구시설관리공단 결원 인력과 구청의 채용 중단·재개 결정",
+      "affected_group": "공공 체육·문화·주차시설 이용 주민, 현장 노동자, 시설관리공단 직원",
+      "mechanism": "기록물·회계·노무·수영지도·주차관리 등 직무의 결원이 장기화되면서 내부통제와 현장 운영 부담이 커지고, 감사 업무까지 겹쳐 서비스 품질과 안전 대응 여력이 떨어질 수 있음",
+      "civic_importance": "공단이 관리하는 시설은 주민 일상에 직접 연결돼 있으며, 결원 충원 여부는 구청의 인력·예산 결정에 달려 있다. 단순 채용 문제가 아니라 안전 필수인력의 공공서비스 유지 문제다.",
+      "anchor_quote": "공단이 제출한 자료에 따르면 8월 31일 기준 정규직 4명, 전문임기제 1명, 기간제계약직 11명, 시간제계약직 1명 총 17명이 부족한 상황입니다.",
       "evidence_status": "ALLEGATION",
-      "public_question": "종로구가 공단의 결원 충원을 미룬 기간 동안 주민들이 이용하는 체육·문화·주차시설의 안전과 서비스 수준에 어떤 변화가 있었는가?",
-      "counterintuitive_question": "인건비를 아끼기 위한 채용 보류가 실제로는 기간제 의존, 업무 과부하, 안전사고 위험 증가로 더 큰 공공비용을 만드는 것은 아닌가?",
-      "scope_hint": "CITYWIDE",
-      "broadcast_potential": 88,
-      "why_not_routine": "결원 숫자가 공공시설 이용과 안전에 직접 연결되는 사안이며, 채용 중단 결정의 책임 주체와 실제 현장 영향을 자료·현장 취재로 검증할 수 있음",
+      "public_question": "어떤 시설에서 어떤 업무가 몇 달째 비어 있으며, 주민 서비스와 안전에 실제로 어떤 변화가 생겼는가?",
+      "counterintuitive_question": "전체 정원을 늘리는 문제가 아니라, 이용률이 낮은 시설의 인력을 재배치하거나 민간위탁하는 것이 안전·서비스 측면에서 더 나은지 검토됐는가?",
+      "scope_hint": "UNKNOWN",
+      "broadcast_potential": 8,
+      "why_not_routine": "결원 숫자 자체보다 수영지도·주차관리 같은 안전 접점과 회계·기록관리 같은 통제 기능이 동시에 비어 있다는 점에서 주민 서비스와 공공기관 책임을 함께 취재할 수 있다.",
       "unknowns": [
+        "17명 결원의 직무별 현황과 공석 기간",
+        "시설별 이용객 수, 운영 축소·대체인력 투입 여부",
+        "사고·민원·대기시간 등 결원으로 인한 실제 서비스 변화",
+        "구청이 채용을 중단한 사유와 법정·안전 필수인력 충원 기준",
         "17개 결원의 직종별·시설별 세부 현황과 실제 충원 승인 여부",
         "법정 필수인력·안전 필수인력의 기준 및 현재 미충족 여부",
         "결원으로 인한 휴관·운영시간 단축·안전점검 지연 등 실제 서비스 영향",
         "구청이 채용을 중단한 사유와 감사 기간 중 업무 재배치 현황",
         "17개 결원의 직종별·시설별 현황",
-        "수영장 안전인력 등 법정·안전 필수인력의 실제 배치율",
-        "결원으로 인한 휴관·운영시간 축소·사고·민원 발생 여부",
-        "구청이 채용을 중단한 사유와 충원 결정 일정",
-        "17명 결원의 직무별 현황과 공석 기간",
-        "시설별 이용객 수, 운영 축소·대체인력 투입 여부"
+        "수영장 안전인력 등 법정·안전 필수인력의 실제 배치율"
       ],
       "review_status": "UNREVIEWED",
       "related_evidence_count": 3,
@@ -375,6 +316,14 @@
         "종로구"
       ],
       "supporting_anchors": [
+        {
+          "document_id": "CLIKC3015916453536194",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
+          "anchor_quote": "공단이 제출한 자료에 따르면 8월 31일 기준 정규직 4명, 전문임기제 1명, 기간제계약직 11명, 시간제계약직 1명 총 17명이 부족한 상황입니다.",
+          "evidence_status": "ALLEGATION"
+        },
         {
           "document_id": "CLIKC3007276402988407",
           "source_name": "종로구",
@@ -390,17 +339,84 @@
           "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
           "anchor_quote": "공단의 인력은 구민의 일상을 지켜주는 인력입니다.",
           "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "CLIKC3015916453536194",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
-          "anchor_quote": "공단이 제출한 자료에 따르면 8월 31일 기준 정규직 4명, 전문임기제 1명, 기간제계약직 11명, 시간제계약직 1명 총 17명이 부족한 상황입니다.",
-          "evidence_status": "ALLEGATION"
         }
       ],
-      "consolidation_reason": "종로구시설관리공단의 17명 결원으로 내부통제와 체육·문화·주차시설 현장 운영 및 안전 필수인력이 부족해졌다는 동일 사안이다."
+      "consolidation_reason": "종로구시설관리공단의 17명 결원으로 내부통제와 체육·주차시설 현장 안전·서비스 인력이 부족하다는 동일 사안이다."
+    },
+    {
+      "candidate_id": "f956a3f86d6a80088c48",
+      "document_id": "OFFICIAL:geumcheon:f33775932e068ca95e03f6bf",
+      "source_id": "geumcheon",
+      "source_name": "금천구",
+      "meeting_date": "2026-09-18",
+      "document_url": "https://council.geumcheon.go.kr/council/viewer/minutes/2956.do",
+      "chunk_number": 2,
+      "signal_type": "RIGHTS_GAP",
+      "headline": "기준 이내라는 설명은 있지만, 주민이 직접 확인하고 초과 시 개선을 요구할 사후관리 권한은 비어 있어",
+      "subject": "데이터센터의 전자파·소음·진동 상시 측정과 정보 공개, 기준 초과 시 조치",
+      "affected_group": "기존·신규 데이터센터 인근 주민과 아파트 입주자",
+      "mechanism": "구청은 허가 당시 기준 이하였고 시뮬레이션 결과도 기준보다 낮다고 설명하지만, 실제 가동 뒤 상시 측정과 주민 공개, 이상 감지, 기준 초과 시 가동 조정·시설 개선을 강제할 사후관리 체계는 확립되지 않았다고 인정함.",
+      "civic_importance": "시뮬레이션과 허가 기준만으로는 실제 가동 환경을 확인할 수 없다. 주민 건강·주거환경·재산 가치에 영향을 줄 수 있는 정보를 누가 측정하고, 어떤 기준으로 공개하며, 문제가 생기면 누가 책임지는지가 핵심이다.",
+      "anchor_quote": "사후 관리체계가 확립되어 있다고 보기 어렵고요.",
+      "evidence_status": "OFFICIAL_FINDING",
+      "public_question": "데이터센터가 24시간 가동된 뒤 주민이 측정 결과를 언제, 어디서 확인할 수 있으며 기준을 넘으면 누가 어떤 기한 안에 가동 조정이나 시설 개선을 명령하는가?",
+      "counterintuitive_question": "주민 불안의 원인이 수치 자체가 아니라 수치를 사업자와 행정기관만 검증하는 구조와 사후 조치 권한의 부재에 있는 것은 아닌가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 9,
+      "why_not_routine": "전자파 공포를 단순 찬반으로 다루는 것이 아니라, 실제 측정·공개·제재가 가능한지라는 검증 가능한 행정 공백을 다룬다.",
+      "unknowns": [
+        "현재 가동 중인 데이터센터 네 곳의 실제 측정 주기와 측정 위치",
+        "측정 주체의 독립성 및 원자료 공개 여부",
+        "전자파·소음·진동 기준 초과 시 법적·행정적 조치 기준",
+        "주민이 재측정이나 제3기관 검증을 요구할 수 있는 절차와 비용 부담",
+        "기존 데이터센터별 실제 상시 측정 여부와 측정 주체",
+        "측정값의 공개 주기·방법·원자료 공개 여부",
+        "기준 초과 또는 주민 민원 발생 시 가동 조정 권한과 법적 근거",
+        "공사 완료 후 시험가동 단계에서의 독립적인 재측정 계획",
+        "금천구 내 데이터센터의 정확한 위치·규모·전력 사용량과 추가 인허가 현황",
+        "전자파·소음·진동·열섬의 실제 측정 주체, 주기, 측정 지점과 공개 여부"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 4,
+      "related_document_count": 2,
+      "related_sources": [
+        "금천구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "OFFICIAL:geumcheon:f33775932e068ca95e03f6bf",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://council.geumcheon.go.kr/council/viewer/minutes/2956.do",
+          "anchor_quote": "사후 관리체계가 확립되어 있다고 보기 어렵고요.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3015737803886787",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
+          "anchor_quote": "사후 관리체계가 확립되어 있다고 보기 어렵고요.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "OFFICIAL:geumcheon:f33775932e068ca95e03f6bf",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://council.geumcheon.go.kr/council/viewer/minutes/2956.do",
+          "anchor_quote": "현재도 그 범위 이내로 관리되고 있는 것으로 파악하고 있습니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "CLIKC3015737803886787",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
+          "anchor_quote": "현재도 그 범위 이내로 관리되고 있는 것으로 파악하고 있습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        }
+      ],
+      "consolidation_reason": "금천구 데이터센터의 실제 가동 후 전자파·소음·진동·열 등의 상시 측정, 주민 공개, 기준 초과 시 조치가 마련되지 않은 동일한 사후관리 공백이다."
     },
     {
       "candidate_id": "e8d4362a3ee3f0ddb762",
@@ -457,74 +473,7 @@
           "evidence_status": "ALLEGATION"
         }
       ],
-      "consolidation_reason": "실제 보험금 지급 실적이 있는 금천구 군복무 청년 상해보험이 중앙정부 대체사업 확정 전에 중단돼 보장 공백이 생겼다는 동일한 문제다."
-    },
-    {
-      "candidate_id": "8fd71fbad88c20c13bbd",
-      "document_id": "OFFICIAL:geumcheon:f33775932e068ca95e03f6bf",
-      "source_id": "geumcheon",
-      "source_name": "금천구",
-      "meeting_date": "2026-09-18",
-      "document_url": "https://council.geumcheon.go.kr/council/viewer/minutes/2956.do",
-      "chunk_number": 1,
-      "signal_type": "SAFETY_RISK",
-      "headline": "데이터센터 집중 지역에서 주민 우려는 커지는데 사후 환경·건강 감시 체계는 불투명하다",
-      "subject": "금천구 데이터센터의 입지 확대와 주민 안전·환경 관리",
-      "affected_group": "데이터센터 인근 주민, 특히 어린 자녀를 둔 가구와 신규 입지 주변 생활권",
-      "mechanism": "금천구에는 정식 분류 기준으로 4개 데이터센터가 있고, 의원 제시 자료상 사용승인 4개·공사 중 1개·허가접수 3개로 추가 확대 가능성이 제기됐다. 주민들은 전자파·소음·진동·열섬과 건강·재산 가치 영향을 우려하고 있으나, 기존 시설의 상시 측정 및 공개 방식은 회의록에서 구체적으로 확인되지 않는다.",
-      "civic_importance": "디지털 산업시설 확대와 주민의 건강·주거권이 충돌할 수 있는 사안이다. 법정 허가 기준 충족만으로 장기적인 건강 우려와 생활환경 변화가 해소되는지, 주민이 측정 결과를 독립적으로 확인할 수 있는지가 핵심이다.",
-      "anchor_quote": "현재도 그 범위 이내로 관리되고 있는 것으로 파악하고 있습니다.",
-      "evidence_status": "ALLEGATION",
-      "public_question": "데이터센터가 늘어나는 동안 주민들은 어떤 항목을 누가 얼마나 자주 측정한 결과로 안전성을 확인할 수 있는가?",
-      "counterintuitive_question": "법정 기준 이하라는 판정이 실제 생활권의 누적 소음·열·전자파와 장기 건강 우려까지 설명할 수 있는가? 데이터센터가 밀집한 지역일수록 개별 시설 기준이 아닌 누적 영향 평가가 필요한 것은 아닌가?",
-      "scope_hint": "CITYWIDE",
-      "broadcast_potential": 9,
-      "why_not_routine": "금천구가 서울 내 데이터센터 집중 지역으로 제시됐고, 산업 유치의 편익과 주민 생활환경·건강권 사이의 책임 기준을 현장 및 타 지역 비교로 확장할 수 있다.",
-      "unknowns": [
-        "기존 데이터센터별 실제 상시 측정 여부와 측정 주체",
-        "측정값의 공개 주기·방법·원자료 공개 여부",
-        "기준 초과 또는 주민 민원 발생 시 가동 조정 권한과 법적 근거",
-        "공사 완료 후 시험가동 단계에서의 독립적인 재측정 계획",
-        "금천구 내 데이터센터의 정확한 위치·규모·전력 사용량과 추가 인허가 현황",
-        "전자파·소음·진동·열섬의 실제 측정 주체, 주기, 측정 지점과 공개 여부",
-        "허가 당시 예측치와 준공 후 실제 수치의 차이",
-        "주민 건강 영향에 대한 국내외 연구와 민원·분쟁 처리 결과",
-        "금천구 4개와 의원이 제시한 8개의 집계 기준·시설 목록 차이",
-        "각 시설의 실제 전자파·소음·진동·열섬 측정 주체와 측정 주기"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 3,
-      "related_document_count": 2,
-      "related_sources": [
-        "금천구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3015737803886787",
-          "source_name": "금천구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
-          "anchor_quote": "사후 관리체계가 확립되어 있다고 보기 어렵고요.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "OFFICIAL:geumcheon:f33775932e068ca95e03f6bf",
-          "source_name": "금천구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://council.geumcheon.go.kr/council/viewer/minutes/2956.do",
-          "anchor_quote": "현재도 그 범위 이내로 관리되고 있는 것으로 파악하고 있습니다.",
-          "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "CLIKC3015737803886787",
-          "source_name": "금천구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
-          "anchor_quote": "현재도 그 범위 이내로 관리되고 있는 것으로 파악하고 있습니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        }
-      ],
-      "consolidation_reason": "금천구 데이터센터의 전자파·소음·진동·열섬 등에 대해 가동 이후 상시 측정·공개·이상 징후 대응 체계가 부족하다는 동일한 환경·건강 감시 문제다."
+      "consolidation_reason": "정부 대체사업이 확정되기 전에 금천구 군복무 청년 상해보험을 중단해 보장 공백이 생긴 동일 사안이다."
     },
     {
       "candidate_id": "78fb7883606a75c81889",
@@ -581,7 +530,90 @@
           "evidence_status": "ALLEGATION"
         }
       ],
-      "consolidation_reason": "도로굴착 뒤 원인자 복구 방식에 의존하면서 현장 확인과 임시 안전조치가 지연돼 보행자와 교통약자의 위험이 방치된다는 동일 사안이다."
+      "consolidation_reason": "도로굴착 뒤 원인자 복구에 의존하면서 현장 확인과 임시 안전조치가 지연된 동일한 주민 보행안전 문제다."
+    },
+    {
+      "candidate_id": "0fe453ab23891600a025",
+      "document_id": "CLIKC3007096562743161",
+      "source_id": "geumcheon",
+      "source_name": "금천구",
+      "meeting_date": "2026-09-17",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
+      "chunk_number": 2,
+      "signal_type": "REPEATED_FAILURE",
+      "headline": "찾아가는 취업상담버스가 정작 이용자가 모이는 현장이 아닌 구청 안에 머물며 성과 관리도 이뤄지지 않고 있다",
+      "subject": "금천구 ‘찾아가는 취업상담버스 일자리 부르릉’ 운영",
+      "affected_group": "구청을 직접 방문하기 어려운 경력보유여성 및 지역 구직자",
+      "mechanism": "이동형 상담사업이 구청 1층 로비와 12층 대강당 등 기존 일자리센터와 겹치는 장소에서 분기별 1회 수준으로 운영되고, 담당 국장이 이용률과 대표 성과를 즉시 파악하지 못한 상태다. 사업 명칭과 운영 방식 사이에 불일치가 있어 실제 접근성 개선으로 이어졌는지 확인이 필요하다.",
+      "civic_importance": "찾아가는 행정에 투입된 예산과 인력이 기존 창구 이용자에게 반복 제공되는 데 그치면, 지원이 가장 필요한 돌봄·육아 주민의 접근성은 개선되지 않은 채 공공자원이 소진될 수 있다.",
+      "anchor_quote": "지금 말씀하신 찾아가는 부르릉은 제가 지금 파악을 못했습니다.",
+      "evidence_status": "OFFICIAL_FINDING",
+      "public_question": "찾아가는 취업상담버스에 얼마를 투입했고, 구청을 찾은 사람 중 실제 취업이나 지속 근무로 이어진 사람은 몇 명인가?",
+      "counterintuitive_question": "이동형 버스를 운영하는데도 왜 구청 내부처럼 이미 일자리센터를 이용할 수 있는 곳에 배치했는가? 사업의 핵심은 버스가 아니라 돌봄시설 등 이용자가 실제로 모이는 장소를 찾아가는 것 아닌가?",
+      "scope_hint": "SINGLE_CASE",
+      "broadcast_potential": 7,
+      "why_not_routine": "사업 실적이 부족하다는 단순 민원이 아니라, ‘찾아가는 서비스’의 장소 선정과 성과 책임이 분리된 사례다. 현장별 이용률을 비교하고 구청·돌봄시설·보건소에서 실제 상담 접근성이 어떻게 달라지는지 검증할 수 있다.",
+      "unknowns": [
+        "사업 예산과 회차별 운영비",
+        "2026년 현재 회차별 상담 인원·구직등록·취업연계·고용유지 성과",
+        "구청 외 육아종합지원센터·키움센터·보건소 등 생활거점에서 운영하지 않은 이유",
+        "일자리센터와 상담버스의 이용자·상담 내용·성과 중복 여부",
+        "상담버스의 운행 횟수와 운영 예산",
+        "예정된 방문 장소 선정 기준과 실제 경력보유여성의 분포",
+        "상담 이후 취업·직업훈련으로 연계되는 비율",
+        "기존 고용복지센터 등과의 역할 중복 여부",
+        "금천구 내 경력보유여성의 실제 규모와 연령·경력·희망근무시간별 분포",
+        "기존 일자리센터 여성 구직자와 취업자의 경력보유여성 해당 비율"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 5,
+      "related_document_count": 3,
+      "related_sources": [
+        "금천구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3007096562743161",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-17",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
+          "anchor_quote": "지금 말씀하신 찾아가는 부르릉은 제가 지금 파악을 못했습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3007096562743161",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-17",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
+          "anchor_quote": "취업상담버스가 기존사업을 활용하면서 접점을 한정된 곳에 두지 말고 실제로 이용하는 분들이 많은 곳을 찾아가는 행정이 되기를 희망하고요.",
+          "evidence_status": "PROPOSAL"
+        },
+        {
+          "document_id": "CLIKC3007096562743161",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-17",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
+          "anchor_quote": "현재 데이터 관리현황은 없습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3067576889748910",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067576889748910&collection=minutes",
+          "anchor_quote": "정보는 있지만 부서 간 공유되지 않고, 기업과의 접점은 있지만 내부에서 겉돌며, 일자리는 열려 있으나 정작 구민의 삶에는 닿지 못하고 있습니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "OFFICIAL:geumcheon:4a6953f363bf0db850d0fb1d",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://council.geumcheon.go.kr/council/viewer/minutes/2957.do",
+          "anchor_quote": "정보는 있지만 부서 간 공유되지 않고, 기업과의 접점은 있지만 내부에서 겉돌며, 일자리는 열려 있으나 정작 구민의 삶에는 닿지 못하고 있습니다.",
+          "evidence_status": "ALLEGATION"
+        }
+      ],
+      "consolidation_reason": "금천구의 경력보유여성·지역 구직자를 실제 생활권과 기업 수요에 연결하지 못하고, 구청 방문자·분산된 기업정보·단발성 상담에 머문 동일한 일자리 연계 실패다."
     },
     {
       "candidate_id": "f95a869e26a606ccc39d",
@@ -648,545 +680,7 @@
           "evidence_status": "ALLEGATION"
         }
       ],
-      "consolidation_reason": "청년들이 직접 기획·운영한 금천청년축제 예산이 성과평가와 당사자 설명 없이 전액 미편성돼 참여정책이 단절됐다는 동일한 문제다."
-    },
-    {
-      "candidate_id": "fcb4ca33dd25653047ad",
-      "document_id": "CLIKC3007276402988407",
-      "source_id": "jongno",
-      "source_name": "종로구",
-      "meeting_date": "2026-09-16",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
-      "chunk_number": 2,
-      "signal_type": "SERVICE_GAP",
-      "headline": "비어 있는 동숭어린이집을 가족 복합공간으로 바꿀 수 있을지, 종로구의 돌봄공간 공급 책임이 시험대에 올랐다",
-      "subject": "폐원 또는 유휴 상태로 언급된 동숭어린이집 공간의 재활용 방안",
-      "affected_group": "종로구의 영유아·아동과 부모, 돌봄·문화공간이 부족한 지역 주민",
-      "mechanism": "기존 어린이집 공간을 단순 유휴공간으로 두지 말고 키즈카페·숲속도서관·육아 소통공간이 결합된 복합공간으로 활용하자는 제안이 나왔다. 다만 법령과 공원시설 기준, 운영 주체, 예산, 실제 수요와 접근성은 아직 확인되지 않았다.",
-      "civic_importance": "기존 공공공간을 어떻게 활용하느냐에 따라 지역의 돌봄 부담과 아동·가족의 생활권 서비스 격차가 달라질 수 있다. 새 시설을 짓는 대신 이미 있는 공간을 전환할 수 있는지, 주민 의견이 실제 결정에 반영되는지가 핵심이다.",
-      "anchor_quote": "구청에서도 동숭어린이집 공간을 단순히 비어 있는 유휴공간으로 바라보지 마시고 키즈카페와 숲속도서관 그리고 육아 소통공간이 어우러진 아이와 가족을 위한 복합공간으로 활용할 수 있도록 적극적으로 검토해 주시기 바랍니다.",
-      "evidence_status": "PROPOSAL",
-      "public_question": "종로구는 동숭어린이집 공간을 언제까지 어떤 방식으로 활용할지, 이용 대상과 운영비를 포함한 실행 계획을 주민에게 공개할 것인가?",
-      "counterintuitive_question": "새 키즈카페를 만드는 것보다 기존 어린이집을 전환하는 편이 정말 저렴하고 접근성이 좋은가, 아니면 운영비와 시설 기준 때문에 다른 공간을 활용하는 것이 주민에게 더 이로운가?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 61,
-      "why_not_routine": "단순한 공간 채우기 제안이 아니라 공공 유휴공간을 돌봄·문화서비스로 전환할지에 대한 정책 결정이다. 현장 이용자 조사, 공간 안전·법적 검토, 다른 자치구의 어린이집 전환 사례 비교로 확장할 수 있다.",
-      "unknowns": [
-        "동숭어린이집의 현재 운영 상태와 건물·부지 소유 및 관리 주체",
-        "어린이집 폐원 또는 공간 전환의 공식 결정 여부",
-        "리모델링·운영에 필요한 예산과 재원 부담 주체",
-        "해당 지역의 아동·가족 인구와 기존 돌봄·문화시설 이용 수요",
-        "동숭어린이집이 언제부터 어떤 이유로 비어 있었는가",
-        "해당 지역의 어린이집·공공놀이시설·도서관·돌봄시설 이용 수요와 공급은 어느 정도인가",
-        "건물 안전성·용도변경·공원시설 기준 등 법적 제약은 무엇인가",
-        "사업비와 운영 주체, 연간 운영비를 누가 부담할 것인가",
-        "동숭어린이집의 현재 소유·사용 상태와 어린이집 기능 중단 사유",
-        "해당 지역의 키즈카페·도서관·육아지원 서비스 수요와 기존 시설과의 중복"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 3,
-      "related_document_count": 3,
-      "related_sources": [
-        "종로구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3007276402988407",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
-          "anchor_quote": "구청에서도 동숭어린이집 공간을 단순히 비어 있는 유휴공간으로 바라보지 마시고 키즈카페와 숲속도서관 그리고 육아 소통공간이 어우러진 아이와 가족을 위한 복합공간으로 활용할 수 있도록 적극적으로 검토해 주시기 바랍니다.",
-          "evidence_status": "PROPOSAL"
-        },
-        {
-          "document_id": "CLIKC3015916453536194",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
-          "anchor_quote": "동숭어린이집 공간을 단순히 비어 있는 유휴공간으로 바라보지 마시고 키즈카페와 숲속도서관 그리고 육아 소통공간이 어우러진 아이와 가족을 위한 복합공간으로 활용할 수 있도록 적극적으로 검토해 주시기 바랍니다.",
-          "evidence_status": "PROPOSAL"
-        },
-        {
-          "document_id": "CLIKC2972716603643697",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
-          "anchor_quote": "구청에서도 동숭어린이집 공간을 단순히 비어 있는 유휴공간으로 바라보지 마시고 키즈카페와 숲속도서관 그리고 육아 소통공간이 어우러진 아이와 가족을 위한 복합공간으로 활용할 수 있도록 적극적으로 검토해 주시기 바랍니다.",
-          "evidence_status": "PROPOSAL"
-        }
-      ],
-      "consolidation_reason": "유휴 상태의 동숭어린이집을 키즈카페·도서관·육아공간 등 가족 복합공간으로 전환할 수 있는지와 수요·법적 기준·운영 책임을 검증하는 동일 사안이다."
-    },
-    {
-      "candidate_id": "8d9abff401008412f96a",
-      "document_id": "CLIKC2972716603643697",
-      "source_id": "jongno",
-      "source_name": "종로구",
-      "meeting_date": "2026-09-16",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
-      "chunk_number": 3,
-      "signal_type": "RIGHTS_GAP",
-      "headline": "종로 중학교 특수학급은 9곳 중 3곳뿐이고, 사립학교 중심 구조가 학생의 가까운 교육권을 막고 있다",
-      "subject": "동부권역 중학교 특수학급 설치와 특수교육 학생의 통학·배치",
-      "affected_group": "특수교육 대상 중학생과 가족, 특히 특수학급이 없는 학교 인근 거주 학생",
-      "mechanism": "종로 관내 중학교 9곳 중 특수학급 설치 학교는 3곳이며 7곳이 사립학교다. 학교 설치 권한과 협의 구조가 교육청·학교에 걸쳐 있어 구청이 수요를 파악하고도 직접 설치하기 어려운 상황이다.",
-      "civic_importance": "특수교육 학생이 거주지 가까이에서 교육받을 권리와 통학 부담, 학교의 교육 접근성이 관련돼 있다. 학교 유형에 따라 특수학급 설치 격차가 생기는지 서울 전역 비교가 가능하다.",
-      "anchor_quote": "그러나 이러한 현실적인 어려움만을 이유로 특수교육 수요를 외면해서는 안 된다고 저는 생각합니다.",
-      "evidence_status": "OFFICIAL_FINDING",
-      "public_question": "종로의 특수교육 대상 학생들은 왜 사는 곳 가까운 중학교에서 교육받지 못하고 있으며, 학교·교육청·구청 중 누가 설치 지연의 책임을 져야 하는가?",
-      "counterintuitive_question": "학교 수가 부족한 것이 아니라 사립학교 비중과 설치 협의 구조가 특수학급 격차의 핵심 원인은 아닌가?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 9,
-      "why_not_routine": "단순 학교 증설 요구가 아니라 사립학교 중심 지역의 제도적 책임 공백과 학생의 교육권을 현장·통학 경로·서울 자치구 비교로 확장할 수 있다.",
-      "unknowns": [
-        "학교별 특수교육 대상 학생 수와 대기·배치 현황",
-        "특수학급이 없는 학교 학생들의 평균 통학 거리와 통학 소요시간",
-        "사립학교의 설치 거부 또는 지연 사유와 교육청의 조정 권한",
-        "구청의 교육경비보조금 지원이 설치·운영에 실제로 어떤 역할을 할 수 있는지",
-        "현재 특수교육 대상 학생 수와 학교별 대기·배치 현황",
-        "학생들의 평균 통학거리와 통학 지원 실태",
-        "사립학교가 특수학급 설치를 꺼리는 구체적 이유",
-        "구와 교육청의 설치 목표·예산·추진 일정",
-        "동부권역 특수교육 대상 학생 수와 학교별 수용·대기 현황",
-        "특수학급 미설치 학교의 설치 가능 공간과 학교 측 입장"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 3,
-      "related_document_count": 3,
-      "related_sources": [
-        "종로구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC2972716603643697",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
-          "anchor_quote": "그러나 이러한 현실적인 어려움만을 이유로 특수교육 수요를 외면해서는 안 된다고 저는 생각합니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "CLIKC3015916453536194",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
-          "anchor_quote": "그러나 이러한 현실적인 어려움만을 이유로 특수교육 수요를 외면해서는 안 된다고 저는 생각합니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "CLIKC3007276402988407",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
-          "anchor_quote": "특수교육이 필요한 학생들이 거주지와 가까운 곳에서 차별 없이 교육받고 자신의 가능성을 마음껏 키워 갈 수 있도록 적극적으로 가교 역할을 하겠습니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        }
-      ],
-      "consolidation_reason": "종로 중학교 9곳 중 3곳에만 특수학급이 설치돼 사립학교 중심의 설치·협의 구조가 학생의 거주지 인근 교육권을 제한한다는 동일한 문제다."
-    },
-    {
-      "candidate_id": "421e822fafe26f6abbe4",
-      "document_id": "CLIKC3015916453536194",
-      "source_id": "jongno",
-      "source_name": "종로구",
-      "meeting_date": "2026-09-16",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
-      "chunk_number": 3,
-      "signal_type": "EXISTING_HARM",
-      "headline": "재개발 동의율 경쟁과 공사비 상승이 창신동 주민의 재정착 가능성과 재산권을 흔들고 있다",
-      "subject": "창신9·10구역 재개발 추진 과정의 분담금·재정착 부담, 동의서 징구 및 주민 갈등",
-      "affected_group": "창신9·10구역 원주민·소유자·세입자 등 재개발 이해관계 주민",
-      "mechanism": "공사비 문제로 재정착과 분담금 상승 우려가 커졌고, 동의서 징구 과정의 불공정·차별 논란으로 주민 갈등이 심화됐다는 설명이 나왔다. 구는 전문가 TF를 구성해 첫 자문을 실시할 예정이다.",
-      "civic_importance": "재개발은 주거환경 개선과 동시에 원주민의 이탈, 분담금 부담, 재산권 변동을 낳는 장기 사업이다. 사업 지원을 표방하는 행정이 주민 간 절차적 공정성을 얼마나 확인했는지가 핵심이다.",
-      "anchor_quote": "공사비 문제로 많은 주민들께서 재정착과 분담금 상승에 대한 우려를 겪게 되었고",
-      "evidence_status": "ALLEGATION",
-      "public_question": "창신9·10구역 재개발이 완료됐을 때 기존 주민 중 누가 실제로 남을 수 있으며, 분담금 상승 위험을 행정은 어떻게 검증하고 공개할 것인가?",
-      "counterintuitive_question": "사업 지연을 막기 위한 신속지원 TF가 주민 보호 장치가 아니라 사업 추진 주체의 속도를 높이는 기구로 작동할 가능성은 없는가?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 9,
-      "why_not_routine": "재산권·주거권·주민 갈등이 결합된 중대 사안이며, 동의서·분담금·매입 주체 자료와 주민 인터뷰를 통해 책임 구조를 검증할 수 있다.",
-      "unknowns": [
-        "동의율 확보를 위해 투자신탁 등이 매입했다는 ‘50%’ 수치의 산출 근거와 실제 매입 주체",
-        "주민들이 제기한 동의서 징구 과정의 불공정·차별 행위가 구체적으로 무엇인지",
-        "예상 분담금과 공사비 상승 규모, 기존 주민의 재정착률 전망",
-        "재개발 계획이 한양도성·낙산공원 등 역사문화 경관에 미치는 영향",
-        "투자신탁 또는 자산투자신탁 명의 매입의 실제 비율과 매입 시점",
-        "매입 주체가 동의율 산정에 미친 영향과 법적 적정성",
-        "기존 거주민의 예상 분담금과 재정착률",
-        "동의서 징구 과정에서 불공정·차별 행위가 있었는지에 대한 공식 조사 결과",
-        "재정착 대상과 예상 분담금의 실제 규모",
-        "동의서 징구 과정에서 제기된 불공정·차별 행위의 구체적 사례"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 3,
-      "related_document_count": 3,
-      "related_sources": [
-        "종로구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC2972716603643697",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
-          "anchor_quote": "공사비 문제로 많은 주민들께서 재정착과 분담금 상승에 대한 우려를 겪게 되었고",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "CLIKC3007276402988407",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
-          "anchor_quote": "인구가 한 50%가 투자신탁, 자산투자신탁에서 우리 동의율을 맞추기 위해서 매입한 겁니다.",
-          "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "CLIKC3015916453536194",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
-          "anchor_quote": "공사비 문제로 많은 주민들께서 재정착과 분담금 상승에 대한 우려를 겪게 되었고",
-          "evidence_status": "ALLEGATION"
-        }
-      ],
-      "consolidation_reason": "창신9·10구역에서 공사비 상승과 동의서 징구·외부 매입 논란이 기존 주민의 분담금 부담과 재정착 가능성을 흔든다는 동일한 재개발 문제다."
-    },
-    {
-      "candidate_id": "73fb8ddc1d5046d12daa",
-      "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
-      "source_id": "mapo",
-      "source_name": "마포구",
-      "meeting_date": "2026-09-21",
-      "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
-      "chunk_number": 1,
-      "signal_type": "SERVICE_GAP",
-      "headline": "용적률 완화와 정책 변경 속에 정비사업 임대주택이 대폭 줄어드는 구조",
-      "subject": "마포4구역 지구별 정비계획 변경과 임대주택 공급",
-      "affected_group": "무주택 세입자와 재개발 지역의 저렴한 임대주택을 필요로 하는 시민",
-      "mechanism": "회의에서 4-9지구 임대주택이 76세대에서 20세대로, 4-11지구가 57세대에서 15세대로, 4-1지구가 26세대에서 0세대로 줄었다고 확인됐다. 구청은 서울시 기본계획에서 임대 비율이 삭제됐고, 200세대 이하 사업지는 임대주택 의무 적용을 받지 않는다고 설명했다.",
-      "civic_importance": "재개발로 주거환경은 개선되더라도 기존 세입자와 저소득층이 입주할 공공·임대 물량이 줄면 개발이익과 주거 안정의 배분 문제가 발생한다.",
-      "anchor_quote": "4-9는 76세대에서 지금 임대가 20세대로 줄어들었고요.",
-      "evidence_status": "OFFICIAL_FINDING",
-      "public_question": "임대주택을 줄여 일반분양으로 전환하면서 늘어난 개발이익과 주거 부담을 누가, 어떤 기준으로 부담하게 되는가?",
-      "counterintuitive_question": "임대 비율을 낮추는 것이 사업을 촉진해 주택 공급을 늘리는 효과보다, 정작 주변 임대료 상승과 세입자 이탈을 키우는 결과가 되지는 않는가?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 91,
-      "why_not_routine": "세 지구의 구체적인 물량 변화와 서울시 정책 변경이 확인돼, 개발 속도와 공공성의 교환을 현장·자료·타 구역 비교로 확장할 수 있다.",
-      "unknowns": [
-        "각 지구의 전체 세대수와 임대주택 비율 변화",
-        "임대주택 감소가 용적률·공공기여와 어떻게 연계됐는지",
-        "서울시가 임대 비율 삭제를 적용한 구체적 근거와 다른 정비구역의 적용 현황",
-        "기존 세입자의 이주·재정착 대책",
-        "삭제된 임대주택 비율 기준이 해당 사업에 적용되는 법적 근거와 적용 시점",
-        "임대주택 26세대가 일반분양으로 전환될 경우 사업자와 조합에 귀속되는 추가 이익 규모",
-        "임대주택 감소를 보완하기 위한 서울시 또는 마포구의 대체 공급 계획",
-        "공공기여 규모와 임대주택 감소 사이의 형평성 검토 여부"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 2,
-      "related_document_count": 1,
-      "related_sources": [
-        "마포구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
-          "source_name": "마포구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
-          "anchor_quote": "4-9는 76세대에서 지금 임대가 20세대로 줄어들었고요.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
-          "source_name": "마포구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
-          "anchor_quote": "4-1이 26세대에서 아예 없는 걸로, 임대가.",
-          "evidence_status": "OFFICIAL_FINDING"
-        }
-      ],
-      "consolidation_reason": "마포4구역 정비계획 변경과 용적률 완화 과정에서 임대주택 의무·공급량이 크게 줄어 무주택 세입자와 저소득층의 공공주택 몫이 축소됐다는 동일 사안이다."
-    },
-    {
-      "candidate_id": "0fe453ab23891600a025",
-      "document_id": "CLIKC3007096562743161",
-      "source_id": "geumcheon",
-      "source_name": "금천구",
-      "meeting_date": "2026-09-17",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
-      "chunk_number": 2,
-      "signal_type": "REPEATED_FAILURE",
-      "headline": "찾아가는 취업상담버스가 정작 이용자가 모이는 현장이 아닌 구청 안에 머물며 성과 관리도 이뤄지지 않고 있다",
-      "subject": "금천구 ‘찾아가는 취업상담버스 일자리 부르릉’ 운영",
-      "affected_group": "구청을 직접 방문하기 어려운 경력보유여성 및 지역 구직자",
-      "mechanism": "이동형 상담사업이 구청 1층 로비와 12층 대강당 등 기존 일자리센터와 겹치는 장소에서 분기별 1회 수준으로 운영되고, 담당 국장이 이용률과 대표 성과를 즉시 파악하지 못한 상태다. 사업 명칭과 운영 방식 사이에 불일치가 있어 실제 접근성 개선으로 이어졌는지 확인이 필요하다.",
-      "civic_importance": "찾아가는 행정에 투입된 예산과 인력이 기존 창구 이용자에게 반복 제공되는 데 그치면, 지원이 가장 필요한 돌봄·육아 주민의 접근성은 개선되지 않은 채 공공자원이 소진될 수 있다.",
-      "anchor_quote": "지금 말씀하신 찾아가는 부르릉은 제가 지금 파악을 못했습니다.",
-      "evidence_status": "OFFICIAL_FINDING",
-      "public_question": "찾아가는 취업상담버스에 얼마를 투입했고, 구청을 찾은 사람 중 실제 취업이나 지속 근무로 이어진 사람은 몇 명인가?",
-      "counterintuitive_question": "이동형 버스를 운영하는데도 왜 구청 내부처럼 이미 일자리센터를 이용할 수 있는 곳에 배치했는가? 사업의 핵심은 버스가 아니라 돌봄시설 등 이용자가 실제로 모이는 장소를 찾아가는 것 아닌가?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 7,
-      "why_not_routine": "사업 실적이 부족하다는 단순 민원이 아니라, ‘찾아가는 서비스’의 장소 선정과 성과 책임이 분리된 사례다. 현장별 이용률을 비교하고 구청·돌봄시설·보건소에서 실제 상담 접근성이 어떻게 달라지는지 검증할 수 있다.",
-      "unknowns": [
-        "상담버스의 운행 횟수와 운영 예산",
-        "예정된 방문 장소 선정 기준과 실제 경력보유여성의 분포",
-        "상담 이후 취업·직업훈련으로 연계되는 비율",
-        "기존 고용복지센터 등과의 역할 중복 여부",
-        "사업 예산과 회차별 운영비",
-        "2026년 현재 회차별 상담 인원·구직등록·취업연계·고용유지 성과",
-        "구청 외 육아종합지원센터·키움센터·보건소 등 생활거점에서 운영하지 않은 이유",
-        "일자리센터와 상담버스의 이용자·상담 내용·성과 중복 여부"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 2,
-      "related_document_count": 1,
-      "related_sources": [
-        "금천구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3007096562743161",
-          "source_name": "금천구",
-          "meeting_date": "2026-09-17",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
-          "anchor_quote": "취업상담버스가 기존사업을 활용하면서 접점을 한정된 곳에 두지 말고 실제로 이용하는 분들이 많은 곳을 찾아가는 행정이 되기를 희망하고요.",
-          "evidence_status": "PROPOSAL"
-        },
-        {
-          "document_id": "CLIKC3007096562743161",
-          "source_name": "금천구",
-          "meeting_date": "2026-09-17",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
-          "anchor_quote": "지금 말씀하신 찾아가는 부르릉은 제가 지금 파악을 못했습니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        }
-      ],
-      "consolidation_reason": "금천구의 찾아가는 취업상담버스가 실제 경력보유여성이 모이는 생활권이 아니라 구청 내부 등 기존 상담기관과 겹치는 장소에 운영돼 접근성과 성과가 불분명하다는 동일 문제다."
-    },
-    {
-      "candidate_id": "c1281fbb35e4166c3c50",
-      "document_id": "CLIKC3067625754563142",
-      "source_id": "seocho",
-      "source_name": "서초구",
-      "meeting_date": "2026-09-14",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625754563142&collection=minutes",
-      "chunk_number": 1,
-      "signal_type": "REPEATED_FAILURE",
-      "headline": "학교 지원금이 교육청·구청 간 조정 실패와 회계연도 차이로 매년 남거나 중복 집행된다",
-      "subject": "초·중등교육경비보조금 및 원어민 영어교사 지원금 정산",
-      "affected_group": "서초구 학교·학생, 지방재정 부담을 지는 주민",
-      "mechanism": "학교 사업에 대한 구청과 교육청의 지원 시점·정산 주기가 어긋나고, 동일 사업에 양 기관 예산이 투입되면서 사용잔액과 구조적 중복액이 발생한다. 이번 회의에서 교육경비 지원금 61억 원 중 약 1억 7,800만 원이 남았고, 원어민 영어교사 지원금 잔액 1억여 원 중 7,440만 원이 회계연도 변경에 따른 중복액으로 설명됐다.",
-      "civic_importance": "학교 지원금은 매년 반복되는 공공사업인데도 지원기관 간 조정 실패가 주민 세금의 비효율과 학교 행정 부담으로 이어질 수 있다. 단순 불용액이 아니라 지원·정산 구조 자체의 문제인지 점검할 필요가 있다.",
-      "anchor_quote": "잔액의 대부분 7440만원은 정산 기간이 3월에서 다음 해 2월까지였는데 회계연도 맞춰서 1월에서 12월로 일치시키는 과정에서 나타난 구조상 발생한 중복액",
-      "evidence_status": "OFFICIAL_FINDING",
-      "public_question": "구청과 교육청이 같은 학교·사업에 지원할 때 중복 지급과 불용을 사전에 막고 있는가? 매년 발생하는 잔액은 누구의 관리 책임인가?",
-      "counterintuitive_question": "학교가 예산을 남겨 반납한 것이 단순한 절약이 아니라, 오히려 지원기관 간 일정·정산 체계가 맞지 않아 생긴 행정상 낭비는 아닌가?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 9,
-      "why_not_routine": "반납액 규모와 반복성, 교육청·구청의 책임 분산, 학교 현장의 실제 영향까지 예산자료와 여러 학교 사례로 확장할 수 있다.",
-      "unknowns": [
-        "학교별·사업별 반납액과 반납 사유의 전체 내역",
-        "중복 신청 또는 중복 교부를 사전에 확인하는 구청·교육청 간 절차",
-        "반납된 예산이 학생 교육서비스 축소로 이어졌는지 여부",
-        "다른 자치구에서도 같은 유형의 잔액과 중복 지원이 반복되는지 여부",
-        "최근 수년간 학교별·사업별 반납액과 중복 지원액 추이",
-        "구청과 서울시교육청 사이에 사전 중복 검증 절차가 있는지",
-        "반납된 예산이 학생 교육서비스 축소나 사업 지연으로 이어졌는지",
-        "다음 회계연도부터 구조적 중복이 실제로 해소됐는지"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 2,
-      "related_document_count": 1,
-      "related_sources": [
-        "서초구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3067625754563142",
-          "source_name": "서초구",
-          "meeting_date": "2026-09-14",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625754563142&collection=minutes",
-          "anchor_quote": "그러면 이 잔액은 학교마다 매해 발생할 수밖에 없는 거네요.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "CLIKC3067625754563142",
-          "source_name": "서초구",
-          "meeting_date": "2026-09-14",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625754563142&collection=minutes",
-          "anchor_quote": "잔액의 대부분 7440만원은 정산 기간이 3월에서 다음 해 2월까지였는데 회계연도 맞춰서 1월에서 12월로 일치시키는 과정에서 나타난 구조상 발생한 중복액",
-          "evidence_status": "OFFICIAL_FINDING"
-        }
-      ],
-      "consolidation_reason": "서초구 학교 지원금이 교육청·구청의 지원 시점과 정산 주기 불일치, 공사 일정과 중복 지원 때문에 매년 잔액·반납·중복 집행을 낳는다는 동일 사안이다."
-    },
-    {
-      "candidate_id": "5fdb0c492864ff21073b",
-      "document_id": "CLIKC3015832853247804",
-      "source_id": "dongjak",
-      "source_name": "동작구",
-      "meeting_date": "2026-09-21",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-      "chunk_number": 1,
-      "signal_type": "PUBLIC_COST",
-      "headline": "매각 시한을 아는 청사에 공공기관을 몰아넣은 뒤 재이전 비용과 업무 공백을 다시 시민이 부담할 우려",
-      "subject": "노량진 구청사 활용과 공공기관 18곳의 입주·재이전 결정",
-      "affected_group": "구청사 입주 기관 이용 주민, 해당 기관 종사자, 청소년·영유아·청년 등 서비스 이용자, 동작구 재정 부담을 지는 주민",
-      "mechanism": "2027년 11월 건물 인도가 예정돼 있었지만 최종 이전지와 총비용을 포함한 중장기 배치계획 없이 기관들을 구청사로 이전했다. 그 결과 이미 약 4억 2천만 원의 이전비가 발생했고, 일부 기관은 2년 안팎 만에 다시 이전해야 한다.",
-      "civic_importance": "공공시설 배치는 단순한 사무실 이동이 아니라 서비스 접근성, 사업비, 시설 투자와 직결된다. 임시 공간 활용이 장기계획 부재로 반복되면 이사비뿐 아니라 공공서비스 중단과 기존 공간 공실까지 발생할 수 있다.",
-      "anchor_quote": "입주 기관을 결정할 당시에 최종 이전지에 대한, 다음 이전지에 대한 중장기 계획은 없었던 걸로 확인이 됩니다.",
-      "evidence_status": "OFFICIAL_FINDING",
-      "public_question": "구청은 이미 사용 종료 시점이 정해진 청사에 기관을 입주시킬 때 왜 최종 이전지와 두 차례 이사 비용까지 계산하지 않았으며, 앞으로 발생할 재이전 비용은 누가 부담합니까?",
-      "counterintuitive_question": "빈 청사를 활용해 상권과 주민 편의를 살리려던 조치가 실제로는 기존 시설을 비우고 다시 이사하게 만들어, 공간을 활용하지 않는 것보다 더 큰 공공비용과 서비스 공백을 낳은 것은 아닙니까?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 9,
-      "why_not_routine": "국장이 중장기 이전계획과 총비용 비교가 없었다고 인정했고, 구체적 기관별 사례와 금액이 제시돼 책임 구조·현장 이용자 피해·다른 자치구의 공공시설 배치 관행까지 확장 검증할 수 있다.",
-      "unknowns": [
-        "18개 기관별 기존 이전 비용과 재이전 예상 비용",
-        "각 기관의 현 위치 계약·사용 가능 기간과 재이전이 확정된 기관의 범위",
-        "기존 배치 결정 과정에서 주민 접근성·기능 연계성·총비용을 비교한 공식 평가자료의 존재 여부",
-        "재배치 계획 수립과 집행을 누가 어떤 기준으로 최종 결정하는지",
-        "구청사 입주 기관 18곳의 최초·재이전 예상 비용을 모두 합한 규모",
-        "각 기관의 이전 결정 과정에서 비용·사용기간·대체 공간을 비교한 공식 검토자료의 존재 여부",
-        "2027년 이후 기관별 최종 이전지와 이전 일정",
-        "동작문화복지센터 철거·개발 계획의 최종 확정 여부와 기존 시설 투자 회수 가능성",
-        "18개 기관별 최초 이전비와 재이전 예상비용의 전체 합계",
-        "기관별 이전 과정에서 발생할 운영 중단·이용자 불편 규모"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 4,
-      "related_document_count": 2,
-      "related_sources": [
-        "동작구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3015832853247804",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-          "anchor_quote": "2027년이면 18개 기관이 다시 구청사를 나와야 합니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
-          "anchor_quote": "입주 기관을 결정할 당시에 최종 이전지에 대한, 다음 이전지에 대한 중장기 계획은 없었던 걸로 확인이 됩니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "CLIKC3015832853247804",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-          "anchor_quote": "입주 기관을 결정할 당시에 최종 이전지에 대한, 다음 이전지에 대한 중장기 계획은 없었던 걸로 확인이 됩니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
-          "anchor_quote": "공간은 비어 있기 때문에 채우는 것이 아니라 주민에게 필요한 기능을 담기 위해 존재해야 합니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        }
-      ],
-      "consolidation_reason": "사용 종료 시점이 정해진 노량진 구청사에 18개 공공기관을 임시 배치한 뒤 장기 공간계획 없이 재이전하게 돼 이전비와 서비스 불편이 반복될 수 있다는 동일한 공간계획 실패다."
-    },
-    {
-      "candidate_id": "086cd8c0045207617a2e",
-      "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
-      "source_id": "dongjak",
-      "source_name": "동작구",
-      "meeting_date": "2026-09-21",
-      "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
-      "chunk_number": 3,
-      "signal_type": "SAFETY_RISK",
-      "headline": "흑석 빗물펌프장 대안 논의가 방재시설 확충 지연과 매몰비용으로 이어질 수 있다",
-      "subject": "흑석빗물펌프장 현 위치 증설안과 한강변 이전안의 재검토 및 주민 의견수렴",
-      "affected_group": "흑석동 및 사당권 저지대 주민, 집중호우 시 침수 위험 지역의 시민",
-      "mechanism": "서울시 기술 검토에서 현 위치 증설안이 채택돼 기본·실시설계가 진행 중인 가운데, 구청이 현 위치 증설과 한강변 이전을 주민에게 동일한 선택지로 제시하려는 상황이다. 이전안으로 바뀌면 타당성 조사와 설계를 다시 하면서 방재기능 보강이 2~3년 이상 늦어질 수 있고, 이미 투입된 타당성·설계비 약 32억7천만 원이 매몰될 가능성이 제기됐다.",
-      "civic_importance": "침수 방어시설은 주민 생명·재산과 직결되며, 대안 비교가 충분한 기술자료와 일정·비용 공개 없이 진행되면 주민 의견수렴이 사실상 안전시설 확충 지연으로 작동할 수 있다. 반대로 기존 계획을 유지할 경우 이전안이 가진 장기적 방재 효과나 도시공간상 이점을 놓칠 가능성도 있어 검증된 비교 기준이 필요하다.",
-      "anchor_quote": "방재기능 보강에 최소 2년에서 3년 이상 지연될 우려가 있습니다.",
-      "evidence_status": "ALLEGATION",
-      "public_question": "구청은 주민에게 두 안을 묻기 전에 방재 효과와 완공 시기, 추가 비용, 기존 설계비의 매몰 여부를 어떤 객관적 자료로 비교해 공개할 것인가?",
-      "counterintuitive_question": "주민 선택권을 넓히는 이전안 재검토가 실제로는 침수 대응을 늦추는 결과가 될 수 있는가, 반대로 이미 진행 중인 현 위치 증설을 서두르는 것이 장기적으로 더 큰 안전·예산 손실을 낳을 가능성은 없는가?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 8,
-      "why_not_routine": "통상적인 설계 변경 논쟁이 아니라 집중호우 위험 지역의 방재 시점, 이미 집행된 수십억 원의 매몰 가능성, 서울시와 구청의 사업 책임이 동시에 걸려 있다. 설계자료·침수지도·사업비·주민설명회 자료를 비교하면 안전과 예산을 함께 다루는 지역 밀착 리포트가 가능하다.",
-      "unknowns": [
-        "한강변 이전안과 현 위치 증설안의 침수 대응 성능·사업비·공사기간 비교 자료",
-        "민선 8기 전후 계획 변경의 공식 결정 문서와 변경 사유",
-        "기존 부지 증설 시 주변 주거환경·소음·악취·공원 조성에 미치는 영향",
-        "한강변 이전안이 실제로 어느 수준까지 설계·용역·행정절차를 진행했는지",
-        "현 위치 증설안과 한강변 이전안의 침수 대응 성능, 공사비, 유지관리비 비교 자료가 공개됐는지",
-        "한강변 이전안의 기존 설계와 안전성 검토가 현재 기준에서도 유효한지",
-        "현 위치 증설 또는 이전으로 사업 일정이 실제로 얼마나 지연되는지",
-        "서울시와 어떤 부서가 어떤 공식 절차와 문서로 협의했는지와 주민 의견이 최종 결정에 어떻게 반영되는지",
-        "한강변 이전안의 구체적 위치·방재 성능·사업비",
-        "현 위치 증설안과 이전안의 홍수 저감 효과 및 유지관리 비용 비교"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 6,
-      "related_document_count": 2,
-      "related_sources": [
-        "동작구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3015832853247804",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-          "anchor_quote": "아파트 개발을 위해서 그 한강변 땅이 필요하니까 원래 이전했던 빗물펌프장이 원위치로 그렇게 된 것이지",
-          "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "CLIKC3015832853247804",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-          "anchor_quote": "빗물펌프장은 한번 설치되면 수십 년간 운영되고 사실상 이전이 어려운 영구적인 방재 시설인 만큼",
-          "evidence_status": "PLAN"
-        },
-        {
-          "document_id": "CLIKC3015832853247804",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-          "anchor_quote": "따라서 흑석빗물펌프장 문제는 단순히 시설을 어느 위치에 둘 것인지의 문제가 아닙니다.",
-          "evidence_status": "PROPOSAL"
-        },
-        {
-          "document_id": "CLIKC3015832853247804",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-          "anchor_quote": "그동안 너무 많은 시간을 허비하였습니다.",
-          "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
-          "anchor_quote": "방재기능 보강에 최소 2년에서 3년 이상 지연될 우려가 있습니다.",
-          "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "CLIKC3015832853247804",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-          "anchor_quote": "방재기능 보강에 최소 2년에서 3년 이상 지연될 우려가 있습니다.",
-          "evidence_status": "ALLEGATION"
-        }
-      ],
-      "consolidation_reason": "흑석 빗물펌프장의 현 위치 증설과 한강변 이전을 둘러싼 개발·공약·주민 의견 충돌이 방재시설 확충 지연, 설계비 매몰, 침수 안전 공백으로 이어질 수 있다는 동일 사안이다."
+      "consolidation_reason": "청년이 직접 기획·운영한 금천청년축제를 성과평가와 당사자 설명 없이 전액 미편성한 동일 사안이다."
     },
     {
       "candidate_id": "4b2ed38a2a06e826240c",
@@ -1261,414 +755,43 @@
           "evidence_status": "OFFICIAL_FINDING"
         }
       ],
-      "consolidation_reason": "금천구의회 복지건설위원회가 의결정족수 미달로 빈집·재개발·폐기물·교통안전 등 주민생활 안건을 심사하지 못하고 본회의에 직상정했다는 동일한 의회 검증 공백 문제다."
+      "consolidation_reason": "금천구의회 복지건설위원회 의결정족수 미달로 주민생활·재개발·빈집관리 안건이 상임위 심사 없이 본회의로 직행한 동일한 의회 검증 공백이다."
     },
     {
-      "candidate_id": "7481fe9e488265c1815e",
-      "document_id": "CLIKC3015833254357261",
-      "source_id": "dongjak",
-      "source_name": "동작구",
-      "meeting_date": "2026-09-18",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
-      "chunk_number": 2,
-      "signal_type": "NEW_POLICY_UNCERTAINTY",
-      "headline": "동작구 AI 행정 확대, 편리함 뒤 개인정보·오류 책임 기준은 비어 있다",
-      "subject": "동작구 인공지능 기본 조례와 향후 지능형 행정서비스 도입",
-      "affected_group": "동작구민 전체, 특히 디지털 취약계층과 행정서비스 오류 피해자",
-      "mechanism": "구정 전반에 AI 행정서비스를 도입할 제도적 근거와 기본계획·기술위원회를 마련하지만, 어떤 업무에 어떤 기준으로 적용하고 오류·차별·개인정보 침해가 발생했을 때 누가 책임지는지는 발언에 드러나지 않는다.",
-      "civic_importance": "AI 행정은 복지·민원·안전 등 시민 생활 전반의 판단에 영향을 줄 수 있어 편의성뿐 아니라 설명 가능성, 이의제기권, 인간 담당자의 개입 여부가 핵심이다.",
-      "anchor_quote": "구정 전반에 선제적이고 안정적인 지능형 행정서비스를 도입하여 구민이 체감할 수 있는 제도적 근거를 마련하고자 제출된 안건입니다.",
-      "evidence_status": "PROPOSAL",
-      "public_question": "동작구가 AI로 민원·복지·안전 업무를 처리할 때 시민은 어떤 데이터를 제공해야 하며, 잘못된 판단을 사람이 재검토해 달라고 요구할 수 있는가?",
-      "counterintuitive_question": "AI 도입이 행정을 더 공정하게 만드는 것이 아니라, 데이터가 부족한 고령자·장애인·이주민을 오히려 서비스 대상에서 누락시키는 것은 아닌가?",
-      "scope_hint": "CITYWIDE",
-      "broadcast_potential": 9,
-      "why_not_routine": "신규 조례가 향후 구정 전반의 의사결정 구조를 바꾸지만, 실제 적용 범위와 시민 통제 장치가 아직 불명확해 정책 설계와 현장 검증을 함께 할 수 있다.",
-      "unknowns": [
-        "AI를 적용할 행정 업무와 대상 서비스가 공개됐는가",
-        "개인정보의 수집·결합·보관 기준은 무엇인가",
-        "AI 판단에 대한 시민의 설명 요구와 이의제기 절차가 있는가",
-        "오류나 차별적 결과가 발생했을 때 최종 책임 주체는 누구인가",
-        "현재 서대문구가 도입했거나 도입 예정인 AI 시스템과 적용 업무",
-        "AI가 주민의 자격·복지·민원 처리에 직접 영향을 주는지 여부",
-        "알고리즘 오류·차별·개인정보 유출 발생 시 책임 부서와 피해 구제 절차",
-        "외부 업체 시스템을 사용할 경우 학습 데이터와 감사·검증 권한의 범위"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 2,
-      "related_document_count": 2,
-      "related_sources": [
-        "동작구",
-        "서대문구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3015833254357261",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
-          "anchor_quote": "구정 전반에 선제적이고 안정적인 지능형 행정서비스를 도입하여 구민이 체감할 수 있는 제도적 근거를 마련하고자 제출된 안건입니다.",
-          "evidence_status": "PROPOSAL"
-        },
-        {
-          "document_id": "OFFICIAL:seodaemun:44aedee3559949632086a1f2",
-          "source_name": "서대문구",
-          "meeting_date": "2026-09-22",
-          "document_url": "https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9340",
-          "anchor_quote": "신뢰받는 인공지능 행정을 구현하고자",
-          "evidence_status": "PROPOSAL"
-        }
-      ],
-      "consolidation_reason": "동작구와 서대문구가 AI 행정 도입 근거를 마련하면서도 오류·차별·개인정보 침해 시 설명·이의제기·인간 재심사와 책임 주체를 구체화하지 않았다는 동일한 제도적 공백이다."
-    },
-    {
-      "candidate_id": "3604615f7933bfc74ee4",
-      "document_id": "CLIKC3015833254357261",
-      "source_id": "dongjak",
-      "source_name": "동작구",
-      "meeting_date": "2026-09-18",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
-      "chunk_number": 2,
-      "signal_type": "RIGHTS_GAP",
-      "headline": "재난 피해자 가족을 위한 전담팀 신설, 흩어진 지원을 실제 권리로 바꿀 장치가 관건이다",
-      "subject": "재난 피해자 가족 지원 소통 전담팀과 재난 피해자 지원센터",
-      "affected_group": "재난 피해자와 유가족, 실종자 가족, 재난 이후 행정·복지 지원을 받아야 하는 주민",
-      "mechanism": "전담팀과 지원센터 설치·통합 운영의 근거는 마련됐지만, 피해자에게 어떤 정보를 언제 제공하고 보상·상담·의료·법률 지원을 어떻게 연결할지는 확인되지 않는다.",
-      "civic_importance": "재난 직후 피해자 가족은 정보 부족과 기관 간 떠넘기기로 이중 피해를 겪을 수 있어, 지자체의 소통 책임과 지원 접근권을 점검할 필요가 있다.",
-      "anchor_quote": "재난 피해자 가족 지원 소통 전담팀을 신설하고 재난 피해자 지원센터와 통합지원본부를 통합 운영할 수 있는 근거를 마련함으로써",
-      "evidence_status": "PROPOSAL",
-      "public_question": "동작구에서 큰 재난이 발생하면 피해자 가족은 누구에게 연락하고, 사고 원인·지원 내용·처리 진행 상황을 언제까지 공식적으로 안내받을 수 있는가?",
-      "counterintuitive_question": "지원기관을 통합하면 창구가 하나로 줄어 편리해지는 것이 아니라, 책임 소재가 모호해져 피해자에게 또 다른 행정 장벽이 생기는 것은 아닌가?",
-      "scope_hint": "CITYWIDE",
-      "broadcast_potential": 8,
-      "why_not_routine": "재난 대응 조직의 명칭 정비가 아니라 피해자 가족과 행정의 소통 구조를 새로 만드는 정책으로, 실제 재난 매뉴얼·모의훈련·피해자 경험을 통해 실효성을 검증할 수 있다.",
-      "unknowns": [
-        "전담팀의 소속과 실제 담당 인원은 몇 명인지",
-        "재난 유형별로 제공되는 상담·의료·주거·법률 지원의 범위는 무엇인지",
-        "통합지원본부와 지원센터를 통합 운영하는 경우 지휘·책임 주체가 누구인지",
-        "최근 재난 대응에서 유가족 소통이나 지원이 지연된 사례가 있었는지",
-        "전담팀이 평상시에도 운영되는지, 재난 때만 구성되는지",
-        "피해자 가족에게 제공할 지원 목록과 연락 창구는 무엇인가",
-        "지원센터와 통합지원본부의 지휘·책임 관계는 어떻게 되는가",
-        "피해자 개인정보와 언론·기관 제공 정보의 보호 기준은 있는가"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 2,
-      "related_document_count": 2,
-      "related_sources": [
-        "동작구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "OFFICIAL:dongjak:cbf500506dc85dfa17fe3864",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20269",
-          "anchor_quote": "재난 피해자 가족 지원 소통 전담팀을 신설하고 재난 피해자 지원센터와 통합지원본부를 통합 운영할 수 있는 근거를 마련함으로써",
-          "evidence_status": "PLAN"
-        },
-        {
-          "document_id": "CLIKC3015833254357261",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
-          "anchor_quote": "재난 피해자 가족 지원 소통 전담팀을 신설하고 재난 피해자 지원센터와 통합지원본부를 통합 운영할 수 있는 근거를 마련함으로써",
-          "evidence_status": "PROPOSAL"
-        }
-      ],
-      "consolidation_reason": "재난 피해자와 유가족을 위한 전담팀·지원센터를 만들면서도 24시간 연락, 정보 제공, 보상·의료·법률·심리 지원의 실제 연결 책임이 불명확하다는 동일 사안이다."
-    },
-    {
-      "candidate_id": "3136487fda3ca840cebd",
-      "document_id": "OFFICIAL:dongjak:cbf500506dc85dfa17fe3864",
-      "source_id": "dongjak",
-      "source_name": "동작구",
-      "meeting_date": "2026-09-18",
-      "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20269",
-      "chunk_number": 1,
-      "signal_type": "SERVICE_GAP",
-      "headline": "퇴직·폐업 뒤에도 일할 수 있는 4050세대가 지역의 분절된 지원체계 속에서 경력을 다시 쓰지 못하고 있다",
-      "subject": "동작구형 4050 경력전환 일자리 매칭사업 제안",
-      "affected_group": "직장을 떠났거나 사업장을 정리한 4050세대 중장년, 폐업 소상공인",
-      "mechanism": "취업지원센터·50플러스센터·소상공인 지원사업이 각각 운영되지만 상담부터 실제 취업, 경력 활용, 고용 유지까지 연결하는 통합 경로와 기업 수요 기반 매칭이 충분하지 않다는 문제 제기다. 재취업 지연 시 가계소득 공백과 노후자산 소진으로 이어질 수 있다.",
-      "civic_importance": "주된 일자리에서 물러난 뒤에도 장기간 일하기를 원하는 중장년층이 많고, 개인의 경력 손실이 가계 위기와 지역 기업의 숙련인력 부족으로 동시에 이어질 수 있다. 구청이 단순 교육 인원보다 실제 취업과 고용유지를 책임질 수 있는지 확인할 수 있다.",
-      "anchor_quote": "교육 위주의 지원에서 벗어나 기업의 실제 채용수요를 중심으로 사업을 설계해야 합니다.",
-      "evidence_status": "PROPOSAL",
-      "public_question": "동작구는 4050 퇴직자와 폐업 소상공인을 실제 일자리로 연결한 성과를 얼마나 내고 있으며, 새 사업이 교육·상담 실적에 그치지 않도록 어떤 책임지표를 둘 것인가?",
-      "counterintuitive_question": "중장년 재취업의 가장 큰 장애가 교육 부족이 아니라 기업의 채용수요와 지원기관의 연결 실패라면, 동작구는 교육 예산보다 기업 발굴과 고용유지에 자원을 배분하고 있는가?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 8,
-      "why_not_routine": "단순 신규 일자리 사업이 아니라 퇴직·폐업 이후 소득 공백, 공공 지원체계의 분절, 실제 채용과 고용유지 성과를 현장 취재로 검증할 수 있는 구조적 의제다.",
-      "unknowns": [
-        "동작구 4050세대의 퇴직·폐업 규모와 재취업 소요 기간",
-        "기존 취업지원센터와 50플러스센터 사업의 중복·연계 실태",
-        "제안된 시범사업의 예산, 담당 주체, 참여 기업 확보 여부",
-        "교육 수료 뒤 실제 취업률과 6개월 고용유지율",
-        "동작구의 기존 중장년 지원사업별 이용자 수와 사업 간 연계 실적",
-        "상담 이후 실제 취업률과 6개월 이상 고용유지율",
-        "동작구 및 서울 서남권 기업의 4050 경력자 채용 수요",
-        "2027년 시범사업의 예산 규모와 성과 책임 부서"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 2,
-      "related_document_count": 2,
-      "related_sources": [
-        "동작구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3015833254357261",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
-          "anchor_quote": "그러나 퇴직이나 폐업 이후 이들의 경력을 필요로 하는 기업과 연결해 주는 통로는 충분하지 않습니다.",
-          "evidence_status": "PROPOSAL"
-        },
-        {
-          "document_id": "OFFICIAL:dongjak:cbf500506dc85dfa17fe3864",
-          "source_name": "동작구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20269",
-          "anchor_quote": "교육 위주의 지원에서 벗어나 기업의 실제 채용수요를 중심으로 사업을 설계해야 합니다.",
-          "evidence_status": "PROPOSAL"
-        }
-      ],
-      "consolidation_reason": "동작구의 취업지원센터·50플러스센터·소상공인 지원이 분절돼 4050 퇴직자와 폐업 소상공인을 실제 채용과 고용 유지로 연결하지 못한다는 동일한 일자리 연계 문제다."
-    },
-    {
-      "candidate_id": "8d36637069f945080bc3",
-      "document_id": "CLIKC3067625553454589",
-      "source_id": "seocho",
-      "source_name": "서초구",
-      "meeting_date": "2026-09-15",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
-      "chunk_number": 4,
-      "signal_type": "RIGHTS_GAP",
-      "headline": "대규모 체육사업의 주민수요와 예산 근거가 충분히 공개되지 않은 채 추경 심사에 올라온 문제",
-      "subject": "원지동 파크골프장 조성 과정의 자료 공개와 주민의견 수렴",
-      "affected_group": "서초구의회와 서초구민, 특히 시설 이용 여부에 따라 비용 부담이 달라지는 주민",
-      "mechanism": "사업 배경, 서울시 승인 시점, 설문조사 대상·방법·결과, 공사비 산정 근거가 초기에는 한 장짜리 자료와 짧은 추경 사유로 제시됐다가 의원들의 반복 질의 뒤에야 상세 자료가 제공됐다. 주민 의견 수렴의 범위와 대표성도 확인되지 않았다.",
-      "civic_importance": "구비 12억 원과 향후 운영비가 들어가는 사업에서 주민이 사업 필요성과 비용 적정성을 판단할 핵심 정보가 사전에 충분히 제공되지 않았다면, 예산 통제와 참여권이 약화될 수 있다.",
-      "anchor_quote": "추경 사유가 너무 한 줄로만 작성이 되어 있었어요.",
-      "evidence_status": "ALLEGATION",
-      "public_question": "주민들이 24억 원 규모 사업의 필요성과 이용기간을 판단할 수 있도록, 수요조사 원자료와 사업비 산정·서울시 협의 문서를 예산 집행 전에 공개했는가?",
-      "counterintuitive_question": "파크골프 수요가 많다는 조사 결과가 있어도, 실제 이용 의사가 없는 주민까지 부담하는 구비 사업이라면 찬성률보다 비용 부담 의사와 대체 체육시설 수요를 조사해야 하는 것 아닌가?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 8,
-      "why_not_routine": "의원의 자료 요구가 단순한 보고서 형식 문제가 아니라, 대규모 추경 사업에서 수요조사와 비용 근거가 뒤늦게 제시된 행정 투명성 문제를 드러낸다. 설문 원자료와 최초·수정 자료를 비교해 검증할 수 있고 다른 임시 공공시설 사업에도 적용 가능한 비교 축이 있다.",
-      "unknowns": [
-        "무상 사용기간의 정확한 시작일과 종료일",
-        "서울시 공공병원·복지시설 사업의 착공 및 부지 회수 일정",
-        "5년 이후 사용기간 연장 가능 여부와 연장 조건",
-        "사업 종료 시 시설 철거·원상복구 비용의 최종 부담 주체와 규모",
-        "설문조사를 실시한 시점과 전체 응답자 수",
-        "응답자의 거주지·연령·시설 이용 여부 등 표본 구성",
-        "찬반 문항과 조사기관, 원자료 공개 여부",
-        "주민설명회나 별도 의견수렴 절차의 개최 여부"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 2,
-      "related_document_count": 1,
-      "related_sources": [
-        "서초구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3067625553454589",
-          "source_name": "서초구",
-          "meeting_date": "2026-09-15",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
-          "anchor_quote": "정말로 3년 8개월만 한다고 하면 제가 주민의 입장에서 너무 기분 나쁠 것 같아요.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "CLIKC3067625553454589",
-          "source_name": "서초구",
-          "meeting_date": "2026-09-15",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
-          "anchor_quote": "추경 사유가 너무 한 줄로만 작성이 되어 있었어요.",
-          "evidence_status": "ALLEGATION"
-        }
-      ],
-      "consolidation_reason": "서초구 원지동 임시 파크골프장에 24억 원을 투입하면서 수요조사·이용기간·서울시 부지 회수 가능성·운영비와 주민 의견 공개가 부족하다는 동일 사안이다."
-    },
-    {
-      "candidate_id": "576d929edda9d1ffaf2e",
-      "document_id": "CLIKC3067625553454589",
-      "source_id": "seocho",
-      "source_name": "서초구",
-      "meeting_date": "2026-09-15",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
-      "chunk_number": 2,
-      "signal_type": "REPEATED_FAILURE",
-      "headline": "‘아시아 태평양 사법정의허브’ 사업의 근거 용역, 핵심 기관과 주민 의견을 대표하지 못했나",
-      "subject": "서초구 아시아·태평양 사법정의허브 조성 연구용역 및 후속 사업",
-      "affected_group": "서초구민, 사업 대상 지역 주민·법조기관, 향후 사업 예산을 부담할 시민",
-      "mechanism": "5억4200만원의 시설비·디자인·용역이 포함된 사업 과정에서 연구용역이 먼저 진행됐지만, 보고서에는 문화벨트와 헤이그 모델의 연결성이 부족하다는 지적이 나왔다. 설문도 변호사 383명, 서초구민 150명, 서울시민 50명에 비해 대검찰청·대법원 소속 응답자는 각각 15명과 10명에 그쳤고, 자문 의견에는 발언자의 전문성과 출처가 표시되지 않았다.",
-      "civic_importance": "도시 브랜드와 대규모 공간·문화 사업의 방향을 정하는 연구용역이 부실하거나 대표성이 낮다면, 이후 디자인·행사·시설 조성 예산 전체의 타당성에 영향을 줄 수 있다. 특히 사업의 핵심 당사자인 법조기관과 지역 주민의 의견이 어떻게 반영됐는지 시민이 알기 어렵다.",
-      "anchor_quote": "이 헤이그가 어떻게 만들어졌는지 그 순서 자체를 우리가 다시 한번 명심을 해야 될 필요가 있을 것 같은데",
-      "evidence_status": "ALLEGATION",
-      "public_question": "서초구는 이 용역의 조사 설계와 비용, 자문 근거를 공개하고, 실제 사업 결정이 대표성 있는 주민·기관 의견에 근거했다는 것을 어떻게 입증할 것인가?",
-      "counterintuitive_question": "응답자가 적은 대법원·대검찰청 관계자 의견을 보고서에서 제외한 것이 오히려 정직한 처리였을까, 아니면 사업의 핵심 이해관계자를 조사에서 사실상 배제한 결과일까?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 9,
-      "why_not_routine": "문서 표현에 대한 단순한 이견이 아니라, 도시 브랜드 사업의 출발점인 연구용역의 비용·표본·전문성·정책 반영 여부를 동시에 검증할 수 있는 사안이다. 보고서 원문, 계약·지출 자료, 설문 원자료, 헤이그 현지 모델과의 비교를 통해 공공사업 타당성 검증 보도로 확장 가능하다.",
-      "unknowns": [
-        "5억4200만원 중 순수 연구용역비와 디자인·시설비의 세부 집행액",
-        "최종보고서가 후속 사업의 어떤 의사결정과 예산에 직접 반영됐는지",
-        "설문 문항·표본 추출 방식·응답률과 조사 제외 기준",
-        "자문위원 명단·소속·전문 분야 및 자문 의견이 보고서에 익명 처리된 이유",
-        "시설과 프로그램에 투입된 총사업비와 연도별 집행 내역",
-        "추가 시설의 설치비·전기료·유지보수 예상액",
-        "사법정의 라운지 하루 20~30명 이용자의 실제 이용 목적과 주민 비율",
-        "행사 전후 유동인구·매출·소상공인 매출 변화를 비교한 자료",
-        "서초구가 단독 또는 관계 기관과 공동으로 결정할 수 있는 사업의 법적 범위",
-        "국제회의·기구 유치의 공식 목표와 연도별 성과지표"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 4,
-      "related_document_count": 1,
-      "related_sources": [
-        "서초구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3067625553454589",
-          "source_name": "서초구",
-          "meeting_date": "2026-09-15",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
-          "anchor_quote": "이 헤이그가 어떻게 만들어졌는지 그 순서 자체를 우리가 다시 한번 명심을 해야 될 필요가 있을 것 같은데",
-          "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "CLIKC3067625553454589",
-          "source_name": "서초구",
-          "meeting_date": "2026-09-15",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
-          "anchor_quote": "거기에 대해서 구체적인 파악은 안 되어 있습니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "CLIKC3067625553454589",
-          "source_name": "서초구",
-          "meeting_date": "2026-09-15",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
-          "anchor_quote": "국제회의 같은 경우에는 저희가 예상을 해서 몇 월에 개최하겠다고 하기에는 단정하기에는 어려운 부분이 있어서",
-          "evidence_status": "OFFICIAL_FINDING"
-        },
-        {
-          "document_id": "CLIKC3067625553454589",
-          "source_name": "서초구",
-          "meeting_date": "2026-09-15",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
-          "anchor_quote": "우리가 하고 싶은 프로그램들을 설계를 해서 거기에 이 용역보고서가 맞춰가고 있습니다.",
-          "evidence_status": "ALLEGATION"
-        }
-      ],
-      "consolidation_reason": "서초구 아시아·태평양 사법정의허브 사업이 대표성 부족한 연구용역과 불명확한 자치구 권한·성과지표에 바탕을 두고 시설·브랜딩·국제행사를 확대하려 한다는 동일한 사업 타당성·성과 검증 문제다."
-    },
-    {
-      "candidate_id": "5ca69cc7af6de6413436",
-      "document_id": "OFFICIAL:mapo:3acf5b0785d8c4c481bc1479",
-      "source_id": "mapo",
-      "source_name": "마포구",
-      "meeting_date": "2026-09-21",
-      "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=ff69e944617333a25e2036ef325f3e429c82b117def7a476f1b9cdb35b904e7da734787bff0dd8b0",
-      "chunk_number": 2,
-      "signal_type": "SERVICE_GAP",
-      "headline": "사업자 공백과 장기계약 부담이 겹친 농수산물시장, 정상화 책임은 누구에게 있나",
-      "subject": "마포농수산물시장 운영사업자 선정 및 기존 계약 해지",
-      "affected_group": "시장 상인, 농수산물시장 이용 구민, 시장 인근 상권",
-      "mechanism": "기존 경보유통 계약이 해지된 뒤 신규 공고의 낙찰자가 계약을 포기하면서 운영 공백이 발생했다. 구청장은 새 계약이 5년+5년, 최대 10년 이어질 수 있어 신중한 선정이 필요하다고 밝혔고, 의원은 상인들의 생계 부담과 사업자 선정 과정의 책임을 제기했다.",
-      "civic_importance": "공공시설 운영사업자 선정이 상인들의 영업 지속 여부와 구민의 장보기 서비스, 향후 10년의 공공자산 운영에 직접 영향을 미친다. 특정 업체 내정 의혹과 과거 계약의 특혜 의혹까지 제기돼 선정 절차의 투명성 검증이 필요하다.",
-      "anchor_quote": "현재 공단에서는 법적 절차에 의해서 먼저 1차로 공고를 냈는데 낙찰자가 계약을 포기함으로써 행위가 이루어지지 않았습니다.",
-      "evidence_status": "OBSERVED_OUTCOME",
-      "public_question": "공공시장 운영 공백으로 상인과 이용 시민이 부담을 지고 있는데, 계약 해지부터 낙찰자 포기까지의 책임과 손실을 누가 어떻게 부담합니까?",
-      "counterintuitive_question": "시장 침체의 원인이 단순히 사업자 역량 부족이 아니라 장기 임대조건, 점포 사용료 현실화 실패, 매장 간 상품 중복 같은 구조에 있는 것은 아닙니까?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 5,
-      "why_not_routine": "사업자 재공고를 알리는 행정 소식이 아니라, 공공시장 장기 운영권 선정과 과거 계약 관리 실패가 상인 생계와 공공자산에 미친 영향을 추적할 수 있다.",
-      "unknowns": [
-        "2차 입찰공고가 지연된 구체적인 법적·행정적 사유",
-        "공단 내부 규정상 구청 협의 또는 승인이 실제로 필요한지 여부",
-        "공실 기간 동안 상인들의 매출과 방문객 수가 얼마나 감소했는지",
-        "입찰보증금과 임대조건을 조정할 수 있는지 여부",
-        "문제가 된 입찰공고의 대상 시설과 구체적인 오류",
-        "입찰공고로 발생했거나 예상되는 공실·매출·공공비용 규모",
-        "공실 활용과 시장 활성화를 위해 감사장에서 약속한 대안의 내용",
-        "공단이 입찰을 재추진했는지와 마포구가 사전 검토·승인했는지",
-        "경보유통 계약 해지의 구체적 사유와 법적 분쟁 내용",
-        "1차 공고의 입찰 조건, 낙찰자와 계약 포기 사유"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 3,
-      "related_document_count": 2,
-      "related_sources": [
-        "마포구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "OFFICIAL:mapo:3acf5b0785d8c4c481bc1479",
-          "source_name": "마포구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=ff69e944617333a25e2036ef325f3e429c82b117def7a476f1b9cdb35b904e7da734787bff0dd8b0",
-          "anchor_quote": "지금 마포농수산물시장 다농마트가 공실로 9개월째 저러고 있습니다.",
-          "evidence_status": "OBSERVED_OUTCOME"
-        },
-        {
-          "document_id": "OFFICIAL:mapo:b76a624462b2b841815f2dc9",
-          "source_name": "마포구",
-          "meeting_date": "2026-09-22",
-          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=f522a426ea577d1b28d893c21fe9a1418ddb885e0b5e1bfcc1997df123ade98daecc76e5b66bb417",
-          "anchor_quote": "그런데 감사 이후 구정질문에서는 대안에 대한 설명이나 보고 없이 입찰공고를 빨리 내야 한다는 취지의 답변이 나왔습니다.",
-          "evidence_status": "ALLEGATION"
-        },
-        {
-          "document_id": "OFFICIAL:mapo:3acf5b0785d8c4c481bc1479",
-          "source_name": "마포구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=ff69e944617333a25e2036ef325f3e429c82b117def7a476f1b9cdb35b904e7da734787bff0dd8b0",
-          "anchor_quote": "현재 공단에서는 법적 절차에 의해서 먼저 1차로 공고를 냈는데 낙찰자가 계약을 포기함으로써 행위가 이루어지지 않았습니다.",
-          "evidence_status": "OBSERVED_OUTCOME"
-        }
-      ],
-      "consolidation_reason": "마포농수산물시장 핵심 점포의 계약 해지·낙찰자 포기·공실 장기화 상황에서 대안 검토보다 입찰을 서두르거나 장기계약을 추진해 상인과 이용자의 피해가 커질 수 있다는 동일한 운영사업자 선정 문제다."
-    },
-    {
-      "candidate_id": "e93f42b1912229f5e818",
+      "candidate_id": "5fdb0c492864ff21073b",
       "document_id": "CLIKC3015832853247804",
       "source_id": "dongjak",
       "source_name": "동작구",
       "meeting_date": "2026-09-21",
       "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-      "chunk_number": 3,
-      "signal_type": "REPEATED_FAILURE",
-      "headline": "위탁 복지시설 기관장의 재량이 복무·차량 운행 증빙 공백으로 이어져 구청의 예산·복무 통제가 작동하지 않았다",
-      "subject": "동작구 산하 위탁 복지기관 기관장의 근무·연가·출장·업무용 차량 및 유류비 관리",
-      "affected_group": "동작구민과 복지시설 이용자, 구비·보조금 부담 시민",
-      "mechanism": "상근 기관장의 출퇴근 기록과 출장 신청·복명서가 없고, 연가·대체휴무 승인 근거도 불분명한 상태에서 차량 운행일지와 유류비 자료만으로 근무와 지출이 처리됐다. 연가 중 차량 운행, 차량 일지와 맞지 않는 주유 기록, 차량 용량을 초과하는 주유량 등 원자료 간 불일치가 제기됐지만 구청은 그동안 이를 직접 대조하지 않았다고 인정했다.",
-      "civic_importance": "기관장에게 지급된 급여·연가보상비·대체휴무와 업무용 차량 유지비가 실제 근무와 공적 업무에 근거했는지 확인되지 않으면 복지 예산의 부당 집행과 관리 책임 공백으로 이어질 수 있다. 수탁법인과 구청의 지도·감독 체계가 형식적으로 작동했는지도 확인할 필요가 있다.",
-      "anchor_quote": "기관장의 출퇴근 기록은 없고 연가와 대체 휴무의 근거는 분명하지 않습니다.",
+      "chunk_number": 1,
+      "signal_type": "PUBLIC_COST",
+      "headline": "매각 시한을 아는 청사에 공공기관을 몰아넣은 뒤 재이전 비용과 업무 공백을 다시 시민이 부담할 우려",
+      "subject": "노량진 구청사 활용과 공공기관 18곳의 입주·재이전 결정",
+      "affected_group": "구청사 입주 기관 이용 주민, 해당 기관 종사자, 청소년·영유아·청년 등 서비스 이용자, 동작구 재정 부담을 지는 주민",
+      "mechanism": "2027년 11월 건물 인도가 예정돼 있었지만 최종 이전지와 총비용을 포함한 중장기 배치계획 없이 기관들을 구청사로 이전했다. 그 결과 이미 약 4억 2천만 원의 이전비가 발생했고, 일부 기관은 2년 안팎 만에 다시 이전해야 한다.",
+      "civic_importance": "공공시설 배치는 단순한 사무실 이동이 아니라 서비스 접근성, 사업비, 시설 투자와 직결된다. 임시 공간 활용이 장기계획 부재로 반복되면 이사비뿐 아니라 공공서비스 중단과 기존 공간 공실까지 발생할 수 있다.",
+      "anchor_quote": "입주 기관을 결정할 당시에 최종 이전지에 대한, 다음 이전지에 대한 중장기 계획은 없었던 걸로 확인이 됩니다.",
       "evidence_status": "OFFICIAL_FINDING",
-      "public_question": "구청과 수탁법인은 기관장의 재임 기간 전체에 대해 근무·휴가·출장·차량·유류비 원자료를 대조해 부당 지급이나 사적 사용이 있었는지 밝히고, 확인된 금액을 환수할 것인가?",
-      "counterintuitive_question": "기관장이라는 이유로 출퇴근과 출장 기록은 면제하면서 대체휴무에는 직원 규정을 적용한 이중 기준이 단순한 규정 미비인가, 아니면 특정인의 복무상 혜택을 가능하게 한 관리 구조였는가?",
+      "public_question": "구청은 이미 사용 종료 시점이 정해진 청사에 기관을 입주시킬 때 왜 최종 이전지와 두 차례 이사 비용까지 계산하지 않았으며, 앞으로 발생할 재이전 비용은 누가 부담합니까?",
+      "counterintuitive_question": "빈 청사를 활용해 상권과 주민 편의를 살리려던 조치가 실제로는 기존 시설을 비우고 다시 이사하게 만들어, 공간을 활용하지 않는 것보다 더 큰 공공비용과 서비스 공백을 낳은 것은 아닙니까?",
       "scope_hint": "SINGLE_CASE",
       "broadcast_potential": 9,
-      "why_not_routine": "단순한 서류 누락이 아니라 급여·휴가·차량·유류비 자료가 서로 맞지 않고, 구청이 원자료 대조를 하지 않은 사실까지 확인된 사안이다. 기관 방문 확인, 차량·주유 데이터 검증, 수탁법인 승인 체계 비교를 통해 6~7분 리포트로 확장할 수 있다.",
+      "why_not_routine": "국장이 중장기 이전계획과 총비용 비교가 없었다고 인정했고, 구체적 기관별 사례와 금액이 제시돼 책임 구조·현장 이용자 피해·다른 자치구의 공공시설 배치 관행까지 확장 검증할 수 있다.",
       "unknowns": [
-        "문제가 제기된 기관의 정확한 수와 기관별 사실관계",
-        "연가보상비·인건비·유류비 등 실제 부당 집행 또는 환수 대상 금액",
-        "차량 운행·주유 기록의 오류가 고의인지 단순 입력·관리 실수인지",
-        "동작구의 지도점검 주기와 과거 지적·시정·환수·징계 결과",
-        "기관장이 실제로 근무·출장·휴일근무를 했는지",
-        "연가 17일 부여와 연가보상비 132만 1,740원의 법적·내부 규정상 근거",
-        "연가 중 차량 운행 28건의 실제 운전자와 운행 목적",
-        "차량 일지와 유류 카드·영수증·누적 주행거리 간 불일치가 기재 오류인지 부적정 집행인지 여부",
-        "기관장이 실제로 출근·출장·휴일근무를 했는지와 차량 운행 목적이 무엇이었는지",
-        "연가 17일 부여와 10일분 연가보상비 지급에 법적·내부 규정상 근거가 있었는지"
+        "18개 기관별 최초 이전비와 재이전 예상비용의 전체 합계",
+        "기관별 이전 과정에서 발생할 운영 중단·이용자 불편 규모",
+        "구청사 매각 또는 인도 일정의 변경 가능성",
+        "기존 공간의 공실 기간과 재활용 가능성",
+        "18개 기관별 기존 이전 비용과 재이전 예상 비용",
+        "각 기관의 현 위치 계약·사용 가능 기간과 재이전이 확정된 기관의 범위",
+        "기존 배치 결정 과정에서 주민 접근성·기능 연계성·총비용을 비교한 공식 평가자료의 존재 여부",
+        "재배치 계획 수립과 집행을 누가 어떤 기준으로 최종 결정하는지",
+        "구청사 입주 기관 18곳의 최초·재이전 예상 비용을 모두 합한 규모",
+        "각 기관의 이전 결정 과정에서 비용·사용기간·대체 공간을 비교한 공식 검토자료의 존재 여부"
       ],
       "review_status": "UNREVIEWED",
-      "related_evidence_count": 3,
+      "related_evidence_count": 7,
       "related_document_count": 2,
       "related_sources": [
         "동작구"
@@ -1679,7 +802,106 @@
           "source_name": "동작구",
           "meeting_date": "2026-09-21",
           "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
-          "anchor_quote": "기록을 신뢰할 수 없다면 그 기록을 근거로 이루어진 복무 처리와 예산 집행 역시 신뢰하기 어렵기 때문입니다.",
+          "anchor_quote": "입주 기관을 결정할 당시에 최종 이전지에 대한, 다음 이전지에 대한 중장기 계획은 없었던 걸로 확인이 됩니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "2027년이면 18개 기관이 다시 구청사를 나와야 합니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+          "anchor_quote": "입주 기관을 결정할 당시에 최종 이전지에 대한, 다음 이전지에 대한 중장기 계획은 없었던 걸로 확인이 됩니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+          "anchor_quote": "공간은 비어 있기 때문에 채우는 것이 아니라 주민에게 필요한 기능을 담기 위해 존재해야 합니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+          "anchor_quote": "2025년 구청사로 이전하면서 약 4,500만 원의 비용을 사용했고 2027년이면 다른 공간을 찾아야 합니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "동작청년센터는 2027년 이후의 공간과 운영방안을 지금부터 정해야 합니다.",
+          "evidence_status": "PROPOSAL"
+        },
+        {
+          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+          "anchor_quote": "청년센터가 제대로 진행되려면 전문적인 운영인력과 전문 프로그램을 해야 되기 때문에 지금과 같은 동행일자리 수준의 사람을 두 사람 갖다 놓는 수준의 운영은 하지 않을 것이라고 생각합니다.",
+          "evidence_status": "PLAN"
+        }
+      ],
+      "consolidation_reason": "사용 종료 시점이 정해진 노량진 구청사에 18개 기관과 청년·보육시설을 임시 배치해 반복 재이전비와 서비스 거점 불안을 만든 동일한 공간계획 실패다."
+    },
+    {
+      "candidate_id": "102d30e6171adffdeaee",
+      "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+      "source_id": "dongjak",
+      "source_name": "동작구",
+      "meeting_date": "2026-09-21",
+      "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+      "chunk_number": 3,
+      "signal_type": "EXISTING_HARM",
+      "headline": "위탁 복지기관장에게만 복무·차량·수당 검증의 예외가 누적됐다는 의혹",
+      "subject": "동작구 산하 위탁 복지시설 기관장의 출퇴근·출장·연가·대체휴무 및 업무용 차량·유류비 관리",
+      "affected_group": "동작구민과 해당 시설 종사자, 구비가 투입되는 복지시설 이용자",
+      "mechanism": "기관장의 출퇴근 기록과 출장 신청·복명서가 없고, 연가·대체휴무·연가보상비의 승인 근거도 확인되지 않은 상태에서 차량 운행일지와 본인 작성 자료를 중심으로 복무와 지출이 처리됐다는 문제 제기다. 연가 중 차량 운행, 차량 일지와 주유 내역 불일치, 차량 탱크 용량을 초과하는 당일 주유량 등 원자료 대조가 필요한 사례도 제시됐다. 국장은 기관장 복무를 점검하지 않은 사실과 지도점검이 소홀했던 점을 인정했다.",
+      "civic_importance": "복지시설 운영비와 인건비·차량 유지비에 구민 세금이 들어가는 만큼, 기관장에게만 검증 가능한 기록과 승인 절차가 적용되지 않았다면 부당한 복무 처리나 예산 집행을 장기간 발견하지 못할 수 있다. 한 기관의 문제를 넘어 수탁법인과 구청의 지도·감독 체계 전체를 점검할 사안이다.",
+      "anchor_quote": "기관장의 출퇴근 복무에 대해서는 지금 살피지 않은 거를 저희가 인지를 하였습니다.",
+      "evidence_status": "ALLEGATION",
+      "public_question": "구청은 해당 기관장의 재임 기간 전체에 대해 복무 기록과 차량·유류비 원자료를 직접 대조해, 잘못 지급된 보상비·대체휴무나 업무용 차량 비용이 있었는지 언제까지 공개하고 환수·징계할 것인가?",
+      "counterintuitive_question": "기관장에게 외부 업무 재량이 필요하다는 이유가 오히려 출퇴근·출장 기록을 면제하는 근거가 될 수 있는가, 아니면 재량이 클수록 수탁법인과 구청의 사후 검증 기록을 더 엄격하게 남겨야 하는가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 9,
+      "why_not_routine": "단순한 서류 누락이 아니라 기관장에게 직원 규정은 불리할 때 배제하고 유리할 때 적용했다는 형평성 문제, 공공차량·유류비의 실제 사용 여부, 구청의 반복적인 감독 실패가 함께 제기됐다. 원자료 대조와 해당 기관·수탁법인·구청의 책임 추적을 통해 6~7분 리포트로 확장할 수 있다.",
+      "unknowns": [
+        "기관장이 실제로 출근·출장·휴일근무를 했는지와 차량 운행 목적이 무엇이었는지",
+        "연가 17일 부여와 10일분 연가보상비 지급에 법적·내부 규정상 근거가 있었는지",
+        "연가 중 차량 운행 28건의 실제 운전자와 운행 목적",
+        "차량 일지·카드 승인 시각·영수증·누적 주행거리·하이패스·과태료 자료가 서로 일치하는지와 사적 사용 또는 부당 수령이 있었는지",
+        "기관장이 실제로 근무·출장·휴일근무를 했는지",
+        "연가 17일 부여와 연가보상비 132만 1,740원의 법적·내부 규정상 근거",
+        "차량 일지와 유류 카드·영수증·누적 주행거리 간 불일치가 기재 오류인지 부적정 집행인지 여부",
+        "문제가 제기된 기관의 정확한 수와 기관별 사실관계",
+        "연가보상비·인건비·유류비 등 실제 부당 집행 또는 환수 대상 금액",
+        "차량 운행·주유 기록의 오류가 고의인지 단순 입력·관리 실수인지"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 3,
+      "related_document_count": 2,
+      "related_sources": [
+        "동작구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+          "anchor_quote": "기관장의 출퇴근 복무에 대해서는 지금 살피지 않은 거를 저희가 인지를 하였습니다.",
           "evidence_status": "ALLEGATION"
         },
         {
@@ -1691,72 +913,114 @@
           "evidence_status": "OFFICIAL_FINDING"
         },
         {
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "기록을 신뢰할 수 없다면 그 기록을 근거로 이루어진 복무 처리와 예산 집행 역시 신뢰하기 어렵기 때문입니다.",
+          "evidence_status": "ALLEGATION"
+        }
+      ],
+      "consolidation_reason": "동작구 위탁 복지기관장의 출퇴근·연가·출장·차량·유류비 원자료를 대조하지 않아 복무와 공공비용 감독이 무너진 동일 사안이다."
+    },
+    {
+      "candidate_id": "4f6e123e9152c6683f3c",
+      "document_id": "CLIKC3015832853247804",
+      "source_id": "dongjak",
+      "source_name": "동작구",
+      "meeting_date": "2026-09-21",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+      "chunk_number": 5,
+      "signal_type": "SAFETY_RISK",
+      "headline": "흑석동 빗물펌프장, 개발과 방재시설 입지 변경 사이에서 침수 대응 공백 우려",
+      "subject": "흑석동 빗물펌프장 현 위치 증설안과 한강변 이전안",
+      "affected_group": "흑석동 주민과 저지대·침수 취약 지역 주민",
+      "mechanism": "공동주택 개발계획에 따라 당초 한강변 이전안이 현 위치 증설안으로 바뀌었고, 구청은 다시 이전안을 검토하고 있다. 위치 변경이 확정될 경우 설계·협의·사업 추진에 추가 시간이 걸릴 수 있으며, 시설 입지에 따라 침수 대응력과 주민 생활환경이 달라질 수 있다.",
+      "civic_importance": "빗물펌프장은 수십 년간 운영되는 사실상 영구적인 방재시설이어서 잘못된 입지 결정은 향후 침수 피해와 도시공간 이용에 장기적인 영향을 줄 수 있다. 특히 의회 답변에서 주민들은 이전 여부와 최소 3년의 추가 지연 가능성에 대해 설명을 요구하고 있다.",
+      "anchor_quote": "빗물펌프장은 한번 설치되면 수십 년간 운영되고 사실상 이전이 어려운 영구적인 방재 시설인 만큼",
+      "evidence_status": "PLAN",
+      "public_question": "개발사업 때문에 바뀐 빗물펌프장 입지가 흑석동 주민의 침수 안전을 실제로 더 높이는지, 그리고 결정 지연에 따른 책임과 비용은 누가 부담합니까?",
+      "counterintuitive_question": "한강변 이전이 더 안전하고 쾌적하다는 설명과 달리, 기존 부지 증설이 오히려 침수 대응 속도·배수 효율·비용 면에서 더 나은 선택일 가능성은 검증됐습니까?",
+      "scope_hint": "SINGLE_CASE",
+      "broadcast_potential": 9,
+      "why_not_routine": "단순한 공사 일정이 아니라 개발계획과 방재시설 입지가 충돌한 사례다. 침수 위험지역 현장, 기존·이전 예정 부지 비교, 서울시와 구청의 의사결정 문서, 다른 빗물펌프장 입지 사례를 통해 6~7분 리포트로 확장할 수 있다.",
+      "unknowns": [
+        "현 위치 증설안과 한강변 이전안의 침수 대응 성능, 공사비, 유지관리비 비교 자료가 공개됐는지",
+        "한강변 이전안의 기존 설계와 안전성 검토가 현재 기준에서도 유효한지",
+        "현 위치 증설 또는 이전으로 사업 일정이 실제로 얼마나 지연되는지",
+        "서울시와 어떤 부서가 어떤 공식 절차와 문서로 협의했는지와 주민 의견이 최종 결정에 어떻게 반영되는지",
+        "한강변 이전안과 현 위치 증설안의 침수 대응 성능·사업비·공사기간 비교 자료",
+        "민선 8기 전후 계획 변경의 공식 결정 문서와 변경 사유",
+        "기존 부지 증설 시 주변 주거환경·소음·악취·공원 조성에 미치는 영향",
+        "한강변 이전안이 실제로 어느 수준까지 설계·용역·행정절차를 진행했는지",
+        "한강변 이전안의 구체적 위치·방재 성능·사업비",
+        "현 위치 증설안과 이전안의 홍수 저감 효과 및 유지관리 비용 비교"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 7,
+      "related_document_count": 2,
+      "related_sources": [
+        "동작구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "빗물펌프장은 한번 설치되면 수십 년간 운영되고 사실상 이전이 어려운 영구적인 방재 시설인 만큼",
+          "evidence_status": "PLAN"
+        },
+        {
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "아파트 개발을 위해서 그 한강변 땅이 필요하니까 원래 이전했던 빗물펌프장이 원위치로 그렇게 된 것이지",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "따라서 흑석빗물펌프장 문제는 단순히 시설을 어느 위치에 둘 것인지의 문제가 아닙니다.",
+          "evidence_status": "PROPOSAL"
+        },
+        {
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "그동안 너무 많은 시간을 허비하였습니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
           "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
           "source_name": "동작구",
           "meeting_date": "2026-09-21",
           "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
-          "anchor_quote": "기관장의 출퇴근 복무에 대해서는 지금 살피지 않은 거를 저희가 인지를 하였습니다.",
-          "evidence_status": "ALLEGATION"
-        }
-      ],
-      "consolidation_reason": "동작구 산하 위탁 복지기관장의 출퇴근·출장·연가·차량·유류비 원자료가 서로 맞지 않는데도 구청의 대조·지도점검이 작동하지 않았다는 동일한 감독 실패다."
-    },
-    {
-      "candidate_id": "c9f6c241e99f107c8c29",
-      "document_id": "OFFICIAL:geumcheon:4a6953f363bf0db850d0fb1d",
-      "source_id": "geumcheon",
-      "source_name": "금천구",
-      "meeting_date": "2026-09-21",
-      "document_url": "https://council.geumcheon.go.kr/council/viewer/minutes/2957.do",
-      "chunk_number": 1,
-      "signal_type": "SERVICE_GAP",
-      "headline": "G밸리 기업 정보가 행정부서와 기관에 흩어져 지역 일자리 목표가 구민 고용으로 이어지지 않는 문제",
-      "subject": "G밸리 기업 정보 공유와 구인·구직 연계 체계",
-      "affected_group": "금천구 구직자와 경력보유여성, G밸리 입주기업, 지역 일자리 사업 참여자",
-      "mechanism": "의원 발언에 따르면 기업 정보와 접점이 여러 부서·관계기관에 분산돼 있고, 기업의 구인 수요가 일자리 사업과 주민에게 연결되지 않고 있다. 구청은 1만 2,500개 일자리와 고용률 69.3%를 목표로 제시했지만, 행사 홍보와 단발성 사업을 넘어 지속적인 기업 관리·정보 공유 체계가 마련됐는지는 불분명하다.",
-      "civic_importance": "국가산업단지라는 이유로 구청이 직접 관리하기 어렵더라도, 지역 기업의 일자리와 주민의 고용 기회를 연결하는 조정 책임은 남는다. 목표 일자리 수가 실제 금천구민의 취업으로 이어지는지 확인할 필요가 있다.",
-      "anchor_quote": "정보는 있지만 부서 간 공유되지 않고, 기업과의 접점은 있지만 내부에서 겉돌며, 일자리는 열려 있으나 정작 구민의 삶에는 닿지 못하고 있습니다.",
-      "evidence_status": "ALLEGATION",
-      "public_question": "금천구가 창출했다고 집계한 일자리 가운데 실제 금천구민이 취업하고 일정 기간 이상 유지한 일자리는 몇 개이며, 이를 확인할 책임 부서는 어디입니까?",
-      "counterintuitive_question": "일자리 부족이 아니라 기업 정보와 구직자 정보를 연결하지 못하는 행정 구조가 원인이라면, 신규 일자리 사업보다 기존 정보의 통합·매칭에 예산을 먼저 써야 하는 것 아닙니까?",
-      "scope_hint": "CITYWIDE",
-      "broadcast_potential": 5,
-      "why_not_routine": "G밸리라는 대규모 산업 기반과 구민의 고용 기회가 행정 단절로 분리되는 구조를 기업 현장, 구직자 사례, 고용 통계, 개인정보 공유 체계의 비교로 검증할 수 있다.",
-      "unknowns": [
-        "금천구와 관계기관이 보유한 G밸리 기업·구인 정보의 종류와 최신성",
-        "부서 간 정보 공유를 가로막는 법적·기술적 제약",
-        "올해 일자리 사업별 목표 인원과 실제 취업·고용 유지 성과",
-        "G밸리 기업 채용 중 금천구민이 취업한 규모와 경력보유여성 연계 실적",
-        "G밸리 입주기업의 구인 수요와 금천구민 취업 연계 실적",
-        "1만 2,500개 일자리의 산정 방식과 직접 고용·간접 고용 구분",
-        "부서·기관 간 공유 가능한 기업 정보의 범위와 개인정보·영업정보 보호 절차",
-        "경력보유여성 등 특정 구직자 집단의 실제 매칭률과 취업 유지율"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 2,
-      "related_document_count": 2,
-      "related_sources": [
-        "금천구"
-      ],
-      "supporting_anchors": [
+          "anchor_quote": "이전 시 방재기능 보강에는 최소 2-3년의 시간이 추가로 필요할 것으로 예상",
+          "evidence_status": "PROPOSAL"
+        },
         {
-          "document_id": "CLIKC3067576889748910",
-          "source_name": "금천구",
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
           "meeting_date": "2026-09-21",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067576889748910&collection=minutes",
-          "anchor_quote": "정보는 있지만 부서 간 공유되지 않고, 기업과의 접점은 있지만 내부에서 겉돌며, 일자리는 열려 있으나 정작 구민의 삶에는 닿지 못하고 있습니다.",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "방재기능 보강에 최소 2년에서 3년 이상 지연될 우려가 있습니다.",
           "evidence_status": "ALLEGATION"
         },
         {
-          "document_id": "OFFICIAL:geumcheon:4a6953f363bf0db850d0fb1d",
-          "source_name": "금천구",
+          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+          "source_name": "동작구",
           "meeting_date": "2026-09-21",
-          "document_url": "https://council.geumcheon.go.kr/council/viewer/minutes/2957.do",
-          "anchor_quote": "정보는 있지만 부서 간 공유되지 않고, 기업과의 접점은 있지만 내부에서 겉돌며, 일자리는 열려 있으나 정작 구민의 삶에는 닿지 못하고 있습니다.",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+          "anchor_quote": "방재기능 보강에 최소 2년에서 3년 이상 지연될 우려가 있습니다.",
           "evidence_status": "ALLEGATION"
         }
       ],
-      "consolidation_reason": "G밸리 기업·구인 정보가 부서와 관계기관에 흩어져 금천구의 일자리 목표가 실제 구민 취업과 고용 유지로 연결되지 않는다는 동일한 행정 연계 실패다."
+      "consolidation_reason": "흑석 빗물펌프장의 현 위치 증설과 한강변 이전을 둘러싼 개발계획 변경, 방재 지연, 매몰비용과 침수 안전 책임을 다룬 동일 사업이다."
     },
     {
       "candidate_id": "fbc88c9e9fc09089887f",
@@ -1813,38 +1077,152 @@
           "evidence_status": "ALLEGATION"
         }
       ],
-      "consolidation_reason": "동작구 정신건강복지센터를 신대방에 집중 배치하면서 구 전체 주민의 이동거리·대중교통 접근성과 익명성에 대한 비교 검토가 부족하다는 동일한 입지·서비스 접근성 문제다."
+      "consolidation_reason": "동작구 정신건강복지 기능을 신대방에 집중할 때 구 전체 이용자의 이동거리·생활권 접근성을 검증하지 않은 동일한 입지 문제다."
     },
     {
-      "candidate_id": "b82d88c48d90dd835a2d",
+      "candidate_id": "b7c07f7e02aecdd066a8",
+      "document_id": "CLIKC3015832853247804",
+      "source_id": "dongjak",
+      "source_name": "동작구",
+      "meeting_date": "2026-09-21",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+      "chunk_number": 4,
+      "signal_type": "SERVICE_GAP",
+      "headline": "억대 예산 이커머스 지원사업이 교육·방송 실적에 비해 실제 판매 성과를 설명하지 못하고 있다",
+      "subject": "동작 이커머스 스테이션의 예산 투입과 소상공인 매출 성과",
+      "affected_group": "동작구 소상공인, 사업 이용 업체, 예산을 부담하는 주민",
+      "mechanism": "의원 제시 자료상 운영 초기 96일 동안 약 1억3천만 원이 투입됐지만 매출 총액은 약 800만 원에 그쳤다. 사업의 성과가 교육 횟수와 방송 횟수 중심으로 관리되고 실제 주문·거래액·참여 업체의 매출 증가 여부는 불분명하다.",
+      "civic_importance": "소상공인 판로 지원이라는 공익적 목적이 실제 매출 증대로 이어졌는지에 따라 억대 예산의 지속 여부와 지원 방식이 달라져야 한다.",
+      "anchor_quote": "운영 초기 96일 동안 약 1억 3,000만 원의 비용이 투입됐고, 같은 기간 매출 총액은 약 800만 원에 그쳤습니다.",
+      "evidence_status": "ALLEGATION",
+      "public_question": "이 사업에 투입된 예산이 참여 소상공인의 실제 매출 증가로 얼마나 이어졌으며, 성과가 낮다면 왜 같은 방식의 사업을 계속해야 하는가?",
+      "counterintuitive_question": "시청자 수와 교육 횟수가 늘어도 매출이 늘지 않는다면 문제는 홍보 부족이 아니라 지원 대상·상품·플랫폼 설계에 있는 것 아닌가?",
+      "scope_hint": "CITYWIDE",
+      "broadcast_potential": 8,
+      "why_not_routine": "매출 자료와 업체 인터뷰, 시설 이용률, 유사한 다른 지자체 사업을 비교해 ‘활동 실적’과 ‘경제적 효과’의 간극을 검증할 수 있다.",
+      "unknowns": [
+        "2023~2026년 연도별 총사업비와 실제 소비자 거래액",
+        "교육·플랫폼·시설·홍보 등 항목별 지출",
+        "라이브커머스의 실제 주문 건수와 판매액",
+        "참여 업체별 매출 변화와 사업 참여가 없었을 때와의 비교 성과",
+        "2023~2026년 연도별 총예산과 시설·플랫폼·교육·홍보비 세부 집행액",
+        "실제 소비자 구매로 발생한 거래 건수와 거래액의 연도별 추이",
+        "참여 업체별 매출 변화와 사업 참여가 매출 증가에 미친 영향",
+        "자체 이커머스 플랫폼 구축 여부와 현재 운영률·이용률"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 2,
+      "related_sources": [
+        "동작구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "운영 초기 96일 동안 약 1억 3,000만 원의 비용이 투입됐고, 같은 기간 매출 총액은 약 800만 원에 그쳤습니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+          "anchor_quote": "운영 초기 96일 동안 약 1억 3,000만 원의 비용이 투입됐고, 같은 기간 매출 총액은 약 800만 원에 그쳤습니다.",
+          "evidence_status": "ALLEGATION"
+        }
+      ],
+      "consolidation_reason": "동작 이커머스 스테이션이 교육·방송 실적에 비해 실제 거래액과 소상공인 매출 성과가 낮은 동일한 성과관리 문제다."
+    },
+    {
+      "candidate_id": "b5ce6a27a420e43db9da",
+      "document_id": "CLIKC3015833254357261",
+      "source_id": "dongjak",
+      "source_name": "동작구",
+      "meeting_date": "2026-09-18",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
+      "chunk_number": 1,
+      "signal_type": "SERVICE_GAP",
+      "headline": "퇴직·폐업 뒤 20년을 더 일하고 싶은 4050세대가 분절된 지원체계에 갇혀 있다",
+      "subject": "동작구형 4050 경력전환 일자리 매칭사업 제안",
+      "affected_group": "직장을 떠났거나 사업장을 정리한 4050세대 중장년, 폐업 소상공인",
+      "mechanism": "동작취업지원센터·50플러스센터·소상공인 지원사업 등이 개별적으로 운영돼 상담부터 실제 취업, 경력 활용, 고용 유지까지 이어지는 통합 연결이 부족하다는 문제 제기",
+      "civic_importance": "중장년의 재취업 지연은 가계소득 공백과 노후자산 소진으로 이어질 수 있으며, 구청이 단순 교육 실적이 아니라 실제 취업과 고용 유지까지 책임질 수 있는지 따져볼 수 있다.",
+      "anchor_quote": "그러나 퇴직이나 폐업 이후 이들의 경력을 필요로 하는 기업과 연결해 주는 통로는 충분하지 않습니다.",
+      "evidence_status": "PROPOSAL",
+      "public_question": "동작구는 4050 주민에게 교육이나 상담을 제공하는 데서 그치지 않고 실제 채용과 6개월 고용 유지까지 책임 있게 연결하고 있는가?",
+      "counterintuitive_question": "중장년 일자리 부족의 원인이 구직자의 역량 부족이 아니라, 기업의 채용 수요와 공공 일자리 지원기관이 연결되지 않는 구조에 있는 것은 아닌가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 8,
+      "why_not_routine": "단순 일자리 사업 제안이 아니라 중장년의 장기 소득 공백, 기관 간 단절, 성과 측정 방식까지 확인할 수 있어 서울 서남권 여러 자치구와 비교 취재가 가능하다.",
+      "unknowns": [
+        "동작구 4050세대의 퇴직·폐업 규모와 재취업 소요 기간",
+        "기존 취업지원센터와 50플러스센터 사업의 중복·연계 실태",
+        "제안된 시범사업의 예산, 담당 주체, 참여 기업 확보 여부",
+        "교육 수료 뒤 실제 취업률과 6개월 고용유지율",
+        "동작구의 기존 중장년 지원사업별 이용자 수와 사업 간 연계 실적",
+        "상담 이후 실제 취업률과 6개월 이상 고용유지율",
+        "동작구 및 서울 서남권 기업의 4050 경력자 채용 수요",
+        "2027년 시범사업의 예산 규모와 성과 책임 부서"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 2,
+      "related_sources": [
+        "동작구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3015833254357261",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
+          "anchor_quote": "그러나 퇴직이나 폐업 이후 이들의 경력을 필요로 하는 기업과 연결해 주는 통로는 충분하지 않습니다.",
+          "evidence_status": "PROPOSAL"
+        },
+        {
+          "document_id": "OFFICIAL:dongjak:cbf500506dc85dfa17fe3864",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20269",
+          "anchor_quote": "교육 위주의 지원에서 벗어나 기업의 실제 채용수요를 중심으로 사업을 설계해야 합니다.",
+          "evidence_status": "PROPOSAL"
+        }
+      ],
+      "consolidation_reason": "동작구의 4050 퇴직자·폐업 소상공인을 상담과 교육에서 실제 채용·고용유지로 연결하지 못하는 분절된 지원체계 문제다."
+    },
+    {
+      "candidate_id": "a489d2516f34830fb727",
       "document_id": "OFFICIAL:dongjak:cbf500506dc85dfa17fe3864",
       "source_id": "dongjak",
       "source_name": "동작구",
       "meeting_date": "2026-09-18",
       "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20269",
-      "chunk_number": 1,
-      "signal_type": "REPEATED_FAILURE",
-      "headline": "자원봉사센터 차량 임차 예산이 당초 목적과 다르게 집행돼 예산 통제와 사후 책임이 흔들렸다",
-      "subject": "동작구 자원봉사센터 차량 임차 예산의 목적 외 집행",
-      "affected_group": "동작구민, 자원봉사센터 이용자와 자원봉사자, 지방재정 부담 주체인 주민",
-      "mechanism": "복지정책과 사업에서 편성 목적과 다른 집행 사실이 발견됐고, 의회가 예산편성 운영 기준 준수를 다시 촉구했다. 잘못 집행된 금액의 규모와 책임자, 환수·시정 여부가 확인되지 않은 상태다.",
-      "civic_importance": "예산이 의회 승인 목적과 다르게 사용되면 사업 우선순위에 대한 주민 통제와 예산 심의의 실효성이 약화된다. 단순 실수인지 반복되는 내부 통제 실패인지 확인할 필요가 있다.",
-      "anchor_quote": "당초 편성된 예산의 목적과 다르게 집행한 사실이 발견되었으므로",
-      "evidence_status": "OFFICIAL_FINDING",
-      "public_question": "주민 세금으로 편성된 차량 임차 예산이 왜 다른 목적에 사용됐고, 잘못 집행된 돈은 회수됐으며 같은 일이 재발하지 않도록 어떤 통제가 작동하는가?",
-      "counterintuitive_question": "예산을 쓰지 못해 남기는 것보다 목적 외 집행이 더 효율적이라는 현장 판단이 있었다면, 의회 승인 예산의 경직성이 문제였는지 아니면 부서 통제가 문제였는지?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 7,
-      "why_not_routine": "의회가 공식적으로 목적 외 집행을 확인한 사안으로, 금액·책임·재발 방지와 다른 사업의 유사 사례까지 확장 가능한 예산 감시 의제다.",
+      "chunk_number": 2,
+      "signal_type": "NEW_POLICY_UNCERTAINTY",
+      "headline": "재난 뒤 유가족 소통 전담팀 신설…동작구의 지원 책임은 현장에서 작동할까",
+      "subject": "재난 피해자 가족 지원 소통 전담팀과 재난 피해자 지원센터·통합지원본부의 통합 운영",
+      "affected_group": "재난 피해자와 유가족, 부상자 및 재난 현장 주변 주민",
+      "mechanism": "조례 개정으로 재난 직후 피해자 가족과 행정기관 사이의 소통 창구와 지원 체계를 새로 마련하지만, 전담 인력·24시간 대응 여부·심리 및 생활 지원의 범위는 회의록에 제시되지 않음",
+      "civic_importance": "재난 발생 직후 유가족이 어떤 기관에 무엇을 요구할 수 있는지는 생명·안전과 직결되는 공적 책임의 문제다. 제도가 생겨도 실제 담당자와 지원 절차가 불명확하면 피해자 지원 공백이 반복될 수 있다.",
+      "anchor_quote": "재난 피해자 가족 지원 소통 전담팀을 신설하고 재난 피해자 지원센터와 통합지원본부를 통합 운영할 수 있는 근거를 마련함으로써",
+      "evidence_status": "PLAN",
+      "public_question": "동작구에서 재난이 발생하면 피해자와 유가족은 발생 직후 누구에게 연락하고, 어떤 지원을 언제까지 받을 수 있는가?",
+      "counterintuitive_question": "지원 조직을 하나로 통합하면 창구가 간단해지는 것처럼 보이지만, 오히려 현장 지휘와 피해자 지원의 책임이 한쪽에 묻히거나 전문 지원이 뒤로 밀릴 가능성은 없는가?",
+      "scope_hint": "CITYWIDE",
+      "broadcast_potential": 8,
+      "why_not_routine": "단순 조직 개편이 아니라 재난 피해자의 권리와 행정의 사후 책임을 새로 규정하는 제도다. 실제 매뉴얼·인력·과거 대응 사례를 확인하면 현장 취재와 타 자치구 비교가 가능하다.",
       "unknowns": [
-        "목적 외 집행 금액과 구체적인 사용처",
-        "집행 과정에서의 승인·감독 책임자",
-        "부적정 집행액의 환수 또는 정산 조치 여부",
-        "유사한 목적 외 집행이 다른 부서에서도 있었는지",
-        "목적 외 집행된 금액과 집행 기간",
-        "차량 임차가 실제로 어떤 사업에 사용됐는지",
-        "변경 집행에 대한 내부 승인·보고 절차 존재 여부",
-        "환수·시정·책임 조치와 유사한 목적 외 집행 사례"
+        "전담팀의 소속과 실제 담당 인원은 몇 명인지",
+        "재난 유형별로 제공되는 상담·의료·주거·법률 지원의 범위는 무엇인지",
+        "통합지원본부와 지원센터를 통합 운영하는 경우 지휘·책임 주체가 누구인지",
+        "최근 재난 대응에서 유가족 소통이나 지원이 지연된 사례가 있었는지",
+        "전담팀이 평상시에도 운영되는지, 재난 때만 구성되는지",
+        "피해자 가족에게 제공할 지원 목록과 연락 창구는 무엇인가",
+        "지원센터와 통합지원본부의 지휘·책임 관계는 어떻게 되는가",
+        "피해자 개인정보와 언론·기관 제공 정보의 보호 기준은 있는가"
       ],
       "review_status": "UNREVIEWED",
       "related_evidence_count": 2,
@@ -1858,19 +1236,638 @@
           "source_name": "동작구",
           "meeting_date": "2026-09-18",
           "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20269",
-          "anchor_quote": "당초 편성된 예산의 목적과 다르게 집행한 사실이 발견되었으므로",
-          "evidence_status": "OFFICIAL_FINDING"
+          "anchor_quote": "재난 피해자 가족 지원 소통 전담팀을 신설하고 재난 피해자 지원센터와 통합지원본부를 통합 운영할 수 있는 근거를 마련함으로써",
+          "evidence_status": "PLAN"
         },
         {
           "document_id": "CLIKC3015833254357261",
           "source_name": "동작구",
           "meeting_date": "2026-09-18",
           "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
-          "anchor_quote": "당초 편성된 예산의 목적과 다르게 집행한 사실이 발견되었으므로",
+          "anchor_quote": "재난 피해자 가족 지원 소통 전담팀을 신설하고 재난 피해자 지원센터와 통합지원본부를 통합 운영할 수 있는 근거를 마련함으로써",
+          "evidence_status": "PROPOSAL"
+        }
+      ],
+      "consolidation_reason": "재난 피해자·유가족 지원 전담팀과 센터를 신설하면서도 연락창구, 정보 제공, 의료·법률·생활지원의 실제 작동 기준이 비어 있는 동일 사안이다."
+    },
+    {
+      "candidate_id": "d9430d73c06195e7a5f7",
+      "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+      "source_id": "dongjak",
+      "source_name": "동작구",
+      "meeting_date": "2026-09-21",
+      "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+      "chunk_number": 4,
+      "signal_type": "PUBLIC_COST",
+      "headline": "공유재산 공연장이 사업자 부실 검증 뒤 체납·철거비를 주민 부담으로 남길 가능성",
+      "subject": "동작주차공원 임시 공연장 사용허가와 사후 철거",
+      "affected_group": "동작주차공원 이용 주민, 공연 관계자·하청업체, 동작구 재정",
+      "mechanism": "동작구가 민간업체에 공유재산 사용·수익 허가를 내준 뒤 사용료 약 5,291만 원 체납, 배우·하청업체 대금 미지급, 조기 폐막이 발생했다. 허가 취소와 행정대집행을 추진하면서 약 2억 원의 철거비와 체납·변상금 회수 불확실성이 공공 부담으로 전가될 수 있다.",
+      "civic_importance": "유휴 공공공간을 민간에 제공하는 사업에서 사업자 재정능력 검증, 체납 시 허가 연장 판단, 원상복구 담보가 작동했는지 점검할 수 있다. 실패 비용이 주민 세금으로 남는다면 다른 공유재산 사업에도 반복될 수 있다.",
+      "anchor_quote": "결국 구청이 받지 못한 돈을 징수하는 과정에서 추가적인 행정 비용과 철거비까지 투입될 수 있는 상황입니다.",
+      "evidence_status": "ALLEGATION",
+      "public_question": "공유재산 사용허가 당시 구청은 어떤 안전장치로 사업 실패 비용을 민간사업자에게 부담시키도록 했으며, 실제 철거비와 체납액을 주민 세금 없이 회수할 수 있는가?",
+      "counterintuitive_question": "민간사업자의 경영 실패가 아니라, 체납을 알고도 허가를 연장하고 원상복구 담보를 충분히 확보하지 않은 행정 절차가 공공비용을 키운 원인은 아닌가?",
+      "scope_hint": "SINGLE_CASE",
+      "broadcast_potential": 8,
+      "why_not_routine": "공공공간 현장 방치, 미지급 피해자, 허가·연장 문서, 철거비 계약과 비용 회수 과정을 추적하면 책임 구조가 분명한 생활 밀착형 리포트가 된다.",
+      "unknowns": [
+        "입찰 전 사업자의 재정·운영·철거 능력을 어떤 자료와 기준으로 검증했는지",
+        "체납을 처음 인지한 시점과 체납 상태에서 사용허가를 연장한 공식 판단 근거",
+        "실제 징수액과 변상금·행정대집행 비용의 회수 가능성",
+        "주민 불편을 해소할 철거 일정과 약 2억 원 철거비의 산출 근거",
+        "사용료 체납을 최초 인지한 시점과 체납 상태에서 허가를 연장한 사유",
+        "사업자의 재정능력·시설 철거능력에 대한 사전 검증자료",
+        "현재까지 징수한 체납 사용료와 변상금 규모",
+        "행정대집행 철거비 2억 원 추계의 근거와 실제 비용 회수 가능성"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 2,
+      "related_sources": [
+        "동작구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20267",
+          "anchor_quote": "결국 구청이 받지 못한 돈을 징수하는 과정에서 추가적인 행정 비용과 철거비까지 투입될 수 있는 상황입니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "CLIKC3015832853247804",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015832853247804&collection=minutes",
+          "anchor_quote": "결국 구청이 받지 못한 돈을 징수하는 과정에서 추가적인 행정 비용과 철거비까지 투입될 수 있는 상황입니다.",
+          "evidence_status": "ALLEGATION"
+        }
+      ],
+      "consolidation_reason": "동작주차공원 임시 공연장 사업자의 체납·조기 폐막 뒤 철거비와 원상복구 비용이 주민 부담으로 남을 수 있는 동일한 공유재산 관리 사안이다."
+    },
+    {
+      "candidate_id": "8bd4c5b4347483b63cfc",
+      "document_id": "CLIKC3015737803886787",
+      "source_id": "geumcheon",
+      "source_name": "금천구",
+      "meeting_date": "2026-09-18",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
+      "chunk_number": 2,
+      "signal_type": "SAFETY_RISK",
+      "headline": "아파트 인근 데이터센터 화재 대응, 서류상 가능과 실제 소방차 진입 사이의 공백",
+      "subject": "배터리 화재 위험이 있는 데이터센터의 소방차 접근성과 현장 대응 검증",
+      "affected_group": "데이터센터 인근 아파트 주민과 주변 도로 이용자",
+      "mechanism": "데이터센터가 아파트와 약 90m 안팎 거리에 있고, 집행부도 공사 현장의 도로 폭과 다수 소방차량의 동시 접근 가능성에 우려를 표명했다. 소방서의 서면 회신은 대응 가능하다는 내용이지만 실제 진입 훈련은 아직 예정 단계다.",
+      "civic_importance": "대형 배터리 화재가 발생하면 주민 대피와 소방차 진입이 동시에 필요하다. 허가 기준을 충족했다는 사실만으로 실제 골든타임 대응이 가능한지 확인해야 한다.",
+      "anchor_quote": "공사 중인 현장을 가보면서 도로폭이 우려할 정도가 된다고 보이기는 합니다.",
+      "evidence_status": "ALLEGATION",
+      "public_question": "데이터센터에서 실제 화재가 발생하면 소방차와 주민 대피 차량이 동시에 접근할 수 있으며, 그 사실을 현장 훈련으로 검증했는가?",
+      "counterintuitive_question": "법정 소방설비를 갖췄다는 것보다 좁은 진입로와 주차 차량이 화재 대응 시간을 더 늦추는 구조는 아닌가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 9,
+      "why_not_routine": "배터리 화재와 주거지 인접 시설이라는 안전 쟁점에 현장 접근성이라는 검증 축이 있고, 실제 소방훈련·도로 측정·인근 시설 비교로 6~7분 리포트 확장이 가능하다.",
+      "unknowns": [
+        "예정된 소방차 진입 훈련의 실시 여부와 결과",
+        "소방차량 몇 대가 어떤 시간 안에 현장에 진입할 수 있는지",
+        "화재 발생 시 주민 대피 동선과 차량 통제 계획",
+        "배터리 종류와 화재 확산 방지·진압 설비의 실제 작동 검증 결과",
+        "현장 도로의 실제 폭과 소방차 회차·동시 진입 가능 여부",
+        "배터리 종류와 규모, 화재 시 예상되는 연소·재발화 위험",
+        "자체 소방설비의 종류와 성능, 소방서의 구체적인 대응계획",
+        "주민 참관 진입훈련 결과와 훈련 뒤 개선 조치"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 2,
+      "related_sources": [
+        "금천구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3015737803886787",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
+          "anchor_quote": "공사 중인 현장을 가보면서 도로폭이 우려할 정도가 된다고 보이기는 합니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "OFFICIAL:geumcheon:f33775932e068ca95e03f6bf",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://council.geumcheon.go.kr/council/viewer/minutes/2956.do",
+          "anchor_quote": "공사 중인 현장을 가보면서 도로폭이 우려할 정도가 된다고 보이기는 합니다.",
+          "evidence_status": "PLAN"
+        }
+      ],
+      "consolidation_reason": "주거지 인접 데이터센터의 배터리 화재 때 좁은 진입로로 소방차와 대피 차량이 실제 접근 가능한지 검증하지 못한 동일한 현장 대응 문제다."
+    },
+    {
+      "candidate_id": "8d9abff401008412f96a",
+      "document_id": "CLIKC2972716603643697",
+      "source_id": "jongno",
+      "source_name": "종로구",
+      "meeting_date": "2026-09-16",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
+      "chunk_number": 3,
+      "signal_type": "RIGHTS_GAP",
+      "headline": "종로 중학교 특수학급은 9곳 중 3곳뿐이고, 사립학교 중심 구조가 학생의 가까운 교육권을 막고 있다",
+      "subject": "동부권역 중학교 특수학급 설치와 특수교육 학생의 통학·배치",
+      "affected_group": "특수교육 대상 중학생과 가족, 특히 특수학급이 없는 학교 인근 거주 학생",
+      "mechanism": "종로 관내 중학교 9곳 중 특수학급 설치 학교는 3곳이며 7곳이 사립학교다. 학교 설치 권한과 협의 구조가 교육청·학교에 걸쳐 있어 구청이 수요를 파악하고도 직접 설치하기 어려운 상황이다.",
+      "civic_importance": "특수교육 학생이 거주지 가까이에서 교육받을 권리와 통학 부담, 학교의 교육 접근성이 관련돼 있다. 학교 유형에 따라 특수학급 설치 격차가 생기는지 서울 전역 비교가 가능하다.",
+      "anchor_quote": "그러나 이러한 현실적인 어려움만을 이유로 특수교육 수요를 외면해서는 안 된다고 저는 생각합니다.",
+      "evidence_status": "OFFICIAL_FINDING",
+      "public_question": "종로의 특수교육 대상 학생들은 왜 사는 곳 가까운 중학교에서 교육받지 못하고 있으며, 학교·교육청·구청 중 누가 설치 지연의 책임을 져야 하는가?",
+      "counterintuitive_question": "학교 수가 부족한 것이 아니라 사립학교 비중과 설치 협의 구조가 특수학급 격차의 핵심 원인은 아닌가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 9,
+      "why_not_routine": "단순 학교 증설 요구가 아니라 사립학교 중심 지역의 제도적 책임 공백과 학생의 교육권을 현장·통학 경로·서울 자치구 비교로 확장할 수 있다.",
+      "unknowns": [
+        "학교별 특수교육 대상 학생 수와 대기·배치 현황",
+        "특수학급이 없는 학교 학생들의 평균 통학 거리와 통학 소요시간",
+        "사립학교의 설치 거부 또는 지연 사유와 교육청의 조정 권한",
+        "구청의 교육경비보조금 지원이 설치·운영에 실제로 어떤 역할을 할 수 있는지",
+        "현재 특수교육 대상 학생 수와 학교별 대기·배치 현황",
+        "학생들의 평균 통학거리와 통학 지원 실태",
+        "사립학교가 특수학급 설치를 꺼리는 구체적 이유",
+        "구와 교육청의 설치 목표·예산·추진 일정",
+        "동부권역 특수교육 대상 학생 수와 학교별 수용·대기 현황",
+        "특수학급 미설치 학교의 설치 가능 공간과 학교 측 입장"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 3,
+      "related_document_count": 3,
+      "related_sources": [
+        "종로구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC2972716603643697",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
+          "anchor_quote": "그러나 이러한 현실적인 어려움만을 이유로 특수교육 수요를 외면해서는 안 된다고 저는 생각합니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3015916453536194",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
+          "anchor_quote": "그러나 이러한 현실적인 어려움만을 이유로 특수교육 수요를 외면해서는 안 된다고 저는 생각합니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3007276402988407",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
+          "anchor_quote": "특수교육이 필요한 학생들이 거주지와 가까운 곳에서 차별 없이 교육받고 자신의 가능성을 마음껏 키워 갈 수 있도록 적극적으로 가교 역할을 하겠습니다.",
           "evidence_status": "OFFICIAL_FINDING"
         }
       ],
-      "consolidation_reason": "동작구 자원봉사센터 차량 임차 예산이 의회 승인 목적과 다르게 집행됐고 환수·책임·재발방지 통제가 불명확하다는 동일한 예산 목적 외 집행 사안이다."
+      "consolidation_reason": "종로 중학교 9곳 중 3곳에만 특수학급이 설치돼 사립학교 중심의 설치 협의 구조가 학생의 근거리 교육권을 제한하는 동일 사안이다."
+    },
+    {
+      "candidate_id": "7cdafc39e1ac2754d719",
+      "document_id": "CLIKC3015916453536194",
+      "source_id": "jongno",
+      "source_name": "종로구",
+      "meeting_date": "2026-09-16",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
+      "chunk_number": 4,
+      "signal_type": "SERVICE_GAP",
+      "headline": "서부권 노인 돌봄시설은 휴업 중인데 신규 공공 데이케어센터 계획은 아직 없다",
+      "subject": "평창·구기동 및 종로구 권역별 데이케어센터 공급",
+      "affected_group": "평창·구기동 등 서부권의 고령자와 치매 환자, 가족 돌봄자",
+      "mechanism": "서부권의 기존 민간 데이케어센터 한 곳이 2025년 5월부터 휴업 중이고, 구는 해당 지역에 공공시설 건립이나 민간 유치 계획을 구체화하지 못한 상태다. 부지와 규제 문제로 어린이집 활용 방안도 중단됐다.",
+      "civic_importance": "고령 인구와 치매 환자가 늘어나는 상황에서 주간 돌봄시설 부족은 가족의 돌봄 부담과 장거리 이동 부담으로 이어질 수 있다. 구청도 서부권뿐 아니라 노인 비율이 높은 동부권까지 시설 부족 가능성을 인정했다.",
+      "anchor_quote": "현재까지 평창·구기동 지역에 공공 데이케어센터를 건립하거나 민간 시설 유치를 위한 구체적인 검토 또는 사업을 추진한 바는 없습니다.",
+      "evidence_status": "OFFICIAL_FINDING",
+      "public_question": "서부권의 기존 시설이 휴업한 뒤에도 종로구가 대체 돌봄시설을 마련하지 못한 이유는 무엇이며, 가족들은 언제 이용할 수 있는가?",
+      "counterintuitive_question": "노인 인구가 가장 많은 동부권에 시설이 필요한 것은 분명한데, 신규 시설의 우선순위를 인구 비율만으로 정하면 실제 이동거리와 대기수요가 큰 서부권이 오히려 뒤로 밀리는 것은 아닌가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 8,
+      "why_not_routine": "시설 하나의 신설 여부가 아니라 휴업, 부지 규제, 권역별 수요 산정이 맞물린 돌봄 공백 문제로 가족·시설·행정의 책임 구조를 추적할 수 있다.",
+      "unknowns": [
+        "서부권과 동부권의 실제 대기자 수와 이용권역",
+        "휴업한 시설의 재개 가능성 및 휴업 사유",
+        "지역별 치매 환자·장기요양 대상자 규모",
+        "공공시설 건립에 필요한 부지·예산과 예상 일정",
+        "평창·구기동의 실제 대기 수요와 이용권역별 이동시간",
+        "휴업 중인 아름다운 실버 데이케어센터의 휴업 사유와 재개 가능성",
+        "청운노인요양원의 이전·데이케어센터 결합 제안에 대한 구청의 협의 의향과 법적·재정적 조건",
+        "서부권과 동부권의 시설 정원 대비 고령자·치매 환자 수"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 2,
+      "related_sources": [
+        "종로구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3015916453536194",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
+          "anchor_quote": "현재까지 평창·구기동 지역에 공공 데이케어센터를 건립하거나 민간 시설 유치를 위한 구체적인 검토 또는 사업을 추진한 바는 없습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC2972716603643697",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
+          "anchor_quote": "현재까지 평창·구기동 지역에 공공 데이케어센터를 건립하거나 민간 시설 유치를 위한 구체적인 검토 또는 사업을 추진한 바는 없습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        }
+      ],
+      "consolidation_reason": "종로 서부권의 데이케어 기반이 휴업·1개 시설 의존 상태인데 대체 공공·민간 돌봄시설 계획이 없는 동일한 지역 돌봄 공백이다."
+    },
+    {
+      "candidate_id": "fcb4ca33dd25653047ad",
+      "document_id": "CLIKC3007276402988407",
+      "source_id": "jongno",
+      "source_name": "종로구",
+      "meeting_date": "2026-09-16",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
+      "chunk_number": 2,
+      "signal_type": "SERVICE_GAP",
+      "headline": "비어 있는 동숭어린이집을 가족 복합공간으로 바꿀 수 있을지, 종로구의 돌봄공간 공급 책임이 시험대에 올랐다",
+      "subject": "폐원 또는 유휴 상태로 언급된 동숭어린이집 공간의 재활용 방안",
+      "affected_group": "종로구의 영유아·아동과 부모, 돌봄·문화공간이 부족한 지역 주민",
+      "mechanism": "기존 어린이집 공간을 단순 유휴공간으로 두지 말고 키즈카페·숲속도서관·육아 소통공간이 결합된 복합공간으로 활용하자는 제안이 나왔다. 다만 법령과 공원시설 기준, 운영 주체, 예산, 실제 수요와 접근성은 아직 확인되지 않았다.",
+      "civic_importance": "기존 공공공간을 어떻게 활용하느냐에 따라 지역의 돌봄 부담과 아동·가족의 생활권 서비스 격차가 달라질 수 있다. 새 시설을 짓는 대신 이미 있는 공간을 전환할 수 있는지, 주민 의견이 실제 결정에 반영되는지가 핵심이다.",
+      "anchor_quote": "구청에서도 동숭어린이집 공간을 단순히 비어 있는 유휴공간으로 바라보지 마시고 키즈카페와 숲속도서관 그리고 육아 소통공간이 어우러진 아이와 가족을 위한 복합공간으로 활용할 수 있도록 적극적으로 검토해 주시기 바랍니다.",
+      "evidence_status": "PROPOSAL",
+      "public_question": "종로구는 동숭어린이집 공간을 언제까지 어떤 방식으로 활용할지, 이용 대상과 운영비를 포함한 실행 계획을 주민에게 공개할 것인가?",
+      "counterintuitive_question": "새 키즈카페를 만드는 것보다 기존 어린이집을 전환하는 편이 정말 저렴하고 접근성이 좋은가, 아니면 운영비와 시설 기준 때문에 다른 공간을 활용하는 것이 주민에게 더 이로운가?",
+      "scope_hint": "SINGLE_CASE",
+      "broadcast_potential": 61,
+      "why_not_routine": "단순한 공간 채우기 제안이 아니라 공공 유휴공간을 돌봄·문화서비스로 전환할지에 대한 정책 결정이다. 현장 이용자 조사, 공간 안전·법적 검토, 다른 자치구의 어린이집 전환 사례 비교로 확장할 수 있다.",
+      "unknowns": [
+        "동숭어린이집의 현재 운영 상태와 건물·부지 소유 및 관리 주체",
+        "어린이집 폐원 또는 공간 전환의 공식 결정 여부",
+        "리모델링·운영에 필요한 예산과 재원 부담 주체",
+        "해당 지역의 아동·가족 인구와 기존 돌봄·문화시설 이용 수요",
+        "동숭어린이집이 언제부터 어떤 이유로 비어 있었는가",
+        "해당 지역의 어린이집·공공놀이시설·도서관·돌봄시설 이용 수요와 공급은 어느 정도인가",
+        "건물 안전성·용도변경·공원시설 기준 등 법적 제약은 무엇인가",
+        "사업비와 운영 주체, 연간 운영비를 누가 부담할 것인가",
+        "동숭어린이집의 현재 소유·사용 상태와 어린이집 기능 중단 사유",
+        "해당 지역의 키즈카페·도서관·육아지원 서비스 수요와 기존 시설과의 중복"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 3,
+      "related_document_count": 3,
+      "related_sources": [
+        "종로구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3007276402988407",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
+          "anchor_quote": "구청에서도 동숭어린이집 공간을 단순히 비어 있는 유휴공간으로 바라보지 마시고 키즈카페와 숲속도서관 그리고 육아 소통공간이 어우러진 아이와 가족을 위한 복합공간으로 활용할 수 있도록 적극적으로 검토해 주시기 바랍니다.",
+          "evidence_status": "PROPOSAL"
+        },
+        {
+          "document_id": "CLIKC3015916453536194",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
+          "anchor_quote": "동숭어린이집 공간을 단순히 비어 있는 유휴공간으로 바라보지 마시고 키즈카페와 숲속도서관 그리고 육아 소통공간이 어우러진 아이와 가족을 위한 복합공간으로 활용할 수 있도록 적극적으로 검토해 주시기 바랍니다.",
+          "evidence_status": "PROPOSAL"
+        },
+        {
+          "document_id": "CLIKC2972716603643697",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
+          "anchor_quote": "구청에서도 동숭어린이집 공간을 단순히 비어 있는 유휴공간으로 바라보지 마시고 키즈카페와 숲속도서관 그리고 육아 소통공간이 어우러진 아이와 가족을 위한 복합공간으로 활용할 수 있도록 적극적으로 검토해 주시기 바랍니다.",
+          "evidence_status": "PROPOSAL"
+        }
+      ],
+      "consolidation_reason": "유휴 동숭어린이집을 키즈카페·도서관·육아공간으로 전환하려는 같은 공간 재활용 구상과 운영·수요·비용 검증 문제다."
+    },
+    {
+      "candidate_id": "c00a0ab7db458fd94642",
+      "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
+      "source_id": "mapo",
+      "source_name": "마포구",
+      "meeting_date": "2026-09-21",
+      "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
+      "chunk_number": 2,
+      "signal_type": "RIGHTS_GAP",
+      "headline": "용적률 완화와 함께 임대주택 의무가 사라져 공공주택 몫이 줄어드는 재개발 구조",
+      "subject": "신촌지역 마포4구역 1지구 정비계획 변경",
+      "affected_group": "공공임대주택을 필요로 하는 저소득층·청년·무주택 세대와 해당 지역 주민",
+      "mechanism": "서울시가 2025년 11월 도시·주거환경정비기본계획에서 임대주택 비율을 삭제하면서, 주거용적률 400% 초과 시 적용되던 임대주택 확보 기준이 완화됐다. 그 결과 해당 지구의 임대주택 26세대가 사라지고 일반분양으로 전환되는 계획이 제시됐다.",
+      "civic_importance": "정비사업의 사업성 보전을 위해 용적률은 높이면서 공공임대주택 공급 의무는 줄인 결정이어서, 민간 개발 이익과 공공주택 확보 사이의 배분 구조를 점검할 수 있다.",
+      "anchor_quote": "4-1이 26세대에서 아예 없는 걸로, 임대가.",
+      "evidence_status": "OFFICIAL_FINDING",
+      "public_question": "용적률을 높여 사업을 추진하면서 사라진 임대주택 26세대의 공공적 가치를 서울시와 사업자는 무엇으로 보완했습니까?",
+      "counterintuitive_question": "주택 공급을 늘린다는 명분의 용적률 완화가 실제로는 무주택자를 위한 임대주택 공급을 줄이는 결과가 된 것은 아닌지, 전체 세대 수가 아니라 공공주택 비율로 따져봤습니까?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 8,
+      "why_not_routine": "특정 사업의 세대 수 변경을 넘어 서울시 정책 변경이 재개발 구역의 공공임대 공급과 개발이익 배분에 미치는 영향을 다른 정비사업과 비교할 수 있다.",
+      "unknowns": [
+        "삭제된 임대주택 비율 기준이 해당 사업에 적용되는 법적 근거와 적용 시점",
+        "임대주택 26세대가 일반분양으로 전환될 경우 사업자와 조합에 귀속되는 추가 이익 규모",
+        "임대주택 감소를 보완하기 위한 서울시 또는 마포구의 대체 공급 계획",
+        "공공기여 규모와 임대주택 감소 사이의 형평성 검토 여부",
+        "각 지구의 전체 세대수와 임대주택 비율 변화",
+        "임대주택 감소가 용적률·공공기여와 어떻게 연계됐는지",
+        "서울시가 임대 비율 삭제를 적용한 구체적 근거와 다른 정비구역의 적용 현황",
+        "기존 세입자의 이주·재정착 대책"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 1,
+      "related_sources": [
+        "마포구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
+          "source_name": "마포구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
+          "anchor_quote": "4-1이 26세대에서 아예 없는 걸로, 임대가.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
+          "source_name": "마포구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
+          "anchor_quote": "4-9는 76세대에서 지금 임대가 20세대로 줄어들었고요.",
+          "evidence_status": "OFFICIAL_FINDING"
+        }
+      ],
+      "consolidation_reason": "마포4구역 정비계획 변경과 용적률 완화 과정에서 임대주택 의무가 약화돼 기존 임대주택 세대가 일반분양으로 전환된 동일한 공공주택 축소 사안이다."
+    },
+    {
+      "candidate_id": "213769b705a1803cc77e",
+      "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
+      "source_id": "mapo",
+      "source_name": "마포구",
+      "meeting_date": "2026-09-21",
+      "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
+      "chunk_number": 2,
+      "signal_type": "REPEATED_FAILURE",
+      "headline": "대규모 재개발 변경안이 주민공람 절차 하자로 심의 단계에서 멈춰 주민 참여가 형식화됐는지 드러났다",
+      "subject": "마포4구역 1지구·12지구 정비계획 변경안",
+      "affected_group": "정비구역 주민과 주변 생활권 주민",
+      "mechanism": "위원회는 주민공람에 절차적 하자가 있어 1지구와 12지구 안건을 보류했고, 담당 부서는 재공람에 30일이 필요할 수 있다고 답변했다. 위원회는 9지구 안건에 대해서도 서울시 심의 결과와 의견 반영 여부를 보고하라는 조건을 붙였다.",
+      "civic_importance": "높이·임대주택·공공기여처럼 주민 생활에 큰 영향을 주는 변경이 적법하고 충분한 공람 없이 진행될 경우, 주민 참여권과 행정 신뢰가 훼손될 수 있다.",
+      "anchor_quote": "주민공람에 관한 절차적 하자가 있으므로 추가적인 검토가 필요하다고 판단되어 보류하고자 하는데",
+      "evidence_status": "OFFICIAL_FINDING",
+      "public_question": "주민의 재산과 생활환경을 바꾸는 계획을 왜 적법한 공람 절차가 갖춰지기 전에 의회와 심의에 올렸으며, 주민 의견은 어떻게 다시 보장됩니까?",
+      "counterintuitive_question": "재공람을 하면 절차상 문제는 해소되지만, 이미 주민들이 놓친 정보와 변경된 계획을 단순히 30일 게시하는 것만으로 실질적인 참여가 회복된다고 볼 수 있습니까?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 8,
+      "why_not_routine": "위원회가 공식적으로 두 안건을 보류할 만큼 절차 문제가 확인됐고, 공람 자료·게시 방식·재공람을 다른 정비사업과 대조해 행정 책임을 추적할 수 있다.",
+      "unknowns": [
+        "절차적 하자의 구체적인 내용과 책임 부서",
+        "공람 기간·공고 내용·게시 위치가 법정 요건을 어떻게 충족하지 못했는지",
+        "이미 공람에 참여한 주민 의견이 재공람에서 어떻게 다뤄지는지",
+        "유사한 서울시 정비사업에서 같은 공람 오류가 반복됐는지",
+        "포털 미게시가 실제 의견 제출 건수와 주민 참여율에 어떤 영향을 미쳤는지",
+        "마포구가 포털 게시와 별도로 주민들에게 어떤 보완 안내를 했는지",
+        "공람기간 연장 또는 재공람이 필요한지 여부"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 1,
+      "related_sources": [
+        "마포구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
+          "source_name": "마포구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
+          "anchor_quote": "주민공람에 관한 절차적 하자가 있으므로 추가적인 검토가 필요하다고 판단되어 보류하고자 하는데",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
+          "source_name": "마포구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
+          "anchor_quote": "안 올려놓은 거는 시스템상 확인이 됐기 때문에 변명의 여지가 없습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        }
+      ],
+      "consolidation_reason": "마포4구역 정비계획 변경에서 주민공람·온라인 의견제출 안내가 실제 참여로 연결되지 않아 주민 의견수렴 절차가 형식화된 동일한 사안이다."
+    },
+    {
+      "candidate_id": "a06f200cd039519fa9af",
+      "document_id": "CLIKC2972716603643697",
+      "source_id": "jongno",
+      "source_name": "종로구",
+      "meeting_date": "2026-09-16",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
+      "chunk_number": 3,
+      "signal_type": "RIGHTS_GAP",
+      "headline": "재개발 동의율 경쟁과 공사비 상승이 창신동 주민의 재정착 가능성을 흔들고 있다",
+      "subject": "창신9·10구역 재개발사업의 동의서 징구, 공사비 상승, 사업 추진 과정",
+      "affected_group": "창신9·10구역 주민, 특히 재정착과 분담금 부담을 감당하기 어려운 기존 거주자",
+      "mechanism": "사업 추진 과정에서 공사비가 상승하고, 동의율 확보를 위한 매입 및 동의서 징구 과정에서 불공정·차별 논란이 제기되면서 주민 간 갈등과 재정착 불안이 커지고 있다. 행정은 뒤늦게 전문가 자문 TF를 신설해 쟁점을 점검하기로 했다.",
+      "civic_importance": "재개발은 주거권과 재산권을 동시에 좌우하며, 사업의 속도나 동의율이 기존 주민의 이주·분담금·재정착 여부에 직접 영향을 미친다. 역사문화 경관 보존이라는 공익과 개발 이익의 배분 문제도 함께 걸려 있다.",
+      "anchor_quote": "공사비 문제로 많은 주민들께서 재정착과 분담금 상승에 대한 우려를 겪게 되었고",
+      "evidence_status": "OFFICIAL_FINDING",
+      "public_question": "창신9·10구역 재개발로 기존 주민이 실제로 얼마를 부담해야 하며, 현재 거주민이 계속 살 수 있도록 행정과 사업 주체가 보장한 장치는 무엇인가?",
+      "counterintuitive_question": "주민 동의율이 높아질수록 사업이 순조로운 것처럼 보이지만, 실제로는 외부 매입과 동의서 확보가 기존 주민의 의사와 재정착 권리를 약화시키는 구조는 없는가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 9,
+      "why_not_routine": "특정 공사 일정이 아니라 재개발의 의사결정 구조, 비용 전가, 원주민 재정착이라는 서울 전역의 반복 가능한 쟁점으로 확장할 수 있다.",
+      "unknowns": [
+        "동의율 확보를 위해 투자신탁 등이 매입했다는 ‘50%’ 수치의 산출 근거와 실제 매입 주체",
+        "주민들이 제기한 동의서 징구 과정의 불공정·차별 행위가 구체적으로 무엇인지",
+        "예상 분담금과 공사비 상승 규모, 기존 주민의 재정착률 전망",
+        "재개발 계획이 한양도성·낙산공원 등 역사문화 경관에 미치는 영향",
+        "투자신탁 또는 자산투자신탁 명의 매입의 실제 비율과 매입 시점",
+        "매입 주체가 동의율 산정에 미친 영향과 법적 적정성",
+        "기존 거주민의 예상 분담금과 재정착률",
+        "동의서 징구 과정에서 불공정·차별 행위가 있었는지에 대한 공식 조사 결과",
+        "재정착 대상과 예상 분담금의 실제 규모",
+        "동의서 징구 과정에서 제기된 불공정·차별 행위의 구체적 사례"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 3,
+      "related_document_count": 3,
+      "related_sources": [
+        "종로구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC2972716603643697",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC2972716603643697&collection=minutes",
+          "anchor_quote": "공사비 문제로 많은 주민들께서 재정착과 분담금 상승에 대한 우려를 겪게 되었고",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3007276402988407",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
+          "anchor_quote": "인구가 한 50%가 투자신탁, 자산투자신탁에서 우리 동의율을 맞추기 위해서 매입한 겁니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "CLIKC3015916453536194",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
+          "anchor_quote": "공사비 문제로 많은 주민들께서 재정착과 분담금 상승에 대한 우려를 겪게 되었고",
+          "evidence_status": "ALLEGATION"
+        }
+      ],
+      "consolidation_reason": "창신9·10구역에서 동의율 확보 방식, 공사비 상승, 분담금과 원주민 재정착 부담이 결합된 동일한 재개발 갈등 사안이다."
+    },
+    {
+      "candidate_id": "cbcf5e7d950f70f74f6a",
+      "document_id": "OFFICIAL:seodaemun:44aedee3559949632086a1f2",
+      "source_id": "seodaemun",
+      "source_name": "서대문구",
+      "meeting_date": "2026-09-22",
+      "document_url": "https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9340",
+      "chunk_number": 2,
+      "signal_type": "SAFETY_RISK",
+      "headline": "공공지원 받는 마을버스가 노선 축소와 개문 운행 논란에 놓였는데 관리 책임은 비어 있다",
+      "subject": "서대문구 마을버스 06번의 노선·배차와 승객 안전 관리",
+      "affected_group": "북아현동 럭키·두산·힐스테이트 일대 주민, 마을버스 승객, 교통약자",
+      "mechanism": "배차 간격 민원에 대해 운송업체가 서울역·롯데마트 구간을 제외하는 방식으로 노선을 단축했고, 회차 불가 사유의 현장 확인이 이뤄지지 않은 상태에서 개문 운행과 난폭운전 의혹까지 제기됐다. 동시에 서울시와 구가 업체에 재정지원금을 지급하고 있다.",
+      "civic_importance": "세금으로 적자를 보전하는 공공교통에서 서비스 접근성과 승객 안전이 함께 악화됐다면 지원금의 조건과 행정 감독이 적절했는지 따져야 한다. 개문 운행은 단순 민원이 아니라 중대 사고로 이어질 수 있는 위험이다.",
+      "anchor_quote": "마을버스가 문을 연 채 운행하는 모습입니다.",
+      "evidence_status": "ALLEGATION",
+      "public_question": "구와 서울시는 지원금을 받는 06번 마을버스의 노선 축소와 안전 운행을 어떤 자료로 감독하고, 주민이 필요한 구간과 배차를 언제 회복할 것인가?",
+      "counterintuitive_question": "배차 간격을 줄이기 위해 노선을 단축했다는 조치가 실제로는 운행 효율보다 승객의 환승·보행 부담과 안전 위험을 키운 것은 아닌가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 9,
+      "why_not_routine": "노선 서비스 공백, 업체 재정지원, 공사 책임 공방, 개문 운행이라는 안전 의혹을 운행 데이터와 현장 영상으로 교차검증할 수 있다.",
+      "unknowns": [
+        "개문 운행 영상의 촬영 일시·차량번호와 실제 운행 위반 여부가 확인됐는가",
+        "06번의 최근 배차 간격, 운행 횟수, 노선 단축 전후 이용객 수는 어떻게 변했는가",
+        "고가 공사로 회차가 불가능하다는 업체 주장을 구청이나 서울시가 현장 검증했는가",
+        "최근 지원금 규모와 배차·안전 위반 시 감액 또는 제재 조건은 무엇인가",
+        "문 개방 운행이 언제, 어디서, 몇 차례 발생했는지",
+        "해당 운행에 대한 사고·민원·현장 점검 기록이 있는지",
+        "06번 버스 운영회사와 운전자에게 실제로 적용된 제재가 있는지",
+        "마을버스 지원금 지급 조건에 안전운행 평가나 감액 기준이 포함돼 있는지",
+        "문 개방 운행이 발생한 날짜·횟수와 실제 사고·부상 여부",
+        "06번 버스 회사와 운전자의 징계 또는 시정 조치 여부"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 3,
+      "related_document_count": 1,
+      "related_sources": [
+        "서대문구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "OFFICIAL:seodaemun:44aedee3559949632086a1f2",
+          "source_name": "서대문구",
+          "meeting_date": "2026-09-22",
+          "document_url": "https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9340",
+          "anchor_quote": "마을버스가 문을 연 채 운행하는 모습입니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "OFFICIAL:seodaemun:44aedee3559949632086a1f2",
+          "source_name": "서대문구",
+          "meeting_date": "2026-09-22",
+          "document_url": "https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9340",
+          "anchor_quote": "보시는 것처럼 문을 열어놓고 달리는 버스 안에서는 급정거나 급회전 한 번에 승객이 바깥으로 떨어질 수 있습니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "OFFICIAL:seodaemun:44aedee3559949632086a1f2",
+          "source_name": "서대문구",
+          "meeting_date": "2026-09-22",
+          "document_url": "https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9340",
+          "anchor_quote": "문을 열어놓고 달리는 버스 안에서는 급정거나 급회전 한 번에 승객이 바깥으로 떨어질 수 있습니다.",
+          "evidence_status": "ALLEGATION"
+        }
+      ],
+      "consolidation_reason": "서대문구 마을버스 06번의 노선·배차 축소와 개문·위험 운행에도 지원금과 연계된 실효성 있는 점검·제재가 없는 동일한 관리 문제다."
+    },
+    {
+      "candidate_id": "5ca69cc7af6de6413436",
+      "document_id": "OFFICIAL:mapo:3acf5b0785d8c4c481bc1479",
+      "source_id": "mapo",
+      "source_name": "마포구",
+      "meeting_date": "2026-09-21",
+      "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=ff69e944617333a25e2036ef325f3e429c82b117def7a476f1b9cdb35b904e7da734787bff0dd8b0",
+      "chunk_number": 2,
+      "signal_type": "SERVICE_GAP",
+      "headline": "사업자 공백과 장기계약 부담이 겹친 농수산물시장, 정상화 책임은 누구에게 있나",
+      "subject": "마포농수산물시장 운영사업자 선정 및 기존 계약 해지",
+      "affected_group": "시장 상인, 농수산물시장 이용 구민, 시장 인근 상권",
+      "mechanism": "기존 경보유통 계약이 해지된 뒤 신규 공고의 낙찰자가 계약을 포기하면서 운영 공백이 발생했다. 구청장은 새 계약이 5년+5년, 최대 10년 이어질 수 있어 신중한 선정이 필요하다고 밝혔고, 의원은 상인들의 생계 부담과 사업자 선정 과정의 책임을 제기했다.",
+      "civic_importance": "공공시설 운영사업자 선정이 상인들의 영업 지속 여부와 구민의 장보기 서비스, 향후 10년의 공공자산 운영에 직접 영향을 미친다. 특정 업체 내정 의혹과 과거 계약의 특혜 의혹까지 제기돼 선정 절차의 투명성 검증이 필요하다.",
+      "anchor_quote": "현재 공단에서는 법적 절차에 의해서 먼저 1차로 공고를 냈는데 낙찰자가 계약을 포기함으로써 행위가 이루어지지 않았습니다.",
+      "evidence_status": "OBSERVED_OUTCOME",
+      "public_question": "공공시장 운영 공백으로 상인과 이용 시민이 부담을 지고 있는데, 계약 해지부터 낙찰자 포기까지의 책임과 손실을 누가 어떻게 부담합니까?",
+      "counterintuitive_question": "시장 침체의 원인이 단순히 사업자 역량 부족이 아니라 장기 임대조건, 점포 사용료 현실화 실패, 매장 간 상품 중복 같은 구조에 있는 것은 아닙니까?",
+      "scope_hint": "SINGLE_CASE",
+      "broadcast_potential": 5,
+      "why_not_routine": "사업자 재공고를 알리는 행정 소식이 아니라, 공공시장 장기 운영권 선정과 과거 계약 관리 실패가 상인 생계와 공공자산에 미친 영향을 추적할 수 있다.",
+      "unknowns": [
+        "경보유통 계약 해지의 구체적 사유와 법적 분쟁 내용",
+        "1차 공고의 입찰 조건, 낙찰자와 계약 포기 사유",
+        "시장 상인들의 실제 매출·영업 손실 규모",
+        "차기 사업자 선정 일정과 평가 기준 및 외부 검증 방식",
+        "2차 입찰공고가 지연된 구체적인 법적·행정적 사유",
+        "공단 내부 규정상 구청 협의 또는 승인이 실제로 필요한지 여부",
+        "공실 기간 동안 상인들의 매출과 방문객 수가 얼마나 감소했는지",
+        "입찰보증금과 임대조건을 조정할 수 있는지 여부",
+        "문제가 된 입찰공고의 대상 시설과 구체적인 오류",
+        "입찰공고로 발생했거나 예상되는 공실·매출·공공비용 규모"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 3,
+      "related_document_count": 2,
+      "related_sources": [
+        "마포구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "OFFICIAL:mapo:3acf5b0785d8c4c481bc1479",
+          "source_name": "마포구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=ff69e944617333a25e2036ef325f3e429c82b117def7a476f1b9cdb35b904e7da734787bff0dd8b0",
+          "anchor_quote": "현재 공단에서는 법적 절차에 의해서 먼저 1차로 공고를 냈는데 낙찰자가 계약을 포기함으로써 행위가 이루어지지 않았습니다.",
+          "evidence_status": "OBSERVED_OUTCOME"
+        },
+        {
+          "document_id": "OFFICIAL:mapo:3acf5b0785d8c4c481bc1479",
+          "source_name": "마포구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=ff69e944617333a25e2036ef325f3e429c82b117def7a476f1b9cdb35b904e7da734787bff0dd8b0",
+          "anchor_quote": "지금 마포농수산물시장 다농마트가 공실로 9개월째 저러고 있습니다.",
+          "evidence_status": "OBSERVED_OUTCOME"
+        },
+        {
+          "document_id": "OFFICIAL:mapo:b76a624462b2b841815f2dc9",
+          "source_name": "마포구",
+          "meeting_date": "2026-09-22",
+          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=f522a426ea577d1b28d893c21fe9a1418ddb885e0b5e1bfcc1997df123ade98daecc76e5b66bb417",
+          "anchor_quote": "그런데 감사 이후 구정질문에서는 대안에 대한 설명이나 보고 없이 입찰공고를 빨리 내야 한다는 취지의 답변이 나왔습니다.",
+          "evidence_status": "ALLEGATION"
+        }
+      ],
+      "consolidation_reason": "마포농수산물시장에서 운영사업자 계약 해지·낙찰 포기와 입찰 조건·공실 대응 지연이 상인과 이용자 피해로 이어진 동일한 시장 운영 정상화 사안이다."
     },
     {
       "candidate_id": "cfff42fc08dfbae671fd",
@@ -1945,7 +1942,206 @@
           "evidence_status": "PROPOSAL"
         }
       ],
-      "consolidation_reason": "서초구 방배카페골목에 반복적으로 보도 정비·미디어큐브·야간경관 시설을 투입하면서 방문객·매출 효과, 설치 규모, 운영비와 주민 피해를 사전 검증하지 않았다는 동일한 상권활성화 사업이다."
+      "consolidation_reason": "방배카페골목에 반복적인 보도·야간경관·미디어큐브 투자를 하면서 상권 효과, 설치 규모와 유지관리 비용을 검증하지 않은 동일 사업이다."
+    },
+    {
+      "candidate_id": "576d929edda9d1ffaf2e",
+      "document_id": "CLIKC3067625553454589",
+      "source_id": "seocho",
+      "source_name": "서초구",
+      "meeting_date": "2026-09-15",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
+      "chunk_number": 2,
+      "signal_type": "REPEATED_FAILURE",
+      "headline": "‘아시아 태평양 사법정의허브’ 사업의 근거 용역, 핵심 기관과 주민 의견을 대표하지 못했나",
+      "subject": "서초구 아시아·태평양 사법정의허브 조성 연구용역 및 후속 사업",
+      "affected_group": "서초구민, 사업 대상 지역 주민·법조기관, 향후 사업 예산을 부담할 시민",
+      "mechanism": "5억4200만원의 시설비·디자인·용역이 포함된 사업 과정에서 연구용역이 먼저 진행됐지만, 보고서에는 문화벨트와 헤이그 모델의 연결성이 부족하다는 지적이 나왔다. 설문도 변호사 383명, 서초구민 150명, 서울시민 50명에 비해 대검찰청·대법원 소속 응답자는 각각 15명과 10명에 그쳤고, 자문 의견에는 발언자의 전문성과 출처가 표시되지 않았다.",
+      "civic_importance": "도시 브랜드와 대규모 공간·문화 사업의 방향을 정하는 연구용역이 부실하거나 대표성이 낮다면, 이후 디자인·행사·시설 조성 예산 전체의 타당성에 영향을 줄 수 있다. 특히 사업의 핵심 당사자인 법조기관과 지역 주민의 의견이 어떻게 반영됐는지 시민이 알기 어렵다.",
+      "anchor_quote": "이 헤이그가 어떻게 만들어졌는지 그 순서 자체를 우리가 다시 한번 명심을 해야 될 필요가 있을 것 같은데",
+      "evidence_status": "ALLEGATION",
+      "public_question": "서초구는 이 용역의 조사 설계와 비용, 자문 근거를 공개하고, 실제 사업 결정이 대표성 있는 주민·기관 의견에 근거했다는 것을 어떻게 입증할 것인가?",
+      "counterintuitive_question": "응답자가 적은 대법원·대검찰청 관계자 의견을 보고서에서 제외한 것이 오히려 정직한 처리였을까, 아니면 사업의 핵심 이해관계자를 조사에서 사실상 배제한 결과일까?",
+      "scope_hint": "SINGLE_CASE",
+      "broadcast_potential": 9,
+      "why_not_routine": "문서 표현에 대한 단순한 이견이 아니라, 도시 브랜드 사업의 출발점인 연구용역의 비용·표본·전문성·정책 반영 여부를 동시에 검증할 수 있는 사안이다. 보고서 원문, 계약·지출 자료, 설문 원자료, 헤이그 현지 모델과의 비교를 통해 공공사업 타당성 검증 보도로 확장 가능하다.",
+      "unknowns": [
+        "5억4200만원 중 순수 연구용역비와 디자인·시설비의 세부 집행액",
+        "최종보고서가 후속 사업의 어떤 의사결정과 예산에 직접 반영됐는지",
+        "설문 문항·표본 추출 방식·응답률과 조사 제외 기준",
+        "자문위원 명단·소속·전문 분야 및 자문 의견이 보고서에 익명 처리된 이유",
+        "시설과 프로그램에 투입된 총사업비와 연도별 집행 내역",
+        "추가 시설의 설치비·전기료·유지보수 예상액",
+        "사법정의 라운지 하루 20~30명 이용자의 실제 이용 목적과 주민 비율",
+        "행사 전후 유동인구·매출·소상공인 매출 변화를 비교한 자료",
+        "서초구가 단독 또는 관계 기관과 공동으로 결정할 수 있는 사업의 법적 범위",
+        "국제회의·기구 유치의 공식 목표와 연도별 성과지표"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 4,
+      "related_document_count": 1,
+      "related_sources": [
+        "서초구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3067625553454589",
+          "source_name": "서초구",
+          "meeting_date": "2026-09-15",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
+          "anchor_quote": "이 헤이그가 어떻게 만들어졌는지 그 순서 자체를 우리가 다시 한번 명심을 해야 될 필요가 있을 것 같은데",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "CLIKC3067625553454589",
+          "source_name": "서초구",
+          "meeting_date": "2026-09-15",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
+          "anchor_quote": "거기에 대해서 구체적인 파악은 안 되어 있습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3067625553454589",
+          "source_name": "서초구",
+          "meeting_date": "2026-09-15",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
+          "anchor_quote": "국제회의 같은 경우에는 저희가 예상을 해서 몇 월에 개최하겠다고 하기에는 단정하기에는 어려운 부분이 있어서",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3067625553454589",
+          "source_name": "서초구",
+          "meeting_date": "2026-09-15",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625553454589&collection=minutes",
+          "anchor_quote": "우리가 하고 싶은 프로그램들을 설계를 해서 거기에 이 용역보고서가 맞춰가고 있습니다.",
+          "evidence_status": "ALLEGATION"
+        }
+      ],
+      "consolidation_reason": "서초 사법정의허브가 대표성 낮은 용역·불명확한 권한과 성과지표를 바탕으로 시설·국제회의 사업을 확장하는 동일한 정책 타당성 문제다."
+    },
+    {
+      "candidate_id": "a8a9cb5021d8ade20c63",
+      "document_id": "CLIKC3076265604665546",
+      "source_id": "seocho",
+      "source_name": "서초구",
+      "meeting_date": "2026-09-15",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076265604665546&collection=minutes",
+      "chunk_number": 3,
+      "signal_type": "NEW_POLICY_UNCERTAINTY",
+      "headline": "대형 공원·주차장 재편 사업을 짧은 용역과 단계별 결정에 의존해 추진",
+      "subject": "마방공원 주차장과 여의천·매헌시민의숲을 연계한 복합여가공간 조성사업",
+      "affected_group": "양재2동·내곡동 주민, 인근 통행자와 공원 이용객, 서초구 재정 부담을 지는 시민",
+      "mechanism": "도시관리계획 변경, 교통성 검토, 공원관리계획, 사업 타당성·재원 조달 방안을 장기 로드맵으로 확정하기 전에 1억5000만원 규모 용역을 6개월 안에 단계적으로 진행하려 하고 있다. 중간보고가 사실상 최종 결과에 가까운 시점에 나올 수 있어 교통 영향과 사업성 검토가 충분하지 않을 가능성이 제기됐다.",
+      "civic_importance": "주차장과 공원을 새로 만드는 수준이 아니라 주변 도로와 하천, 시민의숲까지 바꾸는 생활권 단위 사업이다. 초기 검토가 부실하면 이후 설계 변경, 사업 지연, 추가 용역과 예산 투입으로 이어질 수 있다.",
+      "anchor_quote": "이 사업이 과연 2030년까지 완벽하게 마무리를 지을 수 있는 그런 사전에 어떤 결과보고를 하는 타당성 조사지요",
+      "evidence_status": "PROPOSAL",
+      "public_question": "주민 생활권을 바꾸는 이 사업의 전체 비용과 재원 조달 방안, 교통 대책이 확정되기 전에 용역부터 서둘러야 하는 이유는 무엇인가?",
+      "counterintuitive_question": "사업을 빨리 시작하는 것이 실제 완공을 앞당기는가, 아니면 짧은 용역으로 인한 설계 변경과 관계기관 재협의가 오히려 사업을 장기화할 가능성이 더 큰가?",
+      "scope_hint": "SINGLE_CASE",
+      "broadcast_potential": 8,
+      "why_not_routine": "단순 용역 일정 문제가 아니라 대형 도시공간 재편사업의 타당성 검증과 책임 있는 의사결정 순서가 충분한지 따지는 사안이다.",
+      "unknowns": [
+        "6개월 안에 교통 수요와 주변 생활권 영향을 어느 수준까지 분석할 수 있는지",
+        "전체 사업비와 재정·민간 방식별 재원 조달 계획",
+        "서울시·경찰청 등 관계기관 협의가 실제 일정대로 진행될 가능성",
+        "주민설명회에서 확인된 의견의 전체 조사 결과와 반대·우려 의견",
+        "300면 규모의 산정 근거와 시간대별 현재·미래 주차 수요",
+        "주차장 증설 뒤 러시아워 진출입 교통량과 인근 교차로의 영향",
+        "지하 1개층·지상 4층 시설의 보행 동선과 공원 경관 영향",
+        "주차장 확대와 대중교통·환승 기능 회복 방안의 관계",
+        "460억원 추정 사업비의 재원 구성과 향후 증액 가능성",
+        "주차장 약 300대 증가가 주변 교통과 대중교통 이용에 미칠 영향"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 3,
+      "related_document_count": 1,
+      "related_sources": [
+        "서초구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3076265604665546",
+          "source_name": "서초구",
+          "meeting_date": "2026-09-15",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076265604665546&collection=minutes",
+          "anchor_quote": "이 사업이 과연 2030년까지 완벽하게 마무리를 지을 수 있는 그런 사전에 어떤 결과보고를 하는 타당성 조사지요",
+          "evidence_status": "PROPOSAL"
+        },
+        {
+          "document_id": "CLIKC3076265604665546",
+          "source_name": "서초구",
+          "meeting_date": "2026-09-15",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076265604665546&collection=minutes",
+          "anchor_quote": "현재 193대인데 저희가 기본구상에서는 약 300대까지 증설하는 것으로 해서 한 110대 정도가 더 늘어나겠습니다.",
+          "evidence_status": "PLAN"
+        },
+        {
+          "document_id": "CLIKC3076265604665546",
+          "source_name": "서초구",
+          "meeting_date": "2026-09-15",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076265604665546&collection=minutes",
+          "anchor_quote": "43년간 공원으로 지정되어 있지만 주차장으로만 사용이 되었던 시설이 되겠습니다.",
+          "evidence_status": "PLAN"
+        }
+      ],
+      "consolidation_reason": "마방공원·여의천 일대에서 주차장 확대와 복합여가공간 조성을 추진하며 교통 영향·대체공원·총사업비를 검증하는 동일한 사업이다."
+    },
+    {
+      "candidate_id": "5bd4bf4c0d9145062f3b",
+      "document_id": "CLIKC3067625754563142",
+      "source_id": "seocho",
+      "source_name": "서초구",
+      "meeting_date": "2026-09-14",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625754563142&collection=minutes",
+      "chunk_number": 1,
+      "signal_type": "PUBLIC_COST",
+      "headline": "학교 지원금 수요·공사 일정 조정 실패로 서초구 교육예산이 반복적으로 남거나 중복 지급된다",
+      "subject": "초·중등교육경비보조금 및 학교별 교육사업 집행·정산",
+      "affected_group": "서초구 관내 학교와 학생, 교육예산을 부담하는 주민",
+      "mechanism": "구청이 학교 요청을 받아 지원금을 교부하지만, 공사 취소·낙찰차액·인력 결원·교육청과의 중복 지원 등으로 사용잔액이 발생한다. 학교 공사가 방학에 집중돼 정산이 늦어지는 구조도 다음 연도 반납을 반복시키고 있다.",
+      "civic_importance": "총 지원금 약 61억 원 가운데 59억 2천만 원이 집행됐지만 약 1억 7,800만 원이 남았다. 일부는 불가피한 잔액일 수 있으나, 교육청과의 중복 지원과 사업 취소가 사전에 걸러졌는지 확인할 필요가 있다.",
+      "anchor_quote": "그러면 이 잔액은 학교마다 매해 발생할 수밖에 없는 거네요.",
+      "evidence_status": "OFFICIAL_FINDING",
+      "public_question": "서초구는 매년 발생하는 학교 지원금 잔액과 중복 지원을 줄이기 위해 어떤 사전 검증과 정산 개선을 하고 있으며, 남은 예산은 학생들에게 다시 어떻게 환원됩니까?",
+      "counterintuitive_question": "학교가 예산을 못 쓴 것이 단순한 집행 부진이 아니라, 방학 공사 일정과 교육청·구청의 회계연도 차이 때문에 생긴 구조적 문제라면 현재의 학교별 신청·교부 방식 자체를 바꿔야 하는 것 아닙니까?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 84,
+      "why_not_routine": "단순한 불용액 보고가 아니라 학교 지원금의 중복 교부, 사업 취소, 회계·공사 일정 불일치가 매년 반복될 수 있다는 행정 구조의 문제다. 학교별 자료와 타 자치구 비교를 통해 공공예산 관리 실패와 교육서비스 영향을 함께 검증할 수 있다.",
+      "unknowns": [
+        "학교별·사업별 반납액과 반납 사유의 전체 내역",
+        "중복 신청 또는 중복 교부를 사전에 확인하는 구청·교육청 간 절차",
+        "반납된 예산이 학생 교육서비스 축소로 이어졌는지 여부",
+        "다른 자치구에서도 같은 유형의 잔액과 중복 지원이 반복되는지 여부",
+        "최근 수년간 학교별·사업별 반납액과 중복 지원액 추이",
+        "구청과 서울시교육청 사이에 사전 중복 검증 절차가 있는지",
+        "반납된 예산이 학생 교육서비스 축소나 사업 지연으로 이어졌는지",
+        "다음 회계연도부터 구조적 중복이 실제로 해소됐는지"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 1,
+      "related_sources": [
+        "서초구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3067625754563142",
+          "source_name": "서초구",
+          "meeting_date": "2026-09-14",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625754563142&collection=minutes",
+          "anchor_quote": "그러면 이 잔액은 학교마다 매해 발생할 수밖에 없는 거네요.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3067625754563142",
+          "source_name": "서초구",
+          "meeting_date": "2026-09-14",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3067625754563142&collection=minutes",
+          "anchor_quote": "잔액의 대부분 7440만원은 정산 기간이 3월에서 다음 해 2월까지였는데 회계연도 맞춰서 1월에서 12월로 일치시키는 과정에서 나타난 구조상 발생한 중복액",
+          "evidence_status": "OFFICIAL_FINDING"
+        }
+      ],
+      "consolidation_reason": "서초구 학교 지원금이 교육청과 구청의 지원시기·정산주기 불일치와 중복 지원으로 매년 잔액·반납을 낳은 동일한 교육예산 집행 문제다."
     },
     {
       "candidate_id": "8b324318e66e282556dc",
@@ -1972,10 +2168,14 @@
         "MSRC 공법이 해당 부지의 구조·굴착 조건상 반드시 필요한지",
         "CIP 등 대체 공법과의 객관적 공사비·안전성 비교자료",
         "공법 선정위원회의 평가기준, 회의록, 업체 탈락 사유",
-        "특허료 납부 상태와 근질권·유질계약이 공사 및 하자보수에 미치는 영향"
+        "특허료 납부 상태와 근질권·유질계약이 공사 및 하자보수에 미치는 영향",
+        "MSRC와 CIP의 실제 안전성·공사기간·총사업비 비교 결과",
+        "공법선정위원회가 실제 개최됐는지와 심의 기록 존재 여부",
+        "MSRC 특허 사용료 및 흙막이 공사비 18억 원의 산출근거",
+        "영구벽체 사용으로 제외돼야 할 지하벽체 공사비와 실제 반영액"
       ],
       "review_status": "UNREVIEWED",
-      "related_evidence_count": 1,
+      "related_evidence_count": 2,
       "related_document_count": 1,
       "related_sources": [
         "금천구"
@@ -1988,8 +2188,256 @@
           "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
           "anchor_quote": "인접대지, 도심지 및 대심도 굴착 등을 고려할 때 MSRC 주열벽 공법 적용은 과다하게 반영되었다고 판단됨",
           "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "CLIKC3007096562743161",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-17",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
+          "anchor_quote": "비교평가도 없이 이 공법이 최선이라고 확신하셨습니다.",
+          "evidence_status": "ALLEGATION"
         }
-      ]
+      ],
+      "consolidation_reason": "가산동 생활관·지하주차장 사업에서 MSRC 특허 흙막이 공법의 대체공법 비교, 비용 증가, 특허권·하자보수 검증이 부족했다는 동일 사안이다."
+    },
+    {
+      "candidate_id": "6c91f6559a04be331bd6",
+      "document_id": "CLIKC3007096562743161",
+      "source_id": "geumcheon",
+      "source_name": "금천구",
+      "meeting_date": "2026-09-17",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
+      "chunk_number": 3,
+      "signal_type": "PUBLIC_COST",
+      "headline": "금천구 공사비 산출자료가 서로 다른 총사업비와 계산식으로 의회 심의를 통과할 뻔했다",
+      "subject": "가산동 생활관 관련 공사비 현행화 자료와 증액사유서",
+      "affected_group": "금천구 주민과 예산 심의에 참여하는 구의회",
+      "mechanism": "같은 날짜의 자료에 총사업비가 약 77억 원과 82억 원으로 다르게 기재되고, 물가상승률·면적 증가율·공종별 비율·재료비가 문서마다 일치하지 않는다는 지적이 제기됐다. 현행화 원본과 산출 근거도 즉시 제출되지 않았다.",
+      "civic_importance": "의회가 정확한 원가와 증액 사유를 확인하지 못한 채 수십억 원 규모 사업비를 의결하면, 과다 계상이나 예산 낭비를 사후에 바로잡기 어려울 수 있다. 다만 각 수치가 실제로 잘못됐는지는 원본 자료와 재산정으로 확인해야 한다.",
+      "anchor_quote": "같은 7월 21일자 현행화 세트 안에 총사업비가 두 개입니다.",
+      "evidence_status": "ALLEGATION",
+      "public_question": "금천구는 의회에 제출한 여러 공사비 수치 중 무엇을 공식 금액으로 인정하며, 수식이 포함된 원본·수정 이력·재산정 결과를 주민에게 공개할 것인가?",
+      "counterintuitive_question": "공사비 증액의 핵심 원인이 실제 물가나 면적 증가가 아니라, 기존 총액에 맞추기 위한 비율·수치 입력 과정일 가능성은 없는가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 92,
+      "why_not_routine": "단순한 서류 오기가 아니라 대규모 공공사업의 의회 심의 전 검증 체계, 원본 공개, 예산 통제의 책임 소재를 확인할 수 있는 사안이다.",
+      "unknowns": [
+        "77억 원과 82억 원 중 최종 공식 사업비가 무엇인지",
+        "현행화 원본 파일의 존재와 수정 이력",
+        "물가상승률과 0.666·0.6667 비율의 산정 기준",
+        "재료비에 추가된 약 1억 9,474만 원의 성격과 적용 근거",
+        "의원이 제시한 오류 29건의 항목별 원문과 실제 오류 여부",
+        "각 절차에서 법정·내부적으로 작성해야 하는 문서의 존재 여부",
+        "오류가 예산·설계·투자심사 금액에 미친 영향",
+        "자료 검토·결재·수정 책임자와 재발방지 조치"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 1,
+      "related_sources": [
+        "금천구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3007096562743161",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-17",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
+          "anchor_quote": "같은 7월 21일자 현행화 세트 안에 총사업비가 두 개입니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "CLIKC3007096562743161",
+          "source_name": "금천구",
+          "meeting_date": "2026-09-17",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
+          "anchor_quote": "자료에 오류가 있었던 것은 맞는 것 같고",
+          "evidence_status": "OBSERVED_OUTCOME"
+        }
+      ],
+      "consolidation_reason": "금천구 가산동 생활관 사업의 공사비·설계·공법·심의자료에서 반복 오류와 원본·검증 기록 부재가 제기된 동일한 사업자료 관리 실패다"
+    },
+    {
+      "candidate_id": "75307c1969f46f587a7c",
+      "document_id": "CLIKC3076205853704211",
+      "source_id": "gwanak",
+      "source_name": "관악구",
+      "meeting_date": "2026-09-16",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076205853704211&collection=minutes",
+      "chunk_number": 2,
+      "signal_type": "RIGHTS_GAP",
+      "headline": "관악구의회가 발언 취소와 윤리위 제명 논란을 공개 토론 없이 종결해 의회 발언권과 시민 대표성 논란을 남겼다",
+      "subject": "5분 자유발언 허가 취소 및 의원 제명 부결과 관련한 의회 운영",
+      "affected_group": "발언이 제한된 의원과 관악구의회 회의·윤리 절차를 지켜보는 주민",
+      "mechanism": "의장은 관련 의원들의 의사진행발언·신상발언 신청을 소개한 뒤 공개 발언을 진행하지 않고 회의를 산회했으며, 회의록에는 일부 내용이 게재되지 않았다.",
+      "civic_importance": "의원이 주민을 대신해 문제를 제기할 수 있는 공식 발언 절차가 어떤 기준으로 제한됐는지, 윤리 논란이 공개성과 절차적 권리를 갖추고 처리됐는지는 의회의 민주적 책임과 직결된다.",
+      "anchor_quote": "지금 제10대 관악구의회 23명의 의원은 지금 발언할 때가 아니고 자숙해야 할 때라고 생각합니다.",
+      "evidence_status": "ALLEGATION",
+      "public_question": "관악구의회는 어떤 규정과 절차에 따라 의원들의 발언을 취소하거나 제한했으며, 주민은 그 판단 근거와 관련 자료를 확인할 수 있는가?",
+      "counterintuitive_question": "의원들의 ‘자숙’이 의회 갈등을 줄이는 조치였는지, 오히려 윤리 논란의 사실관계와 책임을 공개적으로 검증하지 못하게 한 조치였는지 확인할 필요가 있지 않은가?",
+      "scope_hint": "SINGLE_CASE",
+      "broadcast_potential": 68,
+      "why_not_routine": "개인 간 정치적 갈등으로 보일 수 있지만, 의원 발언권·윤리 심사·회의록 공개라는 의회 운영의 핵심 절차와 연결된다. 취소 결정 문서, 윤리위 자료, 회의규칙, 당사자와 전문가 취재를 통해 공적 책임을 검증할 수 있다.",
+      "unknowns": [
+        "5분 자유발언 허가가 취소된 구체적인 사유와 취소 결정 주체",
+        "김혜정 의원이 발언하려던 윤리위 제명 부결 관련 내용",
+        "손정혜 의원의 제명 관련 신상발언 신청이 처리되지 않은 이유",
+        "회의록에서 삭제된 부분의 범위와 삭제 근거·절차",
+        "이경관 의원에게 적용된 구체적인 행위와 징계 사유",
+        "비공개 심사가 필요하다고 판단한 법적·사실적 근거",
+        "제명 의결에 이른 심의 자료와 의원별 판단 이유",
+        "제명 결정에 대한 당사자의 소명·이의제기 절차와 결과 공개 여부",
+        "징계 요구의 구체적인 사유와 사실관계",
+        "윤리특별위원회의 심사보고서에 담긴 판단 근거와 적용 규정"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 3,
+      "related_document_count": 2,
+      "related_sources": [
+        "관악구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3076205853704211",
+          "source_name": "관악구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076205853704211&collection=minutes",
+          "anchor_quote": "지금 제10대 관악구의회 23명의 의원은 지금 발언할 때가 아니고 자숙해야 할 때라고 생각합니다.",
+          "evidence_status": "ALLEGATION"
+        },
+        {
+          "document_id": "CLIKC3076207408437126",
+          "source_name": "관악구",
+          "meeting_date": "2026-09-11",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076207408437126&collection=minutes",
+          "anchor_quote": "지금부터 비공개로 회의를 진행하도록 하겠습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3076205853704211",
+          "source_name": "관악구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076205853704211&collection=minutes",
+          "anchor_quote": "본 안건은 의원 징계에 관한 사항이므로 회의규칙 제70조와 제72조에 따라 회의는 비공개로 진행하고 징계 의결은 공개회의에서 선포하도록 하겠습니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        }
+      ],
+      "consolidation_reason": "관악구의회에서 의원 발언 제한과 윤리·제명 심의를 비공개로 처리해 징계 사유와 판단 근거를 주민이 검증하기 어려워진 동일한 의회 절차 투명성 문제다"
+    },
+    {
+      "candidate_id": "7481fe9e488265c1815e",
+      "document_id": "CLIKC3015833254357261",
+      "source_id": "dongjak",
+      "source_name": "동작구",
+      "meeting_date": "2026-09-18",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
+      "chunk_number": 2,
+      "signal_type": "NEW_POLICY_UNCERTAINTY",
+      "headline": "동작구 AI 행정 확대, 편리함 뒤 개인정보·오류 책임 기준은 비어 있다",
+      "subject": "동작구 인공지능 기본 조례와 향후 지능형 행정서비스 도입",
+      "affected_group": "동작구민 전체, 특히 디지털 취약계층과 행정서비스 오류 피해자",
+      "mechanism": "구정 전반에 AI 행정서비스를 도입할 제도적 근거와 기본계획·기술위원회를 마련하지만, 어떤 업무에 어떤 기준으로 적용하고 오류·차별·개인정보 침해가 발생했을 때 누가 책임지는지는 발언에 드러나지 않는다.",
+      "civic_importance": "AI 행정은 복지·민원·안전 등 시민 생활 전반의 판단에 영향을 줄 수 있어 편의성뿐 아니라 설명 가능성, 이의제기권, 인간 담당자의 개입 여부가 핵심이다.",
+      "anchor_quote": "구정 전반에 선제적이고 안정적인 지능형 행정서비스를 도입하여 구민이 체감할 수 있는 제도적 근거를 마련하고자 제출된 안건입니다.",
+      "evidence_status": "PROPOSAL",
+      "public_question": "동작구가 AI로 민원·복지·안전 업무를 처리할 때 시민은 어떤 데이터를 제공해야 하며, 잘못된 판단을 사람이 재검토해 달라고 요구할 수 있는가?",
+      "counterintuitive_question": "AI 도입이 행정을 더 공정하게 만드는 것이 아니라, 데이터가 부족한 고령자·장애인·이주민을 오히려 서비스 대상에서 누락시키는 것은 아닌가?",
+      "scope_hint": "CITYWIDE",
+      "broadcast_potential": 9,
+      "why_not_routine": "신규 조례가 향후 구정 전반의 의사결정 구조를 바꾸지만, 실제 적용 범위와 시민 통제 장치가 아직 불명확해 정책 설계와 현장 검증을 함께 할 수 있다.",
+      "unknowns": [
+        "AI를 적용할 행정 업무와 대상 서비스가 공개됐는가",
+        "개인정보의 수집·결합·보관 기준은 무엇인가",
+        "AI 판단에 대한 시민의 설명 요구와 이의제기 절차가 있는가",
+        "오류나 차별적 결과가 발생했을 때 최종 책임 주체는 누구인가",
+        "현재 서대문구가 도입했거나 도입 예정인 AI 시스템과 적용 업무",
+        "AI가 주민의 자격·복지·민원 처리에 직접 영향을 주는지 여부",
+        "알고리즘 오류·차별·개인정보 유출 발생 시 책임 부서와 피해 구제 절차",
+        "외부 업체 시스템을 사용할 경우 학습 데이터와 감사·검증 권한의 범위"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 2,
+      "related_sources": [
+        "동작구",
+        "서대문구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3015833254357261",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
+          "anchor_quote": "구정 전반에 선제적이고 안정적인 지능형 행정서비스를 도입하여 구민이 체감할 수 있는 제도적 근거를 마련하고자 제출된 안건입니다.",
+          "evidence_status": "PROPOSAL"
+        },
+        {
+          "document_id": "OFFICIAL:seodaemun:44aedee3559949632086a1f2",
+          "source_name": "서대문구",
+          "meeting_date": "2026-09-22",
+          "document_url": "https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9340",
+          "anchor_quote": "신뢰받는 인공지능 행정을 구현하고자",
+          "evidence_status": "PROPOSAL"
+        }
+      ],
+      "consolidation_reason": "동작구와 서대문구가 행정 AI 도입 근거는 마련했지만 오류·차별·개인정보 피해의 설명, 이의제기와 사람의 재심사 책임을 확정하지 않은 동일한 제도적 공백이다"
+    },
+    {
+      "candidate_id": "b82d88c48d90dd835a2d",
+      "document_id": "OFFICIAL:dongjak:cbf500506dc85dfa17fe3864",
+      "source_id": "dongjak",
+      "source_name": "동작구",
+      "meeting_date": "2026-09-18",
+      "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20269",
+      "chunk_number": 1,
+      "signal_type": "REPEATED_FAILURE",
+      "headline": "자원봉사센터 차량 임차 예산이 당초 목적과 다르게 집행돼 예산 통제와 사후 책임이 흔들렸다",
+      "subject": "동작구 자원봉사센터 차량 임차 예산의 목적 외 집행",
+      "affected_group": "동작구민, 자원봉사센터 이용자와 자원봉사자, 지방재정 부담 주체인 주민",
+      "mechanism": "복지정책과 사업에서 편성 목적과 다른 집행 사실이 발견됐고, 의회가 예산편성 운영 기준 준수를 다시 촉구했다. 잘못 집행된 금액의 규모와 책임자, 환수·시정 여부가 확인되지 않은 상태다.",
+      "civic_importance": "예산이 의회 승인 목적과 다르게 사용되면 사업 우선순위에 대한 주민 통제와 예산 심의의 실효성이 약화된다. 단순 실수인지 반복되는 내부 통제 실패인지 확인할 필요가 있다.",
+      "anchor_quote": "당초 편성된 예산의 목적과 다르게 집행한 사실이 발견되었으므로",
+      "evidence_status": "OFFICIAL_FINDING",
+      "public_question": "주민 세금으로 편성된 차량 임차 예산이 왜 다른 목적에 사용됐고, 잘못 집행된 돈은 회수됐으며 같은 일이 재발하지 않도록 어떤 통제가 작동하는가?",
+      "counterintuitive_question": "예산을 쓰지 못해 남기는 것보다 목적 외 집행이 더 효율적이라는 현장 판단이 있었다면, 의회 승인 예산의 경직성이 문제였는지 아니면 부서 통제가 문제였는지?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 7,
+      "why_not_routine": "의회가 공식적으로 목적 외 집행을 확인한 사안으로, 금액·책임·재발 방지와 다른 사업의 유사 사례까지 확장 가능한 예산 감시 의제다.",
+      "unknowns": [
+        "목적 외 집행 금액과 구체적인 사용처",
+        "집행 과정에서의 승인·감독 책임자",
+        "부적정 집행액의 환수 또는 정산 조치 여부",
+        "유사한 목적 외 집행이 다른 부서에서도 있었는지",
+        "목적 외 집행된 금액과 집행 기간",
+        "차량 임차가 실제로 어떤 사업에 사용됐는지",
+        "변경 집행에 대한 내부 승인·보고 절차 존재 여부",
+        "환수·시정·책임 조치와 유사한 목적 외 집행 사례"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 2,
+      "related_document_count": 2,
+      "related_sources": [
+        "동작구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "OFFICIAL:dongjak:cbf500506dc85dfa17fe3864",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://assembly.dongjak.go.kr/viewer/minutes.do?uid=20269",
+          "anchor_quote": "당초 편성된 예산의 목적과 다르게 집행한 사실이 발견되었으므로",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "CLIKC3015833254357261",
+          "source_name": "동작구",
+          "meeting_date": "2026-09-18",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015833254357261&collection=minutes",
+          "anchor_quote": "당초 편성된 예산의 목적과 다르게 집행한 사실이 발견되었으므로",
+          "evidence_status": "OFFICIAL_FINDING"
+        }
+      ],
+      "consolidation_reason": "동작구 자원봉사센터 차량 임차 예산이 의회 승인 목적과 다르게 집행돼 사전 승인·환수·재발방지 통제가 문제된 동일 사안이다"
     },
     {
       "candidate_id": "703c3b232663f09ba860",
@@ -2076,50 +2524,6 @@
           "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=ff69e944617333a25e2036ef325f3e429c82b117def7a476f1b9cdb35b904e7da734787bff0dd8b0",
           "anchor_quote": "이미 관광순환열차는 9월 27일 운영을 종료하고 9월 30일부로 사업을 공식 종료하게 되어 있습니다",
           "evidence_status": "OBSERVED_OUTCOME"
-        }
-      ]
-    },
-    {
-      "candidate_id": "6c91f6559a04be331bd6",
-      "document_id": "CLIKC3007096562743161",
-      "source_id": "geumcheon",
-      "source_name": "금천구",
-      "meeting_date": "2026-09-17",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
-      "chunk_number": 3,
-      "signal_type": "PUBLIC_COST",
-      "headline": "금천구 공사비 산출자료가 서로 다른 총사업비와 계산식으로 의회 심의를 통과할 뻔했다",
-      "subject": "가산동 생활관 관련 공사비 현행화 자료와 증액사유서",
-      "affected_group": "금천구 주민과 예산 심의에 참여하는 구의회",
-      "mechanism": "같은 날짜의 자료에 총사업비가 약 77억 원과 82억 원으로 다르게 기재되고, 물가상승률·면적 증가율·공종별 비율·재료비가 문서마다 일치하지 않는다는 지적이 제기됐다. 현행화 원본과 산출 근거도 즉시 제출되지 않았다.",
-      "civic_importance": "의회가 정확한 원가와 증액 사유를 확인하지 못한 채 수십억 원 규모 사업비를 의결하면, 과다 계상이나 예산 낭비를 사후에 바로잡기 어려울 수 있다. 다만 각 수치가 실제로 잘못됐는지는 원본 자료와 재산정으로 확인해야 한다.",
-      "anchor_quote": "같은 7월 21일자 현행화 세트 안에 총사업비가 두 개입니다.",
-      "evidence_status": "ALLEGATION",
-      "public_question": "금천구는 의회에 제출한 여러 공사비 수치 중 무엇을 공식 금액으로 인정하며, 수식이 포함된 원본·수정 이력·재산정 결과를 주민에게 공개할 것인가?",
-      "counterintuitive_question": "공사비 증액의 핵심 원인이 실제 물가나 면적 증가가 아니라, 기존 총액에 맞추기 위한 비율·수치 입력 과정일 가능성은 없는가?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 92,
-      "why_not_routine": "단순한 서류 오기가 아니라 대규모 공공사업의 의회 심의 전 검증 체계, 원본 공개, 예산 통제의 책임 소재를 확인할 수 있는 사안이다.",
-      "unknowns": [
-        "77억 원과 82억 원 중 최종 공식 사업비가 무엇인지",
-        "현행화 원본 파일의 존재와 수정 이력",
-        "물가상승률과 0.666·0.6667 비율의 산정 기준",
-        "재료비에 추가된 약 1억 9,474만 원의 성격과 적용 근거"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 1,
-      "related_document_count": 1,
-      "related_sources": [
-        "금천구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3007096562743161",
-          "source_name": "금천구",
-          "meeting_date": "2026-09-17",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007096562743161&collection=minutes",
-          "anchor_quote": "같은 7월 21일자 현행화 세트 안에 총사업비가 두 개입니다.",
-          "evidence_status": "ALLEGATION"
         }
       ]
     },
@@ -2212,49 +2616,6 @@
       ]
     },
     {
-      "candidate_id": "5a211573574c5001e1a7",
-      "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
-      "source_id": "mapo",
-      "source_name": "마포구",
-      "meeting_date": "2026-09-21",
-      "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
-      "chunk_number": 1,
-      "signal_type": "RIGHTS_GAP",
-      "headline": "온라인 의견 제출을 안내해 놓고 정작 접수 시스템에는 정비계획을 올리지 않은 마포구",
-      "subject": "신촌지역 마포4구역 1·12지구 주민공람 및 의견 제출 절차",
-      "affected_group": "정비구역 주민·토지등소유자, 특히 온라인으로 의견을 내려고 한 주민",
-      "mechanism": "마포구는 공고문에 서면 제출과 서울도시공간포털 전자문서 제출을 모두 안내했지만, 포털에 해당 사업을 게시하지 않았고 의견서 양식도 온라인에서 제공하지 않았다. 주민은 사실상 구청을 직접 방문해야 하는 상황에 놓였다.",
-      "civic_importance": "정비계획 변경은 재산권과 주거환경에 직접 영향을 주는데, 주민 의견 제출 기회가 형식적으로만 열리면 절차적 정당성과 이후 인허가의 신뢰가 훼손될 수 있다.",
-      "anchor_quote": "안 올려놓은 거는 시스템상 확인이 됐기 때문에 변명의 여지가 없습니다.",
-      "evidence_status": "OFFICIAL_FINDING",
-      "public_question": "마포구는 온라인 제출을 믿고 참여하려던 주민들이 실제로 의견을 낼 수 없었던 기간과 규모를 파악했으며, 그 절차를 어떻게 보완할 것인가?",
-      "counterintuitive_question": "서면 제출이 가능했다는 이유만으로 온라인 제출 불가를 절차상 문제가 없다고 볼 수 있는가? 디지털 접근성을 높이려던 방식이 오히려 주민 참여를 줄인 것은 아닌가?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 88,
-      "why_not_routine": "단순 홈페이지 오류가 아니라, 주민공람이라는 법정·공적 참여 절차의 실효성과 재개발 인허가의 정당성에 영향을 주는 문제다.",
-      "unknowns": [
-        "포털 미게시가 실제 의견 제출 건수와 주민 참여율에 어떤 영향을 미쳤는지",
-        "마포구가 포털 게시와 별도로 주민들에게 어떤 보완 안내를 했는지",
-        "공람기간 연장 또는 재공람이 필요한지 여부"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 1,
-      "related_document_count": 1,
-      "related_sources": [
-        "마포구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "OFFICIAL:mapo:67e94bf9afc710166d55771c",
-          "source_name": "마포구",
-          "meeting_date": "2026-09-21",
-          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=01412f5f3af4b0ef23cedbf1ca012e93c8d4476b18798f1d9c00aed32cd78bc1dabb01ce6c983253",
-          "anchor_quote": "안 올려놓은 거는 시스템상 확인이 됐기 때문에 변명의 여지가 없습니다.",
-          "evidence_status": "OFFICIAL_FINDING"
-        }
-      ]
-    },
-    {
       "candidate_id": "aa266a3f8534a75cebd9",
       "document_id": "OFFICIAL:eunpyeong:c540f06a350cec08d8457e2f",
       "source_id": "eunpyeong",
@@ -2294,50 +2655,6 @@
           "meeting_date": "2026-09-18",
           "document_url": "https://council.ep.go.kr/viewer/minutes.do?uid=6103",
           "anchor_quote": "감당할 수 없는 추가 분담금 앞에 원주민과 세입자는 이주 난민이 되어 변두리로 내몰리고 있습니다.",
-          "evidence_status": "ALLEGATION"
-        }
-      ]
-    },
-    {
-      "candidate_id": "9bba375e2cd229543c02",
-      "document_id": "CLIKC3015916453536194",
-      "source_id": "jongno",
-      "source_name": "종로구",
-      "meeting_date": "2026-09-16",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
-      "chunk_number": 5,
-      "signal_type": "EXISTING_HARM",
-      "headline": "침수 대응 명분의 하천 공사, 문화유산 훼손 책임은 누가 지는가",
-      "subject": "홍제천 암반 제거·지형 변경 공사와 문화유산 보전",
-      "affected_group": "인근 주민과 하천 주변 문화유산을 이용·향유하는 시민",
-      "mechanism": "침수 피해를 이유로 암반 제거 등 지형 변경이 이뤄졌고, 의원은 그 과정에서 문화유산이 훼손됐다고 주장했다. 구청은 향후 추가적인 암반 개입을 하지 않겠다고 밝혔지만, 이미 발생한 훼손의 범위와 복구·책임 문제는 제시되지 않았다.",
-      "civic_importance": "재난 대응 공사가 문화유산 훼손으로 이어졌다면 안전과 보전 사이의 행정 판단이 적절했는지, 사전 조사와 시민 공개가 있었는지 따져야 한다. 한 번 훼손된 역사·경관은 원상회복이 어려울 수 있다.",
-      "anchor_quote": "문화유산을 다 훼손시키고 그랬기 때문에…….",
-      "evidence_status": "ALLEGATION",
-      "public_question": "침수 대응을 위해 누가 어떤 근거로 암반과 지형을 바꿨으며, 이미 훼손된 문화유산을 복구할 계획과 책임자는 있는가?",
-      "counterintuitive_question": "암반 제거가 실제 침수 해결책이었는지보다, 수문 운영이나 배수 체계의 문제가 공사 명분으로 가려진 것은 아닌가?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 88,
-      "why_not_routine": "안전사업의 공익 명분 뒤에 문화유산 훼손과 사전 검토 부재가 있었는지 확인할 수 있고, 현장 비교·공사자료·전문가 검증을 통해 6~7분 리포트로 확장 가능하다.",
-      "unknowns": [
-        "훼손됐다는 문화유산의 구체적 대상과 법적 지정 여부",
-        "암반 제거·지형 변경의 규모와 공사 전후 현장 상태",
-        "문화재·문화유산 관련 사전 조사와 심의·허가 여부",
-        "훼손 복구 계획과 비용 부담 주체"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 1,
-      "related_document_count": 1,
-      "related_sources": [
-        "종로구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3015916453536194",
-          "source_name": "종로구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015916453536194&collection=minutes",
-          "anchor_quote": "문화유산을 다 훼손시키고 그랬기 때문에…….",
           "evidence_status": "ALLEGATION"
         }
       ]
@@ -2387,6 +2704,50 @@
       ]
     },
     {
+      "candidate_id": "8725cab0c655427ea139",
+      "document_id": "CLIKC3007276402988407",
+      "source_id": "jongno",
+      "source_name": "종로구",
+      "meeting_date": "2026-09-16",
+      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
+      "chunk_number": 2,
+      "signal_type": "RIGHTS_GAP",
+      "headline": "환경미화원 사망사고 현장정보가 정당별로 다르게 전달됐다면 의회의 안전감시권이 흔들린다",
+      "subject": "종로구청 주관 환경미화원 작업안전 현장방문의 의회 의원 대상 안내 및 참여 절차",
+      "affected_group": "종로구의회 의원과 이를 통해 행정을 감시해야 하는 종로구 주민, 사고 관련 노동자",
+      "mechanism": "구청 직원이 사고 경위와 업무 현황을 공식 보고한 현장방문에 특정 정당 소속 인사와 의원만 참여했고, 다른 의원들은 사후 보도자료로 알게 됐다는 주장이 제기됐다. 이 경우 안전사고에 대한 의회의 공동 감시와 주민 대표성에 정보 격차가 생긴다.",
+      "civic_importance": "안전사고 현장은 정당 행사가 아니라 공적 행정과 감독의 대상이다. 사고 대응 정보의 제공 기준이 불명확하면 집행부가 의회와 주민에게 어떤 정보를 언제 공개할지 임의로 정할 위험이 있다.",
+      "anchor_quote": "국민의힘 소속 종로구의원은 현장방문에 대해 추후 보도자료를 통해 알게 되었습니다.",
+      "evidence_status": "ALLEGATION",
+      "public_question": "종로구청은 안전사고 현장방문 정보를 어떤 기준으로 누구에게 안내했으며, 앞으로 모든 구의원이 같은 자료와 현장 접근 기회를 보장받을 수 있는가?",
+      "counterintuitive_question": "정당 간 형평성 논란의 핵심이 초청 명단이 아니라, 구청이 민간 대행업체의 안전자료와 사고 경위를 의회 전체에 공개하지 않는 구조에 있는 것은 아닌가?",
+      "scope_hint": "MULTI_DISTRICT",
+      "broadcast_potential": 76,
+      "why_not_routine": "단순한 정당 간 공방이 아니라 중대 사고의 행정정보 공개와 지방의회의 안전감독 권한 문제다. 안내 기록 확보, 현장 관계자 인터뷰, 서울 자치구의 사고 대응·의회 보고 절차 비교가 가능하다.",
+      "unknowns": [
+        "현장방문 초청·안내 대상과 실제 발송 기록",
+        "현장방문이 행정 공식 행사로 사전 계획됐는지 여부",
+        "참석자 선정과 안내를 결정한 부서·책임자",
+        "종로구에 재난·안전 현안 관련 의회 전체 안내 기준이 있는지 여부"
+      ],
+      "review_status": "UNREVIEWED",
+      "related_evidence_count": 1,
+      "related_document_count": 1,
+      "related_sources": [
+        "종로구"
+      ],
+      "supporting_anchors": [
+        {
+          "document_id": "CLIKC3007276402988407",
+          "source_name": "종로구",
+          "meeting_date": "2026-09-16",
+          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3007276402988407&collection=minutes",
+          "anchor_quote": "국민의힘 소속 종로구의원은 현장방문에 대해 추후 보도자료를 통해 알게 되었습니다.",
+          "evidence_status": "ALLEGATION"
+        }
+      ]
+    },
+    {
       "candidate_id": "08ad333a249c6b7cfead",
       "document_id": "CLIKC3076205853704211",
       "source_id": "gwanak",
@@ -2431,50 +2792,6 @@
       ]
     },
     {
-      "candidate_id": "75307c1969f46f587a7c",
-      "document_id": "CLIKC3076205853704211",
-      "source_id": "gwanak",
-      "source_name": "관악구",
-      "meeting_date": "2026-09-16",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076205853704211&collection=minutes",
-      "chunk_number": 2,
-      "signal_type": "RIGHTS_GAP",
-      "headline": "관악구의회가 발언 취소와 윤리위 제명 논란을 공개 토론 없이 종결해 의회 발언권과 시민 대표성 논란을 남겼다",
-      "subject": "5분 자유발언 허가 취소 및 의원 제명 부결과 관련한 의회 운영",
-      "affected_group": "발언이 제한된 의원과 관악구의회 회의·윤리 절차를 지켜보는 주민",
-      "mechanism": "의장은 관련 의원들의 의사진행발언·신상발언 신청을 소개한 뒤 공개 발언을 진행하지 않고 회의를 산회했으며, 회의록에는 일부 내용이 게재되지 않았다.",
-      "civic_importance": "의원이 주민을 대신해 문제를 제기할 수 있는 공식 발언 절차가 어떤 기준으로 제한됐는지, 윤리 논란이 공개성과 절차적 권리를 갖추고 처리됐는지는 의회의 민주적 책임과 직결된다.",
-      "anchor_quote": "지금 제10대 관악구의회 23명의 의원은 지금 발언할 때가 아니고 자숙해야 할 때라고 생각합니다.",
-      "evidence_status": "ALLEGATION",
-      "public_question": "관악구의회는 어떤 규정과 절차에 따라 의원들의 발언을 취소하거나 제한했으며, 주민은 그 판단 근거와 관련 자료를 확인할 수 있는가?",
-      "counterintuitive_question": "의원들의 ‘자숙’이 의회 갈등을 줄이는 조치였는지, 오히려 윤리 논란의 사실관계와 책임을 공개적으로 검증하지 못하게 한 조치였는지 확인할 필요가 있지 않은가?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 68,
-      "why_not_routine": "개인 간 정치적 갈등으로 보일 수 있지만, 의원 발언권·윤리 심사·회의록 공개라는 의회 운영의 핵심 절차와 연결된다. 취소 결정 문서, 윤리위 자료, 회의규칙, 당사자와 전문가 취재를 통해 공적 책임을 검증할 수 있다.",
-      "unknowns": [
-        "5분 자유발언 허가가 취소된 구체적인 사유와 취소 결정 주체",
-        "김혜정 의원이 발언하려던 윤리위 제명 부결 관련 내용",
-        "손정혜 의원의 제명 관련 신상발언 신청이 처리되지 않은 이유",
-        "회의록에서 삭제된 부분의 범위와 삭제 근거·절차"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 1,
-      "related_document_count": 1,
-      "related_sources": [
-        "관악구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3076205853704211",
-          "source_name": "관악구",
-          "meeting_date": "2026-09-16",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076205853704211&collection=minutes",
-          "anchor_quote": "지금 제10대 관악구의회 23명의 의원은 지금 발언할 때가 아니고 자숙해야 할 때라고 생각합니다.",
-          "evidence_status": "ALLEGATION"
-        }
-      ]
-    },
-    {
       "candidate_id": "e755752dd5fac6f9e7b8",
       "document_id": "CLIKC3076206756251175",
       "source_id": "gwanak",
@@ -2515,50 +2832,6 @@
           "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3076206756251175&collection=minutes",
           "anchor_quote": "30년 이상 노후된 하수관로가 47% 약 200㎞ 정도 있거든요.",
           "evidence_status": "OFFICIAL_FINDING"
-        }
-      ]
-    },
-    {
-      "candidate_id": "cbcf5e7d950f70f74f6a",
-      "document_id": "OFFICIAL:seodaemun:44aedee3559949632086a1f2",
-      "source_id": "seodaemun",
-      "source_name": "서대문구",
-      "meeting_date": "2026-09-22",
-      "document_url": "https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9340",
-      "chunk_number": 2,
-      "signal_type": "SAFETY_RISK",
-      "headline": "공공지원 받는 마을버스가 노선 축소와 개문 운행 논란에 놓였는데 관리 책임은 비어 있다",
-      "subject": "서대문구 마을버스 06번의 노선·배차와 승객 안전 관리",
-      "affected_group": "북아현동 럭키·두산·힐스테이트 일대 주민, 마을버스 승객, 교통약자",
-      "mechanism": "배차 간격 민원에 대해 운송업체가 서울역·롯데마트 구간을 제외하는 방식으로 노선을 단축했고, 회차 불가 사유의 현장 확인이 이뤄지지 않은 상태에서 개문 운행과 난폭운전 의혹까지 제기됐다. 동시에 서울시와 구가 업체에 재정지원금을 지급하고 있다.",
-      "civic_importance": "세금으로 적자를 보전하는 공공교통에서 서비스 접근성과 승객 안전이 함께 악화됐다면 지원금의 조건과 행정 감독이 적절했는지 따져야 한다. 개문 운행은 단순 민원이 아니라 중대 사고로 이어질 수 있는 위험이다.",
-      "anchor_quote": "마을버스가 문을 연 채 운행하는 모습입니다.",
-      "evidence_status": "ALLEGATION",
-      "public_question": "구와 서울시는 지원금을 받는 06번 마을버스의 노선 축소와 안전 운행을 어떤 자료로 감독하고, 주민이 필요한 구간과 배차를 언제 회복할 것인가?",
-      "counterintuitive_question": "배차 간격을 줄이기 위해 노선을 단축했다는 조치가 실제로는 운행 효율보다 승객의 환승·보행 부담과 안전 위험을 키운 것은 아닌가?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 9,
-      "why_not_routine": "노선 서비스 공백, 업체 재정지원, 공사 책임 공방, 개문 운행이라는 안전 의혹을 운행 데이터와 현장 영상으로 교차검증할 수 있다.",
-      "unknowns": [
-        "개문 운행 영상의 촬영 일시·차량번호와 실제 운행 위반 여부가 확인됐는가",
-        "06번의 최근 배차 간격, 운행 횟수, 노선 단축 전후 이용객 수는 어떻게 변했는가",
-        "고가 공사로 회차가 불가능하다는 업체 주장을 구청이나 서울시가 현장 검증했는가",
-        "최근 지원금 규모와 배차·안전 위반 시 감액 또는 제재 조건은 무엇인가"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 1,
-      "related_document_count": 1,
-      "related_sources": [
-        "서대문구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "OFFICIAL:seodaemun:44aedee3559949632086a1f2",
-          "source_name": "서대문구",
-          "meeting_date": "2026-09-22",
-          "document_url": "https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9340",
-          "anchor_quote": "마을버스가 문을 연 채 운행하는 모습입니다.",
-          "evidence_status": "ALLEGATION"
         }
       ]
     },
@@ -2719,10 +2992,14 @@
         "시민감사옴부즈만 감사의 원문과 위반 법령 9개의 구체적 조항",
         "준칙을 적용한 공동주택의 정확한 수와 각 단지의 규약 개정 내용",
         "실제 과태료 부과나 분쟁이 발생했는지 여부",
-        "구청의 준칙 폐지·수정·주민 통지 및 피해 구제 계획의 이행 여부"
+        "구청의 준칙 폐지·수정·주민 통지 및 피해 구제 계획의 이행 여부",
+        "서울시 시민감사옴부즈만이 지적한 9개 법령의 구체적인 위반 내용",
+        "16개 단지별 준칙 적용 범위와 실제 과태료 부과·시정명령 여부",
+        "구청의 준칙 폐지, 주민 통지, 피해 구제 계획과 법적 근거",
+        "준칙 제정·적용 과정에서 담당 공무원에 대한 인사·징계 조치 여부"
       ],
       "review_status": "UNREVIEWED",
-      "related_evidence_count": 1,
+      "related_evidence_count": 2,
       "related_document_count": 1,
       "related_sources": [
         "마포구"
@@ -2734,6 +3011,14 @@
           "meeting_date": "2026-09-21",
           "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=ff69e944617333a25e2036ef325f3e429c82b117def7a476f1b9cdb35b904e7da734787bff0dd8b0",
           "anchor_quote": "구청의 잘못으로 법을 위반하게 된 겁니다.",
+          "evidence_status": "OFFICIAL_FINDING"
+        },
+        {
+          "document_id": "OFFICIAL:mapo:3acf5b0785d8c4c481bc1479",
+          "source_name": "마포구",
+          "meeting_date": "2026-09-21",
+          "document_url": "https://council.mapo.seoul.kr/record/recordView.do?key=ff69e944617333a25e2036ef325f3e429c82b117def7a476f1b9cdb35b904e7da734787bff0dd8b0",
+          "anchor_quote": "이 마포구 준칙을 따라 관리규약을 개정한 아파트들도 공동주택관리법 위반입니다.",
           "evidence_status": "OFFICIAL_FINDING"
         }
       ]
@@ -2781,94 +3066,6 @@
           "evidence_status": "OFFICIAL_FINDING"
         }
       ]
-    },
-    {
-      "candidate_id": "8bd4c5b4347483b63cfc",
-      "document_id": "CLIKC3015737803886787",
-      "source_id": "geumcheon",
-      "source_name": "금천구",
-      "meeting_date": "2026-09-18",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
-      "chunk_number": 2,
-      "signal_type": "SAFETY_RISK",
-      "headline": "아파트 인근 데이터센터 화재 대응, 서류상 가능과 실제 소방차 진입 사이의 공백",
-      "subject": "배터리 화재 위험이 있는 데이터센터의 소방차 접근성과 현장 대응 검증",
-      "affected_group": "데이터센터 인근 아파트 주민과 주변 도로 이용자",
-      "mechanism": "데이터센터가 아파트와 약 90m 안팎 거리에 있고, 집행부도 공사 현장의 도로 폭과 다수 소방차량의 동시 접근 가능성에 우려를 표명했다. 소방서의 서면 회신은 대응 가능하다는 내용이지만 실제 진입 훈련은 아직 예정 단계다.",
-      "civic_importance": "대형 배터리 화재가 발생하면 주민 대피와 소방차 진입이 동시에 필요하다. 허가 기준을 충족했다는 사실만으로 실제 골든타임 대응이 가능한지 확인해야 한다.",
-      "anchor_quote": "공사 중인 현장을 가보면서 도로폭이 우려할 정도가 된다고 보이기는 합니다.",
-      "evidence_status": "ALLEGATION",
-      "public_question": "데이터센터에서 실제 화재가 발생하면 소방차와 주민 대피 차량이 동시에 접근할 수 있으며, 그 사실을 현장 훈련으로 검증했는가?",
-      "counterintuitive_question": "법정 소방설비를 갖췄다는 것보다 좁은 진입로와 주차 차량이 화재 대응 시간을 더 늦추는 구조는 아닌가?",
-      "scope_hint": "MULTI_DISTRICT",
-      "broadcast_potential": 9,
-      "why_not_routine": "배터리 화재와 주거지 인접 시설이라는 안전 쟁점에 현장 접근성이라는 검증 축이 있고, 실제 소방훈련·도로 측정·인근 시설 비교로 6~7분 리포트 확장이 가능하다.",
-      "unknowns": [
-        "예정된 소방차 진입 훈련의 실시 여부와 결과",
-        "소방차량 몇 대가 어떤 시간 안에 현장에 진입할 수 있는지",
-        "화재 발생 시 주민 대피 동선과 차량 통제 계획",
-        "배터리 종류와 화재 확산 방지·진압 설비의 실제 작동 검증 결과"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 1,
-      "related_document_count": 1,
-      "related_sources": [
-        "금천구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3015737803886787",
-          "source_name": "금천구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
-          "anchor_quote": "공사 중인 현장을 가보면서 도로폭이 우려할 정도가 된다고 보이기는 합니다.",
-          "evidence_status": "ALLEGATION"
-        }
-      ]
-    },
-    {
-      "candidate_id": "86fad72647a5189bfc0e",
-      "document_id": "CLIKC3015737803886787",
-      "source_id": "geumcheon",
-      "source_name": "금천구",
-      "meeting_date": "2026-09-18",
-      "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
-      "chunk_number": 3,
-      "signal_type": "SAFETY_RISK",
-      "headline": "급경사 사고 반복 구간에서 주민과 학생들이 통학을 스스로 피하는 동안 근본 대책은 용역 단계에 머물러 있다",
-      "subject": "금하로·탑골로 급경사 구간의 반복 교통사고와 안전대책",
-      "affected_group": "금하로·탑골로 인근 주민, 아파트 거주자, 통학 학생, 사고 목격 주민 및 인근 건물 거주자",
-      "mechanism": "급경사 내리막 구조와 대형차 통행으로 차량 전복·충돌 사고가 발생했고, 일부 주민은 자녀를 직접 태워 등하교시키거나 주거지를 떠났다. 구청은 경찰 단속, 내비게이션 우회 안내, TF와 재난기금 용역을 추진 중이지만 예방시설과 차량 통행 관리의 실효성은 아직 확인되지 않았다.",
-      "civic_importance": "최근 3년간 인사사고가 많았다는 의회 제기가 있고, 사고가 학교 하굣길과 주거 안전을 직접 위협한다. 이미 주민들이 통학과 거주를 바꿀 정도의 부담을 겪고 있어 사후 수습이 아닌 예방 행정의 책임을 따질 수 있다.",
-      "anchor_quote": "내 목숨을 담보로 더 이상 살고 싶지 않다",
-      "evidence_status": "ALLEGATION",
-      "public_question": "사고가 반복되고 주민들이 자녀의 통학과 거주를 바꾸고 있는데, 구청은 언제까지 어떤 시설·통행 제한·단속으로 이 구간의 위험을 줄일 것인가?",
-      "counterintuitive_question": "사고의 원인이 단순한 운전자 과실이나 대형차 문제라면, 왜 대형차가 아닌 모든 차량에 사고 다발 안내가 필요하다고 판단했으며 급경사 도로 설계 자체의 책임과 개선 가능성은 검토했는가?",
-      "scope_hint": "SINGLE_CASE",
-      "broadcast_potential": 9,
-      "why_not_routine": "반복 사고, 주거 이탈, 학생 통학 불안, 도로 구조와 행정 예방책의 지연이 결합돼 현장 취재와 사고 데이터·유사 급경사 구간 비교가 가능하다.",
-      "unknowns": [
-        "최근 10년 및 최근 3년간 사고 건수·사망 및 부상 규모",
-        "사고 발생 지점, 시간대, 차량 종류와 과속·대형차 통행의 상관관계",
-        "구청이 8월부터 진행 중인 용역의 범위·완료 일정·예산",
-        "내비게이션 우회 안내가 실제로 적용된 업체와 대형차 외 차량 적용 여부 및 효과적인 우회 경로의 존재 여부"
-      ],
-      "review_status": "UNREVIEWED",
-      "related_evidence_count": 1,
-      "related_document_count": 1,
-      "related_sources": [
-        "금천구"
-      ],
-      "supporting_anchors": [
-        {
-          "document_id": "CLIKC3015737803886787",
-          "source_name": "금천구",
-          "meeting_date": "2026-09-18",
-          "document_url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3015737803886787&collection=minutes",
-          "anchor_quote": "내 목숨을 담보로 더 이상 살고 싶지 않다",
-          "evidence_status": "ALLEGATION"
-        }
-      ]
     }
   ],
   "errors": [
@@ -2876,23 +3073,17 @@
       "document_id": "OFFICIAL:seodaemun:44aedee3559949632086a1f2",
       "chunk_number": 3,
       "error_type": "ValueError",
-      "attempt": 2
+      "attempt": 3
     },
     {
       "document_id": "OFFICIAL:mapo:3acf5b0785d8c4c481bc1479",
       "chunk_number": 4,
       "error_type": "ValueError",
-      "attempt": 1
+      "attempt": 2
     },
     {
-      "document_id": "OFFICIAL:geumcheon:4a6953f363bf0db850d0fb1d",
-      "chunk_number": 2,
-      "error_type": "ValueError",
-      "attempt": 3
-    },
-    {
-      "document_id": "OFFICIAL:dongjak:8e3fd96f4d6ce8afd5062f16",
-      "chunk_number": 4,
+      "document_id": "OFFICIAL:seocho:53abb5e7559c5eb0e7f37321",
+      "chunk_number": 1,
       "error_type": "ValueError",
       "attempt": 1
     },
@@ -2900,17 +3091,17 @@
       "document_id": "OFFICIAL:guro:b9463cc6c61bc8bdbfbd0d63",
       "chunk_number": 1,
       "error_type": "ValueError",
-      "attempt": 2
+      "attempt": 3
     },
     {
-      "document_id": "OFFICIAL:geumcheon:e6f0386613913f3c26403a8c",
-      "chunk_number": 1,
+      "document_id": "OFFICIAL:geumcheon:f33775932e068ca95e03f6bf",
+      "chunk_number": 2,
       "error_type": "ValueError",
       "attempt": 1
     },
     {
-      "document_id": "OFFICIAL:dobong:6313051f43cc933a1b779be0",
-      "chunk_number": 1,
+      "document_id": "OFFICIAL:yeongdeungpo:9cdefe171ae1a7f0c930142f",
+      "chunk_number": 2,
       "error_type": "ValueError",
       "attempt": 1
     }
