@@ -2,6 +2,31 @@
   "schema": 1,
   "processed": [
     {
+      "proposal_id": "202940",
+      "first_processed_at_kst": "2026-10-07T13:20:54+09:00",
+      "detail_sha256": "f4db8c7c6c28ff227b94960b383dd78de7a1e33ff8d0b57f923825523da89650"
+    },
+    {
+      "proposal_id": "202939",
+      "first_processed_at_kst": "2026-10-07T13:20:54+09:00",
+      "detail_sha256": "b8e46c98f6ed4b21ae87cd6640810e66cc51e93c4a2d3dca51b1403a7c57be60"
+    },
+    {
+      "proposal_id": "202938",
+      "first_processed_at_kst": "2026-10-07T13:20:54+09:00",
+      "detail_sha256": "48fe2e400ffc713f077ddb45be494071eb2534b04703b90419acba95cf82770a"
+    },
+    {
+      "proposal_id": "202937",
+      "first_processed_at_kst": "2026-10-07T13:20:54+09:00",
+      "detail_sha256": "c6cf2d0df062ea82769687bf3222fb300e43ce0f2c74c0e35bdf618b4a4171e7"
+    },
+    {
+      "proposal_id": "202936",
+      "first_processed_at_kst": "2026-10-07T13:20:54+09:00",
+      "detail_sha256": "3d9f706f887bfdb68d09e4ff2d7701019ccae68c2dcdbb0e7438c7eafc753590"
+    },
+    {
       "proposal_id": "202924",
       "first_processed_at_kst": "2026-10-05T13:11:54+09:00",
       "detail_sha256": "f088a935f3cc236994357f954968417aff5fee682a82e487055c17a859542040"
