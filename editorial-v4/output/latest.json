@@ -1,177 +1,144 @@
 {
   "schema": 2,
   "head_contract_version": "1.8",
-  "generated_at_utc": "2026-10-05T04:12:44.817854+00:00",
+  "generated_at_utc": "2026-10-07T04:21:33.297244+00:00",
   "collection_cycle": {
     "mode": "FRESH_CYCLE",
     "verified": true,
-    "cycle_id": "fresh-37261016090-1",
-    "started_at_utc": "2026-10-05T03:50:26Z",
+    "cycle_id": "fresh-37569694034-1",
+    "started_at_utc": "2026-10-07T04:04:25Z",
     "runs": [
       {
         "source": "뉴스·유튜브 관심 신호",
         "workflow": "collect-interest-signals.yml",
-        "run_id": 37261025022,
+        "run_id": 37569703695,
         "conclusion": "success"
       },
       {
         "source": "서울 원자료 피드",
         "workflow": "daily-briefing.yml",
-        "run_id": 37261327129,
+        "run_id": 37570004533,
         "conclusion": "success"
       },
       {
         "source": "서울시 감사",
         "workflow": "source-onboarding-audit-l4-shadow.yml",
-        "run_id": 37261508572,
+        "run_id": 37570100896,
         "conclusion": "success"
       },
       {
         "source": "25개 자치구의회 최근 그림자",
         "workflow": "district-council-recent-l3.yml",
-        "run_id": 37261576609,
+        "run_id": 37570160323,
         "conclusion": "success"
       },
       {
         "source": "서울시·25개 자치구의회 전량 아카이브",
         "workflow": "council-issue-lifecycle.yml",
-        "run_id": 37261769861,
+        "run_id": 37570377273,
         "conclusion": "success"
       },
       {
         "source": "시민제안",
         "workflow": "citizen-proposal-shadow.yml",
-        "run_id": 37262422923,
+        "run_id": 37570985248,
         "conclusion": "success"
       },
       {
         "source": "시민제안 검토 큐",
         "workflow": "publish-citizen-shadow.yml",
-        "run_id": 37262473013,
+        "run_id": 37571043780,
         "conclusion": "success"
       }
     ],
     "note": "표시된 상위 수집 실행이 모두 성공한 뒤 통합 헤드를 실행했습니다."
   },
-  "status": "REVIEW_READY",
-  "source_inputs": 56,
-  "validated_inputs": 56,
+  "status": "NO_QUALITY_PROPOSAL",
+  "source_inputs": 58,
+  "validated_inputs": 57,
   "model_inputs": 10,
-  "unmodeled_inputs": 45,
-  "model_calls": 2,
+  "unmodeled_inputs": 47,
+  "model_calls": 1,
   "assessment_retries": 0,
-  "proposals": [
-    {
-      "id": "211cfa75b1dbda60",
-      "verdict": "PROPOSE",
-      "issue_key": "서울교통공사 반복 산재",
-      "title": "시정조치 뒤에도 이어진 사고, 서울 지하철 안전은 바뀌었나",
-      "subject": "서울교통공사의 반복 산업재해와 국토교통부 시정조치가 현장 안전을 바꿨는지",
-      "why_now": "최근까지 사망사고가 이어졌고, 5년간 162건의 시정조치와 과징금 뒤에도 안전관리 이행 여부를 확인해야 한다.",
-      "citizen_question": "반복 지적된 안전 문제는 언제 시정됐고, 현장 노동자와 승객의 위험을 줄였다는 근거가 있는가?",
-      "uncommon_question": "산재 재해자 증가가 위험 자체의 증가인지, 인력 규모나 산재 승인·신고 방식 변화 때문인지 구분하면 반복 지적의 실제 효과는 무엇인가?",
-      "first_check": "국토교통부 162건 시정조치의 반복 항목·이행일·확인 주체를 확보하고, 서울교통공사 사고·작업현장 자료와 대조한다.",
-      "counterhypothesis": "재해자 증가는 위험 증가가 아니라 인력 규모, 신고 또는 근로복지공단 승인 기준의 변화로 일부 설명될 수 있다.",
-      "scene_path": "사고가 발생한 작업 유형과 지하철 역사·차량기지의 안전관리 현장을 취재하고, 노동자·안전 담당자·국토교통부 자료를 연결한다. 시정조치 전후의 작업 절차와 재발 여부를 문서로 대조한다.",
-      "local_broadcast_fit": "HIGH",
-      "editorial_lane": "BOTH",
-      "public_interest_basis": "반복 산업재해와 사망사고는 노동자 생명뿐 아니라 지하철 운영의 시민 안전과 직결된다. 시정조치가 이행되지 않으면 같은 위험과 공공서비스 중단이 반복될 수 있어 관심도와 무관하게 알려야 한다.",
-      "story_scale": "MULTI_SITE_PATTERN",
-      "impact_stage": "REALIZED",
-      "scale_basis": "기사에는 2021년 49명에서 지난해 87명으로 산재 재해자가 늘어난 5년 추세와 같은 기간 산재 사망자 8명, 162건의 시정조치가 제시돼 반복 범위가 확인된다.",
-      "anchor_quote": "국토교통부의 반복된 시정조치와 과징금 처분에도 올해까지 사망사고가 이어지며",
-      "reason": "반복 산재·사망이라는 실현된 결과와 다수 시정조치가 제시됐고, 사고·이행 자료 및 현장 취재로 원인에 대한 반대 설명까지 검증할 수 있다.",
-      "source": "뉴스 본문 판정",
-      "family": "뉴스",
-      "url": "https://www.safetimes.co.kr/news/articleView.html?idxno=246211",
-      "date": "",
-      "claim_status": "기사 서술·미검증",
-      "source_stage": "운영 입력",
-      "production_eligible": true,
-      "status": "취재 질문 검토·사실 미확인",
-      "editorial_risk": "산재 재해자 증가가 실제 위험 악화가 아니라 인력 규모, 작업량, 신고·승인 기준 변화로 설명될 수 있으며, 162건의 시정조치가 모두 반복·미이행이었다고 오인할 위험이 있다.",
-      "decisive_test": "국토교통부의 162건 원문에서 반복 지적 항목과 이행 확인 기록을 확보하고, 사고별 작업 유형·장소·시정조치 전후 재발 여부를 서울교통공사의 인력·작업량 자료와 대조한다.",
-      "independent_review": "서울교통공사라는 지역 공기업의 작업 현장·사고·이행 자료에 접근해 서울 각도의 독자 취재가 가능하다. 제시된 내용은 반복 산재와 사망이라는 현실화된 영향, 다수 시정조치라는 행정 책임 쟁점을 포함하며, 노동자와 승객을 보여줄 현장 장면과 공사·국토교통부의 이행 책임을 둘러싼 대립도 6~7분 구성에 충분하다. 수치의 의미와 시정조치의 실효성은 미검증이므로, 사고·이행 원문과 노출량 보정 검증을 전제로 KEEP한다.",
-      "review_local_broadcast_fit": "HIGH",
-      "review_editorial_lane": "BOTH",
-      "review_public_interest_check": "원자료에는 사망사고, 산재 재해자 추이, 다수 시정조치와 과징금이라는 구체적 사건·행정 조치가 제시돼 있다. 영향을 받는 대상은 서울교통공사 노동자와 지하철 이용 시민이며, 책임 확인 대상은 서울교통공사와 시정조치 이행을 확인하는 국토교통부다. 안전·생명·공공서비스 중단 위험의 공백을 점검하는 WATCHDOG_DUTY 근거가 있다.",
-      "review_story_scale": "MULTI_SITE_PATTERN",
-      "review_impact_stage": "REALIZED",
-      "review_scale_check": "단일 사고나 단순 절차 위반이 아니라 5년 추세, 8명의 산재 사망자, 162건의 시정조치와 복수 사고 현장이 제시돼 반복성과 중대성이 있다. 다만 반복 항목과 기관별·현장별 연결은 취재로 확인해야 한다.",
-      "coverage_status": "기존 보도 각도 별도 대조 필요"
-    }
-  ],
+  "proposals": [],
   "shadow_reviews": [],
   "holds": [
     {
-      "id": "3849dbf9ac53135a",
+      "id": "62dcf9d7e4eb6e87",
       "source": "뉴스 본문 판정",
-      "headline": "국토부 \"GTX-A 삼성역 추가 안전성 검증 필요…서울시에 지연 구상금 검토\"",
-      "reason": "사람 판정 완료·보류",
-      "verdict": "SKIP"
+      "headline": "임플란트치과 환자 사망…강남구, 복지부·국회 제도개선 건의",
+      "reason": "본문 근거 부족",
+      "verdict": "INPUT_HOLD"
     },
     {
       "id": "d99fbc5dbcc57ba4",
       "source": "뉴스 본문 판정",
       "headline": "유승연 광진구의원, '광진119주택' 학대피해아동 임시보호공간으로 활용 제안",
-      "reason": "취약계층 보호라는 공익성은 있으나 시행 전 제안에 머물고, 실제 권리·서비스 변화나 중대한 위험이 확인되지 않았다. 정책 결정과 운영 자료가 확보될 때 재검토한다.",
-      "verdict": "HOLD"
-    },
-    {
-      "id": "council-archive-69289a5bcb232f9b78a2",
-      "source": "종로구 회의록",
-      "headline": "연락 두절 뒤에야 발견된 고독사, 복지 신청자를 실제 지원으로 잇는 안전망이 비어 있다",
-      "reason": "원문 인용 불일치",
-      "verdict": "PROPOSE"
-    },
-    {
-      "id": "0d358185844d134c",
-      "source": "서울시 감사 결과",
-      "headline": "관리 유치원·학교 파견강사 성범죄 경력 확인 절차 개선 필요 - 통보(2)",
-      "reason": "공식 감사 원문과 사람·절차 검증이 먼저 필요하다. 현재 자료만으로는 중대한 실제 위험과 반복 범위를 입증할 수 없어 HOLD한다.",
+      "reason": "시민 안전과 권리 측면의 취재 가치는 있으나, 정책 채택·실제 보호 공백·시설 전환 조건이 확인되지 않아 규모와 영향 관문을 통과하지 못했다.",
       "verdict": "HOLD"
     },
     {
       "id": "council-archive-8b324318e66e282556dc",
       "source": "금천구 회의록",
       "headline": "특허 흙막이 공법 선정이 비용·구조적 필요성·권리변동 위험을 충분히 검증했는지 불투명하다",
-      "reason": "공공공사비와 인접지 안전이라는 잠재적 중대성은 있으나, 핵심 주장이 의원·외부 전문가 발언에 의존한다. 선정·계약 원문과 독립 검증 없이는 PROPOSE할 수 없다.",
+      "reason": "자료 접근성은 높지만 단일 공사에 대한 미검증 판단이고, 중대한 결과 또는 반복 구조가 확인되지 않아 규모 관문에서 HOLD한다.",
+      "verdict": "HOLD"
+    },
+    {
+      "id": "0d358185844d134c",
+      "source": "서울시 감사 결과",
+      "headline": "관리 유치원·학교 파견강사 성범죄 경력 확인 절차 개선 필요 - 통보(2)",
+      "reason": "안전상 중요하지만 감사 원문 재확인과 실제 미조회 사례 검증이 선행돼야 한다. 제공 자료만으로는 방송용 규모와 현재 영향이 확인되지 않아 HOLD한다.",
+      "verdict": "HOLD"
+    },
+    {
+      "id": "ec15d330781dbb91",
+      "source": "뉴스 본문 판정",
+      "headline": "[단독] 삼성역 주철근 누락, 서울시 관계자들 보고 받고도 점검 때 '침묵'",
+      "reason": "중대성은 있으나 핵심 자료·책임기관에 대한 지역방송의 독자 접근성이 낮고 본문 검증도 부족해 HOLD한다.",
       "verdict": "HOLD"
     },
     {
       "id": "council-archive-703c3b232663f09ba860",
       "source": "마포구 회의록",
       "headline": "한 시행사의 다중 사업과 PF 위험을 구청이 재무 검증 없이 승인 절차로 넘기는 구조",
-      "reason": "다중 사업 구조와 공공 책임의 질문은 중요하지만 PF·보증·안전관리 자료가 없는 상태에서 위험을 확정할 수 없다. 재무·계약 자료 확보 후 재평가한다.",
+      "reason": "여러 사업을 묶는 구조적 질문은 가능하지만 실제 PF 위험과 주민 피해가 확인되지 않은 추정 단계라 impact 관문을 통과하지 못했다.",
       "verdict": "HOLD"
     },
     {
-      "id": "fc6570b8f947eb7e",
+      "id": "8523b422a268cd18",
       "source": "뉴스 본문 판정",
-      "headline": "서울지하철 5년간 지연 327건… 7호선 최다, 민원은 2호선 집중",
-      "reason": "실제 지연 자료와 시민 불편은 있으나 핵심 비교분모와 원인이 빠져 있다. 운행량 대비 지연률과 개선 효과를 먼저 확인해야 방송 가설을 세울 수 있다.",
+      "headline": "홍지선, 주택공급정책 엇박자 지적에 \"서울시와 용적률 인센티브 협의하겠다\"",
+      "reason": "정책 결정이 구체화되면 재검토할 수 있으나, 현재는 정치적 주장과 장관의 협의 약속 수준으로 실제 영향이 성립하지 않았다.",
       "verdict": "HOLD"
     },
     {
       "id": "council-archive-4c80db82de188e5e618b",
       "source": "마포구 회의록",
       "headline": "이용률 낮은 관광순환열차버스와 주차수입 포기 사업, 종료 뒤 남는 비용과 대체 활용을 따져야 한다",
-      "reason": "종료라는 명확한 시점은 있으나 평범한 단일 사업의 사후 평가 단계이고, 공공 손실·대체 편익을 입증할 자료가 부족하다.",
+      "reason": "방송 시점과 현장성은 좋지만 핵심 손실 규모가 미검증이고 단일 사업의 사후 정산 자료가 필요해 HOLD한다.",
       "verdict": "HOLD"
+    },
+    {
+      "id": "af134dc661f1094a",
+      "source": "뉴스 본문 판정",
+      "headline": "영등포 재개발·재건축 갈등 해결에 전문가 108명 투입",
+      "reason": "구체적인 사업 발표를 사건이나 성과로 바꾸지 않는다. 시행 결과와 권고 불이행 사례가 축적된 뒤 재검토할 사안이다.",
+      "verdict": "REJECT"
     },
     {
       "id": "council-archive-6c91f6559a04be331bd6",
       "source": "금천구 회의록",
       "headline": "금천구 공사비 산출자료가 서로 다른 총사업비와 계산식으로 의회 심의를 통과할 뻔했다",
-      "reason": "대규모 단일 공사의 재정 통제 문제로 중대성은 있으나, 문서 버전 차이인지 계산 오류인지 판별되지 않았다. 원본·재산정·최종 의결 자료를 확인한 뒤 제안 여부를 결정한다.",
+      "reason": "검증 가능한 문서 쟁점은 있으나 단일 사업의 심의자료 불일치 단계다. 최종 예산 오류나 상당한 손실이 확인되기 전에는 PROPOSE하지 않는다.",
       "verdict": "HOLD"
     },
     {
-      "id": "ab6c4567f39b6901",
+      "id": "0df415b4fc7c53b9",
       "source": "뉴스 본문 판정",
-      "headline": "전세사기 피해 인정 뒤에도, 집은 안전하게 남아 있나",
-      "reason": "같은 소스 계열 또는 사안 중복",
-      "verdict": "HOLD"
+      "headline": "서울 '달빛야장' 6곳 상생협약…주민·상인이 운영수칙 만든다",
+      "reason": "생활 밀착성은 있으나 현재는 상생협약 발표와 기존 한 지역의 불편 제시 수준이다. 실제 충돌·위반·행정 대응이 확인될 때까지 사건으로 제안하지 않는다.",
+      "verdict": "REJECT"
     }
   ],
   "source_gaps": [
@@ -185,11 +152,11 @@
     },
     {
       "source": "서울시의회",
-      "reason": "이번 회차 신규 운영 입력 없음; 오래된 이월 자료 9건은 재평가에서 제외, 문맥 보류 76건"
+      "reason": "이번 회차 신규 운영 입력 없음; 오래된 이월 자료 15건은 재평가에서 제외, 문맥 보류 76건"
     },
     {
       "source": "유튜브",
-      "reason": "개별 영상 360건 장부 연결; 독립 채널·행동 반복·서울 맥락을 함께 갖춘 군집 없음"
+      "reason": "개별 영상 355건 장부 연결; 독립 채널·행동 반복·서울 맥락을 함께 갖춘 군집 없음"
     },
     {
       "source": "지역 커뮤니티·제보",
@@ -236,8 +203,8 @@
     }
   ],
   "cluster_audit": {
-    "before": 56,
-    "after": 56,
+    "before": 57,
+    "after": 57,
     "exact_duplicates": 0,
     "fuzzy_merge": false
   },
@@ -267,11 +234,11 @@
   "source_coverage": [
     {
       "source": "뉴스",
-      "state": "운영 후보 검토 대기",
-      "input": 5,
-      "eligible": 4,
-      "model_input": 4,
-      "proposals": 1,
+      "state": "통합 판정 완료·선정 없음",
+      "input": 7,
+      "eligible": 6,
+      "model_input": 5,
+      "proposals": 0,
       "pending_shadow": 0,
       "reason": ""
     },
@@ -283,14 +250,14 @@
       "model_input": 0,
       "proposals": 0,
       "pending_shadow": 0,
-      "reason": "이번 회차 신규 운영 입력 없음; 오래된 이월 자료 9건은 재평가에서 제외, 문맥 보류 76건"
+      "reason": "이번 회차 신규 운영 입력 없음; 오래된 이월 자료 15건은 재평가에서 제외, 문맥 보류 76건"
     },
     {
       "source": "의회 전량 아카이브",
       "state": "통합 판정 완료·선정 없음",
       "input": 50,
       "eligible": 50,
-      "model_input": 5,
+      "model_input": 4,
       "proposals": 0,
       "pending_shadow": 0,
       "reason": ""
@@ -333,7 +300,7 @@
       "model_input": 0,
       "proposals": 0,
       "pending_shadow": 0,
-      "reason": "개별 영상 360건 장부 연결; 독립 채널·행동 반복·서울 맥락을 함께 갖춘 군집 없음"
+      "reason": "개별 영상 355건 장부 연결; 독립 채널·행동 반복·서울 맥락을 함께 갖춘 군집 없음"
     },
     {
       "source": "지역 커뮤니티·제보",
