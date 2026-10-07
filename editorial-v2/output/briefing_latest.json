@@ -1,6 +1,6 @@
 {
   "schema": 3,
-  "generated_at_kst": "2026-10-05T12:05:24.071536+09:00",
+  "generated_at_kst": "2026-10-07T12:22:32.248249+09:00",
   "run_policy": "월·수 09:00 KST, 원자료 피드에서 최대 3건",
   "input": "source-scout-v1/output/daily_feed_latest.json",
   "count": 3,
@@ -16,7 +16,7 @@
         {
           "source": "서울시의회 회의록",
           "date": "2026-09-11",
-          "url": "https://ms.smc.seoul.kr/record/recordView.do?key=de5362c4f4c2d07e404324988ea9fdebe7eecac3d2bc010d45f59bf80bf0b735a8e217d3d096a3ed"
+          "url": "https://ms.smc.seoul.kr/record/recordView.do?key=3fdb9a28646ea1b1a557d103ab79a3562acbdcc20af55197d7ae9d7e0d2b478868f2cbc7581a3ebb"
         }
       ],
       "needs_verification": [
@@ -66,7 +66,7 @@
         {
           "source": "서울시의회 회의록",
           "date": "2026-09-11",
-          "url": "https://ms.smc.seoul.kr/record/recordView.do?key=de5362c4f4c2d07e404324988ea9fdebe7eecac3d2bc010d45f59bf80bf0b735a8e217d3d096a3ed"
+          "url": "https://ms.smc.seoul.kr/record/recordView.do?key=3fdb9a28646ea1b1a557d103ab79a3562acbdcc20af55197d7ae9d7e0d2b478868f2cbc7581a3ebb"
         }
       ],
       "needs_verification": [
