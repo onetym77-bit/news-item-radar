@@ -11805,6 +11805,202 @@
           "mode": "regular",
           "endpoint": "videos.list",
           "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:38.373022+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|SCENE|가족 간병 퇴사 후기",
+          "query": "가족 간병 퇴사 후기",
+          "selection_tier": "SENTINEL",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:38.720163+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|야간·시설 돌봄 공백|BEHAVIOR|요양원 못 구해 일 쉬어",
+          "query": "요양원 못 구해 일 쉬어",
+          "selection_tier": "SENTINEL",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:38.929890+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "MOBILITY|대중교통 단절|SOURCE|장거리 출퇴근 브이로그",
+          "query": "장거리 출퇴근 브이로그",
+          "selection_tier": "SENTINEL",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:39.200967+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|BEHAVIOR|반지하 침수 또 이사",
+          "query": "반지하 침수 또 이사",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:39.441227+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LOCAL_ECONOMY|골목상권 영업 포기|SCENE|자영업 폐업 후기",
+          "query": "자영업 폐업 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:39.676623+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "HOUSING|주거비 때문에 이동|SCENE|월세 이사 후기",
+          "query": "월세 이사 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:40.000762+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LABOR|임금·퇴직금 미지급|SOURCE|임금체불 노동자 인터뷰",
+          "query": "임금체불 노동자 인터뷰",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:40.195865+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|SOURCE|간병 가족 브이로그",
+          "query": "간병 가족 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:40.477695+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "MOBILITY|교통약자 이동 실패|SOURCE|휠체어 출근 브이로그",
+          "query": "휠체어 출근 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:40.684096+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "DIGITAL_RIGHTS|디지털 접근 배제|BEHAVIOR|키오스크 주문 포기",
+          "query": "키오스크 주문 포기",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:41.021541+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|EVIDENCE|침수 복구비 영수증",
+          "query": "침수 복구비 영수증",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:41.313107+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LOCAL_ECONOMY|필수 생활서비스 폐업|EVIDENCE|병원 폐업 안내문",
+          "query": "병원 폐업 안내문",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:41.651619+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "HOUSING|주거비 때문에 이동|SOURCE|자취 월세 브이로그",
+          "query": "자취 월세 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-10-09T11:36:41.968333+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:42.323379+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:43.069486+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:43.407951+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:43.530058+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:43.735017+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:43.900204+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:44.211775+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:44.396684+09:00",
+          "mode": "regular",
+          "endpoint": "channels.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:44.490197+09:00",
+          "mode": "regular",
+          "endpoint": "playlistItems.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-09T11:36:44.619686+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
         }
       ]
     }
