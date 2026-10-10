@@ -1,6 +1,6 @@
 # 서울 25개 구의회 얇은 관측
 
-관측 시각: 2026-10-09T12:04:42+09:00
+관측 시각: 2026-10-10T11:44:33+09:00
 
 공식 최근목록의 첫 화면만 비교합니다. 회의일은 게시일이 아닙니다.
 첫 관측은 신규로 세지 않으며 접속 실패는 자료 0건이 아닙니다.
@@ -16,57 +16,22 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 | 마포구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 성동구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 종로구 | 지방의정포털 API | 4129 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 중구 | 지방의정포털 API | 3379 | 20 | - | BASELINE_ROUTE_CHANGED |
+| 중구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
 | 용산구 | 지방의정포털 API | 3766 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 성북구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
+| 성북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 도봉구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 은평구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 서대문구 | 의회 홈페이지 | 14 | 14 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 양천구 | 지방의정포털 API | 4458 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 강서구 | 의회 홈페이지 | 24 | 20 | 1 | NEW_IN_VISIBLE_WINDOW |
-| 광진구 | 의회 홈페이지 | 10 | 10 | 5 | NEW_IN_VISIBLE_WINDOW |
-| 동대문구 | 지방의정포털 API | 5241 | 20 | 3 | NEW_IN_VISIBLE_WINDOW |
+| 강서구 | 의회 홈페이지 | 24 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 광진구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 동대문구 | 지방의정포털 API | 5241 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 중랑구 | 지방의정포털 API | 3766 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 구로구 | 의회 홈페이지 | 21 | 20 | 1 | NEW_IN_VISIBLE_WINDOW |
-| 금천구 | 지방의정포털 API | 3566 | 20 | 1 | NEW_IN_VISIBLE_WINDOW |
+| 구로구 | 의회 홈페이지 | 21 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 금천구 | 지방의정포털 API | 3566 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 영등포구 | 의회 홈페이지 | 15 | 15 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 동작구 | 지방의정포털 API | 4086 | 20 | 2 | NEW_IN_VISIBLE_WINDOW |
-| 서초구 | 지방의정포털 API | 4822 | 20 | 1 | NEW_IN_VISIBLE_WINDOW |
+| 동작구 | 지방의정포털 API | 4086 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 서초구 | 지방의정포털 API | 4822 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 송파구 | 지방의정포털 API | 4555 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강동구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-
-## 강서구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-09-22 · [공식 회의록](https://gsc.gangseo.seoul.kr/meeting/confer/popup.do?ntime=323&contype=1&subtype=0&num=2&istemp=1)
-
-## 광진구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-09-21 · [공식 회의록](https://council.gwangjin.go.kr/record/main/contents?uid=6759)
-- 2026-09-18 · [공식 회의록](https://council.gwangjin.go.kr/record/main/contents?uid=6764)
-- 2026-09-04 · [공식 회의록](https://council.gwangjin.go.kr/record/main/contents?uid=6758)
-- 2026-09-03 · [공식 회의록](https://council.gwangjin.go.kr/record/main/contents?uid=6763)
-- 2026-09-02 · [공식 회의록](https://council.gwangjin.go.kr/record/main/contents?uid=6762)
-
-## 동대문구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-08-26 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3153996811279272&collection=minutes)
-- 2026-08-26 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3153996610226697&collection=minutes)
-- 2026-08-26 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3153996409131339&collection=minutes)
-
-## 구로구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-09-17 · [공식 회의록](https://www.guroc.go.kr/meeting/confer/popup.do?ntime=349&contype=2&subtype=3&num=4&istemp=1)
-
-## 금천구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-10-08 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3153976426684360&collection=minutes)
-
-## 동작구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-08-28 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3154076062045493&collection=minutes)
-- 2026-08-27 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3154076513192084&collection=minutes)
-
-## 서초구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-10-08 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3154027764069794&collection=minutes)
