@@ -1,6 +1,6 @@
 # 서울 25개 구의회 얇은 관측
 
-관측 시각: 2026-10-10T11:44:33+09:00
+관측 시각: 2026-10-11T11:10:30+09:00
 
 공식 최근목록의 첫 화면만 비교합니다. 회의일은 게시일이 아닙니다.
 첫 관측은 신규로 세지 않으며 접속 실패는 자료 0건이 아닙니다.
@@ -16,13 +16,13 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 | 마포구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 성동구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 종로구 | 지방의정포털 API | 4129 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 중구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
+| 중구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 용산구 | 지방의정포털 API | 3766 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 성북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 도봉구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 은평구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 서대문구 | 의회 홈페이지 | 14 | 14 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 서대문구 | 의회 홈페이지 | 17 | 17 | 3 | NEW_IN_VISIBLE_WINDOW |
 | 양천구 | 지방의정포털 API | 4458 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강서구 | 의회 홈페이지 | 24 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 광진구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
@@ -35,3 +35,9 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 | 서초구 | 지방의정포털 API | 4822 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 송파구 | 지방의정포털 API | 4555 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강동구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+
+## 서대문구 · NEW_IN_VISIBLE_WINDOW
+
+- 2026-09-21 · [공식 회의록](https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9355)
+- 2026-09-18 · [공식 회의록](https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9354)
+- 2026-09-17 · [공식 회의록](https://ams.sdmcouncil.go.kr/assem/viewer.do?minId=9353)
