@@ -2,9 +2,6 @@ name: Run fresh editorial review cycle
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 9 * * 1,3"
-      timezone: "Asia/Seoul"
 
 permissions:
   actions: write
@@ -16,6 +13,8 @@ concurrency:
 
 jobs:
   collect-review-publish:
+    # Paused: this orchestration includes legacy paid child workflows.
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 240
     env:

@@ -1,0 +1,49 @@
+name: Collect Seoul raw source feed (rebuild)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 7 * * 1,3"
+      timezone: "Asia/Seoul"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rebuild-raw-source-feed
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Collect bounded source feed without editorial queue mutation
+        id: collection
+        run: python -X utf8 source-scout-v1/collect_daily_feed.py --skip-review-queue
+      - name: Preserve exact collection artifact even on later failure
+        if: ${{ always() && steps.collection.outcome == 'success' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: rebuild-source-feed-${{ github.run_id }}
+          path: |
+            source-scout-v1/output/daily_feed_latest.json
+            source-scout-v1/output/daily_feed_latest.md
+            source-scout-v1/output/history/daily_feed_*_${{ github.run_id }}.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Persist raw feed only, without briefing or model interpretation
+        run: |
+          git diff --exit-code -- agent-system-v1/ITEM_LEDGER.csv source-scout-v1/HUMAN_REVIEW_QUEUE.csv
+          git config user.name "news-item-radar-bot"
+          git config user.email "news-item-radar-bot@users.noreply.github.com"
+          git add source-scout-v1/output/daily_feed_latest.json source-scout-v1/output/daily_feed_latest.md
+          git diff --cached --quiet || git commit -m "Update collection-only source feed"
+          bash .github/scripts/push-with-rebase.sh main

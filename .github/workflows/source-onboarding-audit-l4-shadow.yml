@@ -1,9 +1,6 @@
 name: Evaluate Seoul audit questions (L4 shadow)
 
 on:
-  schedule:
-    - cron: "45 10 * * *"
-      timezone: "Asia/Seoul"
   workflow_dispatch:
   pull_request:
     paths:

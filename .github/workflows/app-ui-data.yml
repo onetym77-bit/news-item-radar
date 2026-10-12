@@ -31,8 +31,6 @@ on:
       - ".github/workflows/review-citizen-shadow.yml"
       - ".github/workflows/publish-youtube-shadow.yml"
       - ".github/workflows/review-youtube-shadow.yml"
-  schedule:
-    - cron: "15 3 * * *"
   workflow_run:
     workflows:
       - "Review editorial v4 card"
