@@ -2,8 +2,6 @@ name: Editorial brief v2
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * 1,3"
 
 permissions:
   contents: write

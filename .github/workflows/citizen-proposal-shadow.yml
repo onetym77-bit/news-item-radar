@@ -24,6 +24,7 @@ concurrency:
 
 jobs:
   review:
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -54,7 +55,7 @@ jobs:
       - name: Review direct-experience statements only
         if: github.event_name != 'pull_request'
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ""
           MODEL: ${{ inputs.model || 'gpt-5.6-luna' }}
         run: >-
           python -X utf8 editorial-v4/pipeline.py

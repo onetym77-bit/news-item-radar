@@ -47,11 +47,13 @@ concurrency:
 
 jobs:
   review:
+    # Only no-model PR checks remain enabled during the rebuild.
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
       PYTHONUTF8: "1"
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_API_KEY: ""
       EDITORIAL_COLLECTION_CYCLE_ID: ${{ inputs.collection_cycle_id || '' }}
       EDITORIAL_COLLECTION_STARTED_AT_UTC: ${{ inputs.collection_started_at_utc || '' }}
       EDITORIAL_COLLECTION_RUNS: ${{ inputs.collection_runs || '[]' }}

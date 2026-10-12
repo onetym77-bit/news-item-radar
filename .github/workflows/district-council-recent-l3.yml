@@ -40,11 +40,12 @@ concurrency:
 
 jobs:
   review:
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
       PYTHONUTF8: "1"
-      OPENAI_API_KEY: ${{ github.event_name != 'pull_request' && secrets.OPENAI_API_KEY || '' }}
+      OPENAI_API_KEY: ""
       CLIK_API_KEY: ${{ github.event_name != 'pull_request' && secrets.CLIK_API_KEY || '' }}
     steps:
       - uses: actions/checkout@v6

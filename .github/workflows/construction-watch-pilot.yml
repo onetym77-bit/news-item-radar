@@ -1,9 +1,6 @@
 name: Observe construction changes (pilot)
 
 on:
-  schedule:
-    - cron: "15 11 * * *"
-      timezone: "Asia/Seoul"
   workflow_dispatch:
   pull_request:
     paths:

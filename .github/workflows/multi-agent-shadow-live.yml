@@ -30,6 +30,7 @@ concurrency:
 
 jobs:
   run-shadow:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -139,7 +140,7 @@ jobs:
         if: steps.selection_preflight.outputs.eligible == 'true'
         shell: bash
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ""
           MODEL: ${{ inputs.model }}
           CANDIDATE_LIMIT: ${{ inputs.candidate_limit }}
         run: |

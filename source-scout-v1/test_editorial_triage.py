@@ -91,7 +91,13 @@ class EditorialTriageTests(unittest.TestCase):
         leads = json.loads(selected_path.read_text(encoding="utf-8"))["leads"]
         selected_rows = [
             row for row in feed.get("context_holds", [])
-            if collector.context_hold_editorial_triage_reason(row)
+            # This test checks anchor/context recovery, not today's eligibility.
+            # The mutable latest feed eventually marks the September records as
+            # archived; expiry is separately tested above and stays unchanged
+            # in production. Hold age constant only for this test's input.
+            if collector.context_hold_editorial_triage_reason({
+                **row, "freshness_status": "FRESH"
+            })
         ]
         for lead in leads:
             expected_host = urlsplit(lead["source_url"]).netloc
@@ -132,3 +138,4 @@ class EditorialTriageTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
