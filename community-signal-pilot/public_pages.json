@@ -1,6 +1,6 @@
 {
-  "schema": 1,
-  "policy_version": "2026-09-21",
+  "schema": 2,
+  "policy_version": "2026-09-21-local-social-discovery-v1",
   "source_id": "local_public_pages",
   "scope": "서울 지역 소식 공개 페이지·유튜브·지역 커뮤니티·인기 뉴스의 발견 신호",
   "collection_rules": {
@@ -9,75 +9,79 @@
     "login_bypass": false,
     "personal_accounts": false,
     "raw_personal_text_persisted": false,
-    "views_are_interest_signal_only": true
+    "views_are_interest_signal_only": true,
+    "official_promotional_pages_are_not_primary": true
   },
   "page_types": [
     {
       "type": "LOCAL_NEWS_PAGE",
       "label": "지역 뉴스·미디어 페이지",
-      "platforms": [
-        "facebook",
-        "instagram",
-        "youtube"
-      ],
+      "platforms": ["facebook", "instagram", "youtube"],
       "items": []
     },
     {
       "type": "NEIGHBORHOOD_SIGNAL_PAGE",
       "label": "동네 생활·현장 소식 페이지",
-      "platforms": [
-        "facebook",
-        "instagram"
-      ],
+      "platforms": ["facebook", "instagram"],
       "items": []
     },
     {
       "type": "CITIZEN_ORG_PAGE",
       "label": "시민단체·당사자 단체 공개 페이지",
-      "platforms": [
-        "facebook",
-        "instagram",
-        "youtube"
-      ],
+      "platforms": ["facebook", "instagram", "youtube"],
       "items": []
     },
     {
       "type": "REGIONAL_COMMUNITY_REPORT",
       "label": "지역 커뮤니티·시민 제보",
-      "platforms": [
-        "public_web"
-      ],
+      "platforms": ["public_web"],
       "items": []
     },
     {
       "type": "POPULAR_NEWS_CONTENT",
       "label": "인기 뉴스·콘텐츠",
-      "platforms": [
-        "youtube",
-        "news"
-      ],
+      "platforms": ["youtube", "news"],
       "items": []
     }
   ],
+  "discovery_queue": {
+    "status": "MANUAL_DISCOVERY_REQUIRED",
+    "reason": "검색엔진만으로는 페이스북·인스타그램 공개 지역 페이지의 실제 운영성과 원문 접근성을 안정적으로 확인하기 어렵다.",
+    "search_templates": [
+      "서울 {자치구} 제보",
+      "서울 {동네} 소식",
+      "{자치구} 주민 제보",
+      "{동네} 사건 사고",
+      "{동네} 재개발 갈등",
+      "{동네} 교통 불편",
+      "{동네} 임대료 상권 변화"
+    ],
+    "registration_gate": [
+      "페이지가 공개 상태인지 확인",
+      "최근 3개월 게시물 20개 이상 확인",
+      "홍보·맛집·행사 게시물보다 현장·제보·문제 제기 비중이 높은지 확인",
+      "게시물 단위 URL과 게시 시각을 확인",
+      "지역·문제·당사자가 구체적인지 확인",
+      "개인 계정이 아니라 지역 페이지·미디어·단체 페이지인지 확인"
+    ],
+    "candidate_statuses": [
+      "발견 후보",
+      "운영성 확인",
+      "수집 연결",
+      "보류",
+      "제외"
+    ]
+  },
   "item_contract": {
-    "required": [
-      "url",
-      "platform",
-      "page_name",
-      "region",
-      "published_at",
-      "signal_summary"
-    ],
-    "optional": [
-      "engagement_snapshot",
-      "media_type"
-    ],
+    "required": ["url", "platform", "page_name", "region", "published_at", "signal_summary"],
+    "optional": ["engagement_snapshot", "media_type", "evidence_excerpt"],
     "next_status": "DISCOVERY_SIGNAL"
   },
   "promotion_rules": [
     "지역·시간·문제가 구체적이어야 함",
     "반복 제기 또는 독립 근거가 있어야 함",
     "공식 자료·현장·당사자 확인 경로가 있어야 함",
-    "개인정보와 단일 주장만으로 자동 확정하지 않음"
+    "개인정보와 단일 주장만으로 자동 확정하지 않음",
+    "발견 신호를 사실 확정이나 기사 후보 확정으로 표현하지 않음"
   ]
 }
