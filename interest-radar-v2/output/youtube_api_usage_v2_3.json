@@ -15801,6 +15801,212 @@
           "mode": "regular",
           "endpoint": "videos.list",
           "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:16.569041+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "HOUSING|보증금 반환 지연|SCENE|전세 보증금 반환 후기",
+          "query": "전세 보증금 반환 후기",
+          "selection_tier": "SENTINEL",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:16.890540+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "HOUSING|주거비 때문에 이동|BEHAVIOR|월세 올라 방 줄여 이사",
+          "query": "월세 올라 방 줄여 이사",
+          "selection_tier": "SENTINEL",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:17.145166+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LABOR|임금·퇴직금 미지급|SCENE|월급 못 받은 후기",
+          "query": "월급 못 받은 후기",
+          "selection_tier": "SENTINEL",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:17.446084+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LABOR|플랫폼 노동 수입 감소|SCENE|배달 라이더 수입 후기",
+          "query": "배달 라이더 수입 후기",
+          "selection_tier": "SENTINEL",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:17.712822+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "MOBILITY|교통약자 이동 실패|BEHAVIOR|장애인 콜택시 기다린 시간",
+          "query": "장애인 콜택시 기다린 시간",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:17.945973+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "EDUCATION|교육비 때문에 포기|BEHAVIOR|학원비 올라 학원 끊었어요",
+          "query": "학원비 올라 학원 끊었어요",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:18.257255+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "DIGITAL_RIGHTS|플랫폼 계정·환불 피해|SOURCE|플랫폼 계정 정지 브이로그",
+          "query": "플랫폼 계정 정지 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:18.557455+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|SOURCE|반지하 거주 브이로그",
+          "query": "반지하 거주 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:18.822603+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LOCAL_ECONOMY|골목상권 영업 포기|SCENE|자영업 폐업 후기",
+          "query": "자영업 폐업 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:19.076334+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "HOUSING|주거비 때문에 이동|EVIDENCE|관리비 고지서 공개",
+          "query": "관리비 고지서 공개",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:19.441175+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LABOR|임금·퇴직금 미지급|BEHAVIOR|월급 밀려 퇴사",
+          "query": "월급 밀려 퇴사",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:19.718717+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|야간·시설 돌봄 공백|SOURCE|간병 보호자 일상",
+          "query": "간병 보호자 일상",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:20.073557+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "MOBILITY|교통약자 이동 실패|SCENE|휠체어 지하철 이동 후기",
+          "query": "휠체어 지하철 이동 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:20.324179+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "EDUCATION|교육비 때문에 포기|EVIDENCE|학원비 결제 영수증",
+          "query": "학원비 결제 영수증",
+          "selection_tier": "ROTATION",
+          "run_slot": 0
+        },
+        {
+          "at": "2026-10-17T09:51:20.610740+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:21.023117+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:21.285615+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:21.556373+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:21.717971+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:22.056604+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:22.290747+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:22.554798+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:22.732831+09:00",
+          "mode": "regular",
+          "endpoint": "channels.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:22.900020+09:00",
+          "mode": "regular",
+          "endpoint": "playlistItems.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-10-17T09:51:23.113282+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
         }
       ]
     }
