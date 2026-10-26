@@ -56,12 +56,31 @@ class PublicComplaintTests(unittest.TestCase):
         self.assertNotIn("900101-1234567", value)
 
     def test_derive_signals_keeps_claims_unverified(self):
-        signals = module.derive_signals("도로 단차와 파손으로 안전이 위험합니다. 점검 후 보수 조치를 검토합니다.")
+        signals = module.derive_signals(
+            "도로 단차와 파손으로 안전이 위험합니다.",
+            "점검 후 보수 조치를 검토합니다.",
+            "EXPLICIT_QUESTION_AND_ANSWER",
+        )
         self.assertEqual("SAFETY_OR_MAINTENANCE", signals["signal_type"])
         self.assertEqual("SHADOW_REVIEW", signals["review_status"])
         self.assertEqual("UNVERIFIED_CITIZEN_STATEMENT", signals["claim_status"])
         self.assertFalse(signals["article_candidate"])
         self.assertEqual("NOT_GENERATED_AT_L2", signals["editorial_question"])
+
+    def test_answer_only_page_cannot_create_citizen_signal(self):
+        sections = module.split_explicit_sections(
+            "장애인콜택시 이용관련 문의 답변 내용 "
+            "운행시간이 제한되어 대기와 이용 불편이 있을 수 있습니다."
+        )
+        signals = module.derive_signals(
+            sections["citizen_text"],
+            sections["official_text"],
+            sections["status"],
+        )
+        self.assertEqual("ANSWER_ONLY", sections["status"])
+        self.assertEqual([], signals["citizen_problem_markers"])
+        self.assertEqual("CONTEXT_UNRESOLVED", signals["review_status"])
+        self.assertFalse(signals["citizen_section_available"])
 
     def test_observe_persists_only_derived_markers(self):
         def fetcher(url):
@@ -77,6 +96,8 @@ class PublicComplaintTests(unittest.TestCase):
         self.assertNotIn("민원 내용", serialized)
         self.assertFalse(result["policy"]["questions_generated"])
         self.assertFalse(result["policy"]["automatic_promotion"])
+        self.assertEqual("EXPLICIT_QUESTION_AND_ANSWER", result["records"][0]["section_status"])
+        self.assertTrue(result["records"][0]["citizen_section_available"])
 
     def test_rejects_empty_list(self):
         with self.assertRaises(ValueError):
