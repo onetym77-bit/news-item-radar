@@ -2,602 +2,6 @@
   "version": "2.3",
   "quota_timezone": "America/Los_Angeles",
   "days": {
-    "2026-10-01": {
-      "events": [
-        {
-          "at": "2026-10-01T18:52:07.873692+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "MOBILITY|교통약자 이동 실패|EVIDENCE|장애인콜택시 대기 화면",
-          "query": "장애인콜택시 대기 화면",
-          "selection_tier": "SENTINEL",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:08.072255+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "COST_OF_LIVING|식비·생필품 구매 축소|EVIDENCE|마트 영수증 물가 공개",
-          "query": "마트 영수증 물가 공개",
-          "selection_tier": "SENTINEL",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:08.385926+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "COST_OF_LIVING|공공요금 체납|EVIDENCE|공공요금 고지서 공개",
-          "query": "공공요금 고지서 공개",
-          "selection_tier": "SENTINEL",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:08.613828+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "CARE_HEALTH|야간·시설 돌봄 공백|BEHAVIOR|요양원 못 구해 일 쉬어",
-          "query": "요양원 못 구해 일 쉬어",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:08.931737+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "MOBILITY|교통약자 이동 실패|SCENE|휠체어 지하철 이동 후기",
-          "query": "휠체어 지하철 이동 후기",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:09.165458+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "COST_OF_LIVING|식비·생필품 구매 축소|SOURCE|한달 식비 공개 브이로그",
-          "query": "한달 식비 공개 브이로그",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:09.464956+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "EDUCATION|교육비 때문에 포기|BEHAVIOR|학원비 올라 학원 끊었어요",
-          "query": "학원비 올라 학원 끊었어요",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:09.694406+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "DIGITAL_RIGHTS|디지털 접근 배제|SOURCE|디지털 어려운 부모님",
-          "query": "디지털 어려운 부모님",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:09.973144+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "SAFETY_ENVIRONMENT|일터 안전 은폐|EVIDENCE|산재 신청 문자",
-          "query": "산재 신청 문자",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:10.199599+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LOCAL_ECONOMY|골목상권 영업 포기|SCENE|자영업 폐업 후기",
-          "query": "자영업 폐업 후기",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:10.480110+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "HOUSING|주거비 때문에 이동|EVIDENCE|관리비 고지서 공개",
-          "query": "관리비 고지서 공개",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:10.726969+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LABOR|임금·퇴직금 미지급|SCENE|월급 못 받은 후기",
-          "query": "월급 못 받은 후기",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:11.035981+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|SOURCE|간병 가족 브이로그",
-          "query": "간병 가족 브이로그",
-          "selection_tier": "ROTATION",
-          "run_slot": 2
-        },
-        {
-          "at": "2026-10-01T18:52:11.292322+09:00",
-          "mode": "regular",
-          "endpoint": "videos.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:11.559662+09:00",
-          "mode": "regular",
-          "endpoint": "videos.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:11.854740+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:12.028431+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:12.146309+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:12.291731+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:12.443580+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:12.761411+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:12.934705+09:00",
-          "mode": "regular",
-          "endpoint": "channels.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:13.056369+09:00",
-          "mode": "regular",
-          "endpoint": "playlistItems.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-01T18:52:13.187703+09:00",
-          "mode": "regular",
-          "endpoint": "videos.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:46.992451+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "HOUSING|보증금 반환 지연|SCENE|전세 보증금 반환 후기",
-          "query": "전세 보증금 반환 후기",
-          "selection_tier": "SENTINEL",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:47.217663+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "HOUSING|주거비 때문에 이동|BEHAVIOR|월세 올라 방 줄여 이사",
-          "query": "월세 올라 방 줄여 이사",
-          "selection_tier": "SENTINEL",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:47.790186+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LABOR|임금·퇴직금 미지급|EVIDENCE|임금체불 통장 문자",
-          "query": "임금체불 통장 문자",
-          "selection_tier": "SENTINEL",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:47.992454+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LABOR|플랫폼 노동 수입 감소|SCENE|배달 라이더 수입 후기",
-          "query": "배달 라이더 수입 후기",
-          "selection_tier": "SENTINEL",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:48.245381+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "MOBILITY|교통약자 이동 실패|SOURCE|휠체어 출근 브이로그",
-          "query": "휠체어 출근 브이로그",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:48.461564+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "EDUCATION|교육비 때문에 포기|EVIDENCE|학원비 결제 영수증",
-          "query": "학원비 결제 영수증",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:49.013835+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "DIGITAL_RIGHTS|플랫폼 계정·환불 피해|EVIDENCE|자동결제 취소 내역",
-          "query": "자동결제 취소 내역",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:49.660478+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|SOURCE|반지하 거주 브이로그",
-          "query": "반지하 거주 브이로그",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:49.912508+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LOCAL_ECONOMY|필수 생활서비스 폐업|EVIDENCE|병원 폐업 안내문",
-          "query": "병원 폐업 안내문",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:50.178856+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "HOUSING|주거비 때문에 이동|SCENE|월세 이사 후기",
-          "query": "월세 이사 후기",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:50.533939+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LABOR|임금·퇴직금 미지급|SOURCE|임금체불 노동자 인터뷰",
-          "query": "임금체불 노동자 인터뷰",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:50.764254+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|EVIDENCE|간병비 영수증 공개",
-          "query": "간병비 영수증 공개",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:51.035249+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "MOBILITY|교통약자 이동 실패|BEHAVIOR|장애인 콜택시 기다린 시간",
-          "query": "장애인 콜택시 기다린 시간",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:51.238274+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "EDUCATION|특수·돌봄교육 대기|SOURCE|맞벌이 부모 돌봄 브이로그",
-          "query": "맞벌이 부모 돌봄 브이로그",
-          "selection_tier": "ROTATION",
-          "run_slot": 0
-        },
-        {
-          "at": "2026-10-02T00:35:51.624074+09:00",
-          "mode": "regular",
-          "endpoint": "videos.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:52.013354+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:52.174997+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:52.392864+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:52.655417+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:52.894618+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:53.214812+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:53.372688+09:00",
-          "mode": "regular",
-          "endpoint": "channels.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:53.450758+09:00",
-          "mode": "regular",
-          "endpoint": "playlistItems.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T00:35:53.593271+09:00",
-          "mode": "regular",
-          "endpoint": "videos.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:03.576233+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|SCENE|가족 간병 퇴사 후기",
-          "query": "가족 간병 퇴사 후기",
-          "selection_tier": "SENTINEL",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:03.891845+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "CARE_HEALTH|야간·시설 돌봄 공백|SOURCE|간병 보호자 일상",
-          "query": "간병 보호자 일상",
-          "selection_tier": "SENTINEL",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:04.383990+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "MOBILITY|대중교통 단절|SOURCE|장거리 출퇴근 브이로그",
-          "query": "장거리 출퇴근 브이로그",
-          "selection_tier": "SENTINEL",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:04.590886+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "DIGITAL_RIGHTS|플랫폼 계정·환불 피해|SCENE|계정 정지 당한 후기",
-          "query": "계정 정지 당한 후기",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:04.850335+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "SAFETY_ENVIRONMENT|일터 안전 은폐|SCENE|산재 처리 후기",
-          "query": "산재 처리 후기",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:05.143894+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LOCAL_ECONOMY|골목상권 영업 포기|EVIDENCE|가게 폐업 정산 공개",
-          "query": "가게 폐업 정산 공개",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:05.381975+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "HOUSING|주거비 때문에 이동|SOURCE|자취 월세 브이로그",
-          "query": "자취 월세 브이로그",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:05.606130+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LABOR|플랫폼 노동 수입 감소|SOURCE|배달기사 일상 브이로그",
-          "query": "배달기사 일상 브이로그",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:05.889363+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "DIGITAL_RIGHTS|디지털 접근 배제|BEHAVIOR|키오스크 주문 포기",
-          "query": "키오스크 주문 포기",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:06.108064+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|BEHAVIOR|반지하 침수 또 이사",
-          "query": "반지하 침수 또 이사",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:06.338402+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LOCAL_ECONOMY|필수 생활서비스 폐업|BEHAVIOR|소아과 멀리 원정 진료",
-          "query": "소아과 멀리 원정 진료",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:06.513690+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "HOUSING|보증금 반환 지연|BEHAVIOR|보증금 못 받아 이사 못 가",
-          "query": "보증금 못 받아 이사 못 가",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:06.803875+09:00",
-          "mode": "regular",
-          "endpoint": "search.list",
-          "status": "OK",
-          "query_key": "LABOR|임금·퇴직금 미지급|BEHAVIOR|월급 밀려 퇴사",
-          "query": "월급 밀려 퇴사",
-          "selection_tier": "ROTATION",
-          "run_slot": 1
-        },
-        {
-          "at": "2026-10-02T10:51:07.136644+09:00",
-          "mode": "regular",
-          "endpoint": "videos.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:07.432218+09:00",
-          "mode": "regular",
-          "endpoint": "videos.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:07.879273+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:08.085667+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:08.274697+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:08.418307+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:08.582293+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:08.769900+09:00",
-          "mode": "regular",
-          "endpoint": "commentThreads.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:08.968528+09:00",
-          "mode": "regular",
-          "endpoint": "channels.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:09.080502+09:00",
-          "mode": "regular",
-          "endpoint": "playlistItems.list",
-          "status": "OK"
-        },
-        {
-          "at": "2026-10-02T10:51:09.440153+09:00",
-          "mode": "regular",
-          "endpoint": "videos.list",
-          "status": "OK"
-        }
-      ]
-    },
     "2026-10-02": {
       "events": [
         {
@@ -17218,6 +16622,206 @@
         },
         {
           "at": "2026-11-05T11:55:42.184289+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        }
+      ]
+    },
+    "2026-11-05": {
+      "events": [
+        {
+          "at": "2026-11-05T19:28:39.875054+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "MOBILITY|교통약자 이동 실패|EVIDENCE|장애인콜택시 대기 화면",
+          "query": "장애인콜택시 대기 화면",
+          "selection_tier": "SENTINEL",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:40.137704+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "COST_OF_LIVING|식비·생필품 구매 축소|SOURCE|한달 식비 공개 브이로그",
+          "query": "한달 식비 공개 브이로그",
+          "selection_tier": "SENTINEL",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:40.395093+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "COST_OF_LIVING|공공요금 체납|EVIDENCE|공공요금 고지서 공개",
+          "query": "공공요금 고지서 공개",
+          "selection_tier": "SENTINEL",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:40.605930+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LOCAL_ECONOMY|골목상권 영업 포기|SCENE|자영업 폐업 후기",
+          "query": "자영업 폐업 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:40.901886+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "HOUSING|주거비 때문에 이동|SCENE|월세 이사 후기",
+          "query": "월세 이사 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:41.149189+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LABOR|임금·퇴직금 미지급|SCENE|월급 못 받은 후기",
+          "query": "월급 못 받은 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:41.524938+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|야간·시설 돌봄 공백|BEHAVIOR|요양원 못 구해 일 쉬어",
+          "query": "요양원 못 구해 일 쉬어",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:41.774166+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "MOBILITY|교통약자 이동 실패|SCENE|휠체어 지하철 이동 후기",
+          "query": "휠체어 지하철 이동 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:42.049642+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "COST_OF_LIVING|식비·생필품 구매 축소|EVIDENCE|마트 영수증 물가 공개",
+          "query": "마트 영수증 물가 공개",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:42.386610+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "EDUCATION|특수·돌봄교육 대기|SOURCE|맞벌이 부모 돌봄 브이로그",
+          "query": "맞벌이 부모 돌봄 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:42.666818+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "DIGITAL_RIGHTS|디지털 접근 배제|BEHAVIOR|키오스크 주문 포기",
+          "query": "키오스크 주문 포기",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:42.916434+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|BEHAVIOR|반지하 침수 또 이사",
+          "query": "반지하 침수 또 이사",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:43.240945+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LOCAL_ECONOMY|필수 생활서비스 폐업|BEHAVIOR|소아과 멀리 원정 진료",
+          "query": "소아과 멀리 원정 진료",
+          "selection_tier": "ROTATION",
+          "run_slot": 2
+        },
+        {
+          "at": "2026-11-05T19:28:43.601681+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:44.115686+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:44.456762+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:44.684738+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:44.885758+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:45.048009+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:45.277453+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:45.511672+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:45.903236+09:00",
+          "mode": "regular",
+          "endpoint": "channels.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:46.044051+09:00",
+          "mode": "regular",
+          "endpoint": "playlistItems.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-05T19:28:46.221708+09:00",
           "mode": "regular",
           "endpoint": "videos.list",
           "status": "OK"
