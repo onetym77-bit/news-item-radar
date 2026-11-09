@@ -1,6 +1,6 @@
 # 서울 25개 구의회 얇은 관측
 
-관측 시각: 2026-11-08T11:42:09+09:00
+관측 시각: 2026-11-09T11:58:11+09:00
 
 공식 최근목록의 첫 화면만 비교합니다. 회의일은 게시일이 아닙니다.
 첫 관측은 신규로 세지 않으며 접속 실패는 자료 0건이 아닙니다.
@@ -18,7 +18,7 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 | 종로구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 중구 | 지방의정포털 API | 3379 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 용산구 | 지방의정포털 API | 3795 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 성북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 성북구 | 의회 홈페이지 | 10 | 10 | 1 | NEW_IN_VISIBLE_WINDOW |
 | 강북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 도봉구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 은평구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
@@ -31,7 +31,11 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 | 구로구 | 의회 홈페이지 | 11 | 11 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 금천구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 영등포구 | 의회 홈페이지 | 15 | 15 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 동작구 | 지방의정포털 API | 4116 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 서초구 | 지방의정포털 API | 4855 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 동작구 | 지방의정포털 API | 4118 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 서초구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
 | 송파구 | 지방의정포털 API | 4581 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강동구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+
+## 성북구 · NEW_IN_VISIBLE_WINDOW
+
+- 2026-10-20 · [공식 회의록](https://www.sbc.go.kr/record/recordView.do?key=d0195383e0e8d5a575c254d04055cb6c0376834e53eb7cc39017229e88d0e7192fdff842f2861f0c)
