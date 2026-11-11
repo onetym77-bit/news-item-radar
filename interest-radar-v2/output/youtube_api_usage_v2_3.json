@@ -17473,6 +17473,202 @@
           "mode": "regular",
           "endpoint": "videos.list",
           "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:31.955422+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|SCENE|가족 간병 퇴사 후기",
+          "query": "가족 간병 퇴사 후기",
+          "selection_tier": "SENTINEL",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:32.316478+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|야간·시설 돌봄 공백|BEHAVIOR|요양원 못 구해 일 쉬어",
+          "query": "요양원 못 구해 일 쉬어",
+          "selection_tier": "SENTINEL",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:32.553773+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "MOBILITY|대중교통 단절|SOURCE|장거리 출퇴근 브이로그",
+          "query": "장거리 출퇴근 브이로그",
+          "selection_tier": "SENTINEL",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:32.958906+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|SOURCE|반지하 거주 브이로그",
+          "query": "반지하 거주 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:33.285191+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LOCAL_ECONOMY|필수 생활서비스 폐업|BEHAVIOR|소아과 멀리 원정 진료",
+          "query": "소아과 멀리 원정 진료",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:33.542993+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "HOUSING|보증금 반환 지연|BEHAVIOR|보증금 못 받아 이사 못 가",
+          "query": "보증금 못 받아 이사 못 가",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:33.914094+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LABOR|임금·퇴직금 미지급|BEHAVIOR|월급 밀려 퇴사",
+          "query": "월급 밀려 퇴사",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:34.152760+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|SOURCE|간병 가족 브이로그",
+          "query": "간병 가족 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:34.530757+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "MOBILITY|교통약자 이동 실패|BEHAVIOR|장애인 콜택시 기다린 시간",
+          "query": "장애인 콜택시 기다린 시간",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:34.758628+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "EDUCATION|특수·돌봄교육 대기|SOURCE|맞벌이 부모 돌봄 브이로그",
+          "query": "맞벌이 부모 돌봄 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:35.005980+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "DIGITAL_RIGHTS|디지털 접근 배제|SOURCE|디지털 어려운 부모님",
+          "query": "디지털 어려운 부모님",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:35.252090+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "SAFETY_ENVIRONMENT|일터 안전 은폐|EVIDENCE|산재 신청 문자",
+          "query": "산재 신청 문자",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:35.716847+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LOCAL_ECONOMY|골목상권 영업 포기|EVIDENCE|가게 폐업 정산 공개",
+          "query": "가게 폐업 정산 공개",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-11T11:19:35.963089+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:36.317235+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:36.592834+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:36.806576+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:37.019541+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:37.308250+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:37.553338+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:37.747611+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:37.979222+09:00",
+          "mode": "regular",
+          "endpoint": "channels.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:38.155595+09:00",
+          "mode": "regular",
+          "endpoint": "playlistItems.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-11T11:19:38.354425+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
         }
       ]
     }
