@@ -1,6 +1,6 @@
 # 서울 25개 구의회 얇은 관측
 
-관측 시각: 2026-11-11T11:59:58+09:00
+관측 시각: 2026-11-12T13:13:25+09:00
 
 공식 최근목록의 첫 화면만 비교합니다. 회의일은 게시일이 아닙니다.
 첫 관측은 신규로 세지 않으며 접속 실패는 자료 0건이 아닙니다.
@@ -19,28 +19,27 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 | 중구 | 지방의정포털 API | 3379 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 용산구 | 지방의정포털 API | 3796 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 성북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 강북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 강북구 | 의회 홈페이지 | 10 | 10 | 1 | NEW_IN_VISIBLE_WINDOW |
 | 도봉구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 은평구 | 의회 홈페이지 | 10 | 10 | 2 | NEW_IN_VISIBLE_WINDOW |
-| 서대문구 | 의회 홈페이지 | 15 | 15 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 은평구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 서대문구 | 의회 홈페이지 | 14 | 14 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 양천구 | 지방의정포털 API | 4508 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강서구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 광진구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 동대문구 | 지방의정포털 API | 5242 | 20 | - | BASELINE_ROUTE_CHANGED |
+| 동대문구 | 의회 홈페이지 | 10 | 10 | - | BASELINE_ROUTE_CHANGED |
 | 중랑구 | 지방의정포털 API | 3781 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 구로구 | 의회 홈페이지 | 11 | 11 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 금천구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 금천구 | 의회 홈페이지 | 10 | 10 | 1 | NEW_IN_VISIBLE_WINDOW |
 | 영등포구 | 의회 홈페이지 | 15 | 15 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 동작구 | 지방의정포털 API | 4120 | 20 | 1 | NEW_IN_VISIBLE_WINDOW |
+| 동작구 | 지방의정포털 API | 4122 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 서초구 | 지방의정포털 API | 4856 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 송파구 | 지방의정포털 API | 4581 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강동구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 
-## 은평구 · NEW_IN_VISIBLE_WINDOW
+## 강북구 · NEW_IN_VISIBLE_WINDOW
 
-- 2026-11-10 · [공식 회의록](https://council.ep.go.kr/viewer/minutes.do?uid=6109)
-- 2026-11-10 · [공식 회의록](https://council.ep.go.kr/viewer/minutes.do?uid=6105)
+- 2026-11-11 · [공식 회의록](https://council.gangbuk.go.kr/viewer/minutes.do?uid=8867)
 
-## 동작구 · NEW_IN_VISIBLE_WINDOW
+## 금천구 · NEW_IN_VISIBLE_WINDOW
 
-- 2026-10-13 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3439193705973517&collection=minutes)
+- 2026-11-10 · [공식 회의록](https://council.geumcheon.go.kr/council/viewer/minutes/2967.do)
