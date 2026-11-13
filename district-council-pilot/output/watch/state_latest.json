@@ -78,7 +78,7 @@
         "5b362c710efe6020f999d093",
         "2fc4947571751c26e81667b4"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "gwanak": {
@@ -168,17 +168,19 @@
         "7632770571c5d71be72874e8",
         "722f8244ae0aea7b7d768ad0"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "nowon": {
       "seen_keys": [
         "b1b54085947a767fa11286d2",
         "c6439523ef2bf2847a90e010",
+        "7faa8f2744e318a37e6aa67e",
         "f6d25635a14544cba0a6afd8",
         "f664864152ba01e7fbdea699",
         "2798e5a41f5ed440743a905c",
         "6464108a075e871e8297d498",
+        "42320791d72745d488fe54ab",
         "61f7e2fe75f146818625f80f",
         "828b27ac03f3a3f2e78ccf1f",
         "21589a4045c7bf9030a9c12b",
@@ -277,10 +279,12 @@
       "window_keys": [
         "b1b54085947a767fa11286d2",
         "c6439523ef2bf2847a90e010",
+        "7faa8f2744e318a37e6aa67e",
         "f6d25635a14544cba0a6afd8",
         "f664864152ba01e7fbdea699",
         "2798e5a41f5ed440743a905c",
         "6464108a075e871e8297d498",
+        "42320791d72745d488fe54ab",
         "61f7e2fe75f146818625f80f",
         "828b27ac03f3a3f2e78ccf1f",
         "21589a4045c7bf9030a9c12b",
@@ -292,11 +296,9 @@
         "5e04a277fa5f640eb6c3290a",
         "41e7ccf502b06b02af8493b7",
         "d14b4b17d30e824621677099",
-        "310eed589051b1ca008a7979",
-        "fecf013134173c23b38eaf17",
-        "a4a1a3c41670cb0650f07b63"
+        "310eed589051b1ca008a7979"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "mapo": {
@@ -397,7 +399,7 @@
         "5d4da6c068744b11beb8e4aa",
         "4ae7fd12109767134f1aebef"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "junggu": {
@@ -477,7 +479,7 @@
         "589a7044fb583ddfb352f442",
         "7879671eba98dba9779ef2f6"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "yongsan": {
@@ -575,12 +577,13 @@
         "41ea8fda3006fc7986ba2f2e",
         "60a4c36134ba50328b726be9"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "seongbuk": {
       "seen_keys": [
         "438de795a27ff86b91d2e8c9",
+        "4c2a00bc47d0e7b8e95b79f4",
         "1517e0d1e89fab93715ba999",
         "a1196111a2b457314a389478",
         "6ca2193fbad4639a07519f40",
@@ -655,6 +658,7 @@
       ],
       "window_keys": [
         "438de795a27ff86b91d2e8c9",
+        "4c2a00bc47d0e7b8e95b79f4",
         "1517e0d1e89fab93715ba999",
         "a1196111a2b457314a389478",
         "6ca2193fbad4639a07519f40",
@@ -662,10 +666,9 @@
         "0eb4ee071244202e53ee9f51",
         "5744173b70e69135dfdba831",
         "a39ca232603824c7f208bc8f",
-        "3401efb54e09a5e15610190a",
-        "1d89cd4e01b1fa8f2536b3f3"
+        "3401efb54e09a5e15610190a"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "gangbuk": {
@@ -738,7 +741,7 @@
         "72869bed41143abc850a2609",
         "bcd1381359a787ae3fa32e82"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "dobong": {
@@ -796,11 +799,15 @@
         "a2588673d6c9aee17abbacab",
         "9c711b724cb0e2f902041368"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "eunpyeong": {
       "seen_keys": [
+        "1daa1c5544308d514fb4afdc",
+        "d795613607157cdcc1ff1778",
+        "cd71ab1c211e6b2dd5a1f977",
+        "51e2f8b68ff2dd6213e887c3",
         "069c7185ea754ae35afaef78",
         "e57dd5bb89ede067d20b9853",
         "52d56269b0e3a47d38f0cbe5",
@@ -837,18 +844,18 @@
         "52b4522a7a835e37ae35c657"
       ],
       "window_keys": [
+        "1daa1c5544308d514fb4afdc",
+        "d795613607157cdcc1ff1778",
+        "cd71ab1c211e6b2dd5a1f977",
+        "51e2f8b68ff2dd6213e887c3",
         "069c7185ea754ae35afaef78",
         "e57dd5bb89ede067d20b9853",
         "52d56269b0e3a47d38f0cbe5",
         "acb5e6088f961369cbae75d7",
         "3205705f4521aa21a03059dc",
-        "aa5ff7791fe7874082282606",
-        "8eaf6540151392f2cb19eefb",
-        "ac5bbb870ecf345a44031ddc",
-        "f24fb7d2e0abd848042083d3",
-        "56db0bd32f1be49f8b8fcbb7"
+        "aa5ff7791fe7874082282606"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "seodaemun": {
@@ -931,7 +938,7 @@
         "d7872057b5d0d620e9d2ec12",
         "b05b6c8dec810cfda5283150"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "gangseo": {
@@ -1032,7 +1039,7 @@
         "390de000a4858025d4ef2e05",
         "73bf0bd431dcb70c3d1bd270"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "gwangjin": {
@@ -1121,15 +1128,18 @@
         "0a4fe44c5223345a9e1362f0",
         "60e1a5a8e6bfbdc7c13cafcd"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "jungnang": {
       "seen_keys": [
         "109aeb1951eb5dd166ecea29",
+        "f9fc441eb3d33b3b8ccd17cf",
         "9ca4c240d2a44b902fc9e9c7",
         "8edc100ba55f2e1d8f16c20c",
         "2e4bb64b061a61f3e0cbbbe5",
+        "3b8eda3fb8fbd083c6bca5e6",
+        "8c2a3a2d3d985b2acba70e6b",
         "6b09d39483c79b83303dc6c9",
         "e9f76a815d45fc0cfd04a972",
         "20f1dc59b6e94d995a20af6f",
@@ -1181,9 +1191,12 @@
       ],
       "window_keys": [
         "109aeb1951eb5dd166ecea29",
+        "f9fc441eb3d33b3b8ccd17cf",
         "9ca4c240d2a44b902fc9e9c7",
         "8edc100ba55f2e1d8f16c20c",
         "2e4bb64b061a61f3e0cbbbe5",
+        "3b8eda3fb8fbd083c6bca5e6",
+        "8c2a3a2d3d985b2acba70e6b",
         "6b09d39483c79b83303dc6c9",
         "e9f76a815d45fc0cfd04a972",
         "20f1dc59b6e94d995a20af6f",
@@ -1196,12 +1209,9 @@
         "9015cc7b48b73741ded2b944",
         "9c9f4549cc13b4e6c46075a5",
         "175f114517ff06280e4e9bac",
-        "ccef124097f1d402bce0b752",
-        "ef0e97256e317806d3f87623",
-        "ec8ff70627bab723421e57cb",
-        "20ff93fa2087566754b569ca"
+        "ccef124097f1d402bce0b752"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "guro": {
@@ -1293,7 +1303,7 @@
         "076fb401b47e71047fb40ebf",
         "69826c92c25672479f7474ed"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "geumcheon": {
@@ -1357,7 +1367,7 @@
         "8f77d3e13ccfa2064611936a",
         "52b075458eb60b4fedb60ec8"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "dongjak": {
@@ -1460,7 +1470,7 @@
         "973a4c5438a6896909f5fb3f",
         "35141128db2b478e769539d9"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "seocho": {
@@ -1583,7 +1593,7 @@
         "31b467b3303eb8a9e7269640",
         "46c0deb0e5c0a64aa36b2626"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "songpa": {
@@ -1702,7 +1712,7 @@
         "6d189aee55b3c87d160172b5",
         "2603e850793a1d3c4a4fd59e"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "gangdong": {
@@ -1763,7 +1773,7 @@
         "7e0d457e86ac3a2f5110e871",
         "8bf586f01c7cded836e03dd6"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "jongno": {
@@ -1848,7 +1858,7 @@
         "d0a020f76dc4317c9190494c",
         "13b68a19126a410ff62e06f9"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "dongdaemun": {
@@ -1912,7 +1922,7 @@
         "89342f1457401b93684ef6dc",
         "71893b5db3623f6dea9b9f1d"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "yeongdeungpo": {
@@ -1970,7 +1980,7 @@
         "5c35478be3e6ded600fea06c",
         "69a332ca3b9351e44339d6f2"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     },
     "yangcheon": {
@@ -2079,7 +2089,7 @@
         "8e2182f64b95cb7e27162a8b",
         "0b1b961c452e4cd5ea457b00"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "CLIK_OPEN_API"
     },
     "seongdong": {
@@ -2129,12 +2139,12 @@
         "3dc50f9d346fc9ec5e8994c2",
         "d0d2dcf38d4b4dc0b7fdbf67"
       ],
-      "last_successful_at_kst": "2026-11-12T13:13:25+09:00",
+      "last_successful_at_kst": "2026-11-13T12:34:51+09:00",
       "transport": "COUNCIL_WEBSITE_FALLBACK"
     }
   },
   "last_run": {
-    "collected_at_kst": "2026-11-12T13:13:25+09:00",
+    "collected_at_kst": "2026-11-13T12:34:51+09:00",
     "coverage": "FIRST_PAGE_VISIBLE_WINDOW_ONLY",
     "question_output": "NONE",
     "briefing_output": "NONE",
@@ -2165,11 +2175,24 @@
       {
         "id": "nowon",
         "name": "노원구",
-        "status": "NO_NEW_IN_VISIBLE_WINDOW",
-        "listed": 5178,
+        "status": "NEW_IN_VISIBLE_WINDOW",
+        "listed": 5180,
         "visible": 20,
-        "new_count": 0,
-        "candidates": [],
+        "new_count": 2,
+        "candidates": [
+          {
+            "key": "7faa8f2744e318a37e6aa67e",
+            "document_id": "CLIKC3456425605879629",
+            "url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3456425605879629&collection=minutes",
+            "meeting_date": "2026-10-21"
+          },
+          {
+            "key": "42320791d72745d488fe54ab",
+            "document_id": "CLIKC3456428162721971",
+            "url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3456428162721971&collection=minutes",
+            "meeting_date": "2026-10-15"
+          }
+        ],
         "transport": "CLIK_OPEN_API",
         "api_fallback_reason": ""
       },
@@ -2231,28 +2254,28 @@
       {
         "id": "seongbuk",
         "name": "성북구",
-        "status": "NO_NEW_IN_VISIBLE_WINDOW",
-        "listed": 10,
-        "visible": 10,
-        "new_count": 0,
-        "candidates": [],
-        "transport": "COUNCIL_WEBSITE_FALLBACK",
-        "api_fallback_reason": "ClikAPIError"
-      },
-      {
-        "id": "gangbuk",
-        "name": "강북구",
         "status": "NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
         "new_count": 1,
         "candidates": [
           {
-            "key": "3ebefbbb015d0876f689839c",
-            "url": "https://council.gangbuk.go.kr/viewer/minutes.do?uid=8867",
-            "meeting_date": "2026-11-11"
+            "key": "4c2a00bc47d0e7b8e95b79f4",
+            "url": "https://www.sbc.go.kr/record/recordView.do?key=b4bb6bab9339e9574e1a7c9d687378c2f60adae2e37aba69cce4626c25036f5ba8d5abf3a2c1d48f",
+            "meeting_date": "2026-10-22"
           }
         ],
+        "transport": "COUNCIL_WEBSITE_FALLBACK",
+        "api_fallback_reason": "ClikAPIError"
+      },
+      {
+        "id": "gangbuk",
+        "name": "강북구",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
+        "listed": 10,
+        "visible": 10,
+        "new_count": 0,
+        "candidates": [],
         "transport": "COUNCIL_WEBSITE_FALLBACK",
         "api_fallback_reason": "API_STALE"
       },
@@ -2270,11 +2293,32 @@
       {
         "id": "eunpyeong",
         "name": "은평구",
-        "status": "NO_NEW_IN_VISIBLE_WINDOW",
+        "status": "NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 0,
-        "candidates": [],
+        "new_count": 4,
+        "candidates": [
+          {
+            "key": "1daa1c5544308d514fb4afdc",
+            "url": "https://council.ep.go.kr/viewer/minutes.do?uid=6110",
+            "meeting_date": "2026-11-12"
+          },
+          {
+            "key": "d795613607157cdcc1ff1778",
+            "url": "https://council.ep.go.kr/viewer/minutes.do?uid=6113",
+            "meeting_date": "2026-11-12"
+          },
+          {
+            "key": "cd71ab1c211e6b2dd5a1f977",
+            "url": "https://council.ep.go.kr/viewer/minutes.do?uid=6112",
+            "meeting_date": "2026-11-11"
+          },
+          {
+            "key": "51e2f8b68ff2dd6213e887c3",
+            "url": "https://council.ep.go.kr/viewer/minutes.do?uid=6111",
+            "meeting_date": "2026-11-11"
+          }
+        ],
         "transport": "COUNCIL_WEBSITE_FALLBACK",
         "api_fallback_reason": "API_STALE"
       },
@@ -2325,10 +2369,10 @@
       {
         "id": "dongdaemun",
         "name": "동대문구",
-        "status": "BASELINE_ROUTE_CHANGED",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": null,
+        "new_count": 0,
         "candidates": [],
         "transport": "COUNCIL_WEBSITE_FALLBACK",
         "api_fallback_reason": "API_STALE"
@@ -2336,11 +2380,30 @@
       {
         "id": "jungnang",
         "name": "중랑구",
-        "status": "NO_NEW_IN_VISIBLE_WINDOW",
-        "listed": 3781,
+        "status": "NEW_IN_VISIBLE_WINDOW",
+        "listed": 3784,
         "visible": 20,
-        "new_count": 0,
-        "candidates": [],
+        "new_count": 3,
+        "candidates": [
+          {
+            "key": "f9fc441eb3d33b3b8ccd17cf",
+            "document_id": "CLIKC3456725454824505",
+            "url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3456725454824505&collection=minutes",
+            "meeting_date": "2026-10-30"
+          },
+          {
+            "key": "3b8eda3fb8fbd083c6bca5e6",
+            "document_id": "CLIKC3456727601281292",
+            "url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3456727601281292&collection=minutes",
+            "meeting_date": "2026-10-26"
+          },
+          {
+            "key": "8c2a3a2d3d985b2acba70e6b",
+            "document_id": "CLIKC3456728663356397",
+            "url": "https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3456728663356397&collection=minutes",
+            "meeting_date": "2026-10-23"
+          }
+        ],
         "transport": "CLIK_OPEN_API",
         "api_fallback_reason": ""
       },
@@ -2358,17 +2421,11 @@
       {
         "id": "geumcheon",
         "name": "금천구",
-        "status": "NEW_IN_VISIBLE_WINDOW",
+        "status": "NO_NEW_IN_VISIBLE_WINDOW",
         "listed": 10,
         "visible": 10,
-        "new_count": 1,
-        "candidates": [
-          {
-            "key": "86165fee8e18812db4ca6f31",
-            "url": "https://council.geumcheon.go.kr/council/viewer/minutes/2967.do",
-            "meeting_date": "2026-11-10"
-          }
-        ],
+        "new_count": 0,
+        "candidates": [],
         "transport": "COUNCIL_WEBSITE_FALLBACK",
         "api_fallback_reason": "ClikAPIError"
       },
@@ -2381,7 +2438,7 @@
         "new_count": 0,
         "candidates": [],
         "transport": "COUNCIL_WEBSITE_FALLBACK",
-        "api_fallback_reason": "API_STALE"
+        "api_fallback_reason": "ClikAPIError"
       },
       {
         "id": "dongjak",
