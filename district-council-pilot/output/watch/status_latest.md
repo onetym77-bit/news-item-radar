@@ -1,6 +1,6 @@
 # 서울 25개 구의회 얇은 관측
 
-관측 시각: 2026-11-14T12:31:59+09:00
+관측 시각: 2026-11-15T12:04:11+09:00
 
 공식 최근목록의 첫 화면만 비교합니다. 회의일은 게시일이 아닙니다.
 첫 관측은 신규로 세지 않으며 접속 실패는 자료 0건이 아닙니다.
@@ -18,7 +18,7 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 | 종로구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 중구 | 지방의정포털 API | 3379 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 용산구 | 지방의정포털 API | 3796 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 성북구 | 의회 홈페이지 | 10 | 10 | 2 | NEW_IN_VISIBLE_WINDOW |
+| 성북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 도봉구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 은평구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
@@ -27,39 +27,15 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 | 강서구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 광진구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 동대문구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 중랑구 | 지방의정포털 API | 3785 | 20 | 1 | NEW_IN_VISIBLE_WINDOW |
+| 중랑구 | 지방의정포털 API | 3786 | 20 | 1 | NEW_IN_VISIBLE_WINDOW |
 | 구로구 | 의회 홈페이지 | 11 | 11 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 금천구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 영등포구 | 의회 홈페이지 | 15 | 15 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 동작구 | 지방의정포털 API | 4127 | 20 | 3 | NEW_IN_VISIBLE_WINDOW |
+| 동작구 | 지방의정포털 API | 4127 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 서초구 | 지방의정포털 API | 4856 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 송파구 | 지방의정포털 API | 4581 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 강동구 | 의회 홈페이지 | 10 | 10 | 10 | POSSIBLE_GAP |
-
-## 성북구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-10-22 · [공식 회의록](https://www.sbc.go.kr/record/recordView.do?key=2e5bf898bc8bf1c945fc0473e530135f0dd8914dd5d6f34f8291cf421e2634ca8b182dd11927b0c4)
-- 2026-10-20 · [공식 회의록](https://www.sbc.go.kr/record/recordView.do?key=3f7c763d5ce26ff9e1dd28725fdd26f5e0ae59b24471d2702fa024d500dde6dba2900e0dce5e58ca)
+| 강동구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 
 ## 중랑구 · NEW_IN_VISIBLE_WINDOW
 
-- 2026-10-22 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3465367892915271&collection=minutes)
-
-## 동작구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-11-13 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3465113204155928&collection=minutes)
-- 2026-11-13 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3465112853026151&collection=minutes)
-- 2026-11-06 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3465113605253108&collection=minutes)
-
-## 강동구 · POSSIBLE_GAP
-
-- 2026-10-14 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=326&contype=0&subtype=0&num=0&istemp=0)
-- 2026-10-14 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=326&contype=1&subtype=0&num=1&istemp=0)
-- 2026-10-27 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=326&contype=1&subtype=0&num=2&istemp=0)
-- 2026-10-23 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=326&contype=2&subtype=1&num=1&istemp=0)
-- 2026-10-27 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=326&contype=2&subtype=1&num=2&istemp=0)
-- 2026-10-19 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=326&contype=2&subtype=2&num=1&istemp=0)
-- 2026-10-19 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=326&contype=2&subtype=3&num=1&istemp=0)
-- 2026-10-20 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=326&contype=2&subtype=3&num=2&istemp=0)
-- 2026-10-20 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=326&contype=2&subtype=4&num=1&istemp=0)
-- 2026-09-02 · [공식 회의록](https://council.gangdong.go.kr/meeting/confer/popup.do?ntime=325&contype=0&subtype=0&num=0&istemp=0)
+- 2026-10-26 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3474006593202749&collection=minutes)
