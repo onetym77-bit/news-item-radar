@@ -17885,6 +17885,202 @@
           "mode": "regular",
           "endpoint": "videos.list",
           "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:28.507816+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|가족돌봄 때문에 퇴사|SOURCE|간병 가족 브이로그",
+          "query": "간병 가족 브이로그",
+          "selection_tier": "SENTINEL",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:28.876546+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "CARE_HEALTH|야간·시설 돌봄 공백|BEHAVIOR|요양원 못 구해 일 쉬어",
+          "query": "요양원 못 구해 일 쉬어",
+          "selection_tier": "SENTINEL",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:29.136359+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "MOBILITY|대중교통 단절|SOURCE|장거리 출퇴근 브이로그",
+          "query": "장거리 출퇴근 브이로그",
+          "selection_tier": "SENTINEL",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:29.396044+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "DIGITAL_RIGHTS|플랫폼 계정·환불 피해|EVIDENCE|자동결제 취소 내역",
+          "query": "자동결제 취소 내역",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:29.774011+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|SOURCE|반지하 거주 브이로그",
+          "query": "반지하 거주 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:30.043224+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LOCAL_ECONOMY|골목상권 영업 포기|EVIDENCE|가게 폐업 정산 공개",
+          "query": "가게 폐업 정산 공개",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:30.425047+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "HOUSING|주거비 때문에 이동|SCENE|월세 이사 후기",
+          "query": "월세 이사 후기",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:30.668699+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LABOR|플랫폼 노동 수입 감소|SOURCE|배달기사 일상 브이로그",
+          "query": "배달기사 일상 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:31.039630+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "DIGITAL_RIGHTS|디지털 접근 배제|BEHAVIOR|키오스크 주문 포기",
+          "query": "키오스크 주문 포기",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:31.292581+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "SAFETY_ENVIRONMENT|반복 주거·침수 피해|BEHAVIOR|반지하 침수 또 이사",
+          "query": "반지하 침수 또 이사",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:31.591804+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LOCAL_ECONOMY|필수 생활서비스 폐업|BEHAVIOR|소아과 멀리 원정 진료",
+          "query": "소아과 멀리 원정 진료",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:31.821204+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "HOUSING|주거비 때문에 이동|SOURCE|자취 월세 브이로그",
+          "query": "자취 월세 브이로그",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:32.175605+09:00",
+          "mode": "regular",
+          "endpoint": "search.list",
+          "status": "OK",
+          "query_key": "LABOR|임금·퇴직금 미지급|BEHAVIOR|월급 밀려 퇴사",
+          "query": "월급 밀려 퇴사",
+          "selection_tier": "ROTATION",
+          "run_slot": 1
+        },
+        {
+          "at": "2026-11-19T12:53:32.437871+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:32.706314+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:32.986971+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:33.178239+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:33.327532+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:33.490599+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:33.684998+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:33.802815+09:00",
+          "mode": "regular",
+          "endpoint": "commentThreads.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:33.967559+09:00",
+          "mode": "regular",
+          "endpoint": "channels.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:34.054644+09:00",
+          "mode": "regular",
+          "endpoint": "playlistItems.list",
+          "status": "OK"
+        },
+        {
+          "at": "2026-11-19T12:53:34.191800+09:00",
+          "mode": "regular",
+          "endpoint": "videos.list",
+          "status": "OK"
         }
       ]
     }
