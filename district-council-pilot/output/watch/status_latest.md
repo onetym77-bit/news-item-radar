@@ -1,6 +1,6 @@
 # 서울 25개 구의회 얇은 관측
 
-관측 시각: 2026-11-27T14:20:34+09:00
+관측 시각: 2026-11-28T13:57:21+09:00
 
 공식 최근목록의 첫 화면만 비교합니다. 회의일은 게시일이 아닙니다.
 첫 관측은 신규로 세지 않으며 접속 실패는 자료 0건이 아닙니다.
@@ -12,75 +12,45 @@ API와 의회 홈페이지 사이에서 경로가 바뀐 첫 관측도 기준선
 |---|---|---:|---:|---:|---|
 | 강남구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 관악구 | 지방의정포털 API | 5665 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 노원구 | 지방의정포털 API | 5205 | 20 | 1 | NEW_IN_VISIBLE_WINDOW |
-| 마포구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 노원구 | 지방의정포털 API | 5205 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 마포구 | 의회 홈페이지 | 10 | 10 | 4 | NEW_IN_VISIBLE_WINDOW |
 | 성동구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 종로구 | 의회 홈페이지 | 10 | 10 | 5 | NEW_IN_VISIBLE_WINDOW |
+| 종로구 | 의회 홈페이지 | 10 | 10 | 1 | NEW_IN_VISIBLE_WINDOW |
 | 중구 | 의회 홈페이지 | - | 0 | - | UNKNOWN_COLLECTION |
 | 용산구 | 지방의정포털 API | 3803 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 성북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 강북구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 도봉구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 강북구 | 지방의정포털 API | 5426 | 20 | - | BASELINE_ROUTE_CHANGED |
+| 도봉구 | 의회 홈페이지 | 2 | 2 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 은평구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 서대문구 | 의회 홈페이지 | 14 | 14 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 양천구 | 의회 홈페이지 | 10 | 10 | 1 | NEW_IN_VISIBLE_WINDOW |
-| 강서구 | 의회 홈페이지 | 4 | 4 | 1 | NEW_IN_VISIBLE_WINDOW |
+| 양천구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
+| 강서구 | 의회 홈페이지 | 5 | 5 | 1 | NEW_IN_VISIBLE_WINDOW |
 | 광진구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 동대문구 | 의회 홈페이지 | 10 | 10 | 9 | POSSIBLE_GAP |
+| 동대문구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 중랑구 | 지방의정포털 API | 3791 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 구로구 | 지방의정포털 API | 4052 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 금천구 | 의회 홈페이지 | 10 | 10 | 1 | NEW_IN_VISIBLE_WINDOW |
+| 금천구 | 의회 홈페이지 | 10 | 10 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 영등포구 | 의회 홈페이지 | 15 | 15 | 1 | NEW_IN_VISIBLE_WINDOW |
-| 동작구 | 지방의정포털 API | 4133 | 20 | 1 | NEW_IN_VISIBLE_WINDOW |
+| 동작구 | 지방의정포털 API | 4133 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 서초구 | 지방의정포털 API | 4856 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
-| 송파구 | 지방의정포털 API | 4593 | 20 | 2 | NEW_IN_VISIBLE_WINDOW |
+| 송파구 | 지방의정포털 API | 4593 | 20 | 0 | NO_NEW_IN_VISIBLE_WINDOW |
 | 강동구 | 의회 홈페이지 | - | 0 | - | UNKNOWN_COLLECTION |
 
-## 노원구 · NEW_IN_VISIBLE_WINDOW
+## 마포구 · NEW_IN_VISIBLE_WINDOW
 
-- 2026-11-20 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3577384803703397&collection=minutes)
+- 2026-11-26 · [공식 회의록](https://council.mapo.seoul.kr/record/recordView.do?key=24981e2a69e9fba009ca3f274e1ba73d84a350d1a4534030126d41171ade464f02ef70a3287b5cbd)
+- 2026-11-25 · [공식 회의록](https://council.mapo.seoul.kr/record/recordView.do?key=7f3ca13dbde6ea2da74d91f7923ef714d40e836d798705ea698fc72a07835d154074f038dbcea404)
+- 2026-11-17 · [공식 회의록](https://council.mapo.seoul.kr/record/recordView.do?key=3d78dcbb4ad1d65335d0e3d841190e2fcb44b4047c2922419355fe60e14764d1df5655325e243839)
+- 2026-11-16 · [공식 회의록](https://council.mapo.seoul.kr/record/recordView.do?key=78a7766dc5e53289d956343ee0c620922ba549500747b99f0165cff59587f5070372540cc9cef638)
 
 ## 종로구 · NEW_IN_VISIBLE_WINDOW
 
-- 2026-11-25 · [공식 회의록](https://bookcouncil.jongno.go.kr/record/recordView.do?key=eec8caed91c0518f4a89f83c4553a8c866a78c20cfb224ce4deb234cde864ab6103fbdc755f0995f)
-- 2026-11-25 · [공식 회의록](https://bookcouncil.jongno.go.kr/record/recordView.do?key=9cb3d62a6e8f31b0ba054eb76841371d806432ccec9a7cd3103f9f458b12b8deb13b81af3c8f4710)
-- 2026-11-25 · [공식 회의록](https://bookcouncil.jongno.go.kr/record/recordView.do?key=e7aea0c97307901a2835e82c0a2b2a81536f1dded444cce97d571f9c2098028c597c37250d3e0be7)
-- 2026-11-24 · [공식 회의록](https://bookcouncil.jongno.go.kr/record/recordView.do?key=e027ebbb05362893196550c6ced3571897b37acdd2516129a406a56bc163893d31f54faa9bfc7514)
-- 2026-11-24 · [공식 회의록](https://bookcouncil.jongno.go.kr/record/recordView.do?key=4b8a34fb84ec3b4e4d088e2d0e010b934fb5aefd730604be1a6eff3cfd21f95d0b60b1e5d0152561)
-
-## 양천구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-11-27 · [공식 회의록](https://www.ycc.go.kr/record/main?uid=8738&code=C010&view=full_view)
+- 2026-11-26 · [공식 회의록](https://bookcouncil.jongno.go.kr/record/recordView.do?key=1275c2ab956c5de554f63ee9dd44e99adbc31b58ef9a579f72a1c9b259bff9af48bab77a3369f719)
 
 ## 강서구 · NEW_IN_VISIBLE_WINDOW
 
-- 2026-11-20 · [공식 회의록](https://gsc.gangseo.seoul.kr/meeting/confer/popup.do?ntime=325&contype=4&subtype=2&num=4&istemp=1)
-
-## 동대문구 · POSSIBLE_GAP
-
-- 2026-10-26 · [공식 회의록](https://council.ddm.go.kr/viewer/minutes.do?uid=13789)
-- 2026-10-22 · [공식 회의록](https://council.ddm.go.kr/viewer/minutes.do?uid=13745)
-- 2026-10-21 · [공식 회의록](https://council.ddm.go.kr/viewer/minutes.do?uid=13791)
-- 2026-10-20 · [공식 회의록](https://council.ddm.go.kr/viewer/minutes.do?uid=13784)
-- 2026-10-19 · [공식 회의록](https://council.ddm.go.kr/viewer/minutes.do?uid=13725)
-- 2026-10-16 · [공식 회의록](https://council.ddm.go.kr/viewer/minutes.do?uid=13724)
-- 2026-10-16 · [공식 회의록](https://council.ddm.go.kr/viewer/minutes.do?uid=13788)
-- 2026-10-15 · [공식 회의록](https://council.ddm.go.kr/viewer/minutes.do?uid=13768)
-- 2026-10-15 · [공식 회의록](https://council.ddm.go.kr/viewer/minutes.do?uid=13783)
-
-## 금천구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-11-19 · [공식 회의록](https://council.geumcheon.go.kr/council/viewer/minutes/2977.do)
+- 2026-11-23 · [공식 회의록](https://gsc.gangseo.seoul.kr/meeting/confer/popup.do?ntime=325&contype=4&subtype=2&num=5&istemp=1)
 
 ## 영등포구 · NEW_IN_VISIBLE_WINDOW
 
-- 2026-11-23 · [공식 회의록](https://www.ydpc.go.kr/mnts/asvr/cnts/mnt/mntViewer.php?params=cGRRVDNSUVF2cU9nRXF0Ym9VNGtFQT09)
-
-## 동작구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-11-24 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3577432853563715&collection=minutes)
-
-## 송파구 · NEW_IN_VISIBLE_WINDOW
-
-- 2026-11-19 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3576606905882658&collection=minutes)
-- 2026-11-19 · [공식 회의록](https://clik.nanet.go.kr/potal/search/searchView.do?DOCID=CLIKC3576606503654201&collection=minutes)
+- 2026-11-26 · [공식 회의록](https://www.ydpc.go.kr/mnts/asvr/cnts/mnt/mntViewer.php?params=blVlNGp2WmVEeEl3Z2RxWDR1TnlEZz09)
